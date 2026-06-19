@@ -62,6 +62,34 @@ export { useUsersQuery } from "./hooks/useUsersQuery";
 └─ index.js                 # public API
 ```
 
+## Sidebar — modulli (drill-in) (strict)
+
+Sidebar **ikki bosqichli** ishlaydi. Bu majburiy qoida — har bir asosiy bo'lim (Soliq, Obodonlashtirish, Yoshlar va h.k.) alohida **modul** bo'lib, modulga bosilganda sidebar to'liq shu modulning ichiga **almashadi**.
+
+- **Bosh menyu (root):** faqat modullar ro'yxati ko'rinadi (icon + nom). Hech qanday ichki bo'lim ko'rinmaydi.
+- **Modul ichida (drill-in):** modulga bosilgach sidebar butunlay shu modulning ichki bo'limlariga almashadi. Tepada modul nomi + **"Orqaga"** tugmasi bo'ladi; "Orqaga" bosh menyuga qaytaradi.
+- Bir vaqtda faqat bitta daraja ko'rinadi — root yoki modul ichi, ikkalasi birdan emas.
+
+Shuning uchun `sidebar.config.js` har bir modul uchun `key` (English code value), `title` (Uzbek UI text), `icon` va `items[]` (modul ichki bo'limlari) bilan yoziladi:
+
+```js
+// owner/navigation/sidebar.config.js
+const ownerSidebar = [
+  {
+    key: "soliq",                       // English code value
+    title: "Soliq",                     // Uzbek UI text
+    icon: Landmark,
+    items: [
+      { title: "Bosh sahifa", url: "/owner/soliq" },
+      // { title: "Hisobotlar", url: "/owner/soliq/reports", permission: "soliq.read" },
+    ],
+  },
+];
+```
+
+- Bosh menyudagi bitta modul ham permission bilan filtrlanadi: modulning **birorta** ko'rinadigan ichki bo'limi qolmasa, modul root menyuda ham ko'rinmaydi.
+- Yangi modul qo'shish = `sidebar.config.js` ga yangi obyekt + `routes/index.jsx` ga marshrut. Sidebar drill-in mantig'i `AppSidebar.jsx` ichida bir marta yozilgan, har modul uchun qayta yozilmaydi.
+
 ## Roles and protection
 
 - `shared/constants/roles.js` — `ROLES.OWNER` is the only static value. Dynamic role values come from `/auth/me`.
