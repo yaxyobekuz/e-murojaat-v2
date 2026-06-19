@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 import useObjectState from "@/shared/hooks/useObjectState";
+import Card from "@/shared/components/ui/card/Card";
 import DataTable from "@/shared/components/ui/table/DataTable";
 import Pagination from "@/shared/components/ui/pagination/Pagination";
 import SelectField from "@/shared/components/ui/select/SelectField";
@@ -9,7 +10,7 @@ import { formatMoney } from "@/shared/utils/formatMoney";
 import { formatDateUz } from "@/shared/utils/formatDate";
 import { regionLabel } from "@/shared/data/regions";
 
-import SoliqFilterBar from "../components/SoliqFilterBar";
+import LocationFilter from "../components/LocationFilter";
 import { useAssessmentsQuery } from "../hooks/useSoliqQueries";
 import {
   taxTypeLabel,
@@ -21,17 +22,29 @@ import {
 
 const AssessmentsPage = () => {
   const navigate = useNavigate();
-  const { region, taxType, status, page, setField, setFields } = useObjectState({
-    region: "",
-    taxType: "",
-    status: "",
-    page: 1,
-  });
+  const { region, district, settlement, mahalla, taxType, status, page, setField, setFields } =
+    useObjectState({
+      region: "",
+      district: "",
+      settlement: "",
+      mahalla: "",
+      taxType: "",
+      status: "",
+      page: 1,
+    });
 
-  const { data, isLoading } = useAssessmentsQuery({ region, taxType, status, page, limit: 20 });
+  const { data, isLoading } = useAssessmentsQuery({
+    region,
+    district,
+    settlement,
+    mahalla,
+    taxType,
+    status,
+    page,
+    limit: 20,
+  });
   const rows = data?.items || [];
   const meta = data?.meta || { pages: 1 };
-  const onFilter = (k, v) => setFields({ [k]: v, page: 1 });
 
   const columns = [
     {
@@ -58,24 +71,30 @@ const AssessmentsPage = () => {
         <p className="text-sm text-muted-foreground">Jami: {meta.total ?? "—"}</p>
       </div>
 
-      <SoliqFilterBar filters={{ region }} setField={onFilter} show={["region"]}>
-        <SelectField
-          label="Soliq turi"
-          name="taxType"
-          className="min-w-[160px]"
-          value={taxType}
-          options={taxTypeOptions}
-          onChange={(v) => onFilter("taxType", v)}
-        />
-        <SelectField
-          label="Holat"
-          name="status"
-          className="min-w-[160px]"
-          value={status}
-          options={statusOptions}
-          onChange={(v) => onFilter("status", v)}
-        />
-      </SoliqFilterBar>
+      <Card>
+        <div className="flex flex-wrap items-end gap-3">
+          <LocationFilter
+            value={{ region, district, settlement, mahalla }}
+            onChange={(next) => setFields({ ...next, page: 1 })}
+          />
+          <SelectField
+            label="Soliq turi"
+            name="taxType"
+            className="min-w-[150px]"
+            value={taxType}
+            options={taxTypeOptions}
+            onChange={(v) => setFields({ taxType: v, page: 1 })}
+          />
+          <SelectField
+            label="Holat"
+            name="status"
+            className="min-w-[150px]"
+            value={status}
+            options={statusOptions}
+            onChange={(v) => setFields({ status: v, page: 1 })}
+          />
+        </div>
+      </Card>
 
       <DataTable
         columns={columns}

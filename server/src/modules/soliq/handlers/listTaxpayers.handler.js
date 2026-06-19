@@ -6,6 +6,9 @@ const listTaxpayers = asyncHandler(async (req, res) => {
   const { page, limit } = parsePagination(req.query);
   const { items, total } = await soliqService.listTaxpayers({
     region: req.query.region,
+    district: req.query.district,
+    settlement: req.query.settlement,
+    mahalla: req.query.mahalla,
     type: req.query.type,
     search: req.query.search,
     page,

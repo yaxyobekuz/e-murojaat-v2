@@ -4,14 +4,16 @@ import { Plus } from "lucide-react";
 import useObjectState from "@/shared/hooks/useObjectState";
 import useModal from "@/shared/hooks/useModal";
 import Button from "@/shared/components/ui/button/Button";
+import Card from "@/shared/components/ui/card/Card";
 import DataTable from "@/shared/components/ui/table/DataTable";
 import Pagination from "@/shared/components/ui/pagination/Pagination";
 import SelectField from "@/shared/components/ui/select/SelectField";
+import InputField from "@/shared/components/ui/input/InputField";
 import ModalWrapper from "@/shared/components/ui/modal/ModalWrapper";
 import { MODAL } from "@/shared/constants/modals";
-import { regionLabel } from "@/shared/data/regions";
+import { regionLabel, mahallaLabel } from "@/shared/data/regions";
 
-import SoliqFilterBar from "../components/SoliqFilterBar";
+import LocationFilter from "../components/LocationFilter";
 import TaxpayerCreateModal from "../components/TaxpayerCreateModal";
 import { useTaxpayersQuery } from "../hooks/useSoliqQueries";
 import { taxpayerTypeLabel, taxpayerTypeOptions } from "../utils/soliq.constants";
@@ -19,25 +21,28 @@ import { taxpayerTypeLabel, taxpayerTypeOptions } from "../utils/soliq.constants
 const TaxpayersListPage = () => {
   const navigate = useNavigate();
   const { openModal } = useModal();
-  const { region, type, search, page, setField, setFields } = useObjectState({
-    region: "",
-    type: "",
-    search: "",
-    page: 1,
-  });
+  const { region, district, settlement, mahalla, type, search, page, setField, setFields } =
+    useObjectState({
+      region: "",
+      district: "",
+      settlement: "",
+      mahalla: "",
+      type: "",
+      search: "",
+      page: 1,
+    });
 
-  const params = { region, type, search, page, limit: 20 };
+  const params = { region, district, settlement, mahalla, type, search, page, limit: 20 };
   const { data, isLoading } = useTaxpayersQuery(params);
   const rows = data?.items || [];
   const meta = data?.meta || { pages: 1 };
-
-  const onFilter = (key, value) => setFields({ [key]: value, page: 1 });
 
   const columns = [
     { key: "fullName", header: "F.I.Sh / Tashkilot", render: (r) => <span className="font-medium">{r.fullName}</span> },
     { key: "stir", header: "STIR" },
     { key: "type", header: "Turi", render: (r) => taxpayerTypeLabel(r.type) },
     { key: "region", header: "Viloyat", render: (r) => regionLabel(r.region) },
+    { key: "mahalla", header: "Mahalla", render: (r) => (r.mahalla ? mahallaLabel(r.mahalla) : "—") },
     { key: "phone", header: "Telefon", render: (r) => r.phone || "—" },
   ];
 
@@ -53,20 +58,31 @@ const TaxpayersListPage = () => {
         </Button>
       </div>
 
-      <SoliqFilterBar
-        filters={{ region, search }}
-        setField={onFilter}
-        show={["region", "search"]}
-      >
-        <SelectField
-          label="Turi"
-          name="type"
-          className="min-w-[160px]"
-          value={type}
-          options={taxpayerTypeOptions}
-          onChange={(v) => onFilter("type", v)}
-        />
-      </SoliqFilterBar>
+      <Card>
+        <div className="flex flex-wrap items-end gap-3">
+          <LocationFilter
+            value={{ region, district, settlement, mahalla }}
+            onChange={(next) => setFields({ ...next, page: 1 })}
+          />
+          <SelectField
+            label="Turi"
+            name="type"
+            className="min-w-[150px]"
+            value={type}
+            options={taxpayerTypeOptions}
+            onChange={(v) => setFields({ type: v, page: 1 })}
+          />
+          <InputField
+            type="search"
+            label="Qidiruv"
+            name="search"
+            className="min-w-[180px]"
+            placeholder="STIR, ism..."
+            value={search}
+            onChange={(e) => setFields({ search: e.target.value, page: 1 })}
+          />
+        </div>
+      </Card>
 
       <DataTable
         columns={columns}

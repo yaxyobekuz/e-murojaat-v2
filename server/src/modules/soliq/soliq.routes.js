@@ -13,6 +13,7 @@ import {
   listDebtorsSchema,
   paySchema,
   analyticsSchema,
+  mahallaOverviewSchema,
 } from "./validators/soliq.validator.js";
 
 import listTaxpayers from "./handlers/listTaxpayers.handler.js";
@@ -25,13 +26,19 @@ import pay from "./handlers/pay.handler.js";
 import summary from "./handlers/analytics.summary.handler.js";
 import timeseries from "./handlers/analytics.timeseries.handler.js";
 import breakdown from "./handlers/analytics.breakdown.handler.js";
+import mahallaOverview from "./handlers/mahallaOverview.handler.js";
+import locations from "./handlers/locations.handler.js";
 
 const router = Router();
+
+// Hudud ma'lumotnomasi (drilldown filtr uchun)
+router.get("/locations", requireAuth, requirePermission(PERMISSIONS.SOLIQ_READ), locations);
 
 // Analitika (aniqroq yo'llar — :id dan oldin)
 router.get("/analytics/summary", requireAuth, requirePermission(PERMISSIONS.SOLIQ_READ), validate(analyticsSchema), summary);
 router.get("/analytics/timeseries", requireAuth, requirePermission(PERMISSIONS.SOLIQ_READ), validate(analyticsSchema), timeseries);
 router.get("/analytics/breakdown", requireAuth, requirePermission(PERMISSIONS.SOLIQ_READ), validate(analyticsSchema), breakdown);
+router.get("/analytics/mahalla", requireAuth, requirePermission(PERMISSIONS.SOLIQ_READ), validate(mahallaOverviewSchema), mahallaOverview);
 
 // Soliqlar (hisob-kitoblar) va qarzdorlik
 router.get("/assessments", requireAuth, requirePermission(PERMISSIONS.SOLIQ_READ), validate(listAssessmentsSchema), listAssessments);

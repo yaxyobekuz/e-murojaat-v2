@@ -13,8 +13,12 @@ export const soliqAPI = {
   listDebtors: (params) => http.get(ENDPOINTS.soliq.debtors, { params }),
   pay: (id, body) => http.post(ENDPOINTS.soliq.pay(id), body),
 
+  // Hudud ma'lumotnomasi (drilldown filtr)
+  locations: (params) => http.get(ENDPOINTS.soliq.locations, { params }),
+
   // Analitika
   summary: (params) => http.get(ENDPOINTS.soliq.summary, { params }),
   timeseries: (params) => http.get(ENDPOINTS.soliq.timeseries, { params }),
   breakdown: (params) => http.get(ENDPOINTS.soliq.breakdown, { params }),
+  mahalla: (params) => http.get(ENDPOINTS.soliq.mahalla, { params }),
 };

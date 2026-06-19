@@ -1,21 +1,28 @@
 import { useNavigate } from "react-router-dom";
 
 import useObjectState from "@/shared/hooks/useObjectState";
+import Card from "@/shared/components/ui/card/Card";
 import DataTable from "@/shared/components/ui/table/DataTable";
 import Pagination from "@/shared/components/ui/pagination/Pagination";
 import StatusBadge from "@/shared/components/ui/badge/StatusBadge";
 import { formatMoney } from "@/shared/utils/formatMoney";
 import { regionLabel } from "@/shared/data/regions";
 
-import SoliqFilterBar from "../components/SoliqFilterBar";
+import LocationFilter from "../components/LocationFilter";
 import { useDebtorsQuery } from "../hooks/useSoliqQueries";
 import { taxTypeLabel, statusLabel, STATUS_TONE } from "../utils/soliq.constants";
 
 const DebtorsPage = () => {
   const navigate = useNavigate();
-  const { region, page, setField, setFields } = useObjectState({ region: "", page: 1 });
+  const { region, district, settlement, mahalla, page, setField, setFields } = useObjectState({
+    region: "",
+    district: "",
+    settlement: "",
+    mahalla: "",
+    page: 1,
+  });
 
-  const { data, isLoading } = useDebtorsQuery({ region, page, limit: 20 });
+  const { data, isLoading } = useDebtorsQuery({ region, district, settlement, mahalla, page, limit: 20 });
   const rows = data?.items || [];
   const meta = data?.meta || { pages: 1 };
 
@@ -51,11 +58,12 @@ const DebtorsPage = () => {
         </p>
       </div>
 
-      <SoliqFilterBar
-        filters={{ region }}
-        setField={(k, v) => setFields({ [k]: v, page: 1 })}
-        show={["region"]}
-      />
+      <Card>
+        <LocationFilter
+          value={{ region, district, settlement, mahalla }}
+          onChange={(next) => setFields({ ...next, page: 1 })}
+        />
+      </Card>
 
       <DataTable
         columns={columns}

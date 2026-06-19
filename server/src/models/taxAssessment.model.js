@@ -13,6 +13,9 @@ const taxAssessmentSchema = new mongoose.Schema(
       index: true,
     },
     region: { type: String, required: true, index: true }, // tez analitika uchun denormalizatsiya
+    district: { type: String, default: "", index: true },
+    settlement: { type: String, default: "", index: true },
+    mahalla: { type: String, default: "", index: true },
     taxType: { type: String, enum: TAX_TYPES, required: true, index: true },
     baseValue_uzs: { type: Number, default: 0 }, // kadastr qiymati / daromad
     rate: { type: Number, default: 0 }, // stavka (0.34 = 0.34%)
@@ -33,6 +36,8 @@ const taxAssessmentSchema = new mongoose.Schema(
 
 taxAssessmentSchema.index({ region: 1, taxType: 1 });
 taxAssessmentSchema.index({ status: 1, dueDate: 1 });
+taxAssessmentSchema.index({ mahalla: 1, status: 1 });
+taxAssessmentSchema.index({ mahalla: 1, taxType: 1 });
 
 // Qarz = hisoblangan - to'langan (penyani qo'shib).
 taxAssessmentSchema.virtual("debt_uzs").get(function () {
