@@ -57,6 +57,17 @@ const ownerSidebar = [
     ],
   },
   {
+    key: "yer",
+    title: "Yer / Mol-mulk",
+    icon: LandPlot,
+    permission: "yer.read",
+    items: [
+      { title: "Analitika", url: "/owner/soliq/yer", icon: BarChart3 },
+      { title: "Reyestr", url: "/owner/soliq/yer/reyestr", icon: Building2 },
+      { title: "Arizalar navbati", url: "/owner/soliq/yer/arizalar", icon: Inbox },
+    ],
+  },
+  {
     key: "murojaat",
     title: "Murojaatlar",
     icon: Inbox,
