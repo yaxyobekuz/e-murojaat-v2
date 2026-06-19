@@ -123,14 +123,15 @@ Each skill is described in detail in its `.claude/skills/<id>/SKILL.md` file.
 Har modul tugaganida belgilanadi (Definition of Done: `.claude/rules/03-modul-qurish.md`).
 
 ### Soliq — ✅ tayyor
-- [x] **Backend**: `Taxpayer`, `TaxAssessment`, `TaxPayment` modellar + `modules/soliq/` (handlers + service + provider + validators + routes) + analytics (summary/timeseries/breakdown)
-- [x] **Seed**: `npm run seed:soliq` — 501 to'lovchi, ~990 hisob-kitob, ~1700 to'lov, ~29% qarzdor (penya bilan), 1 demo "One ID" to'lovchi (STIR `301234567`)
-- [x] **Admin**: Analitika dashboard (5 KPI + 4 grafik + viloyat filtr), To'lovchilar reyestri (filtr+qidiruv), To'lovchi kartochkasi, Soliqlar, Qarzdorlik, to'lov modali
+- [x] **Backend**: `Taxpayer`, `TaxAssessment`, `TaxPayment` modellar (4-darajali hudud: region/district/settlement/mahalla) + `modules/soliq/` (handlers + service + provider + validators + routes) + analytics (summary/timeseries/breakdown/mahalla) + `locations` (drilldown ma'lumotnoma)
+- [x] **Hudud ierarxiyasi**: `helpers/regions.helper.js` — 14 viloyat → tuman → qishloq/shahar → mahalla (552 MFY), `mahallaOverview` (mahalla "kartochkasi")
+- [x] **Seed**: `npm run seed:soliq` — **5001 to'lovchi**, ~10000 hisob-kitob, ~17000 to'lov, ~29% qarzdor (penya bilan), har biri 4-darajali real hududda. Demo "One ID" (STIR `301234567`) — Chamanzor MFY, Qo'rg'ontepa, Asaka, Andijon
+- [x] **Admin**: Analitika dashboard (5 KPI + 4 grafik) + **ierarxik hudud filtri** (viloyat→tuman→qishloq→mahalla kaskad). Mahalla tanlanganda → mahalla "kartochkasi" (KPI + to'lov holati donut + yo'nalish/soliq turi bar + **soliq to'lamaganlar ro'yxati**). To'lovchilar/Soliqlar/Qarzdorlik sahifalari ham hudud bo'yicha filtrlanadi
 - [x] **Client**: "Mening soliqlarim" (KPI + soliqlar + to'lov + tarix), demo to'lovchi bilan
-- [x] **Dashboard**: KPI + tushum dinamikasi + soliq turlari + viloyat kesimi + to'lovchi turlari
-- [x] **Demo oqimi**: login → kartochka → qarzni ko'rish → to'lov (qarzdor→tolandi) ✅ E2E tekshirildi
+- [x] **Demo oqimi**: login → hudud drilldown → mahalla kartochka → qarzdorlar → to'lovchi → to'lov ✅ E2E tekshirildi
+- [x] **Terminologiya**: "tushum" → "yig'ilgan soliq" (UI da "Soliq")
 - [x] **Dizayn**: `rules/02` ga mos (indigo accent, status badge rang xaritasi, skeleton, recharts grafiklar)
-- [x] **Qayta ishlatiladigan**: `shared/components/ui/chart/*` (TrendChart, BreakdownBar, DonutChart, ChartCard), `table/*` (DataTable, EmptyState), `badge/StatusBadge` — keyingi modullar shularni ishlatadi
+- [x] **Qayta ishlatiladigan**: `shared/components/ui/chart/*` (TrendChart, BreakdownBar, DonutChart, ChartCard), `table/*` (DataTable, EmptyState), `badge/StatusBadge`, `data/regions.js` (mahallaLabel) — keyingi modullar shularni ishlatadi
 
 ### Obodonlashtirish — ⬜ navbatda
 ### Yoshlar — ⬜ navbatda

@@ -20,9 +20,11 @@ export const qk = Object.freeze({
     taxpayer: (id) => ["soliq", "taxpayer", id],
     assessments: (params) => ["soliq", "assessments", params],
     debtors: (params) => ["soliq", "debtors", params],
+    locations: (params) => ["soliq", "locations", params],
     summary: (params) => ["soliq", "summary", params],
     timeseries: (params) => ["soliq", "timeseries", params],
     breakdown: (params) => ["soliq", "breakdown", params],
+    mahalla: (params) => ["soliq", "mahalla", params],
   },
   yer: {
     all: () => ["yer"],

@@ -21,9 +21,11 @@ export const ENDPOINTS = Object.freeze({
     assessments: "/soliq/assessments",
     debtors: "/soliq/debtors",
     pay: (id) => `/soliq/assessments/${id}/pay`,
+    locations: "/soliq/locations",
     summary: "/soliq/analytics/summary",
     timeseries: "/soliq/analytics/timeseries",
     breakdown: "/soliq/analytics/breakdown",
+    mahalla: "/soliq/analytics/mahalla",
   },
   yer: {
     properties: "/yer/properties",

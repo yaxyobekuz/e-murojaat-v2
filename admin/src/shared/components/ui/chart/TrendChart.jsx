@@ -10,6 +10,7 @@ import {
 } from "recharts";
 import { formatMoney } from "@/shared/utils/formatMoney";
 
+// 12 oylik dinamika (yig'ilgan soliq/sarf). data: [{ month, value }]
 const TrendChart = ({
   data = [],
   color = "#1E4FD8",

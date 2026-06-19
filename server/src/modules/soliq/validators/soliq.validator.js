@@ -7,13 +7,21 @@ const pageQuery = {
   limit: z.coerce.number().int().min(1).max(500).optional(),
 };
 
+// Hudud filtri (4 daraja) — barcha ro'yxat va analitika so'rovlarida bir xil.
+const locationQuery = {
+  region: z.string().optional(),
+  district: z.string().optional(),
+  settlement: z.string().optional(),
+  mahalla: z.string().optional(),
+};
+
 export const idSchema = z.object({
   params: z.object({ id: z.string().min(1) }),
 });
 
 export const listTaxpayersSchema = z.object({
   query: z.object({
-    region: z.string().optional(),
+    ...locationQuery,
     type: z.enum(["jismoniy", "yatt", "yuridik"]).optional(),
     search: z.string().optional(),
     ...pageQuery,
@@ -28,6 +36,8 @@ export const createTaxpayerSchema = z.object({
     fullName: z.string().min(2).max(120),
     region: z.string().min(1),
     district: z.string().optional(),
+    settlement: z.string().optional(),
+    mahalla: z.string().optional(),
     address: z.string().optional(),
     phone: z.string().optional(),
   }),
@@ -40,6 +50,8 @@ export const updateTaxpayerSchema = z.object({
       fullName: z.string().min(2).max(120).optional(),
       region: z.string().min(1).optional(),
       district: z.string().optional(),
+      settlement: z.string().optional(),
+      mahalla: z.string().optional(),
       address: z.string().optional(),
       phone: z.string().optional(),
       status: z.enum(["aktiv", "nofaol"]).optional(),
@@ -49,7 +61,7 @@ export const updateTaxpayerSchema = z.object({
 
 export const listAssessmentsSchema = z.object({
   query: z.object({
-    region: z.string().optional(),
+    ...locationQuery,
     taxType: z.enum(TAX_TYPES).optional(),
     status: z.enum(ASSESSMENT_STATUSES).optional(),
     year: z.coerce.number().int().optional(),
@@ -58,7 +70,7 @@ export const listAssessmentsSchema = z.object({
 });
 
 export const listDebtorsSchema = z.object({
-  query: z.object({ region: z.string().optional(), ...pageQuery }),
+  query: z.object({ ...locationQuery, ...pageQuery }),
 });
 
 export const paySchema = z.object({
@@ -71,8 +83,12 @@ export const paySchema = z.object({
 
 export const analyticsSchema = z.object({
   query: z.object({
-    region: z.string().optional(),
+    ...locationQuery,
     months: z.coerce.number().int().min(1).max(36).optional(),
-    by: z.enum(["region", "type", "taxType", "method"]).optional(),
+    by: z.enum(["region", "type", "taxType", "method", "status"]).optional(),
   }),
+});
+
+export const mahallaOverviewSchema = z.object({
+  query: z.object({ mahalla: z.string().min(1) }),
 });

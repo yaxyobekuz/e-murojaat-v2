@@ -19,6 +19,15 @@ export const REGIONS = [
 export const regionLabel = (key) =>
   REGIONS.find((r) => r.key === key)?.label || key || "—";
 
+// Mahalla key (`settlement__nom_1`) dan label ("Nom MFY"). Backend label bermaganda ishlatiladi.
+export const mahallaLabel = (key) => {
+  if (!key) return "—";
+  const tail = key.split("__").pop() || key; // "chamanzor_1"
+  const name = tail.replace(/_\d+$/, "").replace(/_/g, " "); // "chamanzor"
+  const cap = name.charAt(0).toUpperCase() + name.slice(1);
+  return `${cap} MFY`;
+};
+
 // SelectField uchun options ("Barchasi" bilan).
 export const regionOptions = [
   { label: "Barcha viloyatlar", value: "" },

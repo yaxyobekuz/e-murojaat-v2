@@ -12,8 +12,10 @@ const taxpayerSchema = new mongoose.Schema(
       default: "jismoniy",
     },
     fullName: { type: String, trim: true, required: true }, // ism yoki tashkilot nomi
-    region: { type: String, required: true, index: true },
-    district: { type: String, trim: true, default: "" },
+    region: { type: String, required: true, index: true }, // viloyat key
+    district: { type: String, trim: true, default: "", index: true }, // tuman key
+    settlement: { type: String, trim: true, default: "", index: true }, // qishloq/shahar key
+    mahalla: { type: String, trim: true, default: "", index: true }, // mahalla (MFY) key
     address: { type: String, trim: true, default: "" },
     phone: { type: String, trim: true, default: "" },
     isDemo: { type: Boolean, default: false }, // "One ID" demo fuqaro
@@ -23,6 +25,7 @@ const taxpayerSchema = new mongoose.Schema(
 );
 
 taxpayerSchema.index({ region: 1, type: 1 });
+taxpayerSchema.index({ mahalla: 1, status: 1 });
 
 taxpayerSchema.set("toJSON", {
   transform: (_doc, ret) => {

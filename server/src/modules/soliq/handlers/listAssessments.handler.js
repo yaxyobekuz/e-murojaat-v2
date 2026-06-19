@@ -6,6 +6,9 @@ const listAssessments = asyncHandler(async (req, res) => {
   const { page, limit } = parsePagination(req.query);
   const { items, total } = await soliqService.listAssessments({
     region: req.query.region,
+    district: req.query.district,
+    settlement: req.query.settlement,
+    mahalla: req.query.mahalla,
     taxType: req.query.taxType,
     status: req.query.status,
     year: req.query.year,

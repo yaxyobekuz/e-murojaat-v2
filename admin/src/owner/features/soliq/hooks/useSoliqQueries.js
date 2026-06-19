@@ -50,3 +50,17 @@ export const useBreakdownQuery = (params) =>
     queryKey: qk.soliq.breakdown(params),
     queryFn: () => soliqAPI.breakdown(params).then(unwrap),
   });
+
+// Hudud darajasi (region/district/settlement) bo'yicha keyingi darajani oladi.
+export const useLocationsQuery = (params) =>
+  useQuery({
+    queryKey: qk.soliq.locations(params),
+    queryFn: () => soliqAPI.locations(params).then(unwrap),
+  });
+
+export const useMahallaOverviewQuery = (mahalla) =>
+  useQuery({
+    queryKey: qk.soliq.mahalla({ mahalla }),
+    queryFn: () => soliqAPI.mahalla({ mahalla }).then(unwrap),
+    enabled: !!mahalla,
+  });
