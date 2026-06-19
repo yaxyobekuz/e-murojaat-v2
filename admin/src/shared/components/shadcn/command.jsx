@@ -43,7 +43,7 @@ const CommandList = React.forwardRef(
       [ref],
     );
 
-    // cmdk's internal sizer swallows the wheel event — forward it manually
+    // cmdk's internal sizer swallows the wheel event - forward it manually
     const handleWheel = (e) => {
       onWheel?.(e);
       if (!innerRef.current || e.defaultPrevented) return;
