@@ -13,7 +13,8 @@
     "seed:yer": "node src/seeds/yer.seed.js",
     "seed:gaz": "node src/seeds/gaz.seed.js",
     "seed:murojaat": "node src/seeds/murojaat.seed.js",
-    "seed:svet": "node src/seeds/svet.seed.js"
+    "seed:svet": "node src/seeds/svet.seed.js",
+    "seed:andijon": "node src/seeds/andijon.seed.js"
   },
   "dependencies": {
     "agenda": "^5.0.0",
