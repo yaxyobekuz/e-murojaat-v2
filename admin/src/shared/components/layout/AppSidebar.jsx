@@ -151,7 +151,8 @@ const Main = () => {
             {current.title}
           </SidebarGroupLabel>
 
-          <SidebarMenu>
+          {/* Ichma-ich ko'rinish: chap chiziq + indent (icon mode'da olib tashlanadi) */}
+          <SidebarMenu className="ml-3.5 gap-px border-l border-sidebar-border px-2.5 group-data-[collapsible=icon]:ml-0 group-data-[collapsible=icon]:border-0 group-data-[collapsible=icon]:px-0">
             {current.items.map((subItem) => (
               <SidebarMenuItem key={subItem.title}>
                 <SidebarMenuButton

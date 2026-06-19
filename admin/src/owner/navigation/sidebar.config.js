@@ -25,7 +25,7 @@ const ownerSidebar = [
       { title: "Bosh sahifa", url: "/owner/soliq", icon: Home },
       { title: "Gaz", url: "/owner/soliq/gaz", icon: Flame },
       { title: "Suv", url: "/owner/soliq/suv", icon: Droplet },
-      { title: "Svet", url: "/owner/soliq/svet", icon: Zap },
+      { title: "Elektr", url: "/owner/soliq/elektr", icon: Zap },
       { title: "Yer", url: "/owner/soliq/yer", icon: LandPlot },
     ],
   },
