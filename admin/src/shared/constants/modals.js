@@ -7,4 +7,10 @@ export const MODAL = Object.freeze({
 
   SOLIQ_TAXPAYER_CREATE: "soliq:taxpayerCreate",
   SOLIQ_PAY: "soliq:pay",
+
+  YER_REQUEST_STATUS: "yer:requestStatus",
+  GAZ_REQUEST_STATUS: "gaz:requestStatus",
+  SVET_REQUEST_STATUS: "svet:requestStatus",
+  MUROJAAT_APPEAL_ACTION: "murojaat:appealAction",
+  MUROJAAT_ORG_CREATE: "murojaat:orgCreate",
 });
