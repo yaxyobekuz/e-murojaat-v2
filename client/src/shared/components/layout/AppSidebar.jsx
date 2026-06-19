@@ -100,23 +100,25 @@ const Header = () => {
   );
 };
 
+// Recursively keep only nodes the user may see: a leaf survives if it has no
+// permission or the user holds it; a branch survives if any descendant survives.
+const filterByPermission = (nodes, has) =>
+  nodes
+    .map((node) => {
+      if (node.items?.length) {
+        const items = filterByPermission(node.items, has);
+        return items.length ? { ...node, items } : null;
+      }
+      return !node.permission || has(node.permission) ? node : null;
+    })
+    .filter(Boolean);
+
 const Main = () => {
-  const isMobile = useIsMobile();
-  const { toggleSidebar } = useSidebar();
   const { role } = useAuth();
   const { has } = usePermissions();
 
   const navItems = ROLE_SIDEBAR[role] || [];
-
-  // Filter sub-items by permission
-  const filtered = navItems
-    .map((item) => ({
-      ...item,
-      items: (item.items || []).filter(
-        (sub) => !sub.permission || has(sub.permission),
-      ),
-    }))
-    .filter((item) => item.items.length > 0);
+  const filtered = filterByPermission(navItems, has);
 
   return (
     <SidebarContent>
@@ -149,16 +151,7 @@ const Main = () => {
                 <CollapsibleContent>
                   <SidebarMenuSub>
                     {item.items.map((subItem) => (
-                      <SidebarMenuSubItem key={subItem.title}>
-                        <SidebarMenuSubButton className="h-auto py-2" asChild>
-                          <Link
-                            to={subItem.url}
-                            onClick={isMobile ? toggleSidebar : undefined}
-                          >
-                            {subItem.title}
-                          </Link>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
+                      <NavSubTree key={subItem.title} node={subItem} />
                     ))}
                   </SidebarMenuSub>
                 </CollapsibleContent>
@@ -168,6 +161,56 @@ const Main = () => {
         </SidebarMenu>
       </SidebarGroup>
     </SidebarContent>
+  );
+};
+
+// Renders one node at depth >= 1. A node WITH `items` is a collapsible branch
+// that nests another SidebarMenuSub; a node WITHOUT `items` is a link leaf.
+const NavSubTree = ({ node }) => {
+  const isMobile = useIsMobile();
+  const { toggleSidebar } = useSidebar();
+
+  if (node.items?.length) {
+    return (
+      <Collapsible
+        asChild
+        defaultOpen={node.isActive}
+        className="group/subcollapsible"
+      >
+        <SidebarMenuSubItem>
+          <CollapsibleTrigger asChild>
+            <SidebarMenuSubButton className="h-auto py-2">
+              {node.icon && <node.icon strokeWidth={1.5} />}
+              <span>{node.title}</span>
+              <ChevronRight
+                size={16}
+                strokeWidth={1.5}
+                className="!size-4 ml-auto transition-transform duration-200 group-data-[state=open]/subcollapsible:rotate-90"
+              />
+            </SidebarMenuSubButton>
+          </CollapsibleTrigger>
+
+          <CollapsibleContent>
+            <SidebarMenuSub>
+              {node.items.map((child) => (
+                <NavSubTree key={child.title} node={child} />
+              ))}
+            </SidebarMenuSub>
+          </CollapsibleContent>
+        </SidebarMenuSubItem>
+      </Collapsible>
+    );
+  }
+
+  return (
+    <SidebarMenuSubItem>
+      <SidebarMenuSubButton className="h-auto py-2" asChild>
+        <Link to={node.url} onClick={isMobile ? toggleSidebar : undefined}>
+          {node.icon && <node.icon strokeWidth={1.5} />}
+          <span>{node.title}</span>
+        </Link>
+      </SidebarMenuSubButton>
+    </SidebarMenuSubItem>
   );
 };
 

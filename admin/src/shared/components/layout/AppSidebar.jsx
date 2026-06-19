@@ -22,12 +22,9 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarContent,
-  SidebarMenuSub,
   SidebarMenuItem,
   SidebarGroupLabel,
   SidebarMenuButton,
-  SidebarMenuSubItem,
-  SidebarMenuSubButton,
 } from "@/shared/components/shadcn/sidebar";
 
 // Dropdown Menu
@@ -129,7 +126,9 @@ const Main = () => {
 
   const current = modules.find((m) => m.key === openKey);
 
-  // Modul ichida — drill-in ko'rinishi
+  // Modul ichida — drill-in ko'rinishi.
+  // Ichki bo'limlar SidebarMenu (sub emas) bilan chiziladi — shunda icon
+  // mode'da har bir bo'lim o'z ikonkasi + tooltip bilan ko'rinadi.
   if (current) {
     return (
       <SidebarContent>
@@ -137,6 +136,7 @@ const Main = () => {
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton
+                tooltip="Orqaga"
                 onClick={() => setOpenKey(null)}
                 className="h-auto py-2.5 text-muted-foreground"
               >
@@ -151,24 +151,26 @@ const Main = () => {
             {current.title}
           </SidebarGroupLabel>
 
-          <SidebarMenuSub>
+          <SidebarMenu>
             {current.items.map((subItem) => (
-              <SidebarMenuSubItem key={subItem.title}>
-                <SidebarMenuSubButton
-                  className="h-auto py-2"
+              <SidebarMenuItem key={subItem.title}>
+                <SidebarMenuButton
                   asChild
+                  tooltip={subItem.title}
+                  className="h-auto py-2"
                   isActive={pathname === subItem.url}
                 >
                   <Link
                     to={subItem.url}
                     onClick={isMobile ? toggleSidebar : undefined}
                   >
-                    {subItem.title}
+                    {subItem.icon && <subItem.icon strokeWidth={1.5} />}
+                    <span>{subItem.title}</span>
                   </Link>
-                </SidebarMenuSubButton>
-              </SidebarMenuSubItem>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             ))}
-          </SidebarMenuSub>
+          </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
     );
@@ -192,7 +194,7 @@ const Main = () => {
                 <ChevronRight
                   size={20}
                   strokeWidth={1.5}
-                  className="!size-5 ml-auto"
+                  className="!size-5 ml-auto group-data-[collapsible=icon]:hidden"
                 />
               </SidebarMenuButton>
             </SidebarMenuItem>
