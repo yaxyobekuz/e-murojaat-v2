@@ -20,7 +20,11 @@ app.set("trust proxy", 1);
 app.use(helmet());
 app.use(
   cors({
-    origin: env.CLIENT_URL,
+    origin(origin, callback) {
+      // allow non-browser requests (no origin) and whitelisted origins
+      if (!origin || env.CLIENT_URL.includes(origin)) return callback(null, true);
+      callback(new Error("CORS ruxsat etilmagan"));
+    },
     credentials: true,
   }),
 );
