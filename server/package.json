@@ -9,7 +9,11 @@
     "lint": "eslint .",
     "seed:permissions": "node src/seeds/permissions.seed.js",
     "seed:owner": "node src/seeds/owner.seed.js",
-    "seed:soliq": "node src/seeds/soliq.seed.js"
+    "seed:soliq": "node src/seeds/soliq.seed.js",
+    "seed:yer": "node src/seeds/yer.seed.js",
+    "seed:gaz": "node src/seeds/gaz.seed.js",
+    "seed:murojaat": "node src/seeds/murojaat.seed.js",
+    "seed:svet": "node src/seeds/svet.seed.js"
   },
   "dependencies": {
     "agenda": "^5.0.0",
