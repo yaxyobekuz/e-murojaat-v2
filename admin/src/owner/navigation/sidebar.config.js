@@ -7,6 +7,9 @@ import {
   BarChart3,
   ReceiptText,
   AlertTriangle,
+  GraduationCap,
+  Shield,
+  FlameKindling,
 } from "lucide-react";
 
 const ownerSidebar = [
@@ -15,6 +18,24 @@ const ownerSidebar = [
     title: "Boshqaruv paneli",
     icon: LayoutDashboard,
     items: [{ title: "Bosh sahifa", url: "/owner/dashboard", icon: Home }],
+  },
+  {
+    key: "talim",
+    title: "Ta'lim",
+    icon: GraduationCap,
+    items: [{ title: "Bosh sahifa", url: "/owner/talim", icon: Home }],
+  },
+  {
+    key: "iib",
+    title: "IIB",
+    icon: Shield,
+    items: [{ title: "Bosh sahifa", url: "/owner/iib", icon: Home }],
+  },
+  {
+    key: "fvv",
+    title: "FVV",
+    icon: FlameKindling,
+    items: [{ title: "Bosh sahifa", url: "/owner/fvv", icon: Home }],
   },
   {
     key: "soliq",
