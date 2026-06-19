@@ -14,4 +14,9 @@ export const qk = Object.freeze({
     one: (id) => ["activityLogs", "detail", id],
     stats: (params) => ["activityLogs", "stats", params],
   },
+  soliq: {
+    all: () => ["soliq"],
+    taxpayers: (params) => ["soliq", "taxpayers", params],
+    taxpayer: (id) => ["soliq", "taxpayer", id],
+  },
 });

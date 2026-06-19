@@ -67,3 +67,20 @@ Each skill is described in detail in its `.claude/skills/<id>/SKILL.md` file.
 2. `cd client && cp .env.example .env && npm install && npm run dev` — frontend on port 5173.
 3. Default owner login (from `seed:owner`): `owner` / `owner123`.
 4. Log in on the frontend → automatically redirected to `/owner/dashboard`.
+
+## Modullar progress (Shukurillo)
+
+Har modul tugaganida belgilanadi (Definition of Done: `.claude/rules/03-modul-qurish.md`).
+
+### Soliq — ✅ tayyor
+- [x] **Backend**: `Taxpayer`, `TaxAssessment`, `TaxPayment` modellar + `modules/soliq/` (handlers + service + provider + validators + routes) + analytics (summary/timeseries/breakdown)
+- [x] **Seed**: `npm run seed:soliq` — 501 to'lovchi, ~990 hisob-kitob, ~1700 to'lov, ~29% qarzdor (penya bilan), 1 demo "One ID" to'lovchi (STIR `301234567`)
+- [x] **Admin**: Analitika dashboard (5 KPI + 4 grafik + viloyat filtr), To'lovchilar reyestri (filtr+qidiruv), To'lovchi kartochkasi, Soliqlar, Qarzdorlik, to'lov modali
+- [x] **Client**: "Mening soliqlarim" (KPI + soliqlar + to'lov + tarix), demo to'lovchi bilan
+- [x] **Dashboard**: KPI + tushum dinamikasi + soliq turlari + viloyat kesimi + to'lovchi turlari
+- [x] **Demo oqimi**: login → kartochka → qarzni ko'rish → to'lov (qarzdor→tolandi) ✅ E2E tekshirildi
+- [x] **Dizayn**: `rules/02` ga mos (indigo accent, status badge rang xaritasi, skeleton, recharts grafiklar)
+- [x] **Qayta ishlatiladigan**: `shared/components/ui/chart/*` (TrendChart, BreakdownBar, DonutChart, ChartCard), `table/*` (DataTable, EmptyState), `badge/StatusBadge` — keyingi modullar shularni ishlatadi
+
+### Obodonlashtirish — ⬜ navbatda
+### Yoshlar — ⬜ navbatda

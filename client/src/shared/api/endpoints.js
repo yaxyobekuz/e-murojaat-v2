@@ -15,4 +15,9 @@ export const ENDPOINTS = Object.freeze({
     byId: (id) => `/activity-logs/${id}`,
     stats: "/activity-logs/stats",
   },
+  soliq: {
+    taxpayers: "/soliq/taxpayers",
+    taxpayerById: (id) => `/soliq/taxpayers/${id}`,
+    pay: (id) => `/soliq/assessments/${id}/pay`,
+  },
 });

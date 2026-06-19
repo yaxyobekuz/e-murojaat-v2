@@ -1,4 +1,4 @@
-import { LayoutDashboard } from "lucide-react";
+import { LayoutDashboard, Landmark } from "lucide-react";
 
 // Sidebar konfiguratsiyasi: ichma-ich (nested) tuzilma.
 // - Top daraja: `icon` + `items` bilan guruh.
@@ -18,6 +18,17 @@ const ownerSidebar = [
         title: "Bosh sahifa",
         icon: LayoutDashboard,
         url: "/owner/dashboard",
+      },
+    ],
+  },
+  {
+    title: "Soliq",
+    icon: Landmark,
+    items: [
+      {
+        title: "Mening soliqlarim",
+        icon: Landmark,
+        url: "/owner/soliq",
       },
     ],
   },

@@ -8,7 +8,8 @@
     "start": "node src/index.js",
     "lint": "eslint .",
     "seed:permissions": "node src/seeds/permissions.seed.js",
-    "seed:owner": "node src/seeds/owner.seed.js"
+    "seed:owner": "node src/seeds/owner.seed.js",
+    "seed:soliq": "node src/seeds/soliq.seed.js"
   },
   "dependencies": {
     "agenda": "^5.0.0",

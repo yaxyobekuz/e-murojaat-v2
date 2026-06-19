@@ -3,11 +3,10 @@ import {
   Landmark,
   Trees,
   Users,
-  Flame,
-  Droplet,
-  Zap,
-  LandPlot,
   Home,
+  BarChart3,
+  ReceiptText,
+  AlertTriangle,
 } from "lucide-react";
 
 const ownerSidebar = [
@@ -22,11 +21,10 @@ const ownerSidebar = [
     title: "Soliq",
     icon: Landmark,
     items: [
-      { title: "Bosh sahifa", url: "/owner/soliq", icon: Home },
-      { title: "Gaz", url: "/owner/soliq/gaz", icon: Flame },
-      { title: "Suv", url: "/owner/soliq/suv", icon: Droplet },
-      { title: "Elektr", url: "/owner/soliq/elektr", icon: Zap },
-      { title: "Yer", url: "/owner/soliq/yer", icon: LandPlot },
+      { title: "Analitika", url: "/owner/soliq", icon: BarChart3 },
+      { title: "Soliq to'lovchilar", url: "/owner/soliq/taxpayers", icon: Users },
+      { title: "Soliqlar", url: "/owner/soliq/assessments", icon: ReceiptText },
+      { title: "Qarzdorlik", url: "/owner/soliq/debtors", icon: AlertTriangle },
     ],
   },
   {
