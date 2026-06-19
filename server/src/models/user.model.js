@@ -15,6 +15,9 @@ const userSchema = new mongoose.Schema(
     birthDate: { type: Date, default: null },
     gender: { type: String, enum: ["male", "female"], default: null },
     address: { type: String, trim: true, default: "" },
+
+    // JSHSHIR (PINFL) links the account to citizen domain data (demo One ID).
+    jshshir: { type: String, trim: true, default: null },
   },
   { timestamps: true },
 );
