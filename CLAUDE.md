@@ -61,12 +61,62 @@ template/
 
 Each skill is described in detail in its `.claude/skills/<id>/SKILL.md` file.
 
+## Modullar holati (progress)
+
+| Modul | Backend | Seed | Admin | Client | Dashboard | Holat |
+|---|---|---|---|---|---|---|
+| **Soliq** | ✅ | ✅ | ✅ | ✅ | ✅ | **Tayyor** |
+| **Yer / Mol-mulk** | ✅ | ✅ | ✅ | ✅ | ✅ | **Tayyor** |
+| **Gaz** | ✅ | ✅ | ✅ | ✅ | ✅ | **Tayyor** |
+| **Svet (Elektr)** | ✅ | ✅ | ✅ | ✅ | ✅ | **Tayyor** |
+| **Murojaat** | ✅ | ✅ | ✅ | ✅ | ✅ | **Tayyor** |
+
+### Yer moduli — Definition of Done
+- [x] **Backend:** `models/` (Property, PropertyOwner, PropertyRequest) + `modules/yer/` (handlers + service + kadastr mock provider + validators + routes) + analytics endpointlar (`summary`/`timeseries`/`breakdown`)
+- [x] **Seed:** `seed:yer` — 400 obyekt, 250 ariza (12 oy tarix, timeline eventlar), demo "One ID" fuqaro (owner user JSHSHIR bilan bog'landi)
+- [x] **Client panel:** Mening mulklarim, Mulk tafsiloti, Reyestrdan ko'chirma, Yangi ariza, Arizalarim (timeline)
+- [x] **Admin panel:** Reyestr (jadval+filtr), Arizalar navbati, Ariza ustida ish (status modal + timeline)
+- [x] **Analitika dashboardi:** KPI kartalar + 5 grafik (trend/donut/bar) + filtr paneli
+- [x] **Demo oqimi:** fuqaro ariza → admin status (yangi→tolov→bajarildi) → timeline; terminal guard (409); reyestr lookup — API orqali tekshirildi
+- [x] **Dizayn:** `rules/02` (emerald accent, status badge xaritasi, KPI+grafik tartibi)
+
+### Gaz moduli — Definition of Done
+- [x] **Backend:** `models/` (GasSubscriber — meterId ref, GasMeter, GasUsage — kunlik, GasPayment, GasRequest — events[], GasTariff) + `modules/gaz/` (handlers + service + HG billing mock provider + validators + routes) + analytics endpointlar (`summary`/`timeseries` (usage+revenue+charged)/`breakdown?by=region|type|status|serviceType|method|meterType`). Permission: `gaz.read`/`gaz.manage`
+- [x] **Seed:** `seed:gaz` — 401 abonent + hisoblagich, 146k kunlik sarf (qishda cho'qqi: yanv ×1.6 vs iyul ×0.3 mavsumiylik), 1504 to'lov, 153 ariza, ~25% qarzdorlik, demo "One ID" abonent (9000000007, qarz 420k)
+- [x] **Client panel:** Mening hisobim (balans/qarz + hisoblagich + tarif), Sarf monitoringi (12 oy grafik), To'lov qilish (mock — qarzni yopadi), To'lovlar tarixi, Xizmatga ariza, Arizalarim (timeline), Abonentni tekshirish
+- [x] **Admin panel:** Abonentlar reyestri (jadval+filtr), Abonent kartochkasi (sarf grafigi+to'lovlar+hisoblagich), Arizalar navbati, Ariza ustida ish (status modal + timeline), To'lovlar, Qarzdorlik
+- [x] **Analitika dashboardi:** 4 KPI (abonent/oylik sarf m³/oylik tushum/umumiy qarz) + 6 grafik (sarf trend / tushum vs hisoblangan combo / viloyat bar / abonent turi donut / to'lov usuli donut / hisoblagich turi donut) + filtr paneli (viloyat/sana)
+- [x] **Demo oqimi:** fuqaro ariza → admin status (yangi→ko'rib→yo'naltirildi→bajarildi) → terminal guard (409) → mock to'lov qarzni yopdi (420k→0, status faol) — API orqali tekshirildi
+- [x] **Dizayn:** `rules/02` (ko'k accent #1E4FD8, status badge xaritasi, KPI+grafik tartibi)
+
+### Murojaat moduli — Definition of Done
+- [x] **Backend:** `models/` (Appeal — events[]+replies[] embedded, Organization) + `modules/murojaat/` (handlers + service + SMS mock provider + validators + routes) + analytics endpointlar (`summary`/`timeseries`/`breakdown` — region/type/category/status/result/organization kesimi). Permission: `murojaat.read`/`murojaat.manage`
+- [x] **Seed:** `seed:murojaat` — 600+ murojaat (12 oy tarix, timeline eventlar), 10 tashkilot, ~61% qanoatlantirildi, muddati o'tganlar (qizil), demo "One ID" fuqaro (4 murojaat)
+- [x] **Client panel:** Yangi murojaat, Mening murojaatlarim (timeline+javob), Holatni tekshirish (raqam orqali), Savol-javob (FAQ)
+- [x] **Admin panel:** Murojaatlar navbati (filtr: tur/soha/holat/viloyat/muddat + qidiruv, overdue=qizil), Murojaat ustida ish (status/yo'naltirish/javob/natija + timeline), Tashkilotlar boshqaruvi
+- [x] **Analitika dashboardi:** 6 KPI (jami/yangi/jarayonda/qanoatlantirish %/muddati o'tgan/o'rtacha javob) + 7 grafik (trend/donut/bar + tashkilotlar reytingi) + filtr paneli
+- [x] **Demo oqimi:** fuqaro murojaat → admin yo'naltirish → javob (avto "javob_berildi") → yopish (natija majburiy) → terminal guard (409) → raqam orqali kuzatish — service orqali tekshirildi
+- [x] **Dizayn:** `rules/02` (violet accent, status badge xaritasi, KPI+grafik tartibi)
+
+### Svet (Elektr) moduli — Definition of Done
+- [x] **Backend:** `models/` (ElectricSubscriber — meter embedded, ElectricUsage — within/over-norm split, ElectricPayment, ElectricRequest — events[], ElectricViolation — e-dalolatnoma, ElectricTariff) + `modules/svet/` (handlers + service + HET billing mock provider + validators + routes) + analytics endpointlar (`summary`/`timeseries?metric=usage|norm|revenue`/`breakdown?by=region|type|method|violationType|status`). Permission: `svet.read`/`svet.manage`
+- [x] **Seed:** `seed:svet` — 401 abonent, 4812 oylik sarf (yozda cho'qqi: iyun 506k vs aprel 284k kVt·soat), 1410 to'lov, 153 ariza, 80 e-dalolatnoma, ~25% qarzdorlik, demo "One ID" abonent (40000001, qarz 180k)
+- [x] **Client panel:** Mening hisobim (balans/qarz + ijtimoiy norma progress indikatori + hisoblagich), Sarf monitoringi (12 oy grafik + tarif kalkulyatori), To'lov qilish (mock + tarix), Yangi ariza, Arizalarim (timeline)
+- [x] **Admin panel:** Abonentlar reyestri (jadval+filtr), Abonent kartochkasi (sarf grafigi+to'lovlar+hisoblagich), Arizalar navbati, Ariza ustida ish (status modal + timeline), E-dalolatnoma (qoidabuzarliklar)
+- [x] **Analitika dashboardi:** 4 KPI + 7 grafik (sarf trend / norma ichida vs tashqari stacked / tushum combo / viloyat bar / abonent turi donut / to'lov usuli donut / qoidabuzarlik bar) + filtr paneli
+- [x] **Demo oqimi:** fuqaro ariza → admin status (yangi→ko'rib→tolov+invoys→bajarildi, 4 event) → terminal guard (409) → mock to'lov qarzni yopdi (180k→0, qoldiq balansga) — API orqali tekshirildi
+- [x] **Dizayn:** `rules/02` (amber accent, status badge xaritasi, KPI+grafik tartibi). Yangi shared chartlar: `StackedBar`, `ComboChart`
+
 ## Initial workflow
 
-1. `cd server && cp .env.example .env && npm install && npm run seed:permissions && npm run seed:owner && npm run dev` — backend on port 5000.
+1. `cd server && cp .env.example .env && npm install && npm run seed:permissions && npm run seed:owner && npm run seed:yer && npm run dev` — backend.
 2. `cd client && cp .env.example .env && npm install && npm run dev` — frontend on port 5173.
-3. Default owner login (from `seed:owner`): `owner` / `owner123`.
-4. Log in on the frontend → automatically redirected to `/owner/dashboard`.
+3. Default owner login (from `seed:owner`): `owner` / `owner123`. `seed:yer` links a demo JSHSHIR to this user (acts as the citizen in the client app).
+4. Log in on the frontend → automatically redirected to `/owner/dashboard`. Yer moduli: client `/owner/yer/*`, admin `/owner/soliq/yer`.
+5. Murojaat moduli: `npm run seed:murojaat` (server). Client `/owner/murojaat/*` (yangi/mening/holat/faq), admin `/owner/murojaat/*` (analitika/inbox/tashkilotlar). Public kuzatuv: `GET /api/murojaat/track?appealNumber=...`.
+6. Svet (Elektr) moduli: `npm run seed:svet` (server, `seed:owner` dan keyin). Client `/owner/elektr/*` (hisobim/sarf/tolov/ariza/arizalarim), admin `/owner/soliq/elektr/*` (analitika/abonentlar/arizalar/qoidabuzarliklar). Demo abonent JSHSHIR owner user bilan bog'lanadi.
+7. Gaz moduli: `npm run seed:gaz` (server, `seed:owner` dan keyin). Client `/owner/gaz/*` (hisobim/sarf/tolov/tolovlar/ariza/arizalarim/tekshirish), admin `/owner/soliq/gaz/*` (analitika/abonentlar/arizalar/tolovlar/qarzdorlar). Demo abonent (9000000007) JSHSHIR owner user bilan bog'lanadi.
+8. Soliq moduli: `npm run seed:soliq` (server). Client `/owner/soliq` ("Mening soliqlarim"), admin `/owner/soliq/*` (analitika/taxpayers/assessments/debtors). Demo to'lovchi STIR `301234567`.
 
 ## Modullar progress (Shukurillo)
 
