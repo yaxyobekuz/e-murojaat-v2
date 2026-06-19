@@ -12,6 +12,14 @@ const http = axios.create({
 http.interceptors.request.use((config) => {
   const token = localStorage.getItem("authToken");
   if (token) config.headers.Authorization = `Bearer ${token}`;
+  // Drop empty query params so optional (enum) filters don't fail backend validation
+  if (config.params && typeof config.params === "object") {
+    config.params = Object.fromEntries(
+      Object.entries(config.params).filter(
+        ([, v]) => v !== "" && v !== null && v !== undefined,
+      ),
+    );
+  }
   return config;
 });
 
