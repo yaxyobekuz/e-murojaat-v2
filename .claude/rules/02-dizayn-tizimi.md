@@ -18,6 +18,9 @@
   - Gaz → blue (ko'k)
   - Svet → amber (sariq)
   - Murojaat → violet (binafsha)
+  - Soliq → indigo (ko'k-siyohrang)
+  - Obodonlashtirish → teal (havorang-yashil)
+  - Yoshlar → orange (to'q sariq)
 - Light mode default; dark mode ixtiyoriy (vaqt qolsa).
 
 ## Tipografika

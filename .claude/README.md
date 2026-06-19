@@ -17,8 +17,12 @@ qoida, skill va buyruqlarni oladi.
 │   ├── 01-tz-yer-mol-mulk.md          ← TZ: Yer/Mol-mulk
 │   ├── 02-tz-gaz.md                   ← TZ: Gaz
 │   ├── 03-tz-svet.md                  ← TZ: Svet (Elektr)
-│   ├── 04-tz-murojaat.md              ← TZ: Murojaat/Ariza (BIRINCHI quring)
-│   └── 05-arxitektura-va-analitika.md ← umumiy patternlar (haqiqiy stackka mos)
+│   ├── 04-tz-murojaat.md              ← TZ: Murojaat/Ariza (Yaxyobek BIRINCHI quradi)
+│   ├── 05-arxitektura-va-analitika.md ← umumiy patternlar (haqiqiy stackka mos)
+│   ├── 06-tz-soliq.md                 ← TZ: Soliq (Shukurillo — BIRINCHI quradi)
+│   ├── 07-tz-obodonlashtirish.md      ← TZ: Obodonlashtirish (tashabbusli byudjet)
+│   ├── 08-tz-yoshlar.md               ← TZ: Yoshlar ishlari (Yoshlar balansi)
+│   └── 09-shukurillo-modullari.md     ← Shukurilloga boshlash qo'llanmasi (shu yerdan boshlang)
 ├── rules/                        # Qat'iy qoidalar (har doim amal qilinadi)
 │   ├── 01-kod-standartlari.md
 │   ├── 02-dizayn-tizimi.md
@@ -46,12 +50,30 @@ qoida, skill va buyruqlarni oladi.
 - **Tekshirish:** `/tekshir svet`
 - **Push:** `/push` (uch repo: client, server, admin)
 
+## Jamoa taqsimoti (kim qaysi modul)
+Bu platforma — bitta katta tizim, fullstack jamoa bo'lib quradi. Har kim o'z modullarini
+quradi, lekin **umumiy `shared/`, dizayn tizimi va analitika patterni bitta**:
+
+| Dasturchi | Modullari | TZ fayllari |
+|---|---|---|
+| **Abdukarimov** | Ta'lim, IIB, FVV | (alohida) |
+| **Shukurillo** | Soliq, Obodonlashtirish, Yoshlar | `docs/06`, `07`, `08` |
+| **Yaxyobek** | Yer/Mol-mulk, Gaz, Svet, Murojaat | `docs/01`, `02`, `03`, `04` |
+
 ## Tavsiya etilgan qurish tartibi
-1. `murojaat` (umumiy skelet shu yerda tug'iladi)
+
+**Yaxyobek (umumiy skelet shu jamoada tug'iladi):**
+1. `murojaat` (workflow/timeline/analitika skeleti)
 2. `gaz` → `svet` (svet — gazning nusxasi)
 3. `yer` (eng murakkab, oxirida)
 
-> Sabablari: `.claude/docs/00-davlat-tizimi-asoslari.md` → "Demo strategiyasi".
+**Shukurillo:**
+1. `soliq` (eng analitik/pulli — KPI va grafik patternlari shu yerda)
+2. `obodonlashtirish` (loyiha + byudjet + ovoz berish)
+3. `yoshlar` (registr + monitoring + yashil/sariq/qizil)
+
+> Sabablari va batafsil yo'riqnoma: `docs/00-davlat-tizimi-asoslari.md` ("Demo strategiyasi")
+> va `docs/09-shukurillo-modullari.md` (Shukurilloga maxsus).
 
 ## Eslatma
 Stack yoki konvensiya o'zgarsa — `CLAUDE.md` (va panel CLAUDE.md lari) hamda tegishli

@@ -16,7 +16,7 @@ const OwnerRoutes = () => (
     <Route path="soliq" element={<SoliqPage />} />
     <Route path="soliq/gaz" element={<SoliqGazPage />} />
     <Route path="soliq/suv" element={<SoliqSuvPage />} />
-    <Route path="soliq/elektir" element={<SoliqElektrPage />} />
+    <Route path="soliq/elektr" element={<SoliqElektrPage />} />
     <Route path="soliq/yer" element={<SoliqYerPage />} />
     <Route path="obodonlashtirish" element={<ObodonlashtirishPage />} />
     <Route path="yoshlar" element={<YoshlarPage />} />

@@ -70,6 +70,11 @@ allaqachon scaffold qilingan), analitika komponentlari, seed generatori. Keyingi
 2. **Gaz** → 3. **Svet** — ikkalasi deyarli bir xil (abonent, hisoblagich, to'lov, sarf grafigi). Gazni qurib, Svetga 70% ni ko'chiring.
 3. **Yer/Mol-mulk** — eng murakkab (kadastr, hujjat oqimi), oxiriga.
 
+> **Shukurillo modullari** (alohida tartib, `docs/09-shukurillo-modullari.md`):
+> 1. **Soliq** (eng analitik/pulli — KPI va grafik patternlari shu yerda) →
+> 2. **Obodonlashtirish** (loyiha + byudjet + ovoz berish) →
+> 3. **Yoshlar** (registr + monitoring + yashil/sariq/qizil toifa).
+
 ### Tavsiya 5: Rollar — uchtadan ortig'i demo uchun shart emas
 `Fuqaro`, `Operator`, `Admin` — yetarli. Murakkablashtirmang.
 
