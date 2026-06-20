@@ -24,7 +24,9 @@ const hexToRgba = (hex, a) => {
   return `rgba(${r}, ${g}, ${b}, ${a})`;
 };
 
-// Markaz atrofida doira poligoni (radius metrda) — qurilish maydonini belgilash uchun
+// Markaz atrofida doira poligoni (radius metrda). altitude — yer ustiga ko'tarish
+// (yashil yer-zonasi ustида fizik tepada tursin, render tartibidan qat'i nazar).
+const CIRCLE_ALT = 6;
 const circleRing = (center, radiusM = 130, steps = 40) => {
   const ring = [];
   const latM = radiusM / 111000; // 1° lat ~ 111km
@@ -34,7 +36,7 @@ const circleRing = (center, radiusM = 130, steps = 40) => {
     ring.push({
       lat: center.lat + Math.sin(ang) * latM,
       lng: center.lng + Math.cos(ang) * lngM,
-      altitude: 0,
+      altitude: CIRCLE_ALT,
     });
   }
   return ring;
@@ -49,6 +51,7 @@ const ObodMap3D = ({ showGreen = false, activeId = null, onSelect }) => {
   const libRef = useRef(null);
   const greenPolysRef = useRef([]); // yashil zonalar (showGreen rejimida)
   const greenMarkersRef = useRef([]); // daraxt markerlari
+  const constructionElsRef = useRef([]); // qurilish doira + markerlari (eng tepada turishi kerak)
   const [status, setStatus] = useState("loading"); // loading | ready | fallback
 
   // Boshlang'ich — xarita + qurilish markerlari (har doim ko'rinadi)
@@ -74,12 +77,12 @@ const ObodMap3D = ({ showGreen = false, activeId = null, onSelect }) => {
           // Olov rang qurilish maydoni (doira zona)
           const circle = new Polygon3DElement({
             outerCoordinates: circleRing(p.center, 140),
-            altitudeMode: AltitudeMode.CLAMP_TO_GROUND,
+            altitudeMode: AltitudeMode.RELATIVE_TO_GROUND,
             extruded: false,
-            fillColor: hexToRgba("#f97316", 0.32),
+            fillColor: hexToRgba("#f97316", 0.45),
             strokeColor: "#ea580c",
-            strokeWidth: 3,
-            drawsOccludedSegments: false,
+            strokeWidth: 4,
+            drawsOccludedSegments: true,
           });
           map.append(circle);
 
@@ -96,6 +99,8 @@ const ObodMap3D = ({ showGreen = false, activeId = null, onSelect }) => {
           marker.append(pin);
           marker.addEventListener("gmp-click", () => onSelect?.(p.id));
           map.append(marker);
+          // doira + marker — keyin yashil ustiga qayta ko'tarish uchun saqlaymiz
+          constructionElsRef.current.push(circle, marker);
         });
 
         setStatus("ready");
@@ -155,6 +160,9 @@ const ObodMap3D = ({ showGreen = false, activeId = null, onSelect }) => {
       map.append(marker);
       greenMarkersRef.current.push(marker);
     });
+
+    // Qurilish doira + markerlarini eng tepaga qayta ko'tarish (yashil ostida qolmasin)
+    constructionElsRef.current.forEach((el) => map.append(el));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showGreen, status]);
 

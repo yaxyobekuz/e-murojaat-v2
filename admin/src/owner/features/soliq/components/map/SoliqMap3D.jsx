@@ -29,10 +29,42 @@ const centroid = (path) => ({
   lng: path.reduce((s, p) => s + p.lng, 0) / path.length,
 });
 
+// Markaz atrofida doira poligoni (radius metrda). altitude — yer ustiga ko'tarish,
+// shunda zona ustida fizik tepada turadi (yashil/sariq/qizil poligonlardan ajraladi).
+const CIRCLE_ALT = 6;
+const circleRing = (center, radiusM = 120, steps = 40) => {
+  const ring = [];
+  const latM = radiusM / 111000;
+  const lngM = radiusM / (111000 * Math.cos((center.lat * Math.PI) / 180));
+  for (let i = 0; i < steps; i++) {
+    const ang = (i / steps) * Math.PI * 2;
+    ring.push({
+      lat: center.lat + Math.sin(ang) * latM,
+      lng: center.lng + Math.cos(ang) * lngM,
+      altitude: CIRCLE_ALT,
+    });
+  }
+  return ring;
+};
+
+const MARKER_ALT = 30;
+// Eng katta qarzli hududlar — ogohlantirish marki shularga qo'yiladi (top 5, qarzi bor)
+const ALERT_ZONES = MAHALLA_AREAS.filter((a) => a.info.debtUzs > 0)
+  .sort((a, b) => b.info.debtUzs - a.info.debtUzs)
+  .slice(0, 5);
+
+// Qisqa pul formati (label uchun): 225 600 000 -> "225.6 mln"
+const shortMoney = (n) => {
+  if (n >= 1_000_000_000) return `${(n / 1_000_000_000).toFixed(1)} mlrd`;
+  if (n >= 1_000_000) return `${Math.round(n / 1_000_000)} mln`;
+  return n.toLocaleString("uz-UZ");
+};
+
 const SoliqMap3D = ({ statusFilter = [], activeId = null, onSelect }) => {
   const hostRef = useRef(null);
   const mapRef = useRef(null);
   const polysRef = useRef({}); // id -> Polygon3D element
+  const alertsRef = useRef({}); // id -> { circle, marker } (qarzdor ogohlantirish marki)
   const [status, setStatus] = useState("loading"); // loading | ready | fallback
 
   useEffect(() => {
@@ -43,7 +75,7 @@ const SoliqMap3D = ({ statusFilter = [], activeId = null, onSelect }) => {
         const lib = await loadMaps3d(API_KEY);
         if (cancelled || !hostRef.current) return;
 
-        const { Map3DElement, Polygon3DInteractiveElement, MapMode, AltitudeMode } = lib;
+        const { Map3DElement, Polygon3DInteractiveElement, Polygon3DElement, Marker3DInteractiveElement, PinElement, MapMode, AltitudeMode } = lib;
 
         const map = new Map3DElement({
           center: LOOK_AT,
@@ -72,6 +104,38 @@ const SoliqMap3D = ({ statusFilter = [], activeId = null, onSelect }) => {
           polysRef.current[a.id] = poly;
         });
 
+        // Eng qarzdor hududlarga ogohlantirish marki — qizil radius doira + pin + qarz label
+        const danger = TAX_STATUS.unpaid.color;
+        ALERT_ZONES.forEach((a) => {
+          const c = centroid(a.path);
+          const circle = new Polygon3DElement({
+            outerCoordinates: circleRing(c, 120),
+            altitudeMode: AltitudeMode.RELATIVE_TO_GROUND,
+            extruded: false,
+            fillColor: hexToRgba(danger, 0.4),
+            strokeColor: danger,
+            strokeWidth: 4,
+            drawsOccludedSegments: true,
+          });
+          map.append(circle);
+
+          const pin = new PinElement({
+            background: danger,
+            borderColor: "#7f1d1d",
+            glyph: "⚠️",
+            scale: 1.3,
+          });
+          const marker = new Marker3DInteractiveElement({
+            position: { ...c, altitude: MARKER_ALT },
+            label: `Qarz ${shortMoney(a.info.debtUzs)}`,
+          });
+          marker.append(pin);
+          marker.addEventListener("gmp-click", () => onSelect?.(a.id));
+          map.append(marker);
+
+          alertsRef.current[a.id] = { circle, marker };
+        });
+
         setStatus("ready");
       } catch (err) {
         console.warn("Soliq 3D xarita yuklanmadi, fallback ko'rsatiladi.", err?.message);
@@ -98,6 +162,13 @@ const SoliqMap3D = ({ statusFilter = [], activeId = null, onSelect }) => {
       poly.fillColor = hexToRgba(color, fillA);
       poly.strokeColor = !visible ? hexToRgba(color, 0.3) : color;
       poly.strokeWidth = isActive ? 7 : 4;
+
+      // Ogohlantirish marki — filtrda yashirilsa olib qo'yiladi
+      const alert = alertsRef.current[a.id];
+      if (alert) {
+        alert.circle.style.display = visible ? "" : "none";
+        alert.marker.style.display = visible ? "" : "none";
+      }
     });
   }, [statusFilter, activeId, status]);
 
