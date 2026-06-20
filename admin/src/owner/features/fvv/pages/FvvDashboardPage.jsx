@@ -7,6 +7,15 @@ import { EChart } from "@/shared/components/ui/chart3d/EChart";
 import { BubbleGridHeatmap } from "@/shared/components/ui/chart3d/BubbleGridHeatmap";
 import { DarkAreaMap } from "@/shared/components/ui/chart3d/DarkAreaMap";
 import { Map3DChart } from "@/shared/components/ui/chart3d/Map3DChart";
+import { Mahalla3DMap } from "@/shared/components/ui/chart3d/Mahalla3DMap";
+
+const MAP3D_MARKERS = [
+  { lat: 40.6402, lng: 72.2378, label: "Yong'in-qutqaruv posti", status: "Navbatda: 2 brigada" },
+  { lat: 40.6385, lng: 72.2405, label: "Kamera — Markaziy ko'cha", status: "Jonli efir" },
+  { lat: 40.6371, lng: 72.2362, label: "Yong'in — Bozor", status: "Bartaraf etilmoqda" },
+  { lat: 40.6418, lng: 72.2418, label: "Gaz taqsimlagich", status: "Nazoratda" },
+  { lat: 40.636, lng: 72.239, label: "Suv ombori", status: "Faol" },
+];
 
 /* --------------------------------- mock data --------------------------------- */
 function mulberry32(seed) {
@@ -230,8 +239,8 @@ const FvvDashboardPage = () => {
 
       {/* 3D map + 2D map */}
       <div className="grid gap-4 xl:grid-cols-2">
-        <Section title="3D xarita — mahalla bloklari" icon={MapPin} accent="indigo">
-          <Map3DChart height={340} seed={556677} hotspots={3} />
+        <Section title="Photorealistik 3D xarita" icon={MapPin} accent="indigo">
+          <Mahalla3DMap markers={MAP3D_MARKERS} height={340} fallbackSeed={556677} />
         </Section>
         <Section title="Operatsion xarita" icon={MapPin} accent="cyan">
           <DarkAreaMap markers={MAP_MARKERS} height={340} />
