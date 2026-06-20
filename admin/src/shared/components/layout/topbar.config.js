@@ -47,7 +47,10 @@ const topbarModules = [
     title: "IIB (Xavfsizlik)",
     icon: Shield,
     base: "/owner/iib",
-    items: [{ title: "Analitika", url: "/owner/iib", end: true }],
+    items: [
+      { title: "Analitika", url: "/owner/iib", end: true },
+      { title: "Operativ xarita", url: "/owner/iib/xarita" },
+    ],
   },
   {
     key: "fvv",
