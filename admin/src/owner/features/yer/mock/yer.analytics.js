@@ -34,8 +34,15 @@ export const summary = () => {
   };
 };
 
-// 12-month dual series: registrations + revenue (so'm, mln)
-export const timeseries = () => {
+const WEEKDAYS_UZ = ["Yak", "Du", "Se", "Cho", "Pay", "Ju", "Sha"];
+
+const dayKey = (iso) => {
+  const d = new Date(iso);
+  return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+};
+
+// Last 12 months series: registrations + revenue (so'm, mln)
+const yearlySeries = () => {
   const now = new Date(2026, 5, 20);
   return Array.from({ length: 12 }, (_, i) => {
     const d = new Date(now.getFullYear(), now.getMonth() - (11 - i), 1);
@@ -51,6 +58,52 @@ export const timeseries = () => {
       tushum: revenue, // mln so'm
     };
   });
+};
+
+// Joriy oy — har kuni bir nuqta (oyning kunlari bo'yicha)
+const monthlySeries = () => {
+  const now = new Date(2026, 5, 20);
+  const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  return Array.from({ length: daysInMonth }, (_, i) => {
+    const d = new Date(now.getFullYear(), now.getMonth(), i + 1);
+    const key = dayKey(d);
+    const reqs = requests.filter((r) => dayKey(r.createdAt) === key);
+    const props = properties.filter((p) => dayKey(p.registeredAt) === key);
+    const revenue = Math.round(
+      props.reduce((s, p) => s + p.valueUzs * 0.012, 0) / 1_000_000,
+    );
+    return {
+      month: String(i + 1), // oyning kuni
+      arizalar: reqs.length,
+      tushum: revenue, // mln so'm
+    };
+  });
+};
+
+// Oxirgi 7 kun — hafta kunlari bo'yicha (Hafta)
+const weeklySeries = () => {
+  const now = new Date(2026, 5, 20);
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - (6 - i));
+    const key = dayKey(d);
+    const reqs = requests.filter((r) => dayKey(r.createdAt) === key);
+    const props = properties.filter((p) => dayKey(p.registeredAt) === key);
+    const revenue = Math.round(
+      props.reduce((s, p) => s + p.valueUzs * 0.012, 0) / 1_000_000,
+    );
+    return {
+      month: WEEKDAYS_UZ[d.getDay()],
+      arizalar: reqs.length,
+      tushum: revenue, // mln so'm
+    };
+  });
+};
+
+// range: "Hafta" -> oxirgi 7 kun, "Oy" -> joriy oy (kunlik), "12 oy" -> 12 oy (default)
+export const timeseries = (range = "12 oy") => {
+  if (range === "Hafta") return weeklySeries();
+  if (range === "Oy") return monthlySeries();
+  return yearlySeries();
 };
 
 // Breakdown by a dimension -> [{ key, value }]

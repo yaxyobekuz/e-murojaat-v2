@@ -2,6 +2,7 @@ import useObjectState from "@/shared/hooks/useObjectState";
 import { useYerAnalytics } from "../hooks/useYerAnalytics";
 import YerFilters from "../components/YerFilters";
 import KpiStrip from "../components/KpiStrip";
+import MapSection from "../components/map/MapSection";
 import DashboardRowA from "../components/DashboardRowA";
 import DashboardRowB from "../components/DashboardRowB";
 
@@ -24,6 +25,7 @@ const YerDashboardPage = () => {
 
       <KpiStrip summary={summary} />
       <DashboardRowA />
+      <MapSection />
       <DashboardRowB />
     </div>
   );

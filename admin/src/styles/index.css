@@ -229,3 +229,9 @@ input[type="search"]::-ms-reveal {
   width: 0;
   height: 0;
 }
+
+/* Google Maps alpha/beta dev-channel banner (Map3D alpha kanalini talab qiladi) — yashirish */
+[class*="api-load-alpha-banner"],
+[class*="api-load-beta-banner"] {
+  display: none !important;
+}

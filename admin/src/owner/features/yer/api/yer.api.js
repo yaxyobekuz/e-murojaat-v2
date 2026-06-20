@@ -17,12 +17,12 @@ const ok = async (data, ms = 300) => {
   return data;
 };
 
-const analyticsByKind = (kind) => {
+const analyticsByKind = (kind, params) => {
   switch (kind) {
     case "summary":
       return summary();
     case "timeseries":
-      return timeseries();
+      return timeseries(params?.range);
     case "landUse":
       return landUse();
     case "monthlyRegistrations":
@@ -49,5 +49,5 @@ export const yerAPI = {
   property: (id) => ok(properties.find((p) => p.id === id)),
   requests: (params) => ok(filterSortPaginate(requests, params)),
   request: (id) => ok(requests.find((r) => r.id === id)),
-  analytics: (kind) => ok(analyticsByKind(kind)),
+  analytics: (kind, params) => ok(analyticsByKind(kind, params)),
 };

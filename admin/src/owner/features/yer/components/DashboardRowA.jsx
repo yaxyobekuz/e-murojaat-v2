@@ -10,7 +10,7 @@ import RadialGauge from "./charts/RadialGauge";
 
 const DashboardRowA = () => {
   const [range, setRange] = useState("12 oy");
-  const { data: series } = useYerAnalytics("timeseries");
+  const { data: series } = useYerAnalytics("timeseries", { range });
   const { data: completeness } = useYerAnalytics("cadasterCompleteness");
   const { data: monthly } = useYerAnalytics("monthlyRegistrations");
 
