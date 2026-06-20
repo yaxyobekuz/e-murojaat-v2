@@ -9,6 +9,7 @@ const NAV = [
   { to: "/owner/yer", label: "Analitika", end: true },
   { to: "/owner/yer/reyestr", label: "Reyestr" },
   { to: "/owner/yer/arizalar", label: "Arizalar" },
+  { to: "/owner/soliq", label: "Soliq" },
 ];
 
 // Active link = solid white pill (reference look)

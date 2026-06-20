@@ -1,4 +1,4 @@
-import { LayoutDashboard, Trees, Users, Home } from "lucide-react";
+import { LayoutDashboard, Trees, Users, Home, Landmark, Map } from "lucide-react";
 
 const ownerSidebar = [
   {
@@ -6,6 +6,12 @@ const ownerSidebar = [
     title: "Boshqaruv paneli",
     icon: LayoutDashboard,
     items: [{ title: "Bosh sahifa", url: "/owner/dashboard", icon: Home }],
+  },
+  {
+    key: "soliq",
+    title: "Soliq",
+    icon: Landmark,
+    items: [{ title: "Soliq xaritasi", url: "/owner/soliq", icon: Map }],
   },
   {
     key: "obodonlashtirish",

@@ -5,6 +5,7 @@ import {
   YerRegistryPage,
   YerRequestsPage,
 } from "@/owner/features/yer";
+import { SoliqDashboardPage } from "@/owner/features/soliq";
 
 const OwnerRoutes = () => (
   <Routes>
@@ -12,6 +13,7 @@ const OwnerRoutes = () => (
     <Route path="yer" element={<YerDashboardPage />} />
     <Route path="yer/reyestr" element={<YerRegistryPage />} />
     <Route path="yer/arizalar" element={<YerRequestsPage />} />
+    <Route path="soliq" element={<SoliqDashboardPage />} />
     <Route path="*" element={<Navigate to="yer" replace />} />
   </Routes>
 );
