@@ -15,6 +15,12 @@ export default {
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        // Reference-inspired data accents (purple/yellow); used by charts + KPI
+        brand: {
+          purple: "rgb(var(--accent-purple) / <alpha-value>)",
+          yellow: "rgb(var(--accent-yellow) / <alpha-value>)",
+          cyan: "rgb(var(--accent-cyan) / <alpha-value>)",
+        },
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
