@@ -1,4 +1,4 @@
-import { LayoutDashboard, Trees, Users, Home, Landmark, Map } from "lucide-react";
+import { LayoutDashboard, Trees, Users, Home, Landmark, Map, GraduationCap, Shield, Flame } from "lucide-react";
 
 const ownerSidebar = [
   {
@@ -6,6 +6,24 @@ const ownerSidebar = [
     title: "Boshqaruv paneli",
     icon: LayoutDashboard,
     items: [{ title: "Bosh sahifa", url: "/owner/dashboard", icon: Home }],
+  },
+  {
+    key: "talim",
+    title: "Ta'lim",
+    icon: GraduationCap,
+    items: [{ title: "Ta'lim tahlili", url: "/owner/talim", icon: Home }],
+  },
+  {
+    key: "iib",
+    title: "IIB",
+    icon: Shield,
+    items: [{ title: "Xavfsizlik tahlili", url: "/owner/iib", icon: Home }],
+  },
+  {
+    key: "fvv",
+    title: "FVV",
+    icon: Flame,
+    items: [{ title: "Favqulodda tahlil", url: "/owner/fvv", icon: Home }],
   },
   {
     key: "soliq",
