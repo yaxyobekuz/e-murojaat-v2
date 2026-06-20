@@ -24,23 +24,24 @@ const hexToRgba = (hex, a) => {
   return `rgba(${r}, ${g}, ${b}, ${a})`;
 };
 
-// Qurilish markeri HTML — aylanuvchi kran + puls
-const constructionEl = () => {
-  const el = document.createElement("div");
-  el.className = "obod-marker";
-  el.innerHTML =
-    '<span class="obod-pulse"></span>' +
-    '<span class="obod-chip"><span class="obod-crane">🏗️</span>Qurilish</span>';
-  return el;
+// Markaz atrofida doira poligoni (radius metrda) — qurilish maydonini belgilash uchun
+const circleRing = (center, radiusM = 130, steps = 40) => {
+  const ring = [];
+  const latM = radiusM / 111000; // 1° lat ~ 111km
+  const lngM = radiusM / (111000 * Math.cos((center.lat * Math.PI) / 180));
+  for (let i = 0; i < steps; i++) {
+    const ang = (i / steps) * Math.PI * 2;
+    ring.push({
+      lat: center.lat + Math.sin(ang) * latM,
+      lng: center.lng + Math.cos(ang) * lngM,
+      altitude: 0,
+    });
+  }
+  return ring;
 };
 
-// Yashil maydon markeri — daraxt + soni
-const treeEl = (count) => {
-  const el = document.createElement("div");
-  el.className = "obod-tree-chip";
-  el.innerHTML = `<span>🌳</span>${count.toLocaleString("uz-UZ")}`;
-  return el;
-};
+// Marker balandligi — yerga nisbatan (yer moduli kabi 25m, shunda yer ostiga tushmaydi)
+const MARKER_ALT = 25;
 
 const ObodMap3D = ({ showGreen = false, activeId = null, onSelect }) => {
   const hostRef = useRef(null);
@@ -60,7 +61,7 @@ const ObodMap3D = ({ showGreen = false, activeId = null, onSelect }) => {
         if (cancelled || !hostRef.current) return;
         libRef.current = lib;
 
-        const { Map3DElement, Marker3DInteractiveElement, MapMode } = lib;
+        const { Map3DElement, Marker3DInteractiveElement, PinElement, Polygon3DElement, AltitudeMode, MapMode } = lib;
 
         const map = new Map3DElement({ center: LOOK_AT, ...CAMERA, mode: MapMode.HYBRID });
         map.style.width = "100%";
@@ -68,13 +69,31 @@ const ObodMap3D = ({ showGreen = false, activeId = null, onSelect }) => {
         hostRef.current.replaceChildren(map);
         mapRef.current = map;
 
-        // Qurilish (jarayonda) markerlari — animatsiyali
+        // Qurilish (jarayonda) joylari — olov rang doira (radius) + markazда kran pin
         OBOD_PROJECTS.filter(isConstruction).forEach((p) => {
-          const marker = new Marker3DInteractiveElement({
-            position: { ...p.center, altitude: 0 },
-            altitudeMode: lib.AltitudeMode.CLAMP_TO_GROUND,
+          // Olov rang qurilish maydoni (doira zona)
+          const circle = new Polygon3DElement({
+            outerCoordinates: circleRing(p.center, 140),
+            altitudeMode: AltitudeMode.CLAMP_TO_GROUND,
+            extruded: false,
+            fillColor: hexToRgba("#f97316", 0.32),
+            strokeColor: "#ea580c",
+            strokeWidth: 3,
+            drawsOccludedSegments: false,
           });
-          marker.append(constructionEl());
+          map.append(circle);
+
+          const pin = new PinElement({
+            background: "#ea580c",
+            borderColor: "#7c2d12",
+            glyph: "🏗️",
+            scale: 1.4,
+          });
+          const marker = new Marker3DInteractiveElement({
+            position: { ...p.center, altitude: MARKER_ALT },
+            label: `${p.name} (${p.info.progress}%)`,
+          });
+          marker.append(pin);
           marker.addEventListener("gmp-click", () => onSelect?.(p.id));
           map.append(marker);
         });
@@ -96,7 +115,7 @@ const ObodMap3D = ({ showGreen = false, activeId = null, onSelect }) => {
   useEffect(() => {
     if (status !== "ready" || !mapRef.current || !libRef.current) return;
     const map = mapRef.current;
-    const { Polygon3DElement, Marker3DInteractiveElement, AltitudeMode } = libRef.current;
+    const { Polygon3DElement, Marker3DInteractiveElement, PinElement, AltitudeMode } = libRef.current;
 
     // Tozalash
     greenPolysRef.current.forEach((el) => el.remove());
@@ -121,11 +140,17 @@ const ObodMap3D = ({ showGreen = false, activeId = null, onSelect }) => {
       map.append(poly);
       greenPolysRef.current.push(poly);
 
-      const marker = new Marker3DInteractiveElement({
-        position: { ...p.center, altitude: 0 },
-        altitudeMode: AltitudeMode.CLAMP_TO_GROUND,
+      const pin = new PinElement({
+        background: "#16a34a",
+        borderColor: "#14532d",
+        glyph: "🌳",
+        scale: 1.3,
       });
-      marker.append(treeEl(p.info.trees));
+      const marker = new Marker3DInteractiveElement({
+        position: { ...p.center, altitude: MARKER_ALT },
+        label: `${p.info.trees.toLocaleString("uz-UZ")} daraxt`,
+      });
+      marker.append(pin);
       marker.addEventListener("gmp-click", () => onSelect?.(p.id));
       map.append(marker);
       greenMarkersRef.current.push(marker);

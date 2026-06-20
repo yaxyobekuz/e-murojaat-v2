@@ -48,5 +48,6 @@ const injectBootstrap = (apiKey) => {
 export const loadMaps3d = async (apiKey) => {
   await injectBootstrap(apiKey);
   const maps3d = await window.google.maps.importLibrary("maps3d");
-  return { ...maps3d };
+  const marker = await window.google.maps.importLibrary("marker"); // PinElement uchun
+  return { ...maps3d, ...marker };
 };
