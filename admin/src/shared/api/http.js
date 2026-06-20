@@ -10,8 +10,6 @@ const http = axios.create({
 });
 
 http.interceptors.request.use((config) => {
-  const token = localStorage.getItem("authToken");
-  if (token) config.headers.Authorization = `Bearer ${token}`;
   // Drop empty query params so optional (enum) filters don't fail backend validation
   if (config.params && typeof config.params === "object") {
     config.params = Object.fromEntries(
@@ -22,57 +20,5 @@ http.interceptors.request.use((config) => {
   }
   return config;
 });
-
-// On 401, attempt one refresh and replay the original request
-let isRefreshing = false;
-let waiters = [];
-
-const flushWaiters = (token) => {
-  waiters.forEach((cb) => cb(token));
-  waiters = [];
-};
-
-http.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const original = error.config || {};
-    const isAuthRequest = original.url?.includes("/auth/");
-
-    if (error.response?.status !== 401 || original._retry || isAuthRequest) {
-      return Promise.reject(error);
-    }
-
-    original._retry = true;
-
-    if (isRefreshing) {
-      // Another request is already refreshing; queue and wait for the new token
-      return new Promise((resolve, reject) => {
-        waiters.push((newToken) => {
-          if (!newToken) return reject(error);
-          original.headers.Authorization = `Bearer ${newToken}`;
-          resolve(http(original));
-        });
-      });
-    }
-
-    isRefreshing = true;
-    try {
-      const r = await http.post("/auth/refresh");
-      const newToken = r.data?.data?.accessToken;
-      if (!newToken) throw new Error("No access token in refresh response");
-      localStorage.setItem("authToken", newToken);
-      flushWaiters(newToken);
-      original.headers.Authorization = `Bearer ${newToken}`;
-      return http(original);
-    } catch (e) {
-      flushWaiters(null);
-      localStorage.removeItem("authToken");
-      if (typeof window !== "undefined") window.location.href = "/login";
-      return Promise.reject(e);
-    } finally {
-      isRefreshing = false;
-    }
-  },
-);
 
 export default http;
