@@ -1,15 +1,15 @@
-// Soliq analitikasi — xarita to'liq fon, ustida suzuvchi panellar (KPI + filtr tepada,
-// hududlar paneli pastda). Filtr va tanlov barcha qismlarni bog'laydi (interaktiv).
+// Obodonlashtirish analitikasi — xarita to'liq fon, ustida suzuvchi panellar
+// (KPI + filtr tepada, loyihalar paneli pastda). Filtr va tanlov hammasini bog'laydi.
 import { useMemo } from "react";
 
 import useObjectState from "@/shared/hooks/useObjectState";
-import { MAHALLA_AREAS, summarize } from "../mock/soliq.mapAreas";
-import SoliqMapBackground from "../components/map/SoliqMapBackground";
-import SoliqStatusFilter from "../components/SoliqStatusFilter";
-import SoliqKpiOverlay from "../components/overlay/SoliqKpiOverlay";
-import SoliqZonesPanel from "../components/overlay/SoliqZonesPanel";
+import { OBOD_PROJECTS, summarize } from "../mock/obod.projects";
+import ObodMapBackground from "../components/map/ObodMapBackground";
+import ObodStatusFilter from "../components/ObodStatusFilter";
+import ObodKpiOverlay from "../components/overlay/ObodKpiOverlay";
+import ObodProjectsPanel from "../components/overlay/ObodProjectsPanel";
 
-const SoliqDashboardPage = () => {
+const ObodDashboardPage = () => {
   const { statusFilter, activeId, setField } = useObjectState({
     statusFilter: [],
     activeId: null,
@@ -23,21 +23,19 @@ const SoliqDashboardPage = () => {
         : [...statusFilter, key],
     );
 
-  // Filtrlangan hududlar (KPI + panel shularga tayanadi)
-  const zones = useMemo(
+  const projects = useMemo(
     () =>
       statusFilter.length === 0
-        ? MAHALLA_AREAS
-        : MAHALLA_AREAS.filter((a) => statusFilter.includes(a.status)),
+        ? OBOD_PROJECTS
+        : OBOD_PROJECTS.filter((p) => statusFilter.includes(p.status)),
     [statusFilter],
   );
-  const summary = useMemo(() => summarize(zones), [zones]);
+  const summary = useMemo(() => summarize(projects), [projects]);
 
   return (
     <div className="relative h-[calc(100vh-7rem)] w-full overflow-hidden rounded-2xl border border-[rgb(var(--card-border))] bg-card">
-      {/* Fon — xarita */}
       <div className="absolute inset-0">
-        <SoliqMapBackground
+        <ObodMapBackground
           statusFilter={statusFilter}
           activeId={activeId}
           onSelect={(id) => setField("activeId", id)}
@@ -48,25 +46,23 @@ const SoliqDashboardPage = () => {
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex flex-col gap-3 p-4">
         <div className="pointer-events-auto flex flex-wrap items-start justify-between gap-3">
           <div className="surface-overlay rounded-xl px-3 py-2">
-            <h1 className="text-sm font-semibold tracking-tight">Soliq analitikasi</h1>
-            <p className="text-[11px] text-foreground/55">
-              Sarnovul MFY, Baliqchi tumani, Andijon
-            </p>
+            <h1 className="text-sm font-semibold tracking-tight">Obodonlashtirish analitikasi</h1>
+            <p className="text-[11px] text-foreground/55">Baliqchi tumani, Andijon</p>
           </div>
           <div className="pointer-events-auto">
-            <SoliqStatusFilter active={statusFilter} onToggle={toggleStatus} />
+            <ObodStatusFilter active={statusFilter} onToggle={toggleStatus} />
           </div>
         </div>
         <div className="pointer-events-auto">
-          <SoliqKpiOverlay summary={summary} />
+          <ObodKpiOverlay summary={summary} />
         </div>
       </div>
 
-      {/* Pastki overlay — hududlar paneli (xarita bilan bog'langan) */}
+      {/* Pastki overlay — loyihalar paneli */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex justify-start p-4">
         <div className="pointer-events-auto">
-          <SoliqZonesPanel
-            zones={zones}
+          <ObodProjectsPanel
+            projects={projects}
             activeId={activeId}
             onSelect={(id) => setField("activeId", id)}
           />
@@ -76,4 +72,4 @@ const SoliqDashboardPage = () => {
   );
 };
 
-export default SoliqDashboardPage;
+export default ObodDashboardPage;

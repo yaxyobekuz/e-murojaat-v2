@@ -1,9 +1,9 @@
-// Dashboard-styled info panel shown when a mahalla block is clicked (glass overlay).
-import { X, Home, Coins, Wallet, TrendingDown } from "lucide-react";
+// Loyiha bosilganda chiqadigan info panel (glass overlay).
+import { X, Hammer, Coins, Wallet } from "lucide-react";
 
 import { formatMoney } from "@/shared/utils/formatMoney";
 import GlassStatusBadge from "@/shared/components/ui/glass/GlassStatusBadge";
-import { TAX_STATUS } from "../../mock/soliq.mapAreas";
+import { PROJECT_STATUS } from "../../mock/obod.projects";
 
 const Row = ({ icon: Icon, label, value }) => (
   <div className="flex items-center justify-between gap-3 text-[13px]">
@@ -14,10 +14,10 @@ const Row = ({ icon: Icon, label, value }) => (
   </div>
 );
 
-const SoliqMapInfoCard = ({ area, onClose }) => {
-  if (!area) return null;
-  const { name, status, info } = area;
-  const st = TAX_STATUS[status] || TAX_STATUS.paid;
+const ObodMapInfoCard = ({ project, onClose }) => {
+  if (!project) return null;
+  const { name, status, info } = project;
+  const st = PROJECT_STATUS[status] || PROJECT_STATUS.planned;
 
   return (
     <div className="surface absolute bottom-4 right-4 z-20 w-72 animate-in fade-in slide-in-from-right-2 p-4 shadow-xl">
@@ -27,7 +27,7 @@ const SoliqMapInfoCard = ({ area, onClose }) => {
             className="grid size-8 place-items-center rounded-lg"
             style={{ backgroundColor: `${st.color}26`, color: st.color }}
           >
-            <Home className="size-4" />
+            <Hammer className="size-4" />
           </span>
           <h4 className="text-sm font-semibold leading-tight">{name}</h4>
         </div>
@@ -41,26 +41,26 @@ const SoliqMapInfoCard = ({ area, onClose }) => {
         </button>
       </div>
 
+      <p className="mt-2 text-xs text-foreground/50">{info.typeLabel}</p>
+
       <div className="mt-3 flex flex-col gap-2 border-t border-[rgb(var(--card-border))] pt-3">
-        <Row icon={Home} label="Xonadonlar" value={info.households.toLocaleString("uz-UZ")} />
-        <Row icon={Coins} label="Hisoblangan" value={formatMoney(info.assessedUzs)} />
-        <Row icon={Wallet} label="Yig'ilgan" value={formatMoney(info.collectedUzs)} />
-        <Row icon={TrendingDown} label="Qarz" value={formatMoney(info.debtUzs)} />
+        <Row icon={Coins} label="Byudjet" value={formatMoney(info.budgetUzs)} />
+        <Row icon={Wallet} label="Sarflangan" value={formatMoney(info.spentUzs)} />
         <div className="mt-1 flex items-center justify-between">
           <span className="text-[13px] text-foreground/55">Holati</span>
           <GlassStatusBadge tone={st.tone}>{st.label}</GlassStatusBadge>
         </div>
         <div className="mt-1">
           <div className="mb-1 flex items-center justify-between text-[11px] text-foreground/45">
-            <span>Yig'ilish darajasi</span>
+            <span>Bajarilishi</span>
             <span className="font-semibold tabular-nums" style={{ color: st.color }}>
-              {info.collectionRate}%
+              {info.progress}%
             </span>
           </div>
           <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
             <div
               className="h-full rounded-full"
-              style={{ width: `${info.collectionRate}%`, backgroundColor: st.color }}
+              style={{ width: `${info.progress}%`, backgroundColor: st.color }}
             />
           </div>
         </div>
@@ -69,4 +69,4 @@ const SoliqMapInfoCard = ({ area, onClose }) => {
   );
 };
 
-export default SoliqMapInfoCard;
+export default ObodMapInfoCard;

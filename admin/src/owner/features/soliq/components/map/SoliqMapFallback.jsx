@@ -34,7 +34,7 @@ const centroid = (pts) => {
   return { x, y };
 };
 
-const SoliqMapFallback = ({ active, onSelect }) => {
+const SoliqMapFallback = ({ active, statusFilter = [], onSelect }) => {
   const project = useProjection();
 
   return (
@@ -48,14 +48,15 @@ const SoliqMapFallback = ({ active, onSelect }) => {
         const c = centroid(pts);
         const color = TAX_STATUS[a.status].color;
         const isActive = active?.id === a.id;
+        const visible = statusFilter.length === 0 || statusFilter.includes(a.status);
         return (
           <g key={a.id} className="cursor-pointer" onClick={() => onSelect(a)}>
             <path
               d={d}
               fill={color}
-              fillOpacity={isActive ? 0.85 : 0.55}
+              fillOpacity={!visible ? 0.1 : isActive ? 0.85 : 0.55}
               stroke="#fff"
-              strokeOpacity={0.35}
+              strokeOpacity={!visible ? 0.12 : 0.35}
               strokeWidth={isActive ? 3 : 1.5}
             />
             <text
@@ -64,6 +65,7 @@ const SoliqMapFallback = ({ active, onSelect }) => {
               textAnchor="middle"
               dominantBaseline="middle"
               className="pointer-events-none fill-white text-[11px] font-semibold"
+              opacity={visible ? 1 : 0.25}
             >
               {a.info.collectionRate}%
             </text>

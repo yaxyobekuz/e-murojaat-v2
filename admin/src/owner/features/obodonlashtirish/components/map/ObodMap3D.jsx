@@ -1,15 +1,15 @@
-// Photorealistic 3D soliq xaritasi — hududlar holat rangida (yashil/sariq/qizil)
-// poligon bilan belgilanadi. Boshqariladi (controlled):
+// Photorealistic 3D obodonlashtirish xaritasi — loyiha zonalari holat rangida
+// (ko'k rejada / amber jarayonda / yashil yakunlangan). Boshqariladi (controlled):
 //   - statusFilter: tanlangan holatlar; mos kelmaganlar xiralashadi
-//   - activeId + onSelect: tanlangan hudud (jadval bilan bog'langan), kamera uchib boradi
+//   - activeId + onSelect: tanlangan loyiha (panel bilan bog'langan), kamera uchadi
 // API kalit yo'q/xato bo'lsa — SVG fallback'ga o'tadi.
 import { useEffect, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
 
 import { loadMaps3d } from "../../utils/googleMaps3d.loader";
-import { MAP_CENTER, MAHALLA_AREAS, TAX_STATUS } from "../../mock/soliq.mapAreas";
-import SoliqMapInfoCard from "./SoliqMapInfoCard";
-import SoliqMapFallback from "./SoliqMapFallback";
+import { MAP_CENTER, OBOD_PROJECTS, PROJECT_STATUS } from "../../mock/obod.projects";
+import ObodMapInfoCard from "./ObodMapInfoCard";
+import ObodMapFallback from "./ObodMapFallback";
 
 const API_KEY = import.meta.env.VITE_MAPS_API_KEY;
 
@@ -29,10 +29,10 @@ const centroid = (path) => ({
   lng: path.reduce((s, p) => s + p.lng, 0) / path.length,
 });
 
-const SoliqMap3D = ({ statusFilter = [], activeId = null, onSelect }) => {
+const ObodMap3D = ({ statusFilter = [], activeId = null, onSelect }) => {
   const hostRef = useRef(null);
   const mapRef = useRef(null);
-  const polysRef = useRef({}); // id -> Polygon3D element
+  const polysRef = useRef({});
   const [status, setStatus] = useState("loading"); // loading | ready | fallback
 
   useEffect(() => {
@@ -45,19 +45,15 @@ const SoliqMap3D = ({ statusFilter = [], activeId = null, onSelect }) => {
 
         const { Map3DElement, Polygon3DInteractiveElement, MapMode, AltitudeMode } = lib;
 
-        const map = new Map3DElement({
-          center: LOOK_AT,
-          ...CAMERA,
-          mode: MapMode.HYBRID,
-        });
+        const map = new Map3DElement({ center: LOOK_AT, ...CAMERA, mode: MapMode.HYBRID });
         map.style.width = "100%";
         map.style.height = "100%";
         hostRef.current.replaceChildren(map);
         mapRef.current = map;
 
-        MAHALLA_AREAS.forEach((a) => {
-          const color = TAX_STATUS[a.status].color;
-          const ring = a.path.map((p) => ({ ...p, altitude: 0 }));
+        OBOD_PROJECTS.forEach((p) => {
+          const color = PROJECT_STATUS[p.status].color;
+          const ring = p.path.map((q) => ({ ...q, altitude: 0 }));
           const poly = new Polygon3DInteractiveElement({
             outerCoordinates: ring,
             altitudeMode: AltitudeMode.CLAMP_TO_GROUND,
@@ -67,14 +63,14 @@ const SoliqMap3D = ({ statusFilter = [], activeId = null, onSelect }) => {
             strokeWidth: 4,
             drawsOccludedSegments: false,
           });
-          poly.addEventListener("gmp-click", () => onSelect?.(a.id));
+          poly.addEventListener("gmp-click", () => onSelect?.(p.id));
           map.append(poly);
-          polysRef.current[a.id] = poly;
+          polysRef.current[p.id] = poly;
         });
 
         setStatus("ready");
       } catch (err) {
-        console.warn("Soliq 3D xarita yuklanmadi, fallback ko'rsatiladi.", err?.message);
+        console.warn("Obod 3D xarita yuklanmadi, fallback ko'rsatiladi.", err?.message);
         if (!cancelled) setStatus("fallback");
       }
     })();
@@ -85,35 +81,34 @@ const SoliqMap3D = ({ statusFilter = [], activeId = null, onSelect }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Filtr + tanlovga qarab poligon ko'rinishini yangilash (xaritani qayta qurmasdan)
+  // Filtr + tanlovga qarab poligon ko'rinishini yangilash
   useEffect(() => {
     if (status !== "ready") return;
-    MAHALLA_AREAS.forEach((a) => {
-      const poly = polysRef.current[a.id];
+    OBOD_PROJECTS.forEach((p) => {
+      const poly = polysRef.current[p.id];
       if (!poly) return;
-      const color = TAX_STATUS[a.status].color;
-      const visible = statusFilter.length === 0 || statusFilter.includes(a.status);
-      const isActive = activeId === a.id;
-      const fillA = !visible ? 0.06 : isActive ? 0.7 : 0.45;
-      poly.fillColor = hexToRgba(color, fillA);
+      const color = PROJECT_STATUS[p.status].color;
+      const visible = statusFilter.length === 0 || statusFilter.includes(p.status);
+      const isActive = activeId === p.id;
+      poly.fillColor = hexToRgba(color, !visible ? 0.06 : isActive ? 0.7 : 0.45);
       poly.strokeColor = !visible ? hexToRgba(color, 0.3) : color;
       poly.strokeWidth = isActive ? 7 : 4;
     });
   }, [statusFilter, activeId, status]);
 
-  // Tanlangan hududga kamera uchib boradi
+  // Tanlangan loyihaga kamera uchadi
   useEffect(() => {
     if (status !== "ready" || !activeId || !mapRef.current) return;
-    const area = MAHALLA_AREAS.find((a) => a.id === activeId);
-    if (!area) return;
-    const c = centroid(area.path);
+    const p = OBOD_PROJECTS.find((x) => x.id === activeId);
+    if (!p) return;
+    const c = centroid(p.path);
     mapRef.current.flyCameraTo({
       endCamera: { center: { ...c, altitude: GROUND_ALT }, tilt: 64, range: 700, heading: 20 },
       durationMillis: 1400,
     });
   }, [activeId, status]);
 
-  const activeArea = MAHALLA_AREAS.find((a) => a.id === activeId) || null;
+  const activeProject = OBOD_PROJECTS.find((p) => p.id === activeId) || null;
 
   return (
     <div className="relative h-full w-full overflow-hidden rounded-xl bg-card">
@@ -122,7 +117,7 @@ const SoliqMap3D = ({ statusFilter = [], activeId = null, onSelect }) => {
       {status === "loading" && (
         <div className="absolute inset-0 grid place-items-center text-foreground/50">
           <div className="flex flex-col items-center gap-2">
-            <Loader2 className="size-6 animate-spin text-indigo-500" />
+            <Loader2 className="size-6 animate-spin text-teal-500" />
             <p className="text-xs">Photorealistic 3D xarita yuklanmoqda…</p>
           </div>
         </div>
@@ -130,17 +125,17 @@ const SoliqMap3D = ({ statusFilter = [], activeId = null, onSelect }) => {
 
       {status === "fallback" && (
         <div className="h-full w-full p-2">
-          <SoliqMapFallback
-            active={activeArea}
+          <ObodMapFallback
+            active={activeProject}
             statusFilter={statusFilter}
-            onSelect={(a) => onSelect?.(a.id)}
+            onSelect={(p) => onSelect?.(p.id)}
           />
         </div>
       )}
 
-      <SoliqMapInfoCard area={activeArea} onClose={() => onSelect?.(null)} />
+      <ObodMapInfoCard project={activeProject} onClose={() => onSelect?.(null)} />
     </div>
   );
 };
 
-export default SoliqMap3D;
+export default ObodMap3D;

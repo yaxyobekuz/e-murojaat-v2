@@ -5,7 +5,14 @@ import {
   YerRegistryPage,
   YerRequestsPage,
 } from "@/owner/features/yer";
-import { SoliqDashboardPage } from "@/owner/features/soliq";
+import {
+  SoliqDashboardPage,
+  SoliqDebtorsPage,
+} from "@/owner/features/soliq";
+import {
+  ObodDashboardPage,
+  ObodProjectsPage,
+} from "@/owner/features/obodonlashtirish";
 
 const OwnerRoutes = () => (
   <Routes>
@@ -14,6 +21,9 @@ const OwnerRoutes = () => (
     <Route path="yer/reyestr" element={<YerRegistryPage />} />
     <Route path="yer/arizalar" element={<YerRequestsPage />} />
     <Route path="soliq" element={<SoliqDashboardPage />} />
+    <Route path="soliq/qarzdorlar" element={<SoliqDebtorsPage />} />
+    <Route path="obodonlashtirish" element={<ObodDashboardPage />} />
+    <Route path="obodonlashtirish/loyihalar" element={<ObodProjectsPage />} />
     <Route path="*" element={<Navigate to="yer" replace />} />
   </Routes>
 );

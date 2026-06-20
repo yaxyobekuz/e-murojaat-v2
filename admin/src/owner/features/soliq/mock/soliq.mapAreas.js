@@ -174,17 +174,22 @@ export const MAHALLA_AREAS = BLOCKS.map((b, i) => ({
   path: b.path,
 }));
 
-// Dashboard KPI uchun yig'indi
-export const mahallaSummary = MAHALLA_AREAS.reduce(
-  (acc, a) => {
-    acc.households += a.info.households;
-    acc.assessedUzs += a.info.assessedUzs;
-    acc.collectedUzs += a.info.collectedUzs;
-    acc.debtUzs += a.info.debtUzs;
-    return acc;
-  },
-  { households: 0, assessedUzs: 0, collectedUzs: 0, debtUzs: 0 }
-);
-mahallaSummary.collectionRate = Math.round(
-  (mahallaSummary.collectedUzs / mahallaSummary.assessedUzs) * 100
-);
+// Berilgan hududlar bo'yicha yig'indi (KPI uchun) — filtrlangan ro'yxatga ham ishlaydi
+export const summarize = (zones) => {
+  const acc = zones.reduce(
+    (s, a) => {
+      s.households += a.info.households;
+      s.assessedUzs += a.info.assessedUzs;
+      s.collectedUzs += a.info.collectedUzs;
+      s.debtUzs += a.info.debtUzs;
+      return s;
+    },
+    { households: 0, assessedUzs: 0, collectedUzs: 0, debtUzs: 0 },
+  );
+  acc.collectionRate = acc.assessedUzs
+    ? Math.round((acc.collectedUzs / acc.assessedUzs) * 100)
+    : 0;
+  return acc;
+};
+
+export const mahallaSummary = summarize(MAHALLA_AREAS);
