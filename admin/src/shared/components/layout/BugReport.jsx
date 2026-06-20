@@ -7,12 +7,8 @@ import { BugIcon } from "lucide-react";
 // Router
 import { useLocation } from "react-router-dom";
 
-// Tanstack Query
-import { useQuery } from "@tanstack/react-query";
-
 // API
 import axios from "axios";
-import { authAPI } from "@/features/auth/api/auth.api";
 
 // Env variables
 const chatId = import.meta.env.VITE_BUG_REPORT_CHAT_ID;
@@ -56,11 +52,6 @@ const BugReport = () => {
 };
 
 const BugReportForm = ({ close, isLoading, setIsLoading }) => {
-  const { data: user } = useQuery({
-    queryKey: ["auth", "me"],
-    queryFn: () => authAPI.me().then((res) => res.data.data),
-  });
-
   const location = useLocation();
   const { description, username, image, setField, setFields } = useObjectState({
     image: null,
@@ -86,16 +77,11 @@ const BugReportForm = ({ close, isLoading, setIsLoading }) => {
       const pathUrl =
         window.location.origin + location.pathname + location.search;
 
-      const sessionUserStr = user
-        ? user.fullName || user.firstName
-        : "Noma'lum";
       const tgUsernameStr = username.trim()
         ? `\n✈️ Telegram: ${username.trim().startsWith("@") ? username.trim() : "@" + username.trim()}`
         : "";
 
-      const userInfo = user
-        ? `👤 User: ${sessionUserStr}\n🆔 Username: ${user.username}\n🔑 Rol: ${user.role || "Noma'lum"}${tgUsernameStr}`
-        : `👤 User: Topilmadi${tgUsernameStr}`;
+      const userInfo = `👤 User: Mehmon${tgUsernameStr}`;
 
       const caption = `🔥 Yangi xatolik\n\n📝 Izoh: ${description.trim()}\n\n🔗 Sahifa: ${pathUrl}\n🕒 Sana: ${dateStr}\n\n${userInfo}`;
 

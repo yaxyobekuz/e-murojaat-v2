@@ -1,10 +1,5 @@
 // Icons
-import {
-  LogOut,
-  ChevronLeft,
-  ChevronRight,
-  ArrowLeftToLine,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, ArrowLeftToLine } from "lucide-react";
 
 // React
 import { useState } from "react";
@@ -19,7 +14,6 @@ import {
   SidebarRail,
   SidebarMenu,
   SidebarGroup,
-  SidebarFooter,
   SidebarHeader,
   SidebarContent,
   SidebarMenuItem,
@@ -27,19 +21,8 @@ import {
   SidebarMenuButton,
 } from "@/shared/components/shadcn/sidebar";
 
-// Dropdown Menu
-import {
-  DropdownMenu,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuSeparator,
-} from "@/shared/components/shadcn/dropdown-menu";
-
 // Hooks
 import useAuth from "@/shared/hooks/useAuth";
-import useLogout from "@/features/auth/hooks/useLogout";
 import usePermissions from "@/shared/hooks/usePermissions";
 import { useIsMobile } from "@/shared/hooks/useMobile";
 
@@ -61,7 +44,6 @@ const AppSidebar = ({ ...props }) => {
     <Sidebar collapsible="icon" {...props}>
       <Header />
       <Main />
-      <Footer />
       <SidebarRail />
     </Sidebar>
   );
@@ -203,81 +185,6 @@ const Main = () => {
         </SidebarMenu>
       </SidebarGroup>
     </SidebarContent>
-  );
-};
-
-const Footer = () => {
-  const { user } = useAuth();
-  const { mutate: logout } = useLogout();
-  const isMobile = useIsMobile();
-
-  if (!user) return null;
-
-  const initial = user.firstName?.[0] || user.username?.[0] || "?";
-
-  return (
-    <SidebarFooter>
-      <SidebarMenu>
-        <SidebarMenuItem>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <SidebarMenuButton
-                size="lg"
-                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-              >
-                <div className="flex items-center justify-center size-8 shrink-0 bg-primary rounded-[2px] uppercase text-white">
-                  {initial}
-                </div>
-
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">
-                    {user.firstName || user.username}
-                  </span>
-                  <span className="truncate text-xs">{user.username}</span>
-                </div>
-
-                <ChevronRight
-                  size={20}
-                  strokeWidth={1.5}
-                  className="ml-auto !size-5"
-                />
-              </SidebarMenuButton>
-            </DropdownMenuTrigger>
-
-            <DropdownMenuContent
-              align="end"
-              sideOffset={4}
-              side={isMobile ? "bottom" : "right"}
-              className="w-[--radix-dropdown-menu-trigger-width] min-w-56"
-            >
-              <DropdownMenuLabel className="!p-0 font-normal">
-                <div className="flex items-center gap-2 text-left text-sm">
-                  <div className="flex items-center justify-center size-8 shrink-0 bg-primary rounded-[2px] uppercase text-white">
-                    {initial}
-                  </div>
-
-                  <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-medium">
-                      {user.firstName || user.username}
-                    </span>
-                    <span className="truncate text-xs opacity-70">
-                      {user.username}
-                    </span>
-                  </div>
-                </div>
-              </DropdownMenuLabel>
-
-              <DropdownMenuSeparator />
-
-              <DropdownMenuItem onClick={() => logout()}>
-                <LogOut strokeWidth={1.5} />
-                Chiqish
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </SidebarMenuItem>
-      </SidebarMenu>
-    </SidebarFooter>
   );
 };
 
