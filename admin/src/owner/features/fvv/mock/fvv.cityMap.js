@@ -1,88 +1,83 @@
 // FVV operativ shahar xaritasi — Navbahor MFY (prototip, demo).
-// Murakkab ko'cha to'ri (chiziladi) + honadonlar + yong'in mashinasi ("Pajar") harakati.
-// Koordinata fazosi: SVG viewBox 0..1000 (x), 0..640 (y).
+// Izometrik (qiya) ko'rinish: organik egri ko'chalar + daryo + honadon pinlari.
+// "World" fazo (tekis reja): x 0..1000, y 0..720. Komponent uni qiya proyeksiya qiladi.
 
-export const VIEW = { w: 1000, h: 640 };
+export const WORLD = { w: 1000, h: 720 };
 export const MAP_PLACE_LABEL = "Navbahor MFY, Asaka tumani, Andijon";
 
-// To'r tugunlari (x in 120,300,500,700,880 ; y in 90,230,400,560)
-// ── Ko'chalar (chizish uchun) — to'liq gorizontal/vertikal + diagonal ──────────
-export const ROADS = [
-  // gorizontal
-  { id: "h1", pts: [[100, 90], [900, 90]], name: "Mustaqillik ko'chasi" },
-  { id: "h2", pts: [[100, 230], [900, 230]], name: "Navoiy ko'chasi" },
-  { id: "h3", pts: [[100, 400], [900, 400]], name: "Bobur ko'chasi" },
-  { id: "h4", pts: [[100, 560], [900, 560]], name: "Istiqlol ko'chasi" },
-  // vertikal
-  { id: "v1", pts: [[120, 90], [120, 560]], name: "Amir Temur ko'chasi" },
-  { id: "v2", pts: [[300, 90], [300, 560]], name: "Yangihayot ko'chasi" },
-  { id: "v3", pts: [[500, 90], [500, 560]], name: "Sharq ko'chasi" },
-  { id: "v4", pts: [[700, 90], [700, 560]], name: "G'arb ko'chasi" },
-  { id: "v5", pts: [[880, 90], [880, 560]], name: "Sanoat ko'chasi" },
-  // diagonal/qisqartma yo'llar (faqat bezak — to'rni murakkab ko'rsatadi)
-  { id: "d1", pts: [[300, 400], [500, 560]], name: "Bog' yo'li" },
-  { id: "d2", pts: [[700, 90], [880, 230]], name: "Aylanma yo'l" },
-  { id: "d3", pts: [[120, 230], [300, 90]], name: "Tegirmon yo'li" },
+// ── Daryo (egri tasma) ─────────────────────────────────────────────────────────
+export const RIVER = {
+  pts: [
+    [330, -20], [360, 110], [410, 220], [380, 330],
+    [430, 430], [400, 540], [450, 650], [430, 760],
+  ],
+  width: 54,
+};
+
+// ── Pajar doimiy aylanadigan ASOSIY yo'l (organik halqa, world nuqtalari) ───────
+// Komponent buni silliqlab (Catmull-Rom) chizadi va mashina shu bo'ylab yuradi.
+export const ROUTE_CTRL = [
+  [170, 600], // depo yaqini
+  [150, 430],
+  [240, 300],
+  [200, 170],
+  [340, 110], // ← honadon (hh-4)
+  [520, 150], // ← honadon (hh-1)
+  [650, 90], //  ← honadon (hh-5)
+  [810, 150],
+  [870, 320],
+  [760, 430], // ← honadon (hh-2)
+  [830, 580], // ← honadon (hh-3)
+  [600, 630], // ← honadon (hh-7)
+  [360, 610],
+  [200, 660],
 ];
 
-// Yong'in-qutqaruv deposi
-export const FIRE_STATION = { x: 120, y: 560, name: "13-Yong'in qutqaruv qismi" };
-
-// ── Pajar doimiy harakatlanadigan BURAMA marshrut (yo'llar ustida, to'rni kezadi) ──
-// Har ketma-ket juftlik bir qator yoki ustunni baham ko'radi -> chizilgan yo'lda yuradi.
-export const ROUTE = [
-  [120, 560], // 0  depo
-  [120, 400], // 1
-  [300, 400], // 2
-  [300, 230], // 3
-  [500, 230], // 4  ← missiya (hh-1)
-  [500, 90], //  5
-  [880, 90], //  6  ← missiya (hh-5)
-  [880, 230], // 7
-  [700, 230], // 8
-  [700, 400], // 9  ← missiya (hh-2)
-  [880, 400], // 10
-  [880, 560], // 11 ← missiya (hh-3)
-  [500, 560], // 12
-  [500, 400], // 13
-  [300, 400], // 14
-  [300, 560], // 15 ← missiya (hh-4)
-  [120, 560], // 16 depoga qaytish
+// ── Qo'shimcha ko'chalar (faqat bezak — to'rni boy ko'rsatadi) ──────────────────
+export const SIDE_ROADS = [
+  { id: "s1", pts: [[60, 250], [240, 300], [430, 280], [620, 330], [880, 320]] },
+  { id: "s2", pts: [[120, 520], [360, 480], [560, 520], [760, 470], [940, 520]] },
+  { id: "s3", pts: [[300, 30], [340, 220], [380, 420], [420, 620]] },
+  { id: "s4", pts: [[650, 60], [680, 260], [720, 470], [760, 700]] },
+  { id: "s5", pts: [[40, 120], [200, 170], [360, 130], [520, 160]] },
 ];
 
-// ── Honadonlar (kartada nuqta, bosilsa ma'lumot chiqadi) ───────────────────────
+// Yong'in-qutqaruv deposi (world)
+export const FIRE_STATION = { x: 170, y: 600, name: "13-Yong'in qutqaruv qismi" };
+
+// ── Honadonlar (world pos; pin sifatida chiziladi, bosilsa ma'lumot) ────────────
 export const HOUSEHOLDS = [
   {
     id: "hh-1", head: "Karimovlar oilasi", address: "Sharq ko'chasi, 12-uy",
-    pos: { x: 500, y: 230 }, buildingType: "Ko'p qavatli (5 qavat)",
+    pos: { x: 520, y: 150 }, buildingType: "Ko'p qavatli (5 qavat)",
     apartments: 40, residents: 168, children: 39, elderly: 14, gas: true,
     risk: "Yuqori", phone: "+998 90 123-45-67", lastInspection: "12.03.2026",
     note: "Gaz tarmog'i eski, 3-qavatda signal ishlamaydi.",
   },
   {
     id: "hh-2", head: "To'xtasinov Akmal", address: "G'arb ko'chasi, 7-uy",
-    pos: { x: 700, y: 400 }, buildingType: "Ko'p qavatli (9 qavat)",
+    pos: { x: 760, y: 430 }, buildingType: "Ko'p qavatli (9 qavat)",
     apartments: 72, residents: 290, children: 61, elderly: 25, gas: true,
     risk: "O'rta", phone: "+998 91 222-33-44", lastInspection: "28.01.2026",
     note: "Lift nosoz — qutqaruv qiyin.",
   },
   {
     id: "hh-3", head: "Rasulova Madina", address: "Sanoat ko'chasi, 24-uy",
-    pos: { x: 880, y: 560 }, buildingType: "Ko'p qavatli (5 qavat)",
+    pos: { x: 830, y: 580 }, buildingType: "Ko'p qavatli (5 qavat)",
     apartments: 30, residents: 121, children: 28, elderly: 9, gas: true,
     risk: "Yuqori", phone: "+998 93 444-55-66", lastInspection: "05.02.2026",
     note: "Yaqinida transformator — yong'in xavfi.",
   },
   {
     id: "hh-4", head: "Yusupovlar oilasi", address: "Yangihayot ko'chasi, 1-uy",
-    pos: { x: 300, y: 560 }, buildingType: "Hovli (1 qavat)",
+    pos: { x: 340, y: 110 }, buildingType: "Hovli (1 qavat)",
     apartments: 1, residents: 7, children: 3, elderly: 1, gas: true,
     risk: "Past", phone: "+998 94 555-66-77", lastInspection: "19.04.2026",
     note: "Profilaktika tekshiruvi rejalashtirilgan.",
   },
   {
     id: "hh-5", head: "Sobirov Jasur", address: "Mustaqillik ko'chasi, 30-uy",
-    pos: { x: 880, y: 90 }, buildingType: "Ko'p qavatli (7 qavat)",
+    pos: { x: 650, y: 90 }, buildingType: "Ko'p qavatli (7 qavat)",
     apartments: 56, residents: 214, children: 47, elderly: 18, gas: true,
     risk: "O'rta", phone: "+998 99 888-77-66", lastInspection: "02.06.2026",
     note: "3-qavatda tutun datchigi ishga tushgan.",
@@ -90,40 +85,40 @@ export const HOUSEHOLDS = [
   // qo'shimcha (missiya emas, lekin bosilsa ma'lumot chiqadi)
   {
     id: "hh-6", head: "Ergashev Sardor", address: "Bobur ko'chasi, 16-uy",
-    pos: { x: 120, y: 400 }, buildingType: "Ko'p qavatli (4 qavat)",
+    pos: { x: 150, y: 430 }, buildingType: "Ko'p qavatli (4 qavat)",
     apartments: 24, residents: 96, children: 20, elderly: 7, gas: false,
     risk: "Past", phone: "+998 95 666-77-88", lastInspection: "22.05.2026",
     note: "Elektr isitish, gaz yo'q.",
   },
   {
     id: "hh-7", head: "Aliyeva Nilufar", address: "Istiqlol ko'chasi, 9-uy",
-    pos: { x: 500, y: 560 }, buildingType: "Hovli (2 qavat)",
+    pos: { x: 600, y: 630 }, buildingType: "Hovli (2 qavat)",
     apartments: 2, residents: 11, children: 4, elderly: 2, gas: true,
     risk: "O'rta", phone: "+998 97 777-88-99", lastInspection: "30.03.2026",
     note: "Hovlida gaz balloni saqlanadi.",
   },
   {
     id: "hh-8", head: "Nazarov Bobur", address: "Navoiy ko'chasi, 5-uy",
-    pos: { x: 700, y: 230 }, buildingType: "Ko'p qavatli (3 qavat)",
+    pos: { x: 240, y: 300 }, buildingType: "Ko'p qavatli (3 qavat)",
     apartments: 18, residents: 73, children: 15, elderly: 6, gas: true,
     risk: "Past", phone: "+998 98 333-22-11", lastInspection: "11.05.2026",
     note: "Yong'in shkafi to'liq jihozlangan.",
   },
 ];
 
-// ── Missiyalar — marshrut nuqtalariga bog'langan (crew = rasch, water = suv litr) ──
+// ── Missiyalar (crew = rasch, water = suv litr). Tartib route bo'ylab hisoblanadi ──
 export const MISSIONS = [
-  { routeIndex: 4, householdId: "hh-1", reason: "Yong'in — gaz plitasi", kind: "fire", code: "Y-118", crew: 6, water: 6000 },
-  { routeIndex: 6, householdId: "hh-5", reason: "Tutun signali — 3-qavat", kind: "smoke", code: "T-077", crew: 4, water: 4000 },
-  { routeIndex: 9, householdId: "hh-2", reason: "Qutqaruv — liftda odam qoldi", kind: "rescue", code: "Q-051", crew: 5, water: 3000 },
-  { routeIndex: 11, householdId: "hh-3", reason: "Yong'in — transformator", kind: "fire", code: "Y-133", crew: 6, water: 8000 },
-  { routeIndex: 15, householdId: "hh-4", reason: "Profilaktika tekshiruvi", kind: "check", code: "P-204", crew: 3, water: 2000 },
+  { householdId: "hh-4", reason: "Profilaktika tekshiruvi", kind: "check", code: "P-204", crew: 3, water: 2000 },
+  { householdId: "hh-1", reason: "Yong'in — gaz plitasi", kind: "fire", code: "Y-118", crew: 6, water: 6000 },
+  { householdId: "hh-5", reason: "Tutun signali — 3-qavat", kind: "smoke", code: "T-077", crew: 4, water: 4000 },
+  { householdId: "hh-2", reason: "Qutqaruv — liftda odam qoldi", kind: "rescue", code: "Q-051", crew: 5, water: 3000 },
+  { householdId: "hh-3", reason: "Yong'in — transformator", kind: "fire", code: "Y-133", crew: 6, water: 8000 },
 ];
 
 export const MISSION_KIND = {
   fire: { label: "Yong'in", color: "#ef4444" },
   smoke: { label: "Tutun signali", color: "#f97316" },
-  rescue: { label: "Qutqaruv", color: "#06b6d4" },
+  rescue: { label: "Qutqaruv", color: "#0ea5e9" },
   check: { label: "Profilaktika", color: "#22c55e" },
 };
 
