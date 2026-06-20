@@ -1,7 +1,8 @@
-// API kalitsiz ko'rinish — loyiha zonalarini SVG sifatida chizadi (progress % bilan).
+// API kalitsiz ko'rinish (SVG). Default: faqat qurilish joylari (kran belgisi + puls).
+// showGreen=true bo'lsa: yashil zonalar + daraxt soni qo'shiladi.
 import { useMemo } from "react";
 
-import { OBOD_PROJECTS, PROJECT_STATUS } from "../../mock/obod.projects";
+import { OBOD_PROJECTS, isGreen, isConstruction } from "../../mock/obod.projects";
 
 const PAD = 24;
 const W = 720;
@@ -24,12 +25,7 @@ const useProjection = () =>
     });
   }, []);
 
-const centroid = (pts) => ({
-  x: pts.reduce((s, p) => s + p.x, 0) / pts.length,
-  y: pts.reduce((s, p) => s + p.y, 0) / pts.length,
-});
-
-const ObodMapFallback = ({ active, statusFilter = [], onSelect }) => {
+const ObodMapFallback = ({ active, showGreen = false, onSelect }) => {
   const project = useProjection();
 
   return (
@@ -37,32 +33,41 @@ const ObodMapFallback = ({ active, statusFilter = [], onSelect }) => {
       viewBox={`0 0 ${W} ${H}`}
       className="h-full w-full rounded-xl bg-[radial-gradient(circle_at_30%_20%,rgba(20,184,166,0.10),transparent_60%)]"
     >
-      {OBOD_PROJECTS.map((p) => {
-        const pts = p.path.map(project);
-        const d = pts.map((q, i) => `${i === 0 ? "M" : "L"}${q.x},${q.y}`).join(" ") + " Z";
-        const c = centroid(pts);
-        const color = PROJECT_STATUS[p.status].color;
+      {/* Yashil maydonlar (faqat showGreen) */}
+      {showGreen &&
+        OBOD_PROJECTS.filter(isGreen).map((p) => {
+          const pts = p.path.map(project);
+          const d = pts.map((q, i) => `${i === 0 ? "M" : "L"}${q.x},${q.y}`).join(" ") + " Z";
+          const c = project(p.center);
+          return (
+            <g key={`g-${p.id}`} className="cursor-pointer" onClick={() => onSelect(p)}>
+              <path d={d} fill="#16a34a" fillOpacity={0.5} stroke="#16a34a" strokeWidth={2} />
+              <text
+                x={c.x}
+                y={c.y}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                className="pointer-events-none fill-white text-[12px] font-semibold"
+              >
+                🌳 {p.info.trees}
+              </text>
+            </g>
+          );
+        })}
+
+      {/* Qurilish joylari — kran belgisi + puls (har doim) */}
+      {OBOD_PROJECTS.filter(isConstruction).map((p) => {
+        const c = project(p.center);
         const isActive = active?.id === p.id;
-        const visible = statusFilter.length === 0 || statusFilter.includes(p.status);
         return (
-          <g key={p.id} className="cursor-pointer" onClick={() => onSelect(p)}>
-            <path
-              d={d}
-              fill={color}
-              fillOpacity={!visible ? 0.1 : isActive ? 0.85 : 0.55}
-              stroke="#fff"
-              strokeOpacity={!visible ? 0.12 : 0.35}
-              strokeWidth={isActive ? 3 : 1.5}
-            />
-            <text
-              x={c.x}
-              y={c.y}
-              textAnchor="middle"
-              dominantBaseline="middle"
-              className="pointer-events-none fill-white text-[11px] font-semibold"
-              opacity={visible ? 1 : 0.25}
-            >
-              {p.info.progress}%
+          <g key={`c-${p.id}`} className="cursor-pointer" onClick={() => onSelect(p)}>
+            <circle cx={c.x} cy={c.y} r={isActive ? 18 : 14} fill="#d97706" fillOpacity={0.25}>
+              <animate attributeName="r" values="10;22;10" dur="1.8s" repeatCount="indefinite" />
+              <animate attributeName="fill-opacity" values="0.5;0;0.5" dur="1.8s" repeatCount="indefinite" />
+            </circle>
+            <circle cx={c.x} cy={c.y} r={8} fill="#d97706" />
+            <text x={c.x} y={c.y + 1} textAnchor="middle" dominantBaseline="middle" className="pointer-events-none text-[10px]">
+              🏗️
             </text>
           </g>
         );

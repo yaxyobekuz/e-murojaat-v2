@@ -3,10 +3,10 @@
 import { cn } from "@/shared/utils/cn";
 import { PROJECT_STATUS } from "../../mock/obod.projects";
 
-const ObodProjectsPanel = ({ projects, activeId, onSelect }) => (
+const ObodProjectsPanel = ({ projects, activeId, onSelect, title = "Loyihalar" }) => (
   <div className="surface-overlay flex max-h-[260px] w-80 flex-col rounded-xl p-2">
     <div className="flex items-center justify-between px-2 py-1.5">
-      <h4 className="text-[13px] font-semibold">Loyihalar</h4>
+      <h4 className="text-[13px] font-semibold">{title}</h4>
       <span className="text-[11px] text-foreground/45">{projects.length} ta</span>
     </div>
     <div className="flex flex-col gap-0.5 overflow-y-auto pr-0.5">

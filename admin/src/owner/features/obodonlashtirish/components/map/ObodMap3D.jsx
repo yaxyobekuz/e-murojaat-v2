@@ -1,13 +1,13 @@
-// Photorealistic 3D obodonlashtirish xaritasi — loyiha zonalari holat rangida
-// (ko'k rejada / amber jarayonda / yashil yakunlangan). Boshqariladi (controlled):
-//   - statusFilter: tanlangan holatlar; mos kelmaganlar xiralashadi
-//   - activeId + onSelect: tanlangan loyiha (panel bilan bog'langan), kamera uchadi
-// API kalit yo'q/xato bo'lsa — SVG fallback'ga o'tadi.
+// Photorealistic 3D obodonlashtirish xaritasi.
+// Default: xarita TOZA — faqat qurilish (jarayonda) joylari animatsiyali marker bilan
+//   (aylanuvchi kran + puls halqa) belgilanadi. Zonalar ko'rsatilmaydi.
+// showGreen=true bo'lsa: yashil maydonlar (park/ko'kalamzor) zona bo'lib chiziladi +
+//   ustida daraxt ikonka + daraxtlar soni. Qurilish markerlari ham qoladi.
 import { useEffect, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
 
 import { loadMaps3d } from "../../utils/googleMaps3d.loader";
-import { MAP_CENTER, OBOD_PROJECTS, PROJECT_STATUS } from "../../mock/obod.projects";
+import { MAP_CENTER, OBOD_PROJECTS, isGreen, isConstruction } from "../../mock/obod.projects";
 import ObodMapInfoCard from "./ObodMapInfoCard";
 import ObodMapFallback from "./ObodMapFallback";
 
@@ -24,17 +24,33 @@ const hexToRgba = (hex, a) => {
   return `rgba(${r}, ${g}, ${b}, ${a})`;
 };
 
-const centroid = (path) => ({
-  lat: path.reduce((s, p) => s + p.lat, 0) / path.length,
-  lng: path.reduce((s, p) => s + p.lng, 0) / path.length,
-});
+// Qurilish markeri HTML — aylanuvchi kran + puls
+const constructionEl = () => {
+  const el = document.createElement("div");
+  el.className = "obod-marker";
+  el.innerHTML =
+    '<span class="obod-pulse"></span>' +
+    '<span class="obod-chip"><span class="obod-crane">🏗️</span>Qurilish</span>';
+  return el;
+};
 
-const ObodMap3D = ({ statusFilter = [], activeId = null, onSelect }) => {
+// Yashil maydon markeri — daraxt + soni
+const treeEl = (count) => {
+  const el = document.createElement("div");
+  el.className = "obod-tree-chip";
+  el.innerHTML = `<span>🌳</span>${count.toLocaleString("uz-UZ")}`;
+  return el;
+};
+
+const ObodMap3D = ({ showGreen = false, activeId = null, onSelect }) => {
   const hostRef = useRef(null);
   const mapRef = useRef(null);
-  const polysRef = useRef({});
+  const libRef = useRef(null);
+  const greenPolysRef = useRef([]); // yashil zonalar (showGreen rejimida)
+  const greenMarkersRef = useRef([]); // daraxt markerlari
   const [status, setStatus] = useState("loading"); // loading | ready | fallback
 
+  // Boshlang'ich — xarita + qurilish markerlari (har doim ko'rinadi)
   useEffect(() => {
     let cancelled = false;
 
@@ -42,8 +58,9 @@ const ObodMap3D = ({ statusFilter = [], activeId = null, onSelect }) => {
       try {
         const lib = await loadMaps3d(API_KEY);
         if (cancelled || !hostRef.current) return;
+        libRef.current = lib;
 
-        const { Map3DElement, Polygon3DInteractiveElement, MapMode, AltitudeMode } = lib;
+        const { Map3DElement, Marker3DInteractiveElement, MapMode } = lib;
 
         const map = new Map3DElement({ center: LOOK_AT, ...CAMERA, mode: MapMode.HYBRID });
         map.style.width = "100%";
@@ -51,21 +68,15 @@ const ObodMap3D = ({ statusFilter = [], activeId = null, onSelect }) => {
         hostRef.current.replaceChildren(map);
         mapRef.current = map;
 
-        OBOD_PROJECTS.forEach((p) => {
-          const color = PROJECT_STATUS[p.status].color;
-          const ring = p.path.map((q) => ({ ...q, altitude: 0 }));
-          const poly = new Polygon3DInteractiveElement({
-            outerCoordinates: ring,
-            altitudeMode: AltitudeMode.CLAMP_TO_GROUND,
-            extruded: false,
-            fillColor: hexToRgba(color, 0.45),
-            strokeColor: color,
-            strokeWidth: 4,
-            drawsOccludedSegments: false,
+        // Qurilish (jarayonda) markerlari — animatsiyali
+        OBOD_PROJECTS.filter(isConstruction).forEach((p) => {
+          const marker = new Marker3DInteractiveElement({
+            position: { ...p.center, altitude: 0 },
+            altitudeMode: lib.AltitudeMode.CLAMP_TO_GROUND,
           });
-          poly.addEventListener("gmp-click", () => onSelect?.(p.id));
-          map.append(poly);
-          polysRef.current[p.id] = poly;
+          marker.append(constructionEl());
+          marker.addEventListener("gmp-click", () => onSelect?.(p.id));
+          map.append(marker);
         });
 
         setStatus("ready");
@@ -81,29 +92,54 @@ const ObodMap3D = ({ statusFilter = [], activeId = null, onSelect }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Filtr + tanlovga qarab poligon ko'rinishini yangilash
+  // Yashil maydon rejimi — zona + daraxt markerlarini qo'shish/olib tashlash
   useEffect(() => {
-    if (status !== "ready") return;
-    OBOD_PROJECTS.forEach((p) => {
-      const poly = polysRef.current[p.id];
-      if (!poly) return;
-      const color = PROJECT_STATUS[p.status].color;
-      const visible = statusFilter.length === 0 || statusFilter.includes(p.status);
-      const isActive = activeId === p.id;
-      poly.fillColor = hexToRgba(color, !visible ? 0.06 : isActive ? 0.7 : 0.45);
-      poly.strokeColor = !visible ? hexToRgba(color, 0.3) : color;
-      poly.strokeWidth = isActive ? 7 : 4;
+    if (status !== "ready" || !mapRef.current || !libRef.current) return;
+    const map = mapRef.current;
+    const { Polygon3DElement, Marker3DInteractiveElement, AltitudeMode } = libRef.current;
+
+    // Tozalash
+    greenPolysRef.current.forEach((el) => el.remove());
+    greenMarkersRef.current.forEach((el) => el.remove());
+    greenPolysRef.current = [];
+    greenMarkersRef.current = [];
+
+    if (!showGreen) return;
+
+    const green = "#16a34a";
+    OBOD_PROJECTS.filter(isGreen).forEach((p) => {
+      const ring = p.path.map((q) => ({ ...q, altitude: 0 }));
+      const poly = new Polygon3DElement({
+        outerCoordinates: ring,
+        altitudeMode: AltitudeMode.CLAMP_TO_GROUND,
+        extruded: false,
+        fillColor: hexToRgba(green, 0.5),
+        strokeColor: green,
+        strokeWidth: 3,
+        drawsOccludedSegments: false,
+      });
+      map.append(poly);
+      greenPolysRef.current.push(poly);
+
+      const marker = new Marker3DInteractiveElement({
+        position: { ...p.center, altitude: 0 },
+        altitudeMode: AltitudeMode.CLAMP_TO_GROUND,
+      });
+      marker.append(treeEl(p.info.trees));
+      marker.addEventListener("gmp-click", () => onSelect?.(p.id));
+      map.append(marker);
+      greenMarkersRef.current.push(marker);
     });
-  }, [statusFilter, activeId, status]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showGreen, status]);
 
   // Tanlangan loyihaga kamera uchadi
   useEffect(() => {
     if (status !== "ready" || !activeId || !mapRef.current) return;
     const p = OBOD_PROJECTS.find((x) => x.id === activeId);
     if (!p) return;
-    const c = centroid(p.path);
     mapRef.current.flyCameraTo({
-      endCamera: { center: { ...c, altitude: GROUND_ALT }, tilt: 64, range: 700, heading: 20 },
+      endCamera: { center: { ...p.center, altitude: GROUND_ALT }, tilt: 64, range: 600, heading: 20 },
       durationMillis: 1400,
     });
   }, [activeId, status]);
@@ -127,7 +163,7 @@ const ObodMap3D = ({ statusFilter = [], activeId = null, onSelect }) => {
         <div className="h-full w-full p-2">
           <ObodMapFallback
             active={activeProject}
-            statusFilter={statusFilter}
+            showGreen={showGreen}
             onSelect={(p) => onSelect?.(p.id)}
           />
         </div>

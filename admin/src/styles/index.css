@@ -235,3 +235,61 @@ input[type="search"]::-ms-reveal {
 [class*="api-load-beta-banner"] {
   display: none !important;
 }
+
+/* Obodonlashtirish — qurilish markeri (aylanuvchi kran + puls halqa) */
+.obod-marker {
+  position: relative;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+.obod-pulse {
+  position: absolute;
+  width: 42px;
+  height: 42px;
+  border-radius: 9999px;
+  background: rgba(217, 119, 6, 0.35);
+  animation: obod-pulse 1.8s ease-out infinite;
+}
+@keyframes obod-pulse {
+  0% { transform: scale(0.5); opacity: 0.8; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+.obod-chip {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: 9999px;
+  background: rgba(217, 119, 6, 0.95);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+.obod-crane {
+  display: inline-block;
+  transform-origin: 50% 80%;
+  animation: obod-sway 2.4s ease-in-out infinite;
+}
+@keyframes obod-sway {
+  0%, 100% { transform: rotate(-12deg); }
+  50% { transform: rotate(12deg); }
+}
+/* Yashil maydon markeri (daraxt + soni) — animatsiyasiz */
+.obod-tree-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: 9999px;
+  background: rgba(22, 163, 74, 0.95);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+}

@@ -43,20 +43,26 @@ const BBOX = {
 };
 
 // 12 loyiha (chapdan-o'ngga, yuqoridan-pastga)
+// trees — faqat ko'kalamzor/park loyihalarida (yashil maydonlar rejimida ko'rsatiladi)
 const META = [
   { name: "Markaziy ko'cha yo'li", type: "road", status: "done", progress: 100, budget: 4_200_000_000 },
-  { name: "Sarnovul mahalla parki", type: "park", status: "ongoing", progress: 64, budget: 1_850_000_000 },
+  { name: "Sarnovul mahalla parki", type: "park", status: "ongoing", progress: 64, budget: 1_850_000_000, trees: 320 },
   { name: "Yoritish tarmog'i — 3-blok", type: "lighting", status: "planned", progress: 0, budget: 620_000_000 },
-  { name: "Daryo bo'yi ko'kalamzori", type: "greenery", status: "ongoing", progress: 42, budget: 540_000_000 },
-  { name: "Maktab oldi maydoni", type: "park", status: "done", progress: 100, budget: 980_000_000 },
+  { name: "Daryo bo'yi ko'kalamzori", type: "greenery", status: "ongoing", progress: 42, budget: 540_000_000, trees: 540 },
+  { name: "Maktab oldi maydoni", type: "park", status: "done", progress: 100, budget: 980_000_000, trees: 180 },
   { name: "Ichki yo'llar ta'miri", type: "road", status: "ongoing", progress: 78, budget: 2_100_000_000 },
   { name: "Suv quvuri yangilash", type: "water", status: "planned", progress: 0, budget: 1_400_000_000 },
   { name: "Bozor atrofi yoritish", type: "lighting", status: "done", progress: 100, budget: 430_000_000 },
-  { name: "Sport maydonchasi", type: "park", status: "ongoing", progress: 55, budget: 760_000_000 },
+  { name: "Sport maydonchasi", type: "park", status: "ongoing", progress: 55, budget: 760_000_000, trees: 95 },
   { name: "Avtobus bekati zonasi", type: "road", status: "planned", progress: 0, budget: 310_000_000 },
-  { name: "Ko'cha daraxtlari ekish", type: "greenery", status: "done", progress: 100, budget: 220_000_000 },
+  { name: "Ko'cha daraxtlari ekish", type: "greenery", status: "done", progress: 100, budget: 220_000_000, trees: 760 },
   { name: "Quduq va nasos stansiyasi", type: "water", status: "ongoing", progress: 33, budget: 1_120_000_000 },
 ];
+
+// Yashil maydon turlari (daraxt soni bo'lgan loyihalar)
+export const GREEN_TYPES = ["greenery", "park"];
+export const isGreen = (p) => GREEN_TYPES.includes(p.type) && p.info.trees > 0;
+export const isConstruction = (p) => p.status === "ongoing";
 
 const SEEDS = META.map((m, i) => {
   const col = i % GRID_COLS;
@@ -133,12 +139,15 @@ export const OBOD_PROJECTS = SEEDS.map((seed, i) => ({
   name: seed.name,
   type: seed.type,
   status: seed.status,
+  // marker uchun markaz nuqtasi (seed o'rni)
+  center: { lat: seed.y, lng: seed.x },
   info: {
     typeLabel: PROJECT_TYPE[seed.type],
     budgetUzs: seed.budget,
     progress: seed.progress,
     // bajarilgan summa progressga mos
     spentUzs: Math.round((seed.budget * seed.progress) / 100),
+    trees: seed.trees || 0,
   },
   path: warpPoly(voronoiCell(seed, SEEDS)),
 }));
