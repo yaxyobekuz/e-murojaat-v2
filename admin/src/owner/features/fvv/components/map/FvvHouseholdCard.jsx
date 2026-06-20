@@ -1,5 +1,5 @@
 // Honadon kartada bosilganda — u haqida ma'lumotlar (aholi soni, xavf, gaz...).
-import { X, Home, Users, Baby, Accessibility, Flame, ShieldAlert, Phone, CalendarCheck, Building2 } from "lucide-react";
+import { X, Home, Users, Baby, Accessibility, Flame, ShieldAlert, Phone, CalendarCheck, Building2, Layers, UserCog } from "lucide-react";
 
 import GlassStatusBadge from "@/shared/components/ui/glass/GlassStatusBadge";
 import { RISK_TONE } from "../../mock/fvv.cityMap";
@@ -17,6 +17,9 @@ const FvvHouseholdCard = ({ household, onClose }) => {
   if (!household) return null;
   const h = household;
   const risk = RISK_TONE[h.risk] || RISK_TONE.Past;
+  const isHouse = h.kind === "house";
+  const HeadIcon = isHouse ? Home : Building2;
+  const perApt = h.apartments ? Math.round(h.residents / h.apartments) : h.residents;
 
   return (
     <div className="surface absolute bottom-4 right-4 z-30 w-72 animate-in fade-in slide-in-from-right-2 p-4 shadow-2xl">
@@ -26,7 +29,7 @@ const FvvHouseholdCard = ({ household, onClose }) => {
             className="grid size-8 place-items-center rounded-lg"
             style={{ backgroundColor: `${risk.color}26`, color: risk.color }}
           >
-            <Home className="size-4" />
+            <HeadIcon className="size-4" />
           </span>
           <div className="leading-tight">
             <h4 className="text-sm font-semibold">{h.head}</h4>
@@ -45,10 +48,17 @@ const FvvHouseholdCard = ({ household, onClose }) => {
 
       <div className="mt-3 flex flex-col gap-2 border-t border-[rgb(var(--card-border))] pt-3">
         <Row icon={Building2} label="Bino turi" value={h.buildingType} />
-        <Row icon={Home} label="Xonadonlar" value={h.apartments} />
-        <Row icon={Users} label="Aholi" value={h.residents} valueClass="text-cyan-300" />
+        <Row icon={Layers} label="Qavatlar" value={h.floors} />
+        {!isHouse && <Row icon={Home} label="Kvartiralar" value={h.apartments} />}
+        <Row
+          icon={Users}
+          label="Aholi (jami)"
+          value={isHouse ? h.residents : `${h.residents} (~${perApt}/kv.)`}
+          valueClass="text-cyan-300"
+        />
         <Row icon={Baby} label="Bolalar" value={h.children} />
         <Row icon={Accessibility} label="Keksalar" value={h.elderly} />
+        {h.owner && <Row icon={UserCog} label="Mas'ul" value={h.owner} />}
         <Row
           icon={Flame}
           label="Gaz tarmog'i"
