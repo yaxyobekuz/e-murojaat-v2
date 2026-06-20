@@ -1,49 +1,36 @@
-// FVV operativ xarita — yo'llar chizilgan shahar, Pajar mashinasi doimiy harakatda.
-// Tepada joriy missiya (qaysi honadonga, nima maqsadda). Honadon bosilsa — ma'lumot.
+// FVV operativ xarita — 3D mini shahar + firetruck simulyatsiyasi (R3F).
+// Holat mashinasi (patrul/yo'l/o'chirish/qaytish) HUD'da; bino bosilsa — ma'lumot.
 import useObjectState from "@/shared/hooks/useObjectState";
 import { MAP_PLACE_LABEL, getHousehold, HOUSEHOLDS } from "../mock/fvv.cityMap";
-import FvvCityMap from "../components/map/FvvCityMap";
+import FvvCity3D from "../components/map/FvvCity3D";
 import FvvHouseholdCard from "../components/map/FvvHouseholdCard";
-import FvvMissionBanner from "../components/overlay/FvvMissionBanner";
 
 const FvvMapPage = () => {
-  const { activeHouseId, mission, eta, setField } = useObjectState({
-    activeHouseId: null,
-    mission: null,
-    eta: null,
-  });
-
+  const { activeHouseId, setField } = useObjectState({ activeHouseId: null });
   const activeHouse = getHousehold(activeHouseId);
 
   return (
     <div className="relative h-[calc(100vh-7rem)] w-full overflow-hidden rounded-2xl border border-[rgb(var(--card-border))] bg-card">
-      {/* Fon — animatsiyali shahar xaritasi */}
+      {/* 3D shahar */}
       <div className="absolute inset-0">
-        <FvvCityMap
+        <FvvCity3D
           activeHouseId={activeHouseId}
           onSelectHouse={(id) => setField("activeHouseId", id === activeHouseId ? null : id)}
-          onMission={(m) => setField("mission", m)}
-          onEta={(sec) => setField("eta", sec)}
         />
       </div>
 
-      {/* Tepa overlay — sarlavha + joriy missiya */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex flex-col gap-3 p-4">
-        <div className="pointer-events-auto flex flex-wrap items-start justify-between gap-3">
-          <div className="surface-overlay rounded-xl px-3 py-2">
-            <h1 className="text-sm font-semibold tracking-tight">FVV — operativ xarita</h1>
-            <p className="text-[11px] text-foreground/55">{MAP_PLACE_LABEL}</p>
-          </div>
-          <div className="pointer-events-auto max-w-[340px]">
-            <FvvMissionBanner mission={mission} eta={eta} />
-          </div>
+      {/* Sarlavha */}
+      <div className="pointer-events-none absolute left-4 top-4 z-10">
+        <div className="surface-overlay pointer-events-auto rounded-xl px-3 py-2">
+          <h1 className="text-sm font-semibold tracking-tight">FVV — 3D operativ xarita</h1>
+          <p className="text-[11px] text-foreground/55">{MAP_PLACE_LABEL}</p>
         </div>
       </div>
 
-      {/* Pastki overlay — honadonlar ro'yxati (tez tanlash) */}
+      {/* Binolar ro'yxati (tez tanlash) */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex justify-start p-4">
-        <div className="surface-overlay pointer-events-auto flex max-h-[200px] w-64 flex-col rounded-xl p-2">
-          <div className="px-2 py-1.5 text-[13px] font-semibold">Honadonlar</div>
+        <div className="surface-overlay pointer-events-auto flex max-h-[180px] w-64 flex-col rounded-xl p-2">
+          <div className="px-2 py-1.5 text-[13px] font-semibold">Binolar</div>
           <div className="flex flex-col gap-0.5 overflow-y-auto pr-0.5">
             {HOUSEHOLDS.map((h) => (
               <button
@@ -65,7 +52,7 @@ const FvvMapPage = () => {
         </div>
       </div>
 
-      {/* Tanlangan honadon — ma'lumot kartasi */}
+      {/* Tanlangan bino — ma'lumot kartasi */}
       <FvvHouseholdCard household={activeHouse} onClose={() => setField("activeHouseId", null)} />
     </div>
   );
