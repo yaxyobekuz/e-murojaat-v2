@@ -1,17 +1,18 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import DashboardPage from "@/owner/pages/DashboardPage";
-import ObodonlashtirishPage from "@/owner/pages/ObodonlashtirishPage";
-import YoshlarPage from "@/owner/pages/YoshlarPage";
+import {
+  YerDashboardPage,
+  YerRegistryPage,
+  YerRequestsPage,
+} from "@/owner/features/yer";
 
 const OwnerRoutes = () => (
   <Routes>
-    <Route index element={<Navigate to="dashboard" replace />} />
-    <Route path="dashboard" element={<DashboardPage />} />
-
-    <Route path="obodonlashtirish" element={<ObodonlashtirishPage />} />
-    <Route path="yoshlar" element={<YoshlarPage />} />
-    <Route path="*" element={<Navigate to="dashboard" replace />} />
+    <Route index element={<Navigate to="yer" replace />} />
+    <Route path="yer" element={<YerDashboardPage />} />
+    <Route path="yer/reyestr" element={<YerRegistryPage />} />
+    <Route path="yer/arizalar" element={<YerRequestsPage />} />
+    <Route path="*" element={<Navigate to="yer" replace />} />
   </Routes>
 );
 
