@@ -57,7 +57,10 @@ const topbarModules = [
     title: "FVV (Favqulodda)",
     icon: Flame,
     base: "/owner/fvv",
-    items: [{ title: "Analitika", url: "/owner/fvv", end: true }],
+    items: [
+      { title: "Analitika", url: "/owner/fvv", end: true },
+      { title: "Operativ xarita", url: "/owner/fvv/xarita" },
+    ],
   },
 ];
 

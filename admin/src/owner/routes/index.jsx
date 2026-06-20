@@ -15,7 +15,7 @@ import {
 } from "@/owner/features/obodonlashtirish";
 import { TalimDashboardPage } from "@/owner/features/talim";
 import { IibDashboardPage, IibMapPage } from "@/owner/features/iib";
-import { FvvDashboardPage } from "@/owner/features/fvv";
+import { FvvDashboardPage, FvvMapPage } from "@/owner/features/fvv";
 
 const OwnerRoutes = () => (
   <Routes>
@@ -31,6 +31,7 @@ const OwnerRoutes = () => (
     <Route path="iib" element={<IibDashboardPage />} />
     <Route path="iib/xarita" element={<IibMapPage />} />
     <Route path="fvv" element={<FvvDashboardPage />} />
+    <Route path="fvv/xarita" element={<FvvMapPage />} />
     <Route path="*" element={<Navigate to="yer" replace />} />
   </Routes>
 );
