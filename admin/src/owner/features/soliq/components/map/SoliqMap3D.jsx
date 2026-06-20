@@ -2,7 +2,7 @@
 // (extruded) poligonlar bilan belgilanadi: yashil to'lagan, sariq chala, qizil qarzdor.
 // Blok bosilsa info card. API kalit yo'q/xato bo'lsa — SVG fallback'ga o'tadi.
 import { useEffect, useRef, useState } from "react";
-import { Loader2, RotateCw } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 import { loadMaps3d } from "../../utils/googleMaps3d.loader";
 import { MAP_CENTER, MAHALLA_AREAS, TAX_STATUS } from "../../mock/soliq.mapAreas";
@@ -14,7 +14,7 @@ const API_KEY = import.meta.env.VITE_MAPS_API_KEY;
 // Baliqchi yer balandligi (~440m). Kamera shu nuqtaga qaraydi.
 const GROUND_ALT = 440;
 const LOOK_AT = { ...MAP_CENTER, altitude: GROUND_ALT };
-const CAMERA = { tilt: 70, range: 1200, heading: 25 };
+const CAMERA = { tilt: 66, range: 1300, heading: 20 };
 
 // Hex (#16a34a) -> "rgba(r,g,b,a)" (Polygon3D fillColor uchun)
 const hexToRgba = (hex, a) => {
@@ -24,17 +24,8 @@ const hexToRgba = (hex, a) => {
   return `rgba(${r}, ${g}, ${b}, ${a})`;
 };
 
-const startOrbit = (map) => {
-  map.flyCameraAround({
-    camera: { center: LOOK_AT, ...CAMERA },
-    durationMillis: 60000,
-    rounds: 1,
-  });
-};
-
 const SoliqMap3D = () => {
   const hostRef = useRef(null);
-  const mapRef = useRef(null);
   const [status, setStatus] = useState("loading"); // loading | ready | fallback
   const [active, setActive] = useState(null);
 
@@ -56,11 +47,10 @@ const SoliqMap3D = () => {
         map.style.width = "100%";
         map.style.height = "100%";
         hostRef.current.replaceChildren(map);
-        mapRef.current = map;
 
         // Har blok — yerga yopishgan rangli hudud belgisi (extruded quti emas).
-        // Poligon yer yuzasiga to'shaladi, qalin oq chegara bilan — xuddi
-        // hududni qo'lda belgilaganday ko'rinadi.
+        // Poligon yer yuzasiga to'shaladi, holat rangidagi qalin chegara bilan —
+        // xuddi hududni qo'lda belgilaganday ko'rinadi.
         MAHALLA_AREAS.forEach((a) => {
           const color = TAX_STATUS[a.status].color;
           const ring = a.path.map((p) => ({ ...p, altitude: 0 }));
@@ -79,7 +69,6 @@ const SoliqMap3D = () => {
         });
 
         setStatus("ready");
-        startOrbit(map);
       } catch (err) {
         console.warn("Soliq 3D xarita yuklanmadi, fallback ko'rsatiladi.", err?.message);
         if (!cancelled) setStatus("fallback");
@@ -90,8 +79,6 @@ const SoliqMap3D = () => {
       cancelled = true;
     };
   }, []);
-
-  const replayOrbit = () => mapRef.current && startOrbit(mapRef.current);
 
   return (
     <div className="relative h-full w-full overflow-hidden rounded-xl bg-card">
@@ -110,16 +97,6 @@ const SoliqMap3D = () => {
         <div className="h-full w-full p-2">
           <SoliqMapFallback active={active} onSelect={setActive} />
         </div>
-      )}
-
-      {status === "ready" && (
-        <button
-          type="button"
-          onClick={replayOrbit}
-          className="surface-overlay absolute bottom-4 left-4 z-10 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium text-foreground hover:text-indigo-500"
-        >
-          <RotateCw className="size-3.5" /> Aylanishni takrorlash
-        </button>
       )}
 
       <SoliqMapInfoCard area={active} onClose={() => setActive(null)} />
