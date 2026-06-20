@@ -9,6 +9,9 @@ import { Toaster } from "sonner";
 // Routes
 import Routes from "@/app/routes.jsx";
 
+// Theme
+import ThemeProvider from "@/app/ThemeProvider";
+
 // Store (Redux)
 import store from "@/app/store";
 import { Provider } from "react-redux";
@@ -25,17 +28,19 @@ import { QueryClientProvider } from "@tanstack/react-query";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
-    <QueryClientProvider client={queryClient}>
-      <Provider store={store}>
-        <Routes />
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <Provider store={store}>
+          <Routes />
 
-        <Toaster
-          richColors
-          position="top-right"
-          offset={{ top: 24 }}
-          mobileOffset={{ top: 24 }}
-        />
-      </Provider>
-    </QueryClientProvider>
+          <Toaster
+            richColors
+            position="top-right"
+            offset={{ top: 24 }}
+            mobileOffset={{ top: 24 }}
+          />
+        </Provider>
+      </QueryClientProvider>
+    </ThemeProvider>
   </BrowserRouter>,
 );
