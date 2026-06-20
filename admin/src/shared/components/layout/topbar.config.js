@@ -1,4 +1,4 @@
-import { Map, Landmark, Trees } from "lucide-react";
+import { Map, Landmark, Trees, GraduationCap, Shield, Flame } from "lucide-react";
 
 // TopBar modullari (drill-in). Har modul: key (kod), title (UI), icon, base (root url),
 // items[] (ichki bo'limlar). Modulga bosilsa TopBar shu modul ichiga almashadi.
@@ -34,6 +34,27 @@ const topbarModules = [
       { title: "Analitika", url: "/owner/obodonlashtirish", end: true },
       { title: "Loyihalar", url: "/owner/obodonlashtirish/loyihalar" },
     ],
+  },
+  {
+    key: "talim",
+    title: "Ta'lim",
+    icon: GraduationCap,
+    base: "/owner/talim",
+    items: [{ title: "Analitika", url: "/owner/talim", end: true }],
+  },
+  {
+    key: "iib",
+    title: "IIB (Xavfsizlik)",
+    icon: Shield,
+    base: "/owner/iib",
+    items: [{ title: "Analitika", url: "/owner/iib", end: true }],
+  },
+  {
+    key: "fvv",
+    title: "FVV (Favqulodda)",
+    icon: Flame,
+    base: "/owner/fvv",
+    items: [{ title: "Analitika", url: "/owner/fvv", end: true }],
   },
 ];
 
