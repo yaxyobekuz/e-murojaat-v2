@@ -7,9 +7,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   MAHALLA_AREAS,
   HOUSEHOLDS,
+  OBJECT_TYPES,
   DEPOT,
   FIRE_STATUS,
-  FIRE_TYPES,
   metersBetween,
 } from "../../mock/fvv.mapAreas";
 
@@ -323,23 +323,15 @@ const FvvAreaMap = ({ statusFilter = [], active, onSelect, onSelectHouse, onStat
         <text x={depotS.x} y={depotS.y + 4} textAnchor="middle" className="fill-white text-[9px] font-bold">13</text>
       </g>
 
-      {/* Honadon / bino markerlari (bosilsa ma'lumot) */}
+      {/* Bino markerlari — tur rangi + harfi (bosilsa ma'lumot) */}
       {HOUSEHOLDS.map((h) => {
         const p = project(h.pos);
-        const isApt = h.kind === "apartment";
+        const tm = OBJECT_TYPES[h.type] || OBJECT_TYPES.apartment;
         return (
           <g key={h.id} className="cursor-pointer" onClick={(e) => { e.stopPropagation(); onSelectHouse(h.id); }}>
-            <circle cx={p.x} cy={p.y} r="8" fill="#0f172a" stroke="#38bdf8" strokeWidth="1.3" />
-            {isApt ? (
-              <g stroke="#7dd3fc" strokeWidth="1" fill="none">
-                <rect x={p.x - 3} y={p.y - 3.5} width="6" height="7" />
-                <line x1={p.x - 1} y1={p.y - 1.5} x2={p.x - 1} y2={p.y - 1.5} />
-              </g>
-            ) : (
-              <path d={`M${p.x - 3.5},${p.y + 2} L${p.x - 3.5},${p.y - 1} L${p.x},${p.y - 4} L${p.x + 3.5},${p.y - 1} L${p.x + 3.5},${p.y + 2} Z`}
-                fill="none" stroke="#7dd3fc" strokeWidth="1" />
-            )}
-            <text x={p.x} y={p.y + 16} textAnchor="middle" className="pointer-events-none fill-cyan-200/80 text-[8px]">{h.residents}</text>
+            <rect x={p.x - 7.5} y={p.y - 7.5} width="15" height="15" rx="3.5" fill={tm.color} stroke="#fff" strokeWidth="1.1" opacity="0.96" />
+            <text x={p.x} y={p.y + 0.4} textAnchor="middle" dominantBaseline="central" className="pointer-events-none fill-white text-[7px] font-bold">{tm.letter}</text>
+            <text x={p.x} y={p.y + 16} textAnchor="middle" className="pointer-events-none fill-white/85 text-[7.5px] font-medium">{tm.label}</text>
           </g>
         );
       })}

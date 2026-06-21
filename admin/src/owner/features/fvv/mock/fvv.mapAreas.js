@@ -227,24 +227,61 @@ export const metersBetween = (a, b) => {
   return Math.hypot(dx, dy);
 };
 
-// ── Honadonlar / binolar (bloklarga joylashgan, real raqamlar) ─────────────────
-const HH_DEFS = [
-  { blockIdx: 0, dlat: 0.0004, dlng: -0.0005, head: "12-uy · 5 qavatli", kind: "apartment", floors: 5, apartments: 40, residents: 142, children: 33, elderly: 15, gas: true, risk: "Yuqori", phone: "+998 90 123-45-67", lastInspection: "12.03.2026", note: "Gaz tarmog'i eski." },
-  { blockIdx: 3, dlat: -0.0003, dlng: 0.0006, head: "7-uy · 9 qavatli", kind: "apartment", floors: 9, apartments: 72, residents: 254, children: 58, elderly: 27, gas: true, risk: "Yuqori", phone: "+998 91 222-33-44", lastInspection: "28.01.2026", note: "Lift nosoz — qutqaruv qiyin." },
-  { blockIdx: 5, dlat: 0.0005, dlng: 0.0003, head: "24-uy · 5 qavatli", kind: "apartment", floors: 5, apartments: 30, residents: 104, children: 24, elderly: 11, gas: true, risk: "O'rta", phone: "+998 93 444-55-66", lastInspection: "05.02.2026", note: "Yong'in shkafi to'liq." },
-  { blockIdx: 6, dlat: -0.0004, dlng: -0.0004, head: "Yusupovlar hovlisi", kind: "house", floors: 1, apartments: 1, residents: 6, children: 2, elderly: 1, gas: true, risk: "Past", phone: "+998 94 555-66-77", lastInspection: "19.04.2026", note: "Hovlida gaz balloni." },
-  { blockIdx: 9, dlat: 0.0003, dlng: 0.0005, head: "30-uy · 7 qavatli", kind: "apartment", floors: 7, apartments: 56, residents: 196, children: 45, elderly: 21, gas: true, risk: "Yuqori", phone: "+998 99 888-77-66", lastInspection: "02.06.2026", note: "3-qavatda tutun datchigi." },
-  { blockIdx: 13, dlat: 0.0004, dlng: -0.0003, head: "Aliyevlar hovlisi", kind: "house", floors: 2, apartments: 1, residents: 8, children: 3, elderly: 1, gas: true, risk: "Past", phone: "+998 97 777-88-99", lastInspection: "30.03.2026", note: "Xususiy uy." },
+// ── Bino turlari (marker rangi/harfi + kartochka) ──────────────────────────────
+export const OBJECT_TYPES = {
+  shifoxona: { label: "Shifoxona", color: "#ef4444", letter: "Sh" },
+  maktab: { label: "Maktab", color: "#3b82f6", letter: "M" },
+  bogcha: { label: "Bog'cha", color: "#22c55e", letter: "Bg" },
+  apartment: { label: "Ko'p kvartirali uy", color: "#38bdf8", letter: "K" },
+  house: { label: "Hovli", color: "#a78bfa", letter: "H" },
+  savdo: { label: "Savdo markazi", color: "#f59e0b", letter: "S" },
+  bozor: { label: "Bozor", color: "#f97316", letter: "Bz" },
+  stadion: { label: "Stadion", color: "#10b981", letter: "St" },
+  zavod: { label: "Zavod", color: "#9ca3af", letter: "Z" },
+  avtostansiya: { label: "Avtostansiya", color: "#eab308", letter: "A" },
+  benzin: { label: "Yoqilg'i / gaz", color: "#dc2626", letter: "G" },
+  masjid: { label: "Masjid", color: "#14b8a6", letter: "Mj" },
+};
+
+// Har blokka bittadan obyekt (15 ta). people = xavf ostidagi odamlar (karta belgisi).
+const OBJ_DEFS = [
+  { blockIdx: 0, type: "apartment", name: "12-uy · 5 qavatli", people: 142, risk: "Yuqori", note: "Gaz tarmog'i eski.", stats: [["Qavatlar", 5], ["Kvartiralar", 40], ["Aholi", "142 (~4/kv.)"], ["Bolalar", 33], ["Keksalar", 15]] },
+  { blockIdx: 1, type: "bozor", name: "Markaziy bozor", people: 1500, risk: "Yuqori", note: "Elektr simlari ortiqcha yuklangan.", stats: [["Rastalar", 540], ["Savdogarlar", 610], ["Kunlik tashrif", 8000]] },
+  { blockIdx: 2, type: "maktab", name: "7-umumiy o'rta maktab", people: 1240, risk: "Yuqori", note: "2-smena 14:00 da boshlanadi.", stats: [["O'quvchilar", 1240], ["O'qituvchilar", 86], ["Sinflar", 44], ["Smenalar", 2]] },
+  { blockIdx: 3, type: "zavod", name: "G'isht zavodi", people: 240, risk: "O'rta", note: "Yuqori harorat — yong'in xavfi.", stats: [["Xodimlar", 240], ["Smena", 3], ["Pechlar", 4]] },
+  { blockIdx: 4, type: "bogcha", name: "12-bolalar bog'chasi", people: 210, risk: "Yuqori", note: "Evakuatsiya rejasi yangilangan.", stats: [["Bolalar", 210], ["Tarbiyachilar", 28], ["Guruhlar", 11]] },
+  { blockIdx: 5, type: "avtostansiya", name: "Navbahor avtostansiyasi", people: 300, risk: "Past", note: "", stats: [["Yo'nalishlar", 24], ["Kunlik yo'lovchi", 3200], ["Peronlar", 8]] },
+  { blockIdx: 6, type: "house", name: "Yusupovlar hovlisi", people: 6, risk: "Past", note: "Hovlida gaz balloni saqlanadi.", stats: [["Qavatlar", 1], ["Aholi", 6], ["Bolalar", 2], ["Keksalar", 1]] },
+  { blockIdx: 7, type: "apartment", name: "9-qavatli yangi uy", people: 254, risk: "Yuqori", note: "Lift nosoz — qutqaruv qiyin.", stats: [["Qavatlar", 9], ["Kvartiralar", 72], ["Aholi", "254 (~3.5/kv.)"], ["Bolalar", 58], ["Keksalar", 27]] },
+  { blockIdx: 8, type: "shifoxona", name: "Navbahor tuman shifoxonasi", people: 360, risk: "O'rta", note: "Kislorod balloni — yong'in xavfi.", stats: [["Koyka", 120], ["Bemorlar", 92], ["Shifokorlar", 38], ["Hamshira", 64], ["Bo'limlar", 9]] },
+  { blockIdx: 9, type: "benzin", name: "Gaz taqsimlagich shoxobchasi", people: 14, risk: "Yuqori", note: "Portlash xavfi — birinchi navbatdagi obyekt.", stats: [["Kolonkalar", 6], ["Rezervuar", "20 m³"], ["Xodimlar", 8]] },
+  { blockIdx: 10, type: "stadion", name: "Navbahor stadioni", people: 0, risk: "Past", note: "Tadbir paytida 8000 kishi yig'iladi.", stats: [["Sig'im", 8000], ["Sektorlar", 12]] },
+  { blockIdx: 11, type: "house", name: "Aliyevlar hovlisi", people: 8, risk: "Past", note: "Xususiy 2 qavatli uy.", stats: [["Qavatlar", 2], ["Aholi", 8], ["Bolalar", 3], ["Keksalar", 1]] },
+  { blockIdx: 12, type: "savdo", name: "Navbahor savdo markazi", people: 820, risk: "O'rta", note: "Yong'in signalizatsiyasi faol.", stats: [["Do'konlar", 64], ["Xodimlar", 320], ["Kunlik tashrif", 4500], ["Qavatlar", 3]] },
+  { blockIdx: 13, type: "masjid", name: "Mahalla masjidi", people: 600, risk: "Past", note: "Juma kuni to'la bo'ladi.", stats: [["Sig'im", 600], ["Xodimlar", 6]] },
+  { blockIdx: 14, type: "apartment", name: "5-uy · 7 qavatli", people: 196, risk: "Yuqori", note: "3-qavatda tutun datchigi ishga tushgan.", stats: [["Qavatlar", 7], ["Kvartiralar", 56], ["Aholi", "196 (~3.5/kv.)"], ["Bolalar", 45], ["Keksalar", 21]] },
 ];
-export const HOUSEHOLDS = HH_DEFS.map((d, i) => {
-  const c = MAHALLA_AREAS[d.blockIdx].center;
+const OFFS = [[0.0004, -0.0005], [-0.0003, 0.0006], [0.0005, 0.0003], [-0.0004, -0.0004], [0.0003, 0.0005], [0.0004, -0.0003], [-0.0004, 0.0004], [0.0005, -0.0004], [-0.0003, -0.0005], [0.0004, 0.0004], [-0.0005, 0.0003], [0.0003, -0.0004], [0.0004, 0.0005], [-0.0004, 0.0003], [0.0005, -0.0003]];
+const PHONES = ["+998 90 123-45-67", "+998 91 222-33-44", "+998 93 444-55-66", "+998 94 555-66-77", "+998 99 888-77-66", "+998 97 777-88-99", "+998 98 333-22-11", "+998 95 666-77-88"];
+
+export const HOUSEHOLDS = OBJ_DEFS.map((d, i) => {
+  const area = MAHALLA_AREAS[d.blockIdx];
+  const off = OFFS[i] || [0, 0];
   return {
-    id: `hh-${i + 1}`,
-    blockId: MAHALLA_AREAS[d.blockIdx].id,
-    address: `${MAHALLA_AREAS[d.blockIdx].name}`,
-    pos: { lat: c.lat + d.dlat, lng: c.lng + d.dlng },
-    buildingType: d.kind === "house" ? `Xususiy hovli (${d.floors} qavat)` : `Ko'p kvartirali uy (${d.floors} qavat)`,
-    ...d,
+    id: `obj-${i + 1}`,
+    blockId: area.id,
+    head: d.name,
+    address: area.name,
+    type: d.type,
+    typeLabel: OBJECT_TYPES[d.type].label,
+    pos: { lat: area.center.lat + off[0], lng: area.center.lng + off[1] },
+    people: d.people,
+    residents: d.people,
+    risk: d.risk,
+    phone: PHONES[i % PHONES.length],
+    lastInspection: "12.03.2026",
+    note: d.note,
+    stats: d.stats,
   };
 });
 export const getHousehold = (id) => HOUSEHOLDS.find((h) => h.id === id) || null;
