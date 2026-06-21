@@ -5,9 +5,6 @@ import GlassCard from "@/shared/components/ui/glass/GlassCard";
 import GlassStatCard from "@/shared/components/ui/glass/GlassStatCard";
 import { EChart } from "@/shared/components/ui/chart3d/EChart";
 import { BubbleGridHeatmap } from "@/shared/components/ui/chart3d/BubbleGridHeatmap";
-import { DarkAreaMap } from "@/shared/components/ui/chart3d/DarkAreaMap";
-import { Map3DChart } from "@/shared/components/ui/chart3d/Map3DChart";
-import { Mahalla3DMap } from "@/shared/components/ui/chart3d/Mahalla3DMap";
 
 const MAP3D_MARKERS = [
   { lat: 40.6402, lng: 72.2378, label: "MFY profilaktika posti", status: "Navbatchi: 2 xodim" },
@@ -237,21 +234,10 @@ const IibDashboardPage = () => {
         <BubbleGridHeatmap rows={TYPES} cols={DAY_LABELS} cells={GRID_CELLS} accent="#7c6cf0" />
       </Section>
 
-      {/* 3D map + 2D map */}
+      {/* breakdown */}
       <div className="grid gap-4 xl:grid-cols-2">
-        <Section title="Photorealistik 3D xarita" icon={MapPin} accent="indigo">
-          <Mahalla3DMap markers={MAP3D_MARKERS} height={340} fallbackSeed={424242} />
-        </Section>
-        <Section title="Operatsion xarita" icon={MapPin} accent="cyan">
-          <DarkAreaMap markers={MAP_MARKERS} height={340} />
-        </Section>
-      </div>
-
-      {/* breakdown + 3D scatter */}
-      <div className="grid gap-4 xl:grid-cols-3">
         <Section title="Jinoyat turlari bo'yicha" icon={Activity} accent="purple"><EChart option={typeBreak} height={220} /></Section>
         <Section title="Holatlar bo'yicha" icon={Activity} accent="emerald"><EChart option={statusBreak} height={220} /></Section>
-        <Section title="Hodisalar taqsimoti (3D)" icon={Activity} accent="cyan"><EChart option={scatterOpt} height={220} /></Section>
       </div>
 
       {/* cameras */}
