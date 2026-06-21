@@ -215,21 +215,39 @@ export const MAHALLA_AREAS = BLOCKS.map((b, i) => {
   };
 });
 
-// ── Ko'cha yo'llari (bloklar orasidan o'tadi) ──────────────────────────────────
-export const ROADS = (() => {
-  const roads = [];
-  // vertikal ko'chalar — ustunlar orasida
-  for (let c = 0; c < GRID_COLS - 1; c++) {
-    const lng = ORIGIN.lng + (c + 0.5) * CELL_LNG;
-    roads.push({ id: `v${c}`, pts: [{ lat: BBOX.maxLat, lng }, { lat: BBOX.minLat, lng }] });
-  }
-  // gorizontal ko'chalar — qatorlar orasida
-  for (let r = 0; r < GRID_ROWS - 1; r++) {
-    const lat = ORIGIN.lat - (r + 0.5) * CELL_LAT;
-    roads.push({ id: `h${r}`, pts: [{ lat, lng: BBOX.minLng }, { lat, lng: BBOX.maxLng }] });
-  }
-  return roads;
-})();
+// ── Depo (yong'in mashinasi shu yerdan chiqadi) ────────────────────────────────
+export const DEPOT = { lat: BBOX.minLat + CELL_LAT * 0.3, lng: BBOX.minLng + CELL_LNG * 0.3, name: "13-Yong'in qism" };
+
+// ── Masofa (metr) — lat/lng ni real metrga aylantirish (truck real tezligi uchun) ──
+const M_PER_DEG_LAT = 111320;
+export const metersBetween = (a, b) => {
+  const latMid = ((a.lat + b.lat) / 2) * (Math.PI / 180);
+  const dx = (b.lng - a.lng) * M_PER_DEG_LAT * Math.cos(latMid);
+  const dy = (b.lat - a.lat) * M_PER_DEG_LAT;
+  return Math.hypot(dx, dy);
+};
+
+// ── Honadonlar / binolar (bloklarga joylashgan, real raqamlar) ─────────────────
+const HH_DEFS = [
+  { blockIdx: 0, dlat: 0.0004, dlng: -0.0005, head: "12-uy · 5 qavatli", kind: "apartment", floors: 5, apartments: 40, residents: 142, children: 33, elderly: 15, gas: true, risk: "Yuqori", phone: "+998 90 123-45-67", lastInspection: "12.03.2026", note: "Gaz tarmog'i eski." },
+  { blockIdx: 3, dlat: -0.0003, dlng: 0.0006, head: "7-uy · 9 qavatli", kind: "apartment", floors: 9, apartments: 72, residents: 254, children: 58, elderly: 27, gas: true, risk: "Yuqori", phone: "+998 91 222-33-44", lastInspection: "28.01.2026", note: "Lift nosoz — qutqaruv qiyin." },
+  { blockIdx: 5, dlat: 0.0005, dlng: 0.0003, head: "24-uy · 5 qavatli", kind: "apartment", floors: 5, apartments: 30, residents: 104, children: 24, elderly: 11, gas: true, risk: "O'rta", phone: "+998 93 444-55-66", lastInspection: "05.02.2026", note: "Yong'in shkafi to'liq." },
+  { blockIdx: 6, dlat: -0.0004, dlng: -0.0004, head: "Yusupovlar hovlisi", kind: "house", floors: 1, apartments: 1, residents: 6, children: 2, elderly: 1, gas: true, risk: "Past", phone: "+998 94 555-66-77", lastInspection: "19.04.2026", note: "Hovlida gaz balloni." },
+  { blockIdx: 9, dlat: 0.0003, dlng: 0.0005, head: "30-uy · 7 qavatli", kind: "apartment", floors: 7, apartments: 56, residents: 196, children: 45, elderly: 21, gas: true, risk: "Yuqori", phone: "+998 99 888-77-66", lastInspection: "02.06.2026", note: "3-qavatda tutun datchigi." },
+  { blockIdx: 13, dlat: 0.0004, dlng: -0.0003, head: "Aliyevlar hovlisi", kind: "house", floors: 2, apartments: 1, residents: 8, children: 3, elderly: 1, gas: true, risk: "Past", phone: "+998 97 777-88-99", lastInspection: "30.03.2026", note: "Xususiy uy." },
+];
+export const HOUSEHOLDS = HH_DEFS.map((d, i) => {
+  const c = MAHALLA_AREAS[d.blockIdx].center;
+  return {
+    id: `hh-${i + 1}`,
+    blockId: MAHALLA_AREAS[d.blockIdx].id,
+    address: `${MAHALLA_AREAS[d.blockIdx].name}`,
+    pos: { lat: c.lat + d.dlat, lng: c.lng + d.dlng },
+    buildingType: d.kind === "house" ? `Xususiy hovli (${d.floors} qavat)` : `Ko'p kvartirali uy (${d.floors} qavat)`,
+    ...d,
+  };
+});
+export const getHousehold = (id) => HOUSEHOLDS.find((h) => h.id === id) || null;
 
 export const summarize = (zones) =>
   zones.reduce(
