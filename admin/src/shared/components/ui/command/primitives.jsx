@@ -1,0 +1,243 @@
+// Command-center primitivlari — admin to'q palitrasiga moslangan (bg-card, white/0.07
+// border, glow aksent). Bitta mahalla (Navbahor MFY) miqyosi. Funksional, qayta ishlatiladi.
+import { useEffect, useMemo, useState } from "react";
+import { CircleDot, Power, Search, Video, VideoOff, Circle } from "lucide-react";
+
+import { EChart } from "@/shared/components/ui/chart3d/EChart";
+
+export const hexA = (hex, a) => {
+  const h = hex.replace("#", "");
+  const r = parseInt(h.slice(0, 2), 16), g = parseInt(h.slice(2, 4), 16), b = parseInt(h.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${a})`;
+};
+
+export const useClock = () => {
+  const [t, setT] = useState(() => new Date());
+  useEffect(() => { const id = setInterval(() => setT(new Date()), 1000); return () => clearInterval(id); }, []);
+  const p = (n) => String(n).padStart(2, "0");
+  return { time: `${p(t.getHours())}:${p(t.getMinutes())}:${p(t.getSeconds())}`, date: `${p(t.getDate())}.${p(t.getMonth() + 1)}.${t.getFullYear()}` };
+};
+
+// ── Header ──
+export const CmdHeader = ({ brand, place, nav, accent }) => {
+  const { time, date } = useClock();
+  return (
+    <div className="flex items-center justify-between gap-4 rounded-xl border border-[rgb(var(--card-border))] bg-card px-4 py-2">
+      <div className="flex items-center gap-2.5">
+        <span className="grid size-8 place-items-center rounded-md" style={{ background: hexA(accent, 0.15), color: accent, boxShadow: `0 0 14px ${hexA(accent, 0.5)}` }}><CircleDot className="size-4" /></span>
+        <div className="leading-tight">
+          <div className="text-sm font-bold tracking-[0.18em] text-foreground">{brand}</div>
+          <div className="text-[9px] uppercase tracking-[0.22em]" style={{ color: accent }}>{place}</div>
+        </div>
+      </div>
+      <div className="hidden items-center gap-1 lg:flex">
+        {nav.map((n, i) => (
+          <button key={n} className="flex items-center gap-1 rounded px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider transition-colors"
+            style={i === 0 ? { background: hexA(accent, 0.16), color: accent } : { color: "hsl(var(--muted-foreground))" }}>
+            {i === 1 && <Search className="size-3" />}{n}
+          </button>
+        ))}
+      </div>
+      <div className="flex items-center gap-3">
+        <div className="text-right leading-tight">
+          <div className="font-mono text-base font-bold tabular-nums" style={{ color: accent, textShadow: `0 0 10px ${hexA(accent, 0.6)}` }}>{time}</div>
+          <div className="font-mono text-[9px] tracking-wider text-foreground/40">{date}</div>
+        </div>
+        <span className="grid size-7 place-items-center rounded-md border border-rose-500/40 text-rose-400"><Power className="size-3.5" /></span>
+      </div>
+    </div>
+  );
+};
+
+// ── Panel (admin surface + accent header + burchak qavslari) ──
+export const Panel = ({ title, icon: Icon, accent, right, children, className = "", bodyClass = "" }) => (
+  <div className={`relative flex min-h-0 flex-col overflow-hidden rounded-xl border border-[rgb(var(--card-border))] bg-card ${className}`}
+    style={{ boxShadow: `inset 0 0 28px ${hexA(accent, 0.05)}` }}>
+    {[["top-0 left-0", "border-t border-l"], ["top-0 right-0", "border-t border-r"], ["bottom-0 left-0", "border-b border-l"], ["bottom-0 right-0", "border-b border-r"]].map(([pos, b], i) => (
+      <span key={i} className={`pointer-events-none absolute ${pos} ${b} size-2.5`} style={{ borderColor: hexA(accent, 0.6) }} />
+    ))}
+    {title && (
+      <div className="flex items-center justify-between gap-2 px-3 py-2" style={{ borderBottom: `1px solid ${hexA(accent, 0.16)}`, background: hexA(accent, 0.04) }}>
+        <div className="flex items-center gap-1.5">{Icon && <Icon className="size-3.5" style={{ color: accent }} />}<span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-foreground/75">{title}</span></div>
+        {right && <span className="text-[9px] font-medium uppercase tracking-wider text-foreground/35">{right}</span>}
+      </div>
+    )}
+    <div className={`min-h-0 flex-1 ${bodyClass}`}>{children}</div>
+  </div>
+);
+
+// ── KPI command tile ──
+export const StatTile = ({ icon: Icon, label, value, accent, highlight }) => (
+  <div className="relative flex items-center gap-2.5 overflow-hidden rounded-xl border bg-card px-3 py-2"
+    style={{ borderColor: highlight ? hexA(accent, 0.5) : "rgb(var(--card-border))", boxShadow: highlight ? `0 0 18px ${hexA(accent, 0.22)}` : "none" }}>
+    <span className="grid size-8 shrink-0 place-items-center rounded-md" style={{ background: hexA(accent, 0.14), color: accent }}>{Icon && <Icon className="size-4" />}</span>
+    <div className="min-w-0 leading-tight">
+      <div className="truncate text-[9px] font-medium uppercase tracking-wider text-foreground/45">{label}</div>
+      <div className="font-mono text-[15px] font-bold tabular-nums text-foreground" style={{ textShadow: highlight ? `0 0 10px ${hexA(accent, 0.55)}` : "none" }}>{value}</div>
+    </div>
+  </div>
+);
+
+// ── Progress bar qator ──
+export const BarRow = ({ label, value, pct, accent, unit, color }) => (
+  <div className="px-3 py-1.5">
+    <div className="mb-1 flex items-center justify-between text-[10.5px]"><span className="text-foreground/70">{label}</span><span className="font-mono font-semibold tabular-nums text-foreground">{value}{unit}</span></div>
+    <div className="h-1.5 overflow-hidden rounded-full bg-foreground/5"><div className="h-full rounded-full transition-all duration-700" style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${hexA(color || accent, 0.4)}, ${color || accent})`, boxShadow: `0 0 8px ${hexA(color || accent, 0.55)}` }} /></div>
+  </div>
+);
+
+// ── Radial gauge ──
+export const RadialGauge = ({ value, label, sub, accent, size = 96 }) => {
+  const r = size / 2 - 8, circ = 2 * Math.PI * r, off = circ * (1 - value / 100);
+  return (
+    <div className="flex flex-col items-center gap-1 p-2">
+      <svg width={size} height={size} className="-rotate-90">
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="7" />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={accent} strokeWidth="7" strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={off} style={{ filter: `drop-shadow(0 0 5px ${hexA(accent, 0.7)})`, transition: "stroke-dashoffset 0.8s" }} />
+      </svg>
+      <div className="-mt-[60%] flex flex-col items-center" style={{ marginTop: -size * 0.62 }}>
+        <span className="font-mono text-lg font-bold" style={{ color: accent }}>{value}%</span>
+      </div>
+      <div className="mt-[35%] text-center leading-tight" style={{ marginTop: size * 0.3 }}>
+        <div className="text-[10px] font-medium text-foreground/75">{label}</div>
+        {sub && <div className="text-[9px] text-foreground/40">{sub}</div>}
+      </div>
+    </div>
+  );
+};
+
+// ── Donut (EChart) ──
+export const Donut = ({ data, accent, height = 200 }) => {
+  const option = useMemo(() => ({
+    tooltip: { trigger: "item", backgroundColor: "#16161a", borderColor: hexA(accent, 0.4), textStyle: { color: "#fff", fontSize: 11 } },
+    legend: { bottom: 0, textStyle: { color: "rgba(255,255,255,0.55)", fontSize: 10 }, icon: "circle", itemWidth: 8, itemHeight: 8 },
+    series: [{ type: "pie", radius: ["48%", "72%"], center: ["50%", "44%"], avoidLabelOverlap: false, label: { show: false }, data: data.map((d) => ({ ...d, itemStyle: { color: d.color } })) }],
+  }), [data, accent]);
+  return <EChart option={option} height={height} />;
+};
+
+// ── Area sparkline (EChart) ──
+export const AreaSpark = ({ accent, height = 150, seed = 1 }) => {
+  const option = useMemo(() => {
+    const data = Array.from({ length: 32 }, (_, i) => Math.round(40 + 26 * Math.sin((i + seed) / 4) + i * 1.2 + ((i * seed) % 5) * 4));
+    return {
+      grid: { left: 6, right: 10, top: 12, bottom: 16 },
+      xAxis: { type: "category", boundaryGap: false, data: data.map((_, i) => i), axisLine: { lineStyle: { color: "rgba(255,255,255,0.1)" } }, axisLabel: { show: false }, axisTick: { show: false } },
+      yAxis: { type: "value", splitLine: { lineStyle: { color: "rgba(255,255,255,0.05)" } }, axisLabel: { color: "rgba(255,255,255,0.3)", fontSize: 9 } },
+      tooltip: { trigger: "axis", backgroundColor: "#16161a", borderColor: hexA(accent, 0.4), textStyle: { color: "#fff", fontSize: 11 } },
+      series: [{ type: "line", smooth: true, symbol: "none", data, lineStyle: { width: 2.4, color: accent, shadowColor: accent, shadowBlur: 12 }, areaStyle: { color: { type: "linear", x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: hexA(accent, 0.45) }, { offset: 1, color: hexA(accent, 0) }] } } }],
+    };
+  }, [accent, seed]);
+  return <EChart option={option} height={height} />;
+};
+
+// ── Reyting ro'yxati ──
+export const RatingList = ({ items, accent }) => (
+  <div className="max-h-full overflow-y-auto py-0.5">
+    {items.map((it, i) => (
+      <div key={i} className="flex items-center gap-2 px-3 py-[5px]">
+        <span className="w-4 shrink-0 font-mono text-[9px] text-foreground/30">{String(i + 1).padStart(2, "0")}</span>
+        <span className="flex-1 truncate text-[10.5px] text-foreground/80">{it.label}</span>
+        <div className="hidden h-1 w-14 overflow-hidden rounded-full bg-foreground/5 sm:block"><div className="h-full rounded-full" style={{ width: `${it.pct}%`, background: accent }} /></div>
+        <span className="w-10 shrink-0 text-right font-mono text-[10.5px] font-semibold tabular-nums" style={{ color: accent }}>{it.pct}%</span>
+      </div>
+    ))}
+  </div>
+);
+
+// ── Jonli feed (hodisalar) ──
+export const FeedList = ({ items, accent }) => (
+  <div className="max-h-full overflow-y-auto">
+    {items.map((it, i) => (
+      <div key={i} className="flex items-start gap-2 px-3 py-1.5" style={{ borderBottom: i < items.length - 1 ? "1px solid rgba(255,255,255,0.05)" : "none" }}>
+        <span className="mt-1 size-2 shrink-0 rounded-full" style={{ background: it.color || accent, boxShadow: `0 0 6px ${it.color || accent}` }} />
+        <div className="min-w-0 flex-1 leading-tight">
+          <div className="truncate text-[11px] text-foreground/85">{it.title}</div>
+          <div className="text-[9px] text-foreground/40">{it.time} · {it.place}</div>
+        </div>
+        {it.tag && <span className="shrink-0 rounded px-1.5 py-0.5 text-[8.5px] font-semibold" style={{ background: hexA(it.color || accent, 0.16), color: it.color || accent }}>{it.tag}</span>}
+      </div>
+    ))}
+  </div>
+);
+
+// ── Kamera grid (jonli) ──
+export const CameraGrid = ({ items, accent, cols = "lg:grid-cols-6" }) => (
+  <div className={`grid grid-cols-2 gap-2 p-3 sm:grid-cols-3 ${cols}`}>
+    {items.map((c) => (
+      <div key={c.id} className="group relative overflow-hidden rounded-lg border border-white/10 bg-black">
+        <div className="relative aspect-video">
+          {c.online ? (
+            <>
+              <img src={c.img} alt={c.loc} loading="lazy" className="h-full w-full object-cover opacity-75 transition group-hover:opacity-100" />
+              <div className="absolute left-1.5 top-1.5 flex items-center gap-1 rounded bg-black/60 px-1.5 py-0.5"><Circle className="size-1.5 animate-pulse fill-rose-500 text-rose-500" /><span className="text-[8px] font-semibold text-rose-300">JONLI</span></div>
+            </>
+          ) : (
+            <div className="grid h-full w-full place-items-center bg-zinc-900 text-zinc-600"><VideoOff className="size-5" /></div>
+          )}
+        </div>
+        <div className="flex items-center gap-1 px-1.5 py-1 text-[9px] text-foreground/70">{c.online ? <Video className="size-2.5" style={{ color: accent }} /> : <VideoOff className="size-2.5 text-zinc-600" />}<span className="truncate">{c.loc}</span></div>
+      </div>
+    ))}
+  </div>
+);
+
+// ── Mahalla xaritasi (voronoi bloklar, tanlanadigan) ──
+const rng = (s) => { const x = Math.sin(s * 12.9898 + 78.233) * 43758.5453; return x - Math.floor(x); };
+const clipHP = (poly, a, b, c) => {
+  const out = []; const inside = (p) => a * p.x + b * p.y <= c + 1e-9;
+  for (let i = 0; i < poly.length; i++) { const cur = poly[i], pr = poly[(i + poly.length - 1) % poly.length]; const ci = inside(cur), pi = inside(pr); if (ci !== pi) { const dx = cur.x - pr.x, dy = cur.y - pr.y, den = a * dx + b * dy, t = den === 0 ? 0 : (c - (a * pr.x + b * pr.y)) / den; out.push({ x: pr.x + t * dx, y: pr.y + t * dy }); } if (ci) out.push(cur); }
+  return out;
+};
+export const MahallaMap = ({ blocks, accent, legend }) => {
+  const [active, setActive] = useState(null);
+  const cells = useMemo(() => {
+    const W = 600, H = 360, bb = { x0: 40, y0: 36, x1: 560, y1: 324 };
+    const n = blocks.length, cols = Math.ceil(Math.sqrt(n * 1.6)), rows = Math.ceil(n / cols);
+    const seeds = []; let idx = 0;
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) { if (idx >= n) break; const gx = bb.x0 + (c + 0.5) * ((bb.x1 - bb.x0) / cols) + (rng(idx * 3.1) - 0.5) * 46; const gy = bb.y0 + (r + 0.5) * ((bb.y1 - bb.y0) / rows) + (rng(idx * 5.7) - 0.5) * 34; seeds.push({ x: gx, y: gy, b: blocks[idx] }); idx++; }
+    const box = { x0: bb.x0 - 16, y0: bb.y0 - 16, x1: bb.x1 + 16, y1: bb.y1 + 16 };
+    return seeds.map((s) => { let poly = [{ x: box.x0, y: box.y0 }, { x: box.x1, y: box.y0 }, { x: box.x1, y: box.y1 }, { x: box.x0, y: box.y1 }]; for (const o of seeds) { if (o === s) continue; const a = o.x - s.x, b = o.y - s.y, c = (o.x * o.x - s.x * s.x + o.y * o.y - s.y * s.y) / 2; poly = clipHP(poly, a, b, c); if (!poly.length) break; } return { ...s, poly }; });
+  }, [blocks]);
+  const sel = active != null ? cells[active]?.b : null;
+
+  return (
+    <div className="relative h-full w-full">
+      <div className="absolute inset-0" style={{ backgroundImage: `radial-gradient(circle at 50% 45%, ${hexA(accent, 0.1)}, transparent 65%)` }} />
+      <svg viewBox="0 0 600 360" className="h-full w-full">
+        <defs><filter id="mm-glow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2.5" /></filter></defs>
+        {cells.map((c, i) => {
+          const d = c.poly.map((p, j) => `${j === 0 ? "M" : "L"}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ") + "Z";
+          const col = c.b.color || accent;
+          const cx = c.poly.reduce((s, p) => s + p.x, 0) / c.poly.length, cy = c.poly.reduce((s, p) => s + p.y, 0) / c.poly.length;
+          const isA = active === i;
+          return (
+            <g key={i} className="cursor-pointer" onClick={() => setActive(isA ? null : i)}>
+              <path d={d} fill={hexA(col, isA ? 0.6 : 0.3)} stroke={hexA(col, isA ? 1 : 0.85)} strokeWidth={isA ? 2.2 : 1} filter={isA ? "url(#mm-glow)" : undefined} />
+              <text x={cx} y={cy - 3} textAnchor="middle" className="pointer-events-none fill-white font-medium" style={{ fontSize: 8, textShadow: "0 1px 2px #000" }}>{c.b.name}</text>
+              {c.b.metric != null && <text x={cx} y={cy + 7} textAnchor="middle" className="pointer-events-none font-mono" style={{ fontSize: 8, fill: col }}>{c.b.metric}</text>}
+            </g>
+          );
+        })}
+      </svg>
+      {legend && <div className="absolute bottom-2 left-3 flex gap-3 text-[8.5px] text-foreground/55">{legend.map((l, i) => <span key={i} className="flex items-center gap-1"><span className="size-2 rounded-sm" style={{ background: l.color }} /> {l.label}</span>)}</div>}
+      {sel && (
+        <div className="absolute right-2 top-2 rounded-lg border border-white/10 bg-black/75 px-3 py-2 backdrop-blur">
+          <div className="text-[11px] font-semibold text-white">{sel.name}</div>
+          {sel.detail && <div className="mt-0.5 text-[10px] text-white/60">{sel.detail}</div>}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ── Root wrapper ──
+export const CmdRoot = ({ accent, children }) => (
+  <div className="flex flex-col gap-3 rounded-2xl p-3"
+    style={{ background: `radial-gradient(circle at 50% 0%, ${hexA(accent, 0.06)}, hsl(var(--background)) 60%)`, backgroundImage: "linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)", backgroundSize: "100% 100%, 34px 34px, 34px 34px" }}>
+    {children}
+  </div>
+);
+
+// kamera demo yasash
+export const makeCams = (locs, seedBase) => locs.map((loc, i) => ({ id: `c${i}`, loc, online: rng(seedBase + i) > 0.16, img: `https://picsum.photos/seed/${seedBase}-${i}/320/200?grayscale` }));
