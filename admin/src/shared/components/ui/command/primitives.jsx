@@ -1,7 +1,7 @@
 // Command-center primitivlari — admin to'q palitrasiga moslangan (bg-card, white/0.07
 // border, glow aksent). Bitta mahalla (Navbahor MFY) miqyosi. Funksional, qayta ishlatiladi.
-import { useEffect, useMemo, useState } from "react";
-import { CircleDot, Power, Search, Video, VideoOff, Circle } from "lucide-react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { CircleDot, Power, Search, Video, VideoOff, Circle, Info, X, Database, Clock } from "lucide-react";
 
 import { EChart } from "@/shared/components/ui/chart3d/EChart";
 
@@ -10,6 +10,9 @@ export const hexA = (hex, a) => {
   const r = parseInt(h.slice(0, 2), 16), g = parseInt(h.slice(2, 4), 16), b = parseInt(h.slice(4, 6), 16);
   return `rgba(${r}, ${g}, ${b}, ${a})`;
 };
+
+// Ma'lumot manbasi konteksti — har panel qaysi tizimdan kelishini ko'rsatadi
+const SourceContext = createContext({ system: "Ma'lumotlar bazasi", place: "" });
 
 export const useClock = () => {
   const [t, setT] = useState(() => new Date());
@@ -49,34 +52,84 @@ export const CmdHeader = ({ brand, place, nav, accent }) => {
   );
 };
 
-// ── Panel (admin surface + accent header + burchak qavslari) ──
-export const Panel = ({ title, icon: Icon, accent, right, children, className = "", bodyClass = "" }) => (
-  <div className={`relative flex min-h-0 flex-col overflow-hidden rounded-xl border border-[rgb(var(--card-border))] bg-card ${className}`}
-    style={{ boxShadow: `inset 0 0 28px ${hexA(accent, 0.05)}` }}>
-    {[["top-0 left-0", "border-t border-l"], ["top-0 right-0", "border-t border-r"], ["bottom-0 left-0", "border-b border-l"], ["bottom-0 right-0", "border-b border-r"]].map(([pos, b], i) => (
-      <span key={i} className={`pointer-events-none absolute ${pos} ${b} size-2.5`} style={{ borderColor: hexA(accent, 0.6) }} />
-    ))}
-    {title && (
-      <div className="flex items-center justify-between gap-2 px-3 py-2" style={{ borderBottom: `1px solid ${hexA(accent, 0.16)}`, background: hexA(accent, 0.04) }}>
-        <div className="flex items-center gap-1.5">{Icon && <Icon className="size-3.5" style={{ color: accent }} />}<span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-foreground/75">{title}</span></div>
-        {right && <span className="text-[9px] font-medium uppercase tracking-wider text-foreground/35">{right}</span>}
+// ── Manba oynasi (chart/bo'limni bosganda — ma'lumot qayerdan kelishi) ──
+const SourceOverlay = ({ title, source, accent, onClose }) => {
+  const { system, place } = useContext(SourceContext);
+  const { time } = useClock();
+  return (
+    <div className="absolute inset-0 z-40 flex flex-col gap-2 p-3 backdrop-blur-sm" style={{ background: "rgba(8,8,10,0.92)" }} onClick={onClose}>
+      <div className="flex items-center justify-between">
+        <span className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest" style={{ color: accent }}><Database className="size-3.5" /> Ma'lumot manbasi</span>
+        <button onClick={onClose} className="text-foreground/50 hover:text-foreground"><X className="size-4" /></button>
       </div>
-    )}
-    <div className={`min-h-0 flex-1 ${bodyClass}`}>{children}</div>
+      <div className="flex flex-col gap-1.5 text-[11.5px]">
+        <Field k="Bo'lim" v={title} accent={accent} />
+        <Field k="Manba" v={source} accent={accent} />
+        <Field k="Tizim" v={system} accent={accent} />
+        {place && <Field k="Hudud" v={place} accent={accent} />}
+        <div className="mt-1 flex items-center gap-1.5 text-[10px] text-emerald-400"><span className="size-1.5 animate-pulse rounded-full bg-emerald-400" /> Real vaqt · sinxron</div>
+        <div className="flex items-center gap-1.5 text-[10px] text-foreground/45"><Clock className="size-3" /> Oxirgi yangilanish: <span className="font-mono">{time}</span></div>
+      </div>
+      <div className="mt-auto text-[9.5px] text-foreground/35">Yopish uchun bosing</div>
+    </div>
+  );
+};
+const Field = ({ k, v, accent }) => (
+  <div className="flex items-start justify-between gap-3 rounded border border-white/5 bg-white/[0.02] px-2 py-1">
+    <span className="text-foreground/45">{k}</span>
+    <span className="text-right font-medium" style={{ color: accent }}>{v}</span>
   </div>
 );
 
-// ── KPI command tile ──
-export const StatTile = ({ icon: Icon, label, value, accent, highlight }) => (
-  <div className="relative flex items-center gap-2.5 overflow-hidden rounded-xl border bg-card px-3 py-2"
-    style={{ borderColor: highlight ? hexA(accent, 0.5) : "rgb(var(--card-border))", boxShadow: highlight ? `0 0 18px ${hexA(accent, 0.22)}` : "none" }}>
-    <span className="grid size-8 shrink-0 place-items-center rounded-md" style={{ background: hexA(accent, 0.14), color: accent }}>{Icon && <Icon className="size-4" />}</span>
-    <div className="min-w-0 leading-tight">
-      <div className="truncate text-[9px] font-medium uppercase tracking-wider text-foreground/45">{label}</div>
-      <div className="font-mono text-[15px] font-bold tabular-nums text-foreground" style={{ textShadow: highlight ? `0 0 10px ${hexA(accent, 0.55)}` : "none" }}>{value}</div>
+// ── Panel (admin surface + accent header + manba footer/oyna) ──
+export const Panel = ({ title, icon: Icon, accent, right, source, clickToSource, children, className = "", bodyClass = "" }) => {
+  const [open, setOpen] = useState(false);
+  const src = source || title || "Tizim";
+  return (
+    <div className={`relative flex min-h-0 flex-col overflow-hidden rounded-xl border border-[rgb(var(--card-border))] bg-card ${className}`}
+      style={{ boxShadow: `inset 0 0 28px ${hexA(accent, 0.05)}` }}>
+      {[["top-0 left-0", "border-t border-l"], ["top-0 right-0", "border-t border-r"], ["bottom-0 left-0", "border-b border-l"], ["bottom-0 right-0", "border-b border-r"]].map(([pos, b], i) => (
+        <span key={i} className={`pointer-events-none absolute ${pos} ${b} size-2.5`} style={{ borderColor: hexA(accent, 0.6) }} />
+      ))}
+      {title && (
+        <div className="flex items-center justify-between gap-2 px-3 py-2" style={{ borderBottom: `1px solid ${hexA(accent, 0.16)}`, background: hexA(accent, 0.04) }}>
+          <div className="flex items-center gap-1.5">{Icon && <Icon className="size-3.5" style={{ color: accent }} />}<span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-foreground/75">{title}</span></div>
+          <div className="flex items-center gap-2">
+            {right && <span className="text-[9px] font-medium uppercase tracking-wider text-foreground/35">{right}</span>}
+            <button onClick={() => setOpen(true)} title="Ma'lumot manbasi" className="text-foreground/35 transition-colors hover:text-foreground"><Info className="size-3.5" /></button>
+          </div>
+        </div>
+      )}
+      <div className={`min-h-0 flex-1 ${clickToSource ? "cursor-pointer" : ""} ${bodyClass}`} onClick={clickToSource ? () => setOpen(true) : undefined}>{children}</div>
+      <button onClick={() => setOpen(true)} className="flex items-center gap-1.5 px-3 py-1 text-[9px] text-foreground/40 transition-colors hover:text-foreground/70" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+        <Database className="size-2.5" style={{ color: hexA(accent, 0.7) }} /> Manba: <span className="truncate" style={{ color: hexA(accent, 0.85) }}>{src}</span>
+      </button>
+      {open && <SourceOverlay title={title} source={src} accent={accent} onClose={() => setOpen(false)} />}
     </div>
-  </div>
-);
+  );
+};
+
+// ── KPI command tile (bosilsa manba ko'rinadi) ──
+export const StatTile = ({ icon: Icon, label, value, accent, highlight, source }) => {
+  const { system } = useContext(SourceContext);
+  const [show, setShow] = useState(false);
+  return (
+    <button onClick={() => setShow((s) => !s)} title={`Manba: ${source || system}`}
+      className="relative flex items-center gap-2.5 overflow-hidden rounded-xl border bg-card px-3 py-2 text-left transition-colors hover:border-white/20"
+      style={{ borderColor: highlight ? hexA(accent, 0.5) : "rgb(var(--card-border))", boxShadow: highlight ? `0 0 18px ${hexA(accent, 0.22)}` : "none" }}>
+      <span className="grid size-8 shrink-0 place-items-center rounded-md" style={{ background: hexA(accent, 0.14), color: accent }}>{Icon && <Icon className="size-4" />}</span>
+      <div className="min-w-0 leading-tight">
+        <div className="truncate text-[9px] font-medium uppercase tracking-wider text-foreground/45">{label}</div>
+        <div className="font-mono text-[15px] font-bold tabular-nums text-foreground" style={{ textShadow: highlight ? `0 0 10px ${hexA(accent, 0.55)}` : "none" }}>{value}</div>
+      </div>
+      {show && (
+        <span className="absolute inset-x-0 bottom-0 flex items-center gap-1 truncate bg-black/85 px-2 py-0.5 text-[8.5px]" style={{ color: accent }}>
+          <Database className="size-2.5" /> {source || system}
+        </span>
+      )}
+    </button>
+  );
+};
 
 // ── Progress bar qator ──
 export const BarRow = ({ label, value, pct, accent, unit, color }) => (
@@ -135,7 +188,7 @@ export const AreaSpark = ({ accent, height = 150, seed = 1 }) => {
 export const RatingList = ({ items, accent }) => (
   <div className="max-h-full overflow-y-auto py-0.5">
     {items.map((it, i) => (
-      <div key={i} className="flex items-center gap-2 px-3 py-[5px]">
+      <div key={i} className="flex cursor-pointer items-center gap-2 rounded px-3 py-[5px] transition-colors hover:bg-foreground/[0.04]">
         <span className="w-4 shrink-0 font-mono text-[9px] text-foreground/30">{String(i + 1).padStart(2, "0")}</span>
         <span className="flex-1 truncate text-[10.5px] text-foreground/80">{it.label}</span>
         <div className="hidden h-1 w-14 overflow-hidden rounded-full bg-foreground/5 sm:block"><div className="h-full rounded-full" style={{ width: `${it.pct}%`, background: accent }} /></div>
@@ -149,7 +202,7 @@ export const RatingList = ({ items, accent }) => (
 export const FeedList = ({ items, accent }) => (
   <div className="max-h-full overflow-y-auto">
     {items.map((it, i) => (
-      <div key={i} className="flex items-start gap-2 px-3 py-1.5" style={{ borderBottom: i < items.length - 1 ? "1px solid rgba(255,255,255,0.05)" : "none" }}>
+      <div key={i} title={`${it.place} · ${it.time}`} className="flex cursor-pointer items-start gap-2 px-3 py-1.5 transition-colors hover:bg-foreground/[0.04]" style={{ borderBottom: i < items.length - 1 ? "1px solid rgba(255,255,255,0.05)" : "none" }}>
         <span className="mt-1 size-2 shrink-0 rounded-full" style={{ background: it.color || accent, boxShadow: `0 0 6px ${it.color || accent}` }} />
         <div className="min-w-0 flex-1 leading-tight">
           <div className="truncate text-[11px] text-foreground/85">{it.title}</div>
@@ -231,12 +284,14 @@ export const MahallaMap = ({ blocks, accent, legend }) => {
   );
 };
 
-// ── Root wrapper ──
-export const CmdRoot = ({ accent, children }) => (
-  <div className="flex flex-col gap-3 rounded-2xl p-3"
-    style={{ background: `radial-gradient(circle at 50% 0%, ${hexA(accent, 0.06)}, hsl(var(--background)) 60%)`, backgroundImage: "linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)", backgroundSize: "100% 100%, 34px 34px, 34px 34px" }}>
-    {children}
-  </div>
+// ── Root wrapper (manba kontekstini ta'minlaydi) ──
+export const CmdRoot = ({ accent, system = "Ma'lumotlar bazasi", place = "", children }) => (
+  <SourceContext.Provider value={{ system, place }}>
+    <div className="flex flex-col gap-3 rounded-2xl p-3"
+      style={{ background: `radial-gradient(circle at 50% 0%, ${hexA(accent, 0.06)}, hsl(var(--background)) 60%)`, backgroundImage: "linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)", backgroundSize: "100% 100%, 34px 34px, 34px 34px" }}>
+      {children}
+    </div>
+  </SourceContext.Provider>
 );
 
 // kamera demo yasash

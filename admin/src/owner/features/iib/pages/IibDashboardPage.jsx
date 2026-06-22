@@ -40,28 +40,28 @@ const KPIS = [
 ];
 
 const IibDashboardPage = () => (
-  <CmdRoot accent={A}>
+  <CmdRoot accent={A} system="IIB yagona AT — 102" place="Sarnovul MFY, Baliqchi tumani">
     <CmdHeader brand="ATLAS COMMAND" place={`${PLACE} · IIB`} nav={["Markaziy bo'lim", "Tezkor qidiruv", "Chaqiruvlar", "Patrullar", "Jinoyatlar"]} accent={A} />
     <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-6">{KPIS.map((k, i) => <StatTile key={i} {...k} accent={A} />)}</div>
 
     <div className="grid gap-3 xl:grid-cols-12" style={{ minHeight: "calc(100vh - 14rem)" }}>
       {/* chap — jonli hodisalar + jinoyat turlari */}
       <div className="flex flex-col gap-3 xl:col-span-4">
-        <Panel title="Jonli hodisalar" icon={Siren} accent={A} right="REAL-TIME" className="flex-1" bodyClass="min-h-0"><FeedList items={FEED} accent={A} /></Panel>
-        <Panel title="Jinoyat turlari" icon={Activity} accent={A}><Donut data={CRIME} accent={A} height={200} /></Panel>
+        <Panel title="Jonli hodisalar" icon={Siren} accent={A} right="REAL-TIME" source="102 chaqiruv markazi" className="flex-1" bodyClass="min-h-0"><FeedList items={FEED} accent={A} /></Panel>
+        <Panel title="Jinoyat turlari" icon={Activity} accent={A} source="Yagona jinoyat reyestri" clickToSource><Donut data={CRIME} accent={A} height={200} /></Panel>
       </div>
 
       {/* markaz — operativ xarita + chaqiruvlar */}
       <div className="flex flex-col gap-3 xl:col-span-5">
-        <Panel title="Sarnovul MFY — operativ xarita" icon={MapPin} accent={A} right="LIVE" className="flex-1" bodyClass="relative">
+        <Panel title="Sarnovul MFY — operativ xarita" icon={MapPin} accent={A} right="LIVE" source="MFY GIS · operativ" className="flex-1" bodyClass="relative">
           <MahallaMap blocks={BLOCKS} accent={A} legend={[{ label: "Tinch", color: "#22c55e" }, { label: "Diqqat", color: "#f59e0b" }, { label: "Hodisa", color: "#ef4444" }]} />
         </Panel>
-        <Panel title="Chaqiruvlar dinamikasi (24s)" icon={Activity} accent={A}><AreaSpark accent={A} seed={3} /></Panel>
+        <Panel title="Chaqiruvlar dinamikasi (24s)" icon={Activity} accent={A} source="102 — chaqiruvlar oqimi" clickToSource><AreaSpark accent={A} seed={3} /></Panel>
       </div>
 
       {/* o'ng — patrul + system + CCTV */}
       <div className="flex flex-col gap-3 xl:col-span-3">
-        <Panel title="Patrul holati" icon={Radio} accent={A}>
+        <Panel title="Patrul holati" icon={Radio} accent={A} source="Patrul boshqaruv tizimi">
           <div className="flex flex-col py-1.5">
             <BarRow label="Patrul qamrovi" value="86" unit="%" pct={86} accent={A} />
             <BarRow label="Aniqlanish" value="92" unit="%" pct={92} accent={A} />
@@ -69,7 +69,7 @@ const IibDashboardPage = () => (
             <BarRow label="Kamera qamrovi" value="78" unit="%" pct={78} accent={A} />
           </div>
         </Panel>
-        <Panel title="CCTV — jonli" icon={Camera} accent={A} className="flex-1"><CameraGrid items={CAMS} accent={A} cols="lg:grid-cols-2" /></Panel>
+        <Panel title="CCTV — jonli" icon={Camera} accent={A} source="IIB CCTV tarmog'i" className="flex-1"><CameraGrid items={CAMS} accent={A} cols="lg:grid-cols-2" /></Panel>
       </div>
     </div>
   </CmdRoot>

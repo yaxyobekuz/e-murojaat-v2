@@ -32,24 +32,24 @@ const KPIS = [
 ];
 
 const FvvDashboardPage = () => (
-  <CmdRoot accent={A}>
+  <CmdRoot accent={A} system="FVV operativ AT — 101" place="Sarnovul MFY, Baliqchi tumani">
     <CmdHeader brand="ATLAS COMMAND" place={`${PLACE} · FVV`} nav={["Markaziy bo'lim", "Tezkor qidiruv", "Chaqiruvlar", "Brigadalar", "Hodisalar"]} accent={A} />
     <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-6">{KPIS.map((k, i) => <StatTile key={i} {...k} accent={A} />)}</div>
 
     {/* 1-qator: keng xarita + brigada gaugelari */}
     <div className="grid gap-3 xl:grid-cols-12" style={{ minHeight: "26rem" }}>
-      <Panel title="Sarnovul MFY — yong'in xavfi xaritasi" icon={MapPin} accent={A} right="LIVE" className="xl:col-span-8" bodyClass="relative">
+      <Panel title="Sarnovul MFY — yong'in xavfi xaritasi" icon={MapPin} accent={A} right="LIVE" source="FVV GIS · xavf xaritasi" className="xl:col-span-8" bodyClass="relative">
         <MahallaMap blocks={BLOCKS} accent={A} legend={[{ label: "Tinch", color: "#22c55e" }, { label: "Xavf", color: A }, { label: "Yong'in", color: "#ef4444" }]} />
       </Panel>
       <div className="flex flex-col gap-3 xl:col-span-4">
-        <Panel title="Brigadalar tayyorligi" icon={ShieldAlert} accent={A}>
+        <Panel title="Brigadalar tayyorligi" icon={ShieldAlert} accent={A} source="Navbatchilik tizimi">
           <div className="flex items-center justify-around py-1">
             <RadialGauge value={100} label="Brigada-1" sub="navbatda" accent="#22c55e" size={84} />
             <RadialGauge value={100} label="Brigada-2" sub="navbatda" accent="#22c55e" size={84} />
             <RadialGauge value={60} label="Brigada-3" sub="chaqiruvda" accent={A} size={84} />
           </div>
         </Panel>
-        <Panel title="Texnika tayyorligi" icon={Wrench} accent={A} className="flex-1">
+        <Panel title="Texnika tayyorligi" icon={Wrench} accent={A} source="Texnika reyestri" className="flex-1">
           <div className="flex flex-col py-1.5">
             <BarRow label="Avtotsisterna" value="2/2" pct={100} accent="#22c55e" />
             <BarRow label="Avtonarvon" value="1/1" pct={100} accent="#22c55e" />
@@ -62,13 +62,13 @@ const FvvDashboardPage = () => (
 
     {/* 2-qator: hodisa turlari + dinamika + suv */}
     <div className="grid gap-3 xl:grid-cols-12">
-      <Panel title="Hodisa toifalari" icon={Activity} accent={A} className="xl:col-span-3"><Donut data={HODISA} accent={A} height={190} /></Panel>
-      <Panel title="Chaqiruvlar dinamikasi" icon={Activity} accent={A} className="xl:col-span-5"><AreaSpark accent={A} seed={5} height={190} /></Panel>
-      <Panel title="Suv ta'minoti" icon={Droplets} accent={A} className="xl:col-span-4"><div className="grid place-items-center py-1"><RadialGauge value={88} label="Gidrant qamrovi" sub="14/16 faol" accent="#06b6d4" size={120} /></div></Panel>
+      <Panel title="Hodisa toifalari" icon={Activity} accent={A} source="101 — hodisa reyestri" clickToSource className="xl:col-span-3"><Donut data={HODISA} accent={A} height={190} /></Panel>
+      <Panel title="Chaqiruvlar dinamikasi" icon={Activity} accent={A} source="101 — chaqiruvlar oqimi" clickToSource className="xl:col-span-5"><AreaSpark accent={A} seed={5} height={190} /></Panel>
+      <Panel title="Suv ta'minoti" icon={Droplets} accent={A} source="Gidrant reyestri" clickToSource className="xl:col-span-4"><div className="grid place-items-center py-1"><RadialGauge value={88} label="Gidrant qamrovi" sub="14/16 faol" accent="#06b6d4" size={120} /></div></Panel>
     </div>
 
     {/* kamera */}
-    <Panel title="Kamera kuzatuvi — jonli" icon={Camera} accent={A}><CameraGrid items={CAMS} accent={A} /></Panel>
+    <Panel title="Kamera kuzatuvi — jonli" icon={Camera} accent={A} source="FVV CCTV tarmog'i"><CameraGrid items={CAMS} accent={A} /></Panel>
   </CmdRoot>
 );
 

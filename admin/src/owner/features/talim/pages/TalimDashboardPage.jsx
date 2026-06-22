@@ -39,14 +39,14 @@ const KPIS = [
 ];
 
 const TalimDashboardPage = () => (
-  <CmdRoot accent={A}>
+  <CmdRoot accent={A} system="Ta'lim AT — EMIS" place="Sarnovul MFY, Baliqchi tumani">
     <CmdHeader brand="ATLAS COMMAND" place={`${PLACE} · TA'LIM`} nav={["Markaziy bo'lim", "Tezkor qidiruv", "O'quvchilar", "O'qituvchilar", "Xodimlar"]} accent={A} />
     <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-6">{KPIS.map((k, i) => <StatTile key={i} {...k} accent={A} />)}</div>
 
     <div className="grid gap-3 xl:grid-cols-12" style={{ minHeight: "calc(100vh - 22rem)" }}>
       {/* chap — maktablar + bosqichlar */}
       <div className="flex flex-col gap-3 xl:col-span-3">
-        <Panel title="Maktablar" icon={School} accent={A} right="LIVE" className="flex-1">
+        <Panel title="Maktablar" icon={School} accent={A} right="LIVE" source="Maktab AT (EMIS)" className="flex-1">
           <div className="flex flex-col">
             {SCHOOLS.map((s, i) => (
               <div key={i} className="px-3 py-2" style={{ borderBottom: i < SCHOOLS.length - 1 ? "1px solid rgba(255,255,255,0.05)" : "none" }}>
@@ -56,7 +56,7 @@ const TalimDashboardPage = () => (
             ))}
           </div>
         </Panel>
-        <Panel title="Sinf bosqichlari" icon={BookOpen} accent={A}>
+        <Panel title="Sinf bosqichlari" icon={BookOpen} accent={A} source="EMIS — davomat moduli" clickToSource>
           <div className="flex flex-col py-1.5">
             <BarRow label="Boshlang'ich (1-4)" value="88" unit="%" pct={88} accent={A} />
             <BarRow label="O'rta (5-9)" value="92" unit="%" pct={92} accent={A} />
@@ -67,21 +67,21 @@ const TalimDashboardPage = () => (
 
       {/* markaz — xarita + dinamika */}
       <div className="flex flex-col gap-3 xl:col-span-6">
-        <Panel title="Sarnovul MFY — ta'lim xaritasi" icon={MapPin} accent={A} right="DAVOMAT · LIVE" className="flex-1" bodyClass="relative">
+        <Panel title="Sarnovul MFY — ta'lim xaritasi" icon={MapPin} accent={A} right="DAVOMAT · LIVE" source="MFY GIS xaritasi" className="flex-1" bodyClass="relative">
           <MahallaMap blocks={BLOCKS} accent={A} legend={[{ label: "Yuqori", color: "#22c55e" }, { label: "O'rta", color: A }, { label: "Past", color: "#f59e0b" }]} />
         </Panel>
-        <Panel title="O'quvchilar dinamikasi" icon={Activity} accent={A}><AreaSpark accent={A} seed={2} /></Panel>
+        <Panel title="O'quvchilar dinamikasi" icon={Activity} accent={A} source="EMIS — davomat dinamikasi" clickToSource><AreaSpark accent={A} seed={2} /></Panel>
       </div>
 
       {/* o'ng — davomat + reyting */}
       <div className="flex flex-col gap-3 xl:col-span-3">
-        <Panel title="Bugungi davomat" icon={Activity} accent={A}><div className="grid place-items-center py-2"><RadialGauge value={94} label="Keldi" sub="4 578 / 4 860" accent={A} size={120} /></div></Panel>
-        <Panel title="Hududiy reyting" icon={BarChart3} accent={A} className="flex-1" bodyClass="min-h-0"><RatingList items={RATINGS} accent={A} /></Panel>
+        <Panel title="Bugungi davomat" icon={Activity} accent={A} source="EMIS — kunlik davomat" clickToSource><div className="grid place-items-center py-2"><RadialGauge value={94} label="Keldi" sub="4 578 / 4 860" accent={A} size={120} /></div></Panel>
+        <Panel title="Hududiy reyting" icon={BarChart3} accent={A} source="EMIS — reyting moduli" className="flex-1" bodyClass="min-h-0"><RatingList items={RATINGS} accent={A} /></Panel>
       </div>
     </div>
 
     {/* kamera */}
-    <Panel title="Kamera kuzatuvi — jonli" icon={Camera} accent={A}><CameraGrid items={CAMS} accent={A} /></Panel>
+    <Panel title="Kamera kuzatuvi — jonli" icon={Camera} accent={A} source="Sarnovul MFY CCTV tarmog'i"><CameraGrid items={CAMS} accent={A} /></Panel>
   </CmdRoot>
 );
 
