@@ -13,6 +13,10 @@ import {
 import {
   ObodDashboardPage,
   ObodProjectsPage,
+  AxlatPage,
+  AssenizatsiyaPage,
+  YashilMakonPage,
+  HasharPage,
 } from "@/owner/features/obodonlashtirish";
 import { TalimDashboardPage } from "@/owner/features/talim";
 import { IibDashboardPage, IibMapPage } from "@/owner/features/iib";
@@ -30,6 +34,10 @@ const OwnerRoutes = () => (
     <Route path="soliq/qarzdorlar" element={<SoliqDebtorsPage />} />
     <Route path="obodonlashtirish" element={<ObodDashboardPage />} />
     <Route path="obodonlashtirish/loyihalar" element={<ObodProjectsPage />} />
+    <Route path="obodonlashtirish/axlat" element={<AxlatPage />} />
+    <Route path="obodonlashtirish/assenizatsiya" element={<AssenizatsiyaPage />} />
+    <Route path="obodonlashtirish/yashil-makon" element={<YashilMakonPage />} />
+    <Route path="obodonlashtirish/hashar" element={<HasharPage />} />
     <Route path="talim" element={<TalimDashboardPage />} />
     <Route path="iib" element={<IibDashboardPage />} />
     <Route path="iib/xarita" element={<IibMapPage />} />

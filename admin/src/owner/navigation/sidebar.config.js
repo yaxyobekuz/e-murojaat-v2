@@ -1,4 +1,4 @@
-import { LayoutDashboard, Trees, Users, Home, Landmark, Map, GraduationCap, Shield, Flame, Store, TriangleAlert, Layers } from "lucide-react";
+import { LayoutDashboard, Trees, Users, Home, Landmark, Map, GraduationCap, Shield, Flame, Store, TriangleAlert, Layers, Truck, Droplets, TreePine, Sparkles } from "lucide-react";
 
 const ownerSidebar = [
   {
@@ -39,7 +39,13 @@ const ownerSidebar = [
     key: "obodonlashtirish",
     title: "Obodonlashtirish",
     icon: Trees,
-    items: [{ title: "Bosh sahifa", url: "/owner/obodonlashtirish", icon: Home }],
+    items: [
+      { title: "Bosh sahifa", url: "/owner/obodonlashtirish", icon: Home },
+      { title: "Axlat mashinasi", url: "/owner/obodonlashtirish/axlat", icon: Truck },
+      { title: "Gaz mashinasi", url: "/owner/obodonlashtirish/assenizatsiya", icon: Droplets },
+      { title: "Yashil makon", url: "/owner/obodonlashtirish/yashil-makon", icon: TreePine },
+      { title: "Tozalov & hashar", url: "/owner/obodonlashtirish/hashar", icon: Sparkles },
+    ],
   },
   {
     key: "yoshlar",
