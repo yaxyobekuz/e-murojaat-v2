@@ -312,3 +312,49 @@ input[type="search"]::-ms-reveal {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
   cursor: pointer;
 }
+
+/* Yer kadastr xaritasi — davlat obyekti markeri (pin) */
+.cad-pin {
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: #7c3aed;
+  border: 2.5px solid #fff;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.35), 0 4px 10px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+.cad-pin:hover {
+  transform: scale(1.35);
+}
+/* Mapbox attribution/control zichligini kartochka uslubiga moslash */
+.mapboxgl-ctrl-bottom-right,
+.mapboxgl-ctrl-bottom-left {
+  z-index: 5;
+}
+
+/* Yer kadastr — bino kartochkasi kirish animatsiyasi (spring + stagger) */
+@keyframes cad-card-in {
+  0%   { opacity: 0; transform: translateX(56px) scale(0.8) rotate(2deg); }
+  55%  { opacity: 1; transform: translateX(-10px) scale(1.05) rotate(-1deg); }
+  78%  { transform: translateX(4px) scale(0.99) rotate(0deg); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+.cad-card {
+  animation: cad-card-in 0.62s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity;
+}
+@keyframes cad-row-in {
+  0%   { opacity: 0; transform: translateY(10px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.cad-row {
+  animation: cad-row-in 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--i, 0) * 50ms + 160ms);
+}
+@keyframes cad-badge-pop {
+  0%   { opacity: 0; transform: scale(0) rotate(-40deg); }
+  65%  { opacity: 1; transform: scale(1.25) rotate(8deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+.cad-badge { animation: cad-badge-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.08s both; }
