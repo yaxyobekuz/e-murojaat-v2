@@ -1,78 +1,54 @@
-// IIB — Sarnovul MFY operativ markaz. Hodisa-feed markazli, CCTV o'ng ustunda (boshqa tuzilma).
-import { CalendarDays, ShieldCheck, Radio, Car, PhoneCall, Users, MapPin, Activity, Siren, Cpu, Camera, Video } from "lucide-react";
-import { CmdRoot, CmdHeader, Panel, StatTile, BarRow, Donut, AreaSpark, FeedList, MahallaMap, CameraGrid, makeCams } from "@/shared/components/ui/command/primitives";
+// IIB — Material Dashboard uslubi. Hodisalar jadvali CRUD; kartalar/grafiklar undan hisoblanadi.
+import { useMemo, useState } from "react";
+import { Siren, ShieldCheck, Loader, PhoneCall } from "lucide-react";
+import { MdRoot, MdNavbar, MdStatCard, MdChartCard, MdTable } from "@/shared/components/ui/md/primitives";
 
-const A = "#b794f6";
-const PLACE = "SARNOVUL MFY · BALIQCHI · ANDIJON";
-
-const FEED = [
-  { title: "Begona avto kirdi — 95 A 472 KM", time: "03:14", place: "Sanoat zonasi", tag: "AVTO", color: "#ef4444" },
-  { title: "102 chaqiruv — janjal", time: "02:51", place: "Bozor atrofi", tag: "102", color: "#f59e0b" },
-  { title: "Shubhali shaxs aniqlandi", time: "02:03", place: "Eski shahar", tag: "DIQQAT", color: "#eab308" },
-  { title: "Tezlik nazorati qoidabuzarlik", time: "01:42", place: "Markaziy ko'cha", tag: "YPX", color: "#06b6d4" },
-  { title: "Profilaktika tekshiruvi", time: "23:27", place: "Yangi daha", tag: "OK", color: "#22c55e" },
-  { title: "Patrul navbatchilik almashinuvi", time: "22:00", place: "MFY posti", tag: "PPX", color: A },
+const TYPES = ["Bezorilik", "Mulkiy", "YHQ", "Boshqa"];
+const INIT = [
+  { id: "i1", type: "Bezorilik", place: "Bozor atrofi", time: "02:51", status: "Jarayonda" },
+  { id: "i2", type: "Mulkiy", place: "Sanoat zonasi", time: "03:14", status: "Yangi" },
+  { id: "i3", type: "YHQ", place: "Markaziy ko'cha", time: "01:42", status: "Hal qilindi" },
+  { id: "i4", type: "Boshqa", place: "Yangi daha", time: "23:27", status: "Hal qilindi" },
 ];
-const CRIME = [{ name: "Mayda bezorilik", value: 38, color: A }, { name: "Mulkiy", value: 26, color: "#06b6d4" }, { name: "YHQ", value: 20, color: "#f59e0b" }, { name: "Boshqa", value: 16, color: "#64748b" }];
-const BLOCKS = [
-  { name: "Markaziy", metric: "tinch", color: "#22c55e", detail: "Patrul faol" },
-  { name: "Bozor atrofi", metric: "diqqat", color: "#f59e0b", detail: "102 signali" },
-  { name: "Maktab-7", metric: "tinch", color: "#22c55e", detail: "Kamera 4" },
-  { name: "Sanoat zonasi", metric: "hodisa", color: "#ef4444", detail: "Begona avto" },
-  { name: "Bog' mahalla", metric: "tinch", color: "#22c55e", detail: "—" },
-  { name: "Avtostansiya", metric: "diqqat", color: "#f59e0b", detail: "Tranzit nazorat" },
-  { name: "Eski shahar", metric: "hodisa", color: "#ef4444", detail: "Shubhali shaxs" },
-  { name: "Yangi daha", metric: "tinch", color: "#22c55e", detail: "Profilaktika" },
-  { name: "Stadion", metric: "tinch", color: "#22c55e", detail: "—" },
-  { name: "Chekka", metric: "diqqat", color: "#f59e0b", detail: "Kam yoritilgan" },
-  { name: "Park", metric: "tinch", color: "#22c55e", detail: "—" },
-  { name: "Temir yo'l", metric: "diqqat", color: "#f59e0b", detail: "O'tkagich" },
-];
-const CAMS = makeCams(["MFY posti", "Markaziy ko'cha", "Bozor kirishi", "Maktab-7", "Avtostansiya", "Sanoat darvoza"], 4242);
-
-const KPIS = [
-  { label: "Hisobot davri", value: "YAN 2026", icon: CalendarDays, highlight: true },
-  { label: "Jamoat xavfsizligi", value: "94%", icon: ShieldCheck },
-  { label: "Patrul ekipaj", value: "4", icon: Car },
-  { label: "Chaqiruvlar (oy)", value: "486", icon: PhoneCall, highlight: true },
-  { label: "Kameralar", value: "28", icon: Video },
-  { label: "Xodimlar", value: "32", icon: Users },
+const statusTone = (v) => (v === "Hal qilindi" ? "yashil" : v === "Jarayonda" ? "sariq" : "kok");
+const COLUMNS = [
+  { key: "type", label: "Tur", type: "select", options: TYPES.map((t) => ({ value: t, label: t })) },
+  { key: "place", label: "Joy", type: "text" },
+  { key: "time", label: "Vaqt", type: "text" },
+  { key: "status", label: "Holat", type: "status", tone: statusTone, options: ["Yangi", "Jarayonda", "Hal qilindi"].map((t) => ({ value: t, label: t })) },
 ];
 
-const IibDashboardPage = () => (
-  <CmdRoot accent={A} system="IIB yagona AT — 102" place="Sarnovul MFY, Baliqchi tumani">
-    <CmdHeader brand="ATLAS COMMAND" place={`${PLACE} · IIB`} nav={["Markaziy bo'lim", "Tezkor qidiruv", "Chaqiruvlar", "Patrullar", "Jinoyatlar"]} accent={A} />
-    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-6">{KPIS.map((k, i) => <StatTile key={i} {...k} accent={A} />)}</div>
+const IibDashboardPage = () => {
+  const [rows, setRows] = useState(INIT);
+  const s = useMemo(() => {
+    const done = rows.filter((r) => r.status === "Hal qilindi").length;
+    const prog = rows.filter((r) => r.status === "Jarayonda").length;
+    const rate = rows.length ? Math.round((done / rows.length) * 100) : 0;
+    const byType = TYPES.map((t) => rows.filter((r) => r.type === t).length);
+    return { total: rows.length, done, prog, rate, byType };
+  }, [rows]);
 
-    <div className="grid gap-3 xl:grid-cols-12" style={{ minHeight: "calc(100vh - 14rem)" }}>
-      {/* chap — jonli hodisalar + jinoyat turlari */}
-      <div className="flex flex-col gap-3 xl:col-span-4">
-        <Panel title="Jonli hodisalar" icon={Siren} accent={A} right="REAL-TIME" source="102 chaqiruv markazi" className="flex-1" bodyClass="min-h-0"><FeedList items={FEED} accent={A} /></Panel>
-        <Panel title="Jinoyat turlari" icon={Activity} accent={A} source="Yagona jinoyat reyestri" clickToSource><Donut data={CRIME} accent={A} height={200} /></Panel>
+  return (
+    <MdRoot>
+      <MdNavbar crumb="IIB" title="IIB — Sarnovul MFY operativ" />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <MdStatCard color="dark" icon={Siren} title="Jami hodisalar" count={s.total} note="bu oy" />
+        <MdStatCard color="warning" icon={Loader} title="Jarayonda" count={s.prog} note="ko'rib chiqilmoqda" />
+        <MdStatCard color="success" icon={ShieldCheck} title="Hal qilingan" count={s.done} delta={`${s.rate}%`} note="aniqlanish darajasi" />
+        <MdStatCard color="info" icon={PhoneCall} title="102 chaqiruvlar" count="486" delta="+5%" note="o'tgan haftaga nisbatan" />
       </div>
 
-      {/* markaz — operativ xarita + chaqiruvlar */}
-      <div className="flex flex-col gap-3 xl:col-span-5">
-        <Panel title="Sarnovul MFY — operativ xarita" icon={MapPin} accent={A} right="LIVE" source="MFY GIS · operativ" className="flex-1" bodyClass="relative">
-          <MahallaMap blocks={BLOCKS} accent={A} legend={[{ label: "Tinch", color: "#22c55e" }, { label: "Diqqat", color: "#f59e0b" }, { label: "Hodisa", color: "#ef4444" }]} />
-        </Panel>
-        <Panel title="Chaqiruvlar dinamikasi (24s)" icon={Activity} accent={A} source="102 — chaqiruvlar oqimi" clickToSource><AreaSpark accent={A} seed={3} /></Panel>
+      <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <MdChartCard color="error" type="bar" labels={TYPES} values={s.byType} title="Hodisa turlari" description="Joriy oy kesimi" date="hozir yangilandi" />
+        <MdChartCard color="info" type="line" labels={["00", "04", "08", "12", "16", "20"]} values={[3, 1, 4, 6, 5, 7]} title="Chaqiruvlar dinamikasi (24s)" description="(+12%) kechagi kunga nisbatan" date="4 daqiqa oldin" />
+        <MdChartCard color="dark" type="line" labels={["Du", "Se", "Ch", "Pa", "Ju"]} values={[12, 9, 14, 11, s.total]} title="Haftalik tendensiya" description="Hodisalar trendi" date="yangilandi" />
       </div>
 
-      {/* o'ng — patrul + system + CCTV */}
-      <div className="flex flex-col gap-3 xl:col-span-3">
-        <Panel title="Patrul holati" icon={Radio} accent={A} source="Patrul boshqaruv tizimi">
-          <div className="flex flex-col py-1.5">
-            <BarRow label="Patrul qamrovi" value="86" unit="%" pct={86} accent={A} />
-            <BarRow label="Aniqlanish" value="92" unit="%" pct={92} accent={A} />
-            <BarRow label="Javob vaqti" value="7 daq" pct={70} accent={A} />
-            <BarRow label="Kamera qamrovi" value="78" unit="%" pct={78} accent={A} />
-          </div>
-        </Panel>
-        <Panel title="CCTV — jonli" icon={Camera} accent={A} source="IIB CCTV tarmog'i" className="flex-1"><CameraGrid items={CAMS} accent={A} cols="lg:grid-cols-2" /></Panel>
+      <div className="mt-8">
+        <MdTable title="Hodisalar jurnali" subtitle="Yangi hodisa qo'shing — statistika avtomatik yangilanadi" color="error" columns={COLUMNS} rows={rows} setRows={setRows} />
       </div>
-    </div>
-  </CmdRoot>
-);
+    </MdRoot>
+  );
+};
 
 export default IibDashboardPage;
