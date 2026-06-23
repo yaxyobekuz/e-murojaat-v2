@@ -1,7 +1,7 @@
 // Command-center primitivlari — admin to'q palitrasiga moslangan (bg-card, white/0.07
 // border, glow aksent). Bitta mahalla (Navbahor MFY) miqyosi. Funksional, qayta ishlatiladi.
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { CircleDot, Power, Video, VideoOff, Circle, Info, X, Database, Clock, Plus, Trash2 } from "lucide-react";
+import { CircleDot, Power, Video, VideoOff, Circle, Info, X, Database, Clock, Plus, Trash2, Car, User, Play, MapPin } from "lucide-react";
 
 import { EChart } from "@/shared/components/ui/chart3d/EChart";
 
@@ -300,6 +300,60 @@ export const CmdRoot = ({ accent, system = "Ma'lumotlar bazasi", place = "", chi
 
 // kamera demo yasash
 export const makeCams = (locs, seedBase) => locs.map((loc, i) => ({ id: `c${i}`, loc, online: rng(seedBase + i) > 0.16, img: `https://picsum.photos/seed/${seedBase}-${i}/320/200?grayscale` }));
+
+// ── CCTV monitor — kirish hodisalari + tanlangan footage (begona odam/mashina) ──
+export const CctvMonitor = ({ events, accent }) => {
+  const [id, setId] = useState(events[0]?.id);
+  const ev = events.find((e) => e.id === id) || events[0];
+  if (!ev) return null;
+  return (
+    <div className="grid h-full gap-2 p-2 lg:grid-cols-3">
+      <div className="flex max-h-[440px] flex-col overflow-y-auto rounded-lg border border-white/8 bg-white/[0.02]">
+        <div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-foreground/45">Kirish hodisalari ({events.length})</div>
+        {events.map((e) => {
+          const on = e.id === ev.id;
+          const Icon = e.kind === "avto" ? Car : User;
+          const col = e.kind === "avto" ? "#ef4444" : "#f59e0b";
+          return (
+            <button key={e.id} onClick={() => setId(e.id)} className="flex items-start gap-2 px-3 py-2 text-left transition-colors hover:bg-white/[0.04]" style={{ background: on ? hexA(accent, 0.12) : "transparent", borderLeft: `2px solid ${on ? accent : "transparent"}` }}>
+              <span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded" style={{ background: hexA(col, 0.16), color: col }}><Icon className="size-3.5" /></span>
+              <div className="min-w-0 flex-1 leading-tight">
+                <div className="truncate text-[11.5px] font-medium text-foreground/90">{e.title}</div>
+                <div className="flex items-center gap-1 text-[9px] text-foreground/40"><MapPin className="size-2.5" /> {e.place} · {e.time}</div>
+                {e.plate && <div className="mt-0.5 inline-block rounded bg-white/10 px-1 font-mono text-[9.5px] text-white/80">{e.plate}</div>}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+      <div className="flex flex-col gap-2 lg:col-span-2">
+        <div className="relative aspect-video w-full overflow-hidden rounded-lg border border-white/10 bg-black">
+          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg,#0b1220,#111827 55%,#0a0f1a)" }} />
+          <div className="absolute inset-0 opacity-[0.10]" style={{ backgroundImage: "repeating-linear-gradient(0deg, rgba(255,255,255,0.5) 0 1px, transparent 1px 3px)" }} />
+          <div className="absolute inset-0 grid place-items-center"><Play className="size-12 text-white/15" /></div>
+          <div className="absolute left-2 top-2 flex items-center gap-1 rounded bg-black/60 px-2 py-0.5"><Circle className="size-2 animate-pulse fill-rose-500 text-rose-500" /><span className="text-[9px] font-semibold text-rose-300">REC · {ev.cam}</span></div>
+          <div className="absolute right-2 top-2 rounded bg-black/60 px-2 py-0.5 font-mono text-[10px] text-emerald-300">{ev.time}</div>
+          <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-3" style={{ background: "linear-gradient(0deg, rgba(0,0,0,0.85), transparent)" }}>
+            <div className="leading-tight">
+              <div className="text-[12.5px] font-semibold text-white">{ev.title}</div>
+              <div className="flex items-center gap-1 text-[10px] text-white/60"><MapPin className="size-3" /> {ev.place}</div>
+            </div>
+            {ev.plate && <div className="rounded-md border-2 border-white/70 bg-black/40 px-2 py-1 font-mono text-[16px] font-bold tracking-wider text-white">{ev.plate}</div>}
+          </div>
+        </div>
+        <div className="grid grid-cols-4 gap-2">
+          {events.slice(0, 4).map((e) => (
+            <button key={e.id} onClick={() => setId(e.id)} className="relative aspect-video overflow-hidden rounded border" style={{ borderColor: e.id === ev.id ? accent : "rgba(255,255,255,0.1)" }}>
+              <div className="absolute inset-0" style={{ background: "linear-gradient(135deg,#0b1220,#1a2233)" }} />
+              <Circle className="absolute right-1 top-1 size-1.5 animate-pulse fill-rose-500 text-rose-500" />
+              <span className="absolute bottom-0.5 left-1 font-mono text-[8px] text-white/70">{e.cam}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 // ── Dark CRUD jadval (qo'shish/o'chirish) — command uslubi ──
 const TONE = { yashil: "#22c55e", qizil: "#ef4444", sariq: "#f59e0b", kok: "#38bdf8", kulrang: "#94a3b8" };
