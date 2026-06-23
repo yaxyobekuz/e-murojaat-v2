@@ -28,6 +28,10 @@ const genNumber = (region) => Math.random() < 0.5
   : `${region} ${ri(1000, 9999)} ${L()}${L()}${L()}`;          // 30 7890 ABC
 // Ro'yxatdagi mahalla bazasi (~40 ta, Toshkent)
 const REGISTERED = Array.from({ length: 40 }, () => genNumber(pick(MAHALLA_REG)));
+// Real footage — kamera tasviri uchun (Pexels CDN, ko'cha/trafik) + avto rasmi (LoremFlickr)
+const CCTV_FILTER = "grayscale(.38) contrast(1.12) saturate(.72) brightness(.92)";
+const vid = (id, f) => `https://videos.pexels.com/video-files/${id}/${f}.mp4`;
+const fl = (kw, lock) => `https://loremflickr.com/420/260/${kw}?lock=${lock}`;
 // O'tayotgan mashina: 80% ro'yxatdan (yashil), 20% begona (qizil)
 let CARID = 0;
 const nextCar = (cam) => {
@@ -37,7 +41,7 @@ const nextCar = (cam) => {
     ? (Math.random() < 0.7 ? genNumber(pick(REGIONS.filter((r) => !MAHALLA_REG.includes(r)))) : genNumber("01"))
     : pick(REGISTERED);
   const d = new Date();
-  return { id: CARID, plate, foreign, cam, time: `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`, ts: Date.now() };
+  return { id: CARID, plate, foreign, cam, time: `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`, ts: Date.now(), img: fl("car,street,traffic", CARID * 7 + 11) };
 };
 
 /* ───────── CSS ───────── */
@@ -89,6 +93,10 @@ const CSS = `
 .scc-cam .clk{position:absolute;right:8px;top:8px;font-family:"JetBrains Mono";font-size:10px;color:${T.green};background:rgba(0,0,0,.5);padding:1px 5px;border-radius:4px}
 .scc-cam .ghost{position:absolute;bottom:14%;left:-30%;opacity:.5;animation:sccDrive linear infinite}
 @keyframes sccDrive{to{left:120%}}
+.scc-scan{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.07) 0 1px,transparent 1px 3px);animation:sccScan 6s linear infinite;mix-blend-mode:overlay}
+.scc-vig{position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 55px rgba(0,0,0,.6)}
+.scc-expicon{position:absolute;right:8px;bottom:8px;font-size:13px;color:rgba(255,255,255,.55)}
+.scc-cam:hover .scc-expicon{color:#fff}
 /* Avtomobil oqimi lentasi */
 .scc-flow{display:flex;gap:8px;overflow:hidden;padding:6px 2px;mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
 .scc-carc{flex:0 0 auto;width:128px;border:1px solid ${T.border};border-radius:10px;padding:7px 9px;background:rgba(255,255,255,.02);animation:sccSlide .5s cubic-bezier(.2,.8,.2,1)}
@@ -186,21 +194,71 @@ function HexMap() {
 
 /* ───────── Kamera devori ───────── */
 const CAMS = ["Kirish — Navbahor ko'chasi", "Chiqish — Bog' ko'chasi", "Markaziy chorraha", "Maktab oldi", "Bozor kirishi", "MFY posti"];
-function CameraWall() {
+const CAM_VIDEOS = [
+  vid(2034115, "2034115-sd_640_360_30fps"), vid(5921059, "5921059-sd_640_360_30fps"), vid(1721294, "1721294-sd_640_360_25fps"),
+  vid(857195, "857195-sd_640_360_25fps"), vid(2099536, "2099536-sd_640_360_30fps"), vid(854671, "854671-sd_640_360_25fps"),
+];
+function CamFeed({ src, big }) {
+  return (
+    <>
+      <video src={src} autoPlay muted loop playsInline style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: CCTV_FILTER }} />
+      <div className="scc-scan" />
+      <div className="scc-vig" />
+    </>
+  );
+}
+function CameraWall({ onOpen }) {
   const clk = useClock();
   return (
     <div className="scc-cams">
       {CAMS.map((nm, i) => (
-        <div className="scc-cam" key={nm}>
-          <div className="feed" />
-          <div className="ghost" style={{ animationDuration: `${ri(7, 13)}s`, animationDelay: `${i * 1.5}s` }}><CarSil w={ri(40, 64)} color="#37505c" /></div>
+        <button className="scc-cam" key={nm} onClick={() => onOpen(i)} title="Kamerani ochish" style={{ cursor: "pointer", padding: 0, textAlign: "left" }}>
+          <CamFeed src={CAM_VIDEOS[i]} />
           <div className="rec"><i /> REC</div>
           <div className="clk mono">{clk}</div>
           <div className="cnm">CAM-{pad(i + 1)} · {nm}</div>
-        </div>
+          <div className="scc-expicon">⤢</div>
+        </button>
       ))}
     </div>
   );
+}
+function CameraModal({ idx, onClose }) {
+  const clk = useClock();
+  return createPortal(
+    <div className="scc-modal" onClick={onClose}><div className="scc-mbox" onClick={(e) => e.stopPropagation()}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}><div><div style={{ fontFamily: '"Space Grotesk"', fontWeight: 700, fontSize: 16 }}>CAM-{pad(idx + 1)} · {CAMS[idx]}</div><div style={{ fontSize: 11, color: T.muted }}>Navbahor MFY · jonli kuzatuv</div></div><button className="scc-x" onClick={onClose}>×</button></div>
+      <div style={{ flex: 1, position: "relative", borderRadius: 12, overflow: "hidden", background: "#000" }}>
+        <CamFeed src={CAM_VIDEOS[idx]} />
+        <div className="rec" style={{ fontSize: 12 }}><i /> REC</div>
+        <div className="clk mono" style={{ fontSize: 13 }}>{clk}</div>
+        <div className="cnm" style={{ fontSize: 12 }}>CAM-{pad(idx + 1)} · {CAMS[idx]}</div>
+      </div>
+      <div style={{ marginTop: 10 }}><span className="scc-pill">DEMO footage — namunaviy</span></div>
+    </div></div>, document.body);
+}
+function CarModal({ car, onClose }) {
+  return createPortal(
+    <div className="scc-modal" onClick={onClose}><div className="scc-mbox" style={{ height: "auto", maxHeight: "88vh" }} onClick={(e) => e.stopPropagation()}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}><div style={{ fontFamily: '"Space Grotesk"', fontWeight: 700, fontSize: 17, color: car.foreign ? T.alarm : T.green }}>{car.foreign ? "⚠ Begona avtomobil" : "✓ Ro'yxatdagi avtomobil"}</div><button className="scc-x" onClick={onClose}>×</button></div>
+      <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 16 }}>
+        <div style={{ position: "relative", borderRadius: 12, overflow: "hidden", border: `1px solid ${T.border}`, aspectRatio: "16/10", background: "#05080d" }}>
+          <img src={car.img} alt="avto" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: CCTV_FILTER }} />
+          <div className="scc-scan" /><div className="scc-vig" />
+          <div className="rec"><i /> {car.cam}</div>
+          <div className="clk mono">{car.time}</div>
+        </div>
+        <div>
+          <div style={{ fontSize: 11, color: T.muted, marginBottom: 6 }}>Davlat raqami</div>
+          <UzPlate plate={car.plate} size="lg" />
+          <div style={{ marginTop: 16, display: "flex", flexDirection: "column", gap: 10 }}>
+            {[["Holat", car.foreign ? "BEGONA — ro'yxatda yo'q" : "Ro'yxatda mavjud"], ["Aniqlangan kamera", car.cam], ["Aniqlangan vaqt", car.date || car.time], ["Hudud", "Navbahor MFY"]].map(([l, v]) => <div key={l} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: `1px solid ${T.border}`, fontSize: 13 }}><span style={{ color: T.muted }}>{l}</span><span style={{ fontWeight: 600, color: l === "Holat" ? (car.foreign ? T.alarm : T.green) : T.text }}>{v}</span></div>)}
+          </div>
+          <div style={{ display: "flex", gap: 8, marginTop: 14 }}><button className="scc-btn" style={{ borderColor: T.gold, color: T.gold }} onClick={() => alert("DEMO: bazadan tekshirilmoqda")}>Bazadan tekshirish</button></div>
+        </div>
+      </div>
+      <div style={{ marginTop: 12 }}><span className="scc-pill">DEMO — namunaviy</span></div>
+    </div></div>, document.body);
 }
 
 /* ───────── Asosiy ───────── */
@@ -211,6 +269,8 @@ const IibDashboardPage = () => {
   const [alarms, setAlarms] = useState([]);
   const [passed, setPassed] = useState(312);
   const [foreign, setForeign] = useState(58);
+  const [selCam, setSelCam] = useState(null);
+  const [selCar, setSelCar] = useState(null);
 
   useEffect(() => {
     if (reduced) return; let stop = false;
@@ -255,13 +315,21 @@ const IibDashboardPage = () => {
         {/* ALARM */}
         {latest && (
           <div className="scc-alarm glow" style={{ marginBottom: 14 }} key={latest.id}>
-            <div style={{ flex: "0 0 auto", textAlign: "center" }}><CarSil w={150} color="#c44" /><div style={{ fontSize: 10, color: "#ffb3b3", marginTop: 2 }}>{latest.cam}</div></div>
+            <div style={{ flex: "0 0 auto", width: 210, cursor: "pointer" }} onClick={() => setSelCar(latest)} role="button" tabIndex={0} onKeyDown={(e) => e.key === "Enter" && setSelCar(latest)}>
+              <div style={{ position: "relative", borderRadius: 12, overflow: "hidden", border: "1px solid rgba(255,77,77,.45)", aspectRatio: "16/10", background: "#05080d" }}>
+                <img src={latest.img} alt="avto" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", filter: CCTV_FILTER }} />
+                <div className="scc-scan" /><div className="scc-vig" />
+                <div className="rec"><i /> {latest.cam}</div><div className="clk mono">{latest.time}</div>
+              </div>
+              <div style={{ fontSize: 10, color: "#ffb3b3", marginTop: 4, textAlign: "center" }}>bosib batafsil ko'ring</div>
+            </div>
             <div style={{ flex: 1 }}>
               <div style={{ fontFamily: '"Space Grotesk"', fontWeight: 800, fontSize: 18, color: T.alarm, letterSpacing: ".5px" }}>⚠ BEGONA AVTOMOBIL — RO'YXATDA YO'Q</div>
               <div style={{ margin: "12px 0" }}><UzPlate plate={latest.plate} size="lg" /></div>
               <div style={{ fontSize: 12, color: T.muted }}>Aniqlangan: <b style={{ color: T.text }}>{latest.cam}</b> · {latest.date}</div>
               <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
-                <button className="scc-btn" style={{ borderColor: T.gold, color: T.gold }} onClick={() => alert("DEMO: tekshirish so'rovi yuborildi")}>Tekshirish</button>
+                <button className="scc-btn" style={{ borderColor: T.gold, color: T.gold }} onClick={() => setSelCar(latest)}>Batafsil</button>
+                <button className="scc-btn" onClick={() => alert("DEMO: tekshirish so'rovi yuborildi")}>Tekshirish</button>
                 <button className="scc-btn" onClick={() => setAlarms((p) => p.map((a) => a.id === latest.id ? { ...a, checked: true } : a))}>Belgilash</button>
               </div>
             </div>
@@ -272,10 +340,10 @@ const IibDashboardPage = () => {
         <div className="scc-grid" style={{ marginBottom: 14 }}>
           <div className="scc-card scc-c8" style={{ animationDelay: "120ms" }}>
             <div className="hd"><div><div className="t">Jonli kamera devori</div><div className="s">Mahalla kirish/chiqish nuqtalari · {CAMS.length} kamera</div></div><span className="scc-pill">DEMO simulyatsiya</span></div>
-            <CameraWall />
-            <div style={{ marginTop: 12, fontSize: 11, color: T.muted, marginBottom: 4 }}>Avtomobil oqimi — real vaqtda</div>
+            <CameraWall onOpen={setSelCam} />
+            <div style={{ marginTop: 12, fontSize: 11, color: T.muted, marginBottom: 4 }}>Avtomobil oqimi — real vaqtda · kartani bosing</div>
             <div className="scc-flow">{cars.map((c) => (
-              <div className="scc-carc" key={c.id}>
+              <div className="scc-carc" key={c.id} role="button" tabIndex={0} style={{ cursor: "pointer" }} onClick={() => setSelCar(c)} onKeyDown={(e) => e.key === "Enter" && setSelCar(c)}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}><CarSil w={48} color={c.foreign ? "#c66" : "#6aa0a6"} /><span style={{ width: 8, height: 8, borderRadius: 99, background: c.foreign ? T.alarm : T.green, boxShadow: `0 0 6px ${c.foreign ? T.alarm : T.green}` }} /></div>
                 <div style={{ marginTop: 4 }}><UzPlate plate={c.plate} size="sm" /></div>
                 <div style={{ fontSize: 9, color: T.muted, marginTop: 4, display: "flex", justifyContent: "space-between" }}><span style={{ color: c.foreign ? T.alarm : T.green }}>{c.foreign ? "begona" : "ro'yxatda"}</span><span className="mono">{c.time}</span></div>
@@ -286,7 +354,7 @@ const IibDashboardPage = () => {
             <div style={{ maxHeight: 430, overflowY: "auto", display: "flex", flexDirection: "column", gap: 8 }}>
               {alarms.length === 0 && <div style={{ color: T.muted, fontSize: 12, padding: 16, textAlign: "center" }}>Kuzatuv davom etmoqda…</div>}
               {alarms.map((a) => (
-                <div key={a.id} style={{ border: `1px solid ${a.checked ? T.border : "rgba(255,77,77,.4)"}`, borderRadius: 10, padding: 8, background: a.checked ? "rgba(255,255,255,.02)" : "rgba(255,77,77,.06)", display: "flex", alignItems: "center", gap: 8 }}>
+                <div key={a.id} role="button" tabIndex={0} onClick={() => setSelCar(a)} onKeyDown={(e) => e.key === "Enter" && setSelCar(a)} style={{ cursor: "pointer", border: `1px solid ${a.checked ? T.border : "rgba(255,77,77,.4)"}`, borderRadius: 10, padding: 8, background: a.checked ? "rgba(255,255,255,.02)" : "rgba(255,77,77,.06)", display: "flex", alignItems: "center", gap: 8 }}>
                   <UzPlate plate={a.plate} size="sm" />
                   <div style={{ flex: 1, minWidth: 0, fontSize: 10, color: T.muted }}><div style={{ color: a.checked ? T.green : T.alarm, fontWeight: 700 }}>{a.checked ? "✓ belgilangan" : "begona"}</div>{a.cam} · {a.time}</div>
                 </div>))}
@@ -336,8 +404,10 @@ const IibDashboardPage = () => {
           </div>
         </div>
 
-        <div style={{ marginTop: 16, fontSize: 11.5, color: T.muted }}>Barcha ma'lumotlar — <b>DEMO (namunaviy/simulyatsiya)</b>. Faqat Navbahor MFY. Backend yo'q.</div>
+        <div style={{ marginTop: 16, fontSize: 11.5, color: T.muted }}>Barcha ma'lumotlar — <b>DEMO (namunaviy/simulyatsiya)</b>. Faqat Navbahor MFY. Backend yo'q. Kamera tasvirlari — namunaviy real ko'cha footage'lari.</div>
       </div>
+      {selCam != null && <CameraModal idx={selCam} onClose={() => setSelCam(null)} />}
+      {selCar && <CarModal car={selCar} onClose={() => setSelCar(null)} />}
     </div>
   );
 };
