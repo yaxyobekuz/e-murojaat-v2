@@ -50,12 +50,14 @@ const SoliqDashboardPage = () => {
         </div>
       </div>
 
-      {/* Pastki chap — legenda */}
-      <div className="pointer-events-none absolute bottom-4 left-4 z-10">
-        <div className="pointer-events-auto">
-          <BusinessLegend />
+      {/* Pastki chap — legenda (ro'yxat rejimida ro'yxat egallaydi, legenda yashiriladi) */}
+      {mode !== "list" && (
+        <div className="pointer-events-none absolute bottom-4 left-4 z-10">
+          <div className="pointer-events-auto">
+            <BusinessLegend />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Pastki markaz — rejim paneli */}
       <div className="pointer-events-none absolute inset-x-0 bottom-4 z-10 flex justify-center">
@@ -73,9 +75,9 @@ const SoliqDashboardPage = () => {
         </div>
       )}
 
-      {/* Ro'yxat rejimi — xarita ustida panel */}
+      {/* Ro'yxat rejimi — chapda, filtr panelidan past boshlanadi (o'ngdagi detail bilan kesishmaydi) */}
       {mode === "list" && (
-        <div className="pointer-events-none absolute inset-0 z-30 flex justify-end p-4 pt-[230px]">
+        <div className="pointer-events-none absolute bottom-20 left-4 top-[230px] z-10 flex items-start">
           <div className="pointer-events-auto">
             <BusinessListOverlay
               businesses={businesses}

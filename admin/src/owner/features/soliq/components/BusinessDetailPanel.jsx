@@ -11,8 +11,12 @@ import {
 
 import { cn } from "@/shared/utils/cn";
 import { formatMoney } from "@/shared/utils/formatMoney";
+import useModal from "@/shared/hooks/useModal";
+import { MODAL } from "@/shared/constants/modals";
+import ModalWrapper from "@/shared/components/ui/modal/ModalWrapper";
 import GlassStatusBadge from "@/shared/components/ui/glass/GlassStatusBadge";
 import { BUSINESS_TYPES } from "../mock/soliq.businesses";
+import BusinessTaxHistoryModal from "./modals/BusinessTaxHistoryModal";
 
 const shortMln = (n) => `${(n / 1_000_000).toFixed(1)} mln so'm`;
 
@@ -31,7 +35,8 @@ const Row = ({ label, value }) => (
   </div>
 );
 
-const BusinessDetailPanel = ({ business, onClose, onOpenHistory }) => {
+const BusinessDetailPanel = ({ business, onClose }) => {
+  const { openModal } = useModal();
   if (!business) return null;
   const type = BUSINESS_TYPES[business.typeKey];
   const Icon = type.icon;
@@ -161,13 +166,21 @@ const BusinessDetailPanel = ({ business, onClose, onOpenHistory }) => {
           </button>
           <button
             type="button"
-            onClick={onOpenHistory}
+            onClick={() => openModal(MODAL.SOLIQ_BUSINESS_HISTORY, { business })}
             className="rounded-xl border border-[rgb(var(--card-border))] px-3 py-2.5 text-[13px] font-medium text-foreground/80 transition-colors hover:bg-card/60"
           >
             Soliq tarixi
           </button>
         </div>
       </div>
+
+      <ModalWrapper
+        name={MODAL.SOLIQ_BUSINESS_HISTORY}
+        title="Soliq tarixi"
+        className="max-w-2xl border border-[rgb(var(--card-border))] bg-card text-foreground"
+      >
+        <BusinessTaxHistoryModal />
+      </ModalWrapper>
     </div>
   );
 };

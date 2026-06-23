@@ -7,6 +7,7 @@ export const MODAL = Object.freeze({
 
   SOLIQ_TAXPAYER_CREATE: "soliq:taxpayerCreate",
   SOLIQ_PAY: "soliq:pay",
+  SOLIQ_BUSINESS_HISTORY: "soliq:businessHistory",
 
   YER_REQUEST_STATUS: "yer:requestStatus",
   GAZ_REQUEST_STATUS: "gaz:requestStatus",

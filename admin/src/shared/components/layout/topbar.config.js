@@ -22,6 +22,7 @@ const topbarModules = [
     base: "/owner/soliq",
     items: [
       { title: "Analitika", url: "/owner/soliq", end: true },
+      { title: "Bizneslar", url: "/owner/soliq/bizneslar" },
       { title: "Qarzdorlar", url: "/owner/soliq/qarzdorlar" },
     ],
   },
