@@ -1,7 +1,7 @@
 // Command-center primitivlari — admin to'q palitrasiga moslangan (bg-card, white/0.07
 // border, glow aksent). Bitta mahalla (Navbahor MFY) miqyosi. Funksional, qayta ishlatiladi.
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { CircleDot, Power, Video, VideoOff, Circle, Info, X, Database, Clock, Plus, Trash2, Car, User, MapPin } from "lucide-react";
+import { CircleDot, Power, Video, VideoOff, Circle, Info, X, Database, Clock, Plus, Trash2, Car, User, MapPin, Flame, Droplets, LifeBuoy } from "lucide-react";
 
 import { EChart } from "@/shared/components/ui/chart3d/EChart";
 
@@ -308,14 +308,19 @@ export const CctvMonitor = ({ events, accent }) => {
   const ev = events.find((e) => e.id === id) || events[0];
   if (!ev) return null;
   const CCTV_FILTER = "grayscale(0.4) contrast(1.15) saturate(0.7) brightness(0.9)";
+  const KIND = {
+    avto: { icon: Car, color: "#ef4444" }, odam: { icon: User, color: "#f59e0b" },
+    fire: { icon: Flame, color: "#ef4444" }, gas: { icon: Droplets, color: "#06b6d4" }, rescue: { icon: LifeBuoy, color: "#22d3ee" },
+  };
   return (
     <div className="grid h-full gap-2 p-2 lg:grid-cols-3">
       <div className="flex max-h-[440px] flex-col overflow-y-auto rounded-lg border border-white/8 bg-white/[0.02]">
         <div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-foreground/45">Kirish hodisalari ({events.length})</div>
         {events.map((e) => {
           const on = e.id === ev.id;
-          const Icon = e.kind === "avto" ? Car : User;
-          const col = e.kind === "avto" ? "#ef4444" : "#f59e0b";
+          const meta = KIND[e.kind] || KIND.odam;
+          const Icon = meta.icon;
+          const col = meta.color;
           return (
             <button key={e.id} onClick={() => setId(e.id)} className="flex items-start gap-2 px-3 py-2 text-left transition-colors hover:bg-white/[0.04]" style={{ background: on ? hexA(accent, 0.12) : "transparent", borderLeft: `2px solid ${on ? accent : "transparent"}` }}>
               <span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded" style={{ background: hexA(col, 0.16), color: col }}><Icon className="size-3.5" /></span>
@@ -345,7 +350,8 @@ export const CctvMonitor = ({ events, accent }) => {
               <div className="text-[12.5px] font-semibold text-white">{ev.title}</div>
               <div className="flex items-center gap-1 text-[10px] text-white/60"><MapPin className="size-3" /> {ev.place}</div>
             </div>
-            {ev.plate && <div className="rounded-md border-2 border-white/70 bg-black/40 px-2 py-1 font-mono text-[16px] font-bold tracking-wider text-white">{ev.plate}</div>}
+            {ev.plate ? <div className="rounded-md border-2 border-white/70 bg-black/40 px-2 py-1 font-mono text-[16px] font-bold tracking-wider text-white">{ev.plate}</div>
+              : ev.badge ? <div className="rounded-md px-2 py-1 text-[11px] font-bold uppercase tracking-wider text-white" style={{ background: hexA(accent, 0.85) }}>{ev.badge}</div> : null}
           </div>
         </div>
         <div className="grid grid-cols-4 gap-2">
