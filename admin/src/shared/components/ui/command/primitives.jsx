@@ -328,7 +328,9 @@ export const CctvMonitor = ({ events, accent }) => {
       </div>
       <div className="flex flex-col gap-2 lg:col-span-2">
         <div className="relative aspect-video w-full overflow-hidden rounded-lg border border-white/10 bg-black">
-          {ev.img ? <img src={ev.img} alt={ev.title} className="absolute inset-0 h-full w-full object-cover" />
+          {ev.video ? (
+            <video key={ev.id} src={ev.video} poster={ev.img} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" />
+          ) : ev.img ? <img src={ev.img} alt={ev.title} className="absolute inset-0 h-full w-full object-cover" />
             : <div className="absolute inset-0" style={{ background: "linear-gradient(135deg,#0b1220,#111827 55%,#0a0f1a)" }} />}
           <div className="absolute inset-0 opacity-[0.12]" style={{ backgroundImage: "repeating-linear-gradient(0deg, rgba(255,255,255,0.4) 0 1px, transparent 1px 3px)" }} />
           <div className="absolute left-2 top-2 flex items-center gap-1 rounded bg-black/65 px-2 py-0.5"><Circle className="size-2 animate-pulse fill-rose-500 text-rose-500" /><span className="text-[9px] font-semibold text-rose-300">REC · {ev.cam}</span></div>
