@@ -34,6 +34,10 @@ const topbarModules = [
     items: [
       { title: "Analitika", url: "/owner/obodonlashtirish", end: true },
       { title: "Loyihalar", url: "/owner/obodonlashtirish/loyihalar" },
+      { title: "Axlat mashinasi", url: "/owner/obodonlashtirish/axlat" },
+      { title: "Gaz mashinasi", url: "/owner/obodonlashtirish/assenizatsiya" },
+      { title: "Yashil makon", url: "/owner/obodonlashtirish/yashil-makon" },
+      { title: "Tozalov & hashar", url: "/owner/obodonlashtirish/hashar" },
     ],
   },
   {
