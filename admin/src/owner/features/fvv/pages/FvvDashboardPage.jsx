@@ -1,23 +1,19 @@
 // FVV — "Smart Operation Center". Header navlari funksional tab: Umumiy + Hodisalar/
 // Brigadalar/Texnika/Profilaktika (har biri boshqariladigan CRUD jadval).
 import { useMemo, useState } from "react";
-import { Flame, Droplets, LifeBuoy, Truck, Bell, Activity, MapPin, Gauge, Radio, ShieldAlert, Siren, CheckCircle2, Wrench, ClipboardCheck, Video } from "lucide-react";
-import { CmdRoot, CmdHeader, Panel, StatTile, BarRow, RadialGauge, RatingList, CmdTable, VideoWall, hexA } from "@/shared/components/ui/command/primitives";
+import { Flame, Droplets, LifeBuoy, Truck, Bell, Activity, MapPin, Gauge, Radio, ShieldAlert, Siren, CheckCircle2, Wrench, ClipboardCheck } from "lucide-react";
+import { CmdRoot, CmdHeader, Panel, StatTile, BarRow, RadialGauge, RatingList, CmdTable, DispatchConsole, hexA } from "@/shared/components/ui/command/primitives";
 
 const A = "#f59e0b";
 const CY = "#22d3ee";
 const NAV = ["Umumiy", "Hodisalar", "Brigadalar", "Texnika", "Profilaktika"];
 
-// Real footage — Pexels (yong'in/tutun/qutqaruv) + poster real rasm (LoremFlickr)
-const fl = (kw, lock) => `https://loremflickr.com/640/360/${kw}?lock=${lock}`;
-const vid = (id, file) => `https://videos.pexels.com/video-files/${id}/${file}.mp4`;
-const FVV_FEEDS = [
-  { id: "w1", cam: "FVV-CAM-01", place: "Sanoat zonasi", status: "Yong'in", color: "#ef4444", img: fl("fire,building", 11), video: vid(4205697, "4205697-sd_640_360_30fps") },
-  { id: "w2", cam: "FVV-CAM-02", place: "Gaz taqsimlagich", status: "Gaz", color: "#06b6d4", img: fl("smoke,gas", 22), video: vid(856973, "856973-sd_640_360_25fps") },
-  { id: "w3", cam: "FVV-CAM-03", place: "Eski shahar", status: "Qutqaruv", color: "#22d3ee", img: fl("firefighter,rescue", 33), video: vid(4328514, "4328514-sd_640_360_30fps") },
-  { id: "w4", cam: "FVV-CAM-04", place: "Bozor", status: "Tutun", color: "#f59e0b", img: fl("fire,flames", 44), video: vid(2835998, "2835998-sd_640_360_24fps") },
-  { id: "w5", cam: "FVV-CAM-05", place: "Transformator", status: "Yong'in", color: "#ef4444", img: fl("fire,electric", 55), video: vid(2715412, "2715412-sd_640_360_30fps") },
-  { id: "w6", cam: "FVV-CAM-06", place: "Markaziy ko'cha", status: "Nazorat", color: "#22c55e", img: fl("street,night", 66), video: vid(2099536, "2099536-sd_640_360_30fps") },
+// Jonli dispetcher — faol chaqiruvlar (ETA countdown + datchiklar)
+const INCIDENTS = [
+  { id: "d1", type: "Yong'in — bino", place: "Sanoat zonasi, 12-uy", sev: "Yuqori", brigade: "Brigada-1", step: 1, etaSec: 95, sensors: { temp: 420, smoke: 82, gas: 8, co: 160 } },
+  { id: "d2", type: "Gaz sizishi", place: "Gaz taqsimlagich", sev: "Yuqori", brigade: "Brigada-2", step: 1, etaSec: 140, sensors: { temp: 48, smoke: 12, gas: 38, co: 40 } },
+  { id: "d3", type: "Qutqaruv — lift", place: "Eski shahar, 7-uy", sev: "O'rta", brigade: "Brigada-3", step: 2, etaSec: 0, sensors: { temp: 33, smoke: 4, gas: 2, co: 12 } },
+  { id: "d4", type: "Tutun signali", place: "Bozor rastasi", sev: "Past", brigade: "Navbatchi", step: 0, etaSec: 60, sensors: { temp: 30, smoke: 22, gas: 1, co: 8 } },
 ];
 
 const BigStat = ({ icon: Icon, label, value, accent, subs, source }) => (
@@ -115,8 +111,8 @@ const FvvDashboardPage = () => {
               <BigStat icon={Droplets} label="Gaz / suv" value="2 162" accent={CY} source="Gidrant reyestri" subs={[{ k: "Gidrant", v: 16 }, { k: "Faol", v: 14 }, { k: "Gaz signal", v: 4 }, { k: "Qamrov", v: "88%" }]} />
             </div>
             <div className="flex flex-col gap-3 xl:col-span-6">
-              <Panel title="Video devor — jonli kamera feed" icon={Video} accent={A} right={`${FVV_FEEDS.length} kamera · JONLI`} source="FVV hodisa kameralari" className="flex-1" bodyClass="min-h-0">
-                <VideoWall feeds={FVV_FEEDS} accent={A} />
+              <Panel title="Operativ dispetcher — jonli javob" icon={Radio} accent={A} right="REAL-TIME" source="101 dispetcher tizimi" className="flex-1" bodyClass="min-h-0">
+                <DispatchConsole incidents={INCIDENTS} accent={A} />
               </Panel>
             </div>
             <div className="flex flex-col gap-3 xl:col-span-3">

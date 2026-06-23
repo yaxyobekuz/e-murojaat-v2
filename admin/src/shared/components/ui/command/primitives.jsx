@@ -1,7 +1,7 @@
 // Command-center primitivlari — admin to'q palitrasiga moslangan (bg-card, white/0.07
 // border, glow aksent). Bitta mahalla (Navbahor MFY) miqyosi. Funksional, qayta ishlatiladi.
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { CircleDot, Power, Video, VideoOff, Circle, Info, X, Database, Clock, Plus, Trash2, Car, User, MapPin, Flame, Droplets, LifeBuoy } from "lucide-react";
+import { CircleDot, Power, Video, VideoOff, Circle, Info, X, Database, Clock, Plus, Trash2, Car, User, MapPin, Flame, Droplets, LifeBuoy, Thermometer, Wind, AlertTriangle, Navigation, Truck, Check } from "lucide-react";
 
 import { EChart } from "@/shared/components/ui/chart3d/EChart";
 
@@ -363,6 +363,111 @@ export const CctvMonitor = ({ events, accent }) => {
               <span className="absolute bottom-0.5 left-1 font-mono text-[8px] text-white/80" style={{ textShadow: "0 1px 2px #000" }}>{e.cam}</span>
             </button>
           ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ── Dispetcher konsoli — faol chaqiruvlar + ETA countdown + timeline + datchiklar ──
+const DSTEPS = ["Qabul qilindi", "Yo'lda", "Joyida", "O'chirilmoqda", "Bartaraf etildi"];
+const SEV = { Yuqori: "#ef4444", "O'rta": "#f59e0b", Past: "#22c55e" };
+const SENSOR_META = {
+  temp: { label: "Harorat", unit: "°C", max: 600, icon: Thermometer, color: "#ef4444" },
+  smoke: { label: "Tutun", unit: "%", max: 100, icon: Wind, color: "#f59e0b" },
+  gas: { label: "Gaz (CH₄)", unit: "%LEL", max: 50, icon: Droplets, color: "#06b6d4" },
+  co: { label: "CO", unit: "ppm", max: 400, icon: AlertTriangle, color: "#a78bfa" },
+};
+const fmtS = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+
+export const DispatchConsole = ({ incidents, accent }) => {
+  const [id, setId] = useState(incidents[0]?.id);
+  const inc = incidents.find((i) => i.id === id) || incidents[0];
+  const [eta, setEta] = useState(inc?.etaSec || 0);
+  const [step, setStep] = useState(inc?.step || 0);
+  const [sensors, setSensors] = useState({ ...(inc?.sensors || {}) });
+
+  useEffect(() => {
+    setEta(inc?.etaSec || 0); setStep(inc?.step || 0); setSensors({ ...(inc?.sensors || {}) });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+  useEffect(() => {
+    const t = setInterval(() => {
+      setEta((e) => (e > 0 ? e - 1 : 0));
+      setSensors((s) => { const o = {}; for (const k in s) o[k] = Math.max(0, s[k] + Math.round((Math.random() - 0.5) * (SENSOR_META[k].max * 0.03))); return o; });
+    }, 1000);
+    return () => clearInterval(t);
+  }, []);
+  useEffect(() => { if (eta === 0 && step === 1) setStep(2); }, [eta, step]);
+
+  if (!inc) return null;
+  const arrived = step >= 2;
+  const pct = inc.etaSec ? Math.round((eta / inc.etaSec) * 100) : 0;
+  const r = 40, circ = 2 * Math.PI * r;
+
+  return (
+    <div className="grid h-full gap-2 p-2 lg:grid-cols-3">
+      {/* faol chaqiruvlar */}
+      <div className="flex max-h-[450px] flex-col overflow-y-auto rounded-lg border border-white/8 bg-white/[0.02]">
+        <div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-foreground/45">Faol chaqiruvlar ({incidents.length})</div>
+        {incidents.map((i) => {
+          const on = i.id === inc.id;
+          return (
+            <button key={i.id} onClick={() => setId(i.id)} className="flex items-start gap-2 px-3 py-2 text-left transition-colors hover:bg-white/[0.04]" style={{ background: on ? hexA(accent, 0.12) : "transparent", borderLeft: `2px solid ${on ? accent : "transparent"}` }}>
+              <span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded" style={{ background: hexA(SEV[i.sev], 0.16), color: SEV[i.sev] }}><Flame className="size-3.5" /></span>
+              <div className="min-w-0 flex-1 leading-tight">
+                <div className="truncate text-[11.5px] font-medium text-foreground/90">{i.type}</div>
+                <div className="flex items-center gap-1 text-[9px] text-foreground/40"><MapPin className="size-2.5" /> {i.place}</div>
+                <div className="mt-0.5 inline-block rounded px-1 text-[8.5px] font-semibold" style={{ background: hexA(SEV[i.sev], 0.16), color: SEV[i.sev] }}>{DSTEPS[i.step]}</div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* tafsilot */}
+      <div className="flex flex-col gap-2 lg:col-span-2">
+        <div className="flex items-center justify-between rounded-lg border border-white/8 bg-white/[0.02] px-3 py-2">
+          <div className="leading-tight">
+            <div className="flex items-center gap-2 text-[14px] font-semibold text-foreground"><Flame className="size-4" style={{ color: SEV[inc.sev] }} /> {inc.type}</div>
+            <div className="flex items-center gap-1 text-[10.5px] text-foreground/50"><MapPin className="size-3" /> {inc.place}</div>
+          </div>
+          <div className="text-right text-[10.5px] text-foreground/55"><div className="flex items-center justify-end gap-1"><Truck className="size-3" style={{ color: accent }} /> {inc.brigade}</div><div className="rounded px-1 text-[9px] font-semibold" style={{ color: SEV[inc.sev] }}>Xavf: {inc.sev}</div></div>
+        </div>
+
+        {/* ETA ring + timeline */}
+        <div className="grid items-center gap-3 rounded-lg border border-white/8 bg-white/[0.02] p-3 sm:grid-cols-[auto_1fr]">
+          <div className="relative grid place-items-center">
+            <svg width="96" height="96" className="-rotate-90"><circle cx="48" cy="48" r={r} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="7" /><circle cx="48" cy="48" r={r} fill="none" stroke={arrived ? "#22c55e" : accent} strokeWidth="7" strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={circ * (1 - (arrived ? 1 : pct / 100))} style={{ transition: "stroke-dashoffset 1s linear", filter: `drop-shadow(0 0 5px ${hexA(arrived ? "#22c55e" : accent, 0.7)})` }} /></svg>
+            <div className="absolute flex flex-col items-center"><span className="font-mono text-[15px] font-bold" style={{ color: arrived ? "#22c55e" : accent }}>{arrived ? "✓" : fmtS(eta)}</span><span className="text-[8px] text-foreground/45">{arrived ? "yetib bordi" : "ETA"}</span></div>
+          </div>
+          <div className="flex items-center justify-between">
+            {DSTEPS.map((s, i) => {
+              const done = i <= step;
+              const cur = i === step;
+              return (
+                <div key={i} className="flex flex-1 flex-col items-center gap-1 text-center">
+                  <span className="grid size-6 place-items-center rounded-full text-[10px]" style={{ background: done ? hexA(accent, cur ? 0.9 : 0.4) : "rgba(255,255,255,0.06)", color: done ? "#fff" : "rgba(255,255,255,0.4)", boxShadow: cur ? `0 0 10px ${hexA(accent, 0.6)}` : "none" }}>{done ? <Check className="size-3" /> : i + 1}</span>
+                  <span className="text-[8.5px] leading-tight" style={{ color: cur ? accent : "rgba(255,255,255,0.45)" }}>{s}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* datchiklar */}
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          {Object.keys(sensors).map((k) => {
+            const m = SENSOR_META[k]; const v = sensors[k]; const p = Math.min(100, (v / m.max) * 100);
+            const danger = p > 65;
+            return (
+              <div key={k} className="rounded-lg border border-white/8 bg-white/[0.02] p-2">
+                <div className="flex items-center gap-1 text-[9px] uppercase tracking-wider text-foreground/45"><m.icon className="size-3" style={{ color: m.color }} /> {m.label}</div>
+                <div className="font-mono text-[16px] font-bold tabular-nums" style={{ color: danger ? "#ef4444" : "#fff" }}>{v}<span className="ml-0.5 text-[9px] text-foreground/40">{m.unit}</span></div>
+                <div className="mt-1 h-1 overflow-hidden rounded-full bg-white/5"><div className="h-full rounded-full transition-all duration-700" style={{ width: `${p}%`, background: danger ? "#ef4444" : m.color }} /></div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
