@@ -304,8 +304,10 @@ export const makeCams = (locs, seedBase) => locs.map((loc, i) => ({ id: `c${i}`,
 // ── CCTV monitor — kirish hodisalari + tanlangan footage (begona odam/mashina) ──
 export const CctvMonitor = ({ events, accent }) => {
   const [id, setId] = useState(events[0]?.id);
+  const { time } = useClock();
   const ev = events.find((e) => e.id === id) || events[0];
   if (!ev) return null;
+  const CCTV_FILTER = "grayscale(0.4) contrast(1.15) saturate(0.7) brightness(0.9)";
   return (
     <div className="grid h-full gap-2 p-2 lg:grid-cols-3">
       <div className="flex max-h-[440px] flex-col overflow-y-auto rounded-lg border border-white/8 bg-white/[0.02]">
@@ -329,12 +331,15 @@ export const CctvMonitor = ({ events, accent }) => {
       <div className="flex flex-col gap-2 lg:col-span-2">
         <div className="relative aspect-video w-full overflow-hidden rounded-lg border border-white/10 bg-black">
           {ev.video ? (
-            <video key={ev.id} src={ev.video} poster={ev.img} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" />
-          ) : ev.img ? <img src={ev.img} alt={ev.title} className="absolute inset-0 h-full w-full object-cover" />
+            <video key={ev.id} src={ev.video} poster={ev.img} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" style={{ filter: CCTV_FILTER }} />
+          ) : ev.img ? <img src={ev.img} alt={ev.title} className="absolute inset-0 h-full w-full object-cover" style={{ filter: CCTV_FILTER }} />
             : <div className="absolute inset-0" style={{ background: "linear-gradient(135deg,#0b1220,#111827 55%,#0a0f1a)" }} />}
-          <div className="absolute inset-0 opacity-[0.12]" style={{ backgroundImage: "repeating-linear-gradient(0deg, rgba(255,255,255,0.4) 0 1px, transparent 1px 3px)" }} />
-          <div className="absolute left-2 top-2 flex items-center gap-1 rounded bg-black/65 px-2 py-0.5"><Circle className="size-2 animate-pulse fill-rose-500 text-rose-500" /><span className="text-[9px] font-semibold text-rose-300">REC · {ev.cam}</span></div>
-          <div className="absolute right-2 top-2 rounded bg-black/60 px-2 py-0.5 font-mono text-[10px] text-emerald-300">{ev.time}</div>
+          {/* CCTV ishlov: skanlayn + yashil tus + vignetka */}
+          <div className="absolute inset-0 opacity-[0.14]" style={{ backgroundImage: "repeating-linear-gradient(0deg, rgba(255,255,255,0.45) 0 1px, transparent 1px 3px)" }} />
+          <div className="absolute inset-0" style={{ background: "radial-gradient(circle at 50% 50%, transparent 55%, rgba(0,0,0,0.55) 100%)", mixBlendMode: "multiply" }} />
+          <div className="absolute inset-0" style={{ background: hexA(accent, 0.06) }} />
+          <div className="absolute left-2 top-2 flex items-center gap-1 rounded bg-black/65 px-2 py-0.5"><Circle className="size-2 animate-pulse fill-rose-500 text-rose-500" /><span className="text-[9px] font-semibold tracking-wider text-rose-300">● REC</span></div>
+          <div className="absolute right-2 top-2 rounded bg-black/65 px-2 py-0.5 font-mono text-[10px] text-emerald-300">{ev.cam} · {time}</div>
           <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-3" style={{ background: "linear-gradient(0deg, rgba(0,0,0,0.85), transparent)" }}>
             <div className="leading-tight">
               <div className="text-[12.5px] font-semibold text-white">{ev.title}</div>
@@ -346,7 +351,7 @@ export const CctvMonitor = ({ events, accent }) => {
         <div className="grid grid-cols-4 gap-2">
           {events.slice(0, 4).map((e) => (
             <button key={e.id} onClick={() => setId(e.id)} className="relative aspect-video overflow-hidden rounded border" style={{ borderColor: e.id === ev.id ? accent : "rgba(255,255,255,0.1)" }}>
-              {e.img ? <img src={e.img} alt={e.cam} className="absolute inset-0 h-full w-full object-cover" /> : <div className="absolute inset-0" style={{ background: "linear-gradient(135deg,#0b1220,#1a2233)" }} />}
+              {e.img ? <img src={e.img} alt={e.cam} className="absolute inset-0 h-full w-full object-cover" style={{ filter: CCTV_FILTER }} /> : <div className="absolute inset-0" style={{ background: "linear-gradient(135deg,#0b1220,#1a2233)" }} />}
               <span className="absolute inset-0 bg-black/20" />
               <Circle className="absolute right-1 top-1 size-1.5 animate-pulse fill-rose-500 text-rose-500" />
               <span className="absolute bottom-0.5 left-1 font-mono text-[8px] text-white/80" style={{ textShadow: "0 1px 2px #000" }}>{e.cam}</span>
