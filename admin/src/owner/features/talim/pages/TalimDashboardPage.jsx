@@ -85,7 +85,8 @@ const CSS = `
 .tcc-card .hd .s{font-size:11px;color:${T.muted}}
 .tcc-exp{border:1px solid ${T.border};background:rgba(255,255,255,.03);border-radius:8px;width:28px;height:28px;display:grid;place-items:center;cursor:pointer;color:${T.muted};flex:0 0 auto}
 .tcc-exp:hover{color:${T.text};border-color:${T.gold}}
-.tcc-ch{flex:1;min-height:200px}
+.tcc-ch{width:100%;overflow:hidden;position:relative}
+.tcc-card{overflow:hidden}
 .tcc-note{font-size:11px;color:${T.muted};margin-top:8px}
 .tcc-pill{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;background:rgba(224,169,59,.14);color:${T.gold}}
 .tcc-pill.real{background:rgba(47,191,135,.14);color:${T.green}}
@@ -139,18 +140,23 @@ function EPanel({ title, subtitle, note, option, className = "tcc-c6", delay = 0
   const mref = useRef(null), minst = useRef(null);
   const [open, setOpen] = useState(false);
   useEffect(() => {
-    if (!ref.current) return; inst.current = echarts.init(ref.current, null, { renderer: "canvas" });
+    if (!ref.current) return;
+    inst.current = echarts.init(ref.current, null, { renderer: "canvas" });
     inst.current.setOption(option);
-    const ro = () => inst.current && inst.current.resize(); window.addEventListener("resize", ro);
-    return () => { window.removeEventListener("resize", ro); inst.current && inst.current.dispose(); };
+    // ResizeObserver — konteyner o'lchami o'zgarsa canvas mos resize bo'ladi (overflow yo'q)
+    const ro = new ResizeObserver(() => inst.current && inst.current.resize());
+    ro.observe(ref.current);
+    return () => { ro.disconnect(); inst.current && inst.current.dispose(); };
   }, []);
   useEffect(() => { inst.current && inst.current.setOption(option, true); }, [option]);
   useEffect(() => {
-    if (!open || !mref.current) return; minst.current = echarts.init(mref.current);
-    minst.current.setOption(option); const ro = () => minst.current && minst.current.resize();
-    window.addEventListener("resize", ro); const tmo = setTimeout(() => minst.current && minst.current.resize(), 60);
+    if (!open || !mref.current) return;
+    minst.current = echarts.init(mref.current);
+    minst.current.setOption(option);
+    const ro = new ResizeObserver(() => minst.current && minst.current.resize());
+    ro.observe(mref.current);
     const onKey = (e) => e.key === "Escape" && setOpen(false); window.addEventListener("keydown", onKey);
-    return () => { clearTimeout(tmo); window.removeEventListener("resize", ro); window.removeEventListener("keydown", onKey); minst.current && minst.current.dispose(); };
+    return () => { ro.disconnect(); window.removeEventListener("keydown", onKey); minst.current && minst.current.dispose(); };
   }, [open]);
   return (
     <div className={`tcc-card ${className}`} style={{ animationDelay: `${delay}ms` }}>
