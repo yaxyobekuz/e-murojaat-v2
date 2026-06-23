@@ -22,12 +22,12 @@ const Mini = ({ icon: Icon, value, label }) => (
   </div>
 );
 
-const ProjectCard = ({ project, onOpen }) => {
+const ProjectCard = ({ project, active, onOpen }) => {
   const cat = PROJECT_CATEGORIES[project.category];
   const st = PROJECT_STATUS[project.status];
 
   return (
-    <GlowCard glow={project.glow} className="flex h-full flex-col">
+    <GlowCard glow={project.glow} className="flex h-full flex-col" active={active}>
       <div className="flex items-start justify-between gap-2">
         <ProjectLogo project={project} size={44} iconSize={20} />
         <GlassStatusBadge tone={st.tone}>{st.label}</GlassStatusBadge>

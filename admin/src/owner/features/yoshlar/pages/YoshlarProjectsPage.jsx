@@ -74,11 +74,17 @@ const YoshlarProjectsPage = () => {
 
         {/* grid + detail */}
         <div className="flex gap-4">
-          <motion.div layout className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          <motion.div
+            layout
+            className={cn(
+              "grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2",
+              active ? "xl:grid-cols-2" : "xl:grid-cols-3",
+            )}
+          >
             <AnimatePresence mode="popLayout">
               {list.map((p) => (
                 <motion.div key={p.id} layout initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }}>
-                  <ProjectCard project={p} onOpen={(pr) => setField("activeId", pr.id === activeId ? null : pr.id)} />
+                  <ProjectCard project={p} active={p.id === activeId} onOpen={(pr) => setField("activeId", pr.id)} />
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -86,7 +92,7 @@ const YoshlarProjectsPage = () => {
 
           <AnimatePresence>
             {active && (
-              <div className="sticky top-4 hidden h-fit lg:block">
+              <div className="sticky top-4 hidden h-fit shrink-0 lg:block">
                 <ProjectDetail project={active} onClose={() => setField("activeId", null)} />
               </div>
             )}

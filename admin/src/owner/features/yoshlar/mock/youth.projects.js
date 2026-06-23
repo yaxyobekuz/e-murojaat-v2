@@ -257,3 +257,258 @@ export const projectTotals = (list = PROJECTS) =>
     },
     { participants: 0, mentors: 0, centers: 0, recruiting: 0, count: list.length },
   );
+
+// Batafsil ma'lumot (yon panel uchun): kengaytirilgan tavsif, maqsadlar, natijalar,
+// yo'nalishlar va yillik o'sish. Loyiha `id` bo'yicha bog'lanadi.
+export const PROJECT_DETAILS = {
+  "ibrat-farzandlari": {
+    about:
+      "Prezident tashabbusi bilan tashkil etilgan davlat dasturi. Yoshlarga ingliz, nemis, koreys, arab, xitoy va boshqa chet tillarini mutlaqo bepul o'rgatadi. Mahalla o'quv markazlari, malakali o'qituvchilar va \"Ibrat Academy\" mobil ilovasi orqali oflayn va onlayn ta'lim birlashtirilgan.",
+    goals: [
+      "Har uchinchi maktab o'quvchisini kamida bitta chet tilini o'rganishga jalb etish",
+      "Mobil ilovaga 3000+ darslik va milliy o'quv qo'llanmalarini joylash",
+      "Mahallalarda til o'rganishni hamma uchun tekin va qulay qilish",
+    ],
+    outcomes: [
+      { label: "Bitiruvchi", value: "118 ming" },
+      { label: "Til yo'nalishi", value: "9 ta" },
+      { label: "Mamnunlik", value: "94%" },
+    ],
+    directions: ["Ingliz", "Nemis", "Koreys", "Arab", "Xitoy", "Rus"],
+    growth: [
+      { year: "2021", v: 60 },
+      { year: "2022", v: 145 },
+      { year: "2023", v: 260 },
+      { year: "2024", v: 350 },
+      { year: "2025", v: 412 },
+    ],
+  },
+  "ustoz-ai": {
+    about:
+      "Yoshlar ishlari agentligi va Turonbank hamkorligida tashkil etilgan video-ta'lim platformasi. Sun'iy intellekt yordamida har bir foydalanuvchiga shaxsiy ta'lim yo'nalishi tuziladi: dasturlash, dizayn, marketing va boshqa zamonaviy kasblar AI-mentor orqali o'rgatiladi.",
+    goals: [
+      "1000 ta video darslik tayyorlash va mobil ilovani ishga tushirish",
+      "250 ming yoshni zamonaviy va talab yuqori kasblarga o'rgatish",
+      "YouTube'da 15 mln ko'rishga va 250 ming obunachiga erishish",
+    ],
+    outcomes: [
+      { label: "Video dars", value: "300+" },
+      { label: "Faol o'quvchi", value: "156 ming" },
+      { label: "Yo'nalish", value: "12 ta" },
+    ],
+    directions: ["AI mentor", "Dasturlash", "Dizayn", "Marketing", "Kasb-hunar"],
+    growth: [
+      { year: "2023", v: 40 },
+      { year: "2024", v: 110 },
+      { year: "2025", v: 156 },
+    ],
+  },
+  uzcombinator: {
+    about:
+      "O'zbekiston va Markaziy Osiyo yosh tadbirkorlari uchun startap akselerator. 45 kunlik intensiv dastur Product, Growth, Go-To-Market va Fundraising bosqichlaridan iborat. Maqsad — mahalliy startaplarni global, jumladan AQSh bozoriga olib chiqish.",
+    goals: [
+      "Yosh jamoalarni mentorlik va investorlar bilan bog'lash",
+      "Startaplarni global bozorga tayyorlash va grant ajratish",
+      "Markaziy Osiyoda startap ekotizimini rivojlantirish",
+    ],
+    outcomes: [
+      { label: "Akseleratsiya", value: "120+ startap" },
+      { label: "Jalb etilgan", value: "$8 mln" },
+      { label: "Mentor", value: "120 ta" },
+    ],
+    directions: ["Akseleratsiya", "Grant", "Investor", "Global bozor"],
+    growth: [
+      { year: "2022", v: 2.1 },
+      { year: "2023", v: 4.6 },
+      { year: "2024", v: 6.8 },
+      { year: "2025", v: 8.4 },
+    ],
+  },
+  "qizlar-akademiyasi": {
+    about:
+      "Prezidentning 2024-yil 21-fevraldagi farmoni asosida tashkil etilgan platforma. Xotin-qizlarni shaxsiy, kasbiy va intellektual rivojlantirishga, bilim olish hamda ishga joylashish imkoniyatlarini yaratishga qaratilgan. 8 ta moduldan iborat.",
+    goals: [
+      "Qizlarni kasbiy ko'nikma va raqamli savodxonlikka o'rgatish",
+      "Liderlik, huquq, psixologiya va tadbirkorlik ko'nikmalarini berish",
+      "Ayol-qizlarning ishga joylashish va daromad topishini ta'minlash",
+    ],
+    outcomes: [
+      { label: "Qatnashchi", value: "210 ming+" },
+      { label: "Modul", value: "8 ta" },
+      { label: "Mentor", value: "860 ta" },
+    ],
+    directions: ["Huquq", "Psixologiya", "IT & media", "Tadbirkorlik", "Hunarmandchilik"],
+    growth: [
+      { year: "2024", v: 38 },
+      { year: "2025", v: 94 },
+    ],
+  },
+  mutolaa: {
+    about:
+      "O'zbek tilidagi eng yirik mobil kutubxona. 3000+ elektron va 500+ audiokitob professional aktyorlar ovozida yozilgan. Loyiha ma'rifatparvar Mahmudxo'ja Behbudiyning 1908-yilda Samarqandda ochgan \"Mutolaaxona\"sidan ilhomlangan.",
+    goals: [
+      "Yoshlarda mutolaa madaniyati va raqamli savodxonlikni oshirish",
+      "O'zbek va jahon adabiyotini audioformatda keng tarqatish",
+      "Kitobxonlikni rag'batlantirish (eng faol kitobxonlarga sovg'alar)",
+    ],
+    outcomes: [
+      { label: "Kitob fondi", value: "3000+" },
+      { label: "Audiokitob", value: "500+" },
+      { label: "Foydalanuvchi", value: "1.2 mln" },
+    ],
+    directions: ["Elektron kitob", "Audiokitob", "Mobil ilova", "Adabiyot"],
+    growth: [
+      { year: "2021", v: 180 },
+      { year: "2022", v: 420 },
+      { year: "2023", v: 720 },
+      { year: "2024", v: 980 },
+      { year: "2025", v: 1200 },
+    ],
+  },
+  uzchess: {
+    about:
+      "Yoshlar ishlari agentligining shaxmatni rivojlantirish loyihasi. Yoshlar shaxmatni noldan, mutlaqo bepul o'rganadi: video darslar, AI raqib, interaktiv masalalar, kitoblar va xalqaro turnirlar jonli efiri bir ilovada jamlangan.",
+    goals: [
+      "Yoshlarda mantiqiy fikrlash va strategik tafakkurni rivojlantirish",
+      "Shaxmatni har bir maktab va mahallaga olib kirish",
+      "Iqtidorli shaxmatchilarni aniqlash va xalqaro darajaga tayyorlash",
+    ],
+    outcomes: [
+      { label: "O'quvchi", value: "220 ming" },
+      { label: "Video dars", value: "1200+" },
+      { label: "Markaz", value: "152 ta" },
+    ],
+    directions: ["Video dars", "AI raqib", "Masalalar", "Turnirlar"],
+    growth: [
+      { year: "2020", v: 45 },
+      { year: "2021", v: 90 },
+      { year: "2022", v: 140 },
+      { year: "2023", v: 185 },
+      { year: "2024", v: 220 },
+    ],
+  },
+  "it-akademiya": {
+    about:
+      "\"Bir million o'zbek dasturchilari\" — yoshlarni dasturlashga o'rgatuvchi yirik milliy dastur. Full-Stack, Frontend, Android va Data Analytics yo'nalishlari bo'yicha bepul onlayn kurslar. IT-Park, Inha universiteti va Coursera bilan hamkorlikda.",
+    goals: [
+      "1 mln yoshni dasturlash va raqamli kasblarga o'rgatish",
+      "Bitiruvchilarni amaliyot va ish bilan ta'minlash",
+      "\"5 mln sun'iy intellekt yetakchilari\" dasturiga zamin yaratish",
+    ],
+    outcomes: [
+      { label: "Ro'yxatdan o'tgan", value: "340 ming" },
+      { label: "Yo'nalish", value: "8 ta" },
+      { label: "Coursera litsenziya", value: "10 ming" },
+    ],
+    directions: ["Full-Stack", "Frontend", "Android", "Data Analytics"],
+    growth: [
+      { year: "2021", v: 95 },
+      { year: "2022", v: 170 },
+      { year: "2023", v: 250 },
+      { year: "2024", v: 305 },
+      { year: "2025", v: 340 },
+    ],
+  },
+  "yoshlar-daftari": {
+    about:
+      "Mahalla, tuman va viloyat darajasida ishsiz hamda ijtimoiy himoyaga muhtoj yoshlarni yagona ro'yxatga oluvchi tizim. Har bir yoshga ijtimoiy, huquqiy, psixologik yordam, ta'lim va ish bilan ta'minlash bo'yicha aniq yo'l xaritasi tuziladi.",
+    goals: [
+      "Ehtiyojmand yoshlarni aniqlash va manzilli qo'llab-quvvatlash",
+      "Ularni kasb-hunar va ish bilan ta'minlash",
+      "Ijtimoiy himoya va moliyaviy yordamni manzilli yetkazish",
+    ],
+    outcomes: [
+      { label: "Ro'yxatga olingan", value: "78 ming" },
+      { label: "Ishga joylashgan", value: "31 ming" },
+      { label: "Qamrov", value: "552 MFY" },
+    ],
+    directions: ["Ro'yxat", "Bandlik", "Kasb-hunar", "Ijtimoiy yordam"],
+    growth: [
+      { year: "2021", v: 22 },
+      { year: "2022", v: 41 },
+      { year: "2023", v: 58 },
+      { year: "2024", v: 78 },
+    ],
+  },
+  "5-tashabbus": {
+    about:
+      "Prezidentning beshta muhim tashabbusi asosidagi keng qamrovli dastur. Yoshlarni madaniyat va san'at, jismoniy tarbiya va sport, axborot texnologiyalari, kitobxonlik hamda xotin-qizlar bandligi yo'nalishlarida qamrab oladi.",
+    goals: [
+      "Yoshlarni bo'sh vaqtini mazmunli o'tkazishga jalb etish",
+      "Madaniyat, sport va IT'ga ommaviy qiziqishni oshirish",
+      "Iqtidorli yoshlarni aniqlash va qo'llab-quvvatlash",
+    ],
+    outcomes: [
+      { label: "Qamrov", value: "2.4 mln" },
+      { label: "Yo'nalish", value: "5 ta" },
+      { label: "To'garak", value: "12 ming+" },
+    ],
+    directions: ["Madaniyat", "Sport", "IT", "Kitobxonlik", "Bandlik"],
+    growth: [
+      { year: "2019", v: 900 },
+      { year: "2021", v: 1500 },
+      { year: "2023", v: 2000 },
+      { year: "2025", v: 2400 },
+    ],
+  },
+  "talaba-talim-grant": {
+    about:
+      "Iqtidorli yoshlarga oliy ta'lim kontrakti to'lovi, xalqaro fan olimpiadalari va chet el ta'limi uchun grantlar ajratuvchi dastur. Moliyaviy imkoni cheklangan, ammo qobiliyatli yoshlarning ta'lim olish huquqini ta'minlaydi.",
+    goals: [
+      "Iqtidorli, ammo ehtiyojmand yoshlarga ta'lim grantini berish",
+      "Xalqaro olimpiada g'oliblarini rag'batlantirish",
+      "Chet el yetakchi universitetlarida o'qish imkonini yaratish",
+    ],
+    outcomes: [
+      { label: "Grant egasi", value: "36 ming" },
+      { label: "Xalqaro olimpiada", value: "240+ g'olib" },
+      { label: "Chet el granti", value: "1 800" },
+    ],
+    directions: ["Kontrakt grant", "Olimpiada", "Chet el ta'limi", "Stipendiya"],
+    growth: [
+      { year: "2020", v: 8 },
+      { year: "2022", v: 19 },
+      { year: "2024", v: 30 },
+      { year: "2025", v: 36 },
+    ],
+  },
+  "yosh-tadbirkor": {
+    about:
+      "Yoshlarni tadbirkorlik asoslari, biznes-reja tuzish va moliyaviy savodxonlikka o'rgatuvchi dastur. Eng yaxshi g'oyalar uchun mikrogrant ajratiladi va mahalliy biznes yaratishga amaliy ko'mak beriladi.",
+    goals: [
+      "Yoshlarda tadbirkorlik ko'nikmalarini shakllantirish",
+      "Eng yaxshi biznes-g'oyalarga mikrogrant ajratish",
+      "Mahallalarda yangi ish o'rinlari yaratishga ko'maklashish",
+    ],
+    outcomes: [
+      { label: "Tinglovchi", value: "21 ming" },
+      { label: "Mikrogrant", value: "640 loyiha" },
+      { label: "Mentor", value: "340 ta" },
+    ],
+    directions: ["Biznes asoslari", "Biznes-reja", "Mikrogrant", "Moliyaviy savod"],
+    growth: [
+      { year: "2024", v: 9 },
+      { year: "2025", v: 21 },
+    ],
+  },
+  "ijod-maktabi": {
+    about:
+      "Yoshlarni grafik dizayn, raqamli san'at, animatsiya va kreativ industriyaga tayyorlovchi maktab. Har bir o'quvchi amaliy loyihalar va portfolio bilan bitiradi, eng iqtidorlilari ijodiy industriyada ishga joylashtiriladi.",
+    goals: [
+      "Yoshlarni kreativ va raqamli kasblarga tayyorlash",
+      "Portfolio va amaliyot orqali real ko'nikma berish",
+      "Ijodiy industriyada yangi iste'dodlarni aniqlash",
+    ],
+    outcomes: [
+      { label: "O'quvchi", value: "64 ming" },
+      { label: "Portfolio", value: "12 ming+" },
+      { label: "Markaz", value: "44 ta" },
+    ],
+    directions: ["Grafik dizayn", "Raqamli san'at", "Animatsiya", "Portfolio"],
+    growth: [
+      { year: "2023", v: 24 },
+      { year: "2024", v: 48 },
+      { year: "2025", v: 64 },
+    ],
+  },
+};

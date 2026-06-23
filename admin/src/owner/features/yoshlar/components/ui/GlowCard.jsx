@@ -5,7 +5,7 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 
 import { cn } from "@/shared/utils/cn";
 
-const GlowCard = ({ children, className = "", glow = "6,182,212", tilt = true, ...rest }) => {
+const GlowCard = ({ children, className = "", glow = "6,182,212", tilt = true, active = false, ...rest }) => {
   const ref = useRef(null);
   const mx = useMotionValue(0.5);
   const my = useMotionValue(0.5);
@@ -36,9 +36,12 @@ const GlowCard = ({ children, className = "", glow = "6,182,212", tilt = true, .
       )}
       {...rest}
     >
-      {/* accent glow chetida */}
+      {/* accent glow chetida — active bo'lsa doim yonadi */}
       <div
-        className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        className={cn(
+          "pointer-events-none absolute -inset-px rounded-2xl transition-opacity duration-300 group-hover:opacity-100",
+          active ? "opacity-100" : "opacity-0",
+        )}
         style={{ boxShadow: `inset 0 0 0 1px rgba(${glow},0.35), 0 0 40px -8px rgba(${glow},0.45)` }}
       />
       {/* yuqori chiziq accent */}
