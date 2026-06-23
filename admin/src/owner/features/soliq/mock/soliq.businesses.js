@@ -200,6 +200,33 @@ export const businessSummary = (list = BUSINESSES) => {
   return acc;
 };
 
+// Bitta hudud (mahalla bloki) bo'yicha yig'indi — blok bosilganda panel uchun.
+// filtered: joriy filtrdagi bizneslar (panel filtr bilan mos kelsin).
+export const blockSummary = (blockId, blockName, filtered = BUSINESSES) => {
+  const inside = filtered.filter((b) => b.blockId === blockId);
+  const acc = inside.reduce(
+    (s, b) => {
+      s.assessed += b.assessedYear;
+      s.collected += b.collectedYear;
+      s.debt += b.debtYear;
+      if (b.isDebtor) s.debtors += 1;
+      return s;
+    },
+    { assessed: 0, collected: 0, debt: 0, debtors: 0 },
+  );
+  acc.rate = acc.assessed ? Math.round((acc.collected / acc.assessed) * 100) : 0;
+  acc.tier = tierOf(acc.rate);
+  acc.count = inside.length;
+  acc.blockId = blockId;
+  acc.blockName = blockName;
+  // eng katta qarzdor 3 ta biznes (panelda ko'rsatish uchun)
+  acc.topDebtors = inside
+    .filter((b) => b.debtYear > 0)
+    .sort((a, b) => b.debtYear - a.debtYear)
+    .slice(0, 3);
+  return acc;
+};
+
 // Filtrlar: { all, large, debtor, isNew } — checkboxlar
 export const filterBusinesses = (list, filters = {}) => {
   const { large, debtor, isNew, types } = filters;

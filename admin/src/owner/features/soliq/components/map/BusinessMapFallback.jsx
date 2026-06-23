@@ -55,7 +55,7 @@ const buildClusters = (businesses, project) => {
 const tierColor = (rate) =>
   COLLECTION_TIERS[rate >= 90 ? "high" : rate >= 70 ? "mid" : rate >= 50 ? "low" : "veryLow"].color;
 
-const BusinessMapFallback = ({ businesses = [], mode = "map", activeId, onSelect }) => {
+const BusinessMapFallback = ({ businesses = [], mode = "map", activeId, activeBlockId, onSelect, onSelectBlock }) => {
   const project = useProjection();
   const clusters = mode === "clusters" ? buildClusters(businesses, project) : null;
 
@@ -64,15 +64,26 @@ const BusinessMapFallback = ({ businesses = [], mode = "map", activeId, onSelect
       viewBox={`0 0 ${W} ${H}`}
       className="h-full w-full rounded-xl bg-[radial-gradient(circle_at_30%_20%,rgba(37,99,235,0.1),transparent_60%)]"
     >
-      {/* hududlar konturi */}
+      {/* hududlar konturi — bosiladigan */}
       {MAHALLA_AREAS.map((a) => {
         const pts = a.path.map(project);
         const d = pts.map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`).join(" ") + " Z";
         const inside = businesses.filter((b) => b.blockId === a.id);
         const avg = inside.length ? Math.round(inside.reduce((s, b) => s + b.rate, 0) / inside.length) : 0;
         const color = inside.length ? tierColor(avg) : "#475569";
+        const on = activeBlockId === a.id;
         return (
-          <path key={a.id} d={d} fill={color} fillOpacity={0.08} stroke={color} strokeOpacity={0.4} strokeWidth={1.5} />
+          <path
+            key={a.id}
+            d={d}
+            fill={color}
+            fillOpacity={on ? 0.3 : 0.08}
+            stroke={color}
+            strokeOpacity={on ? 0.9 : 0.4}
+            strokeWidth={on ? 3 : 1.5}
+            className="cursor-pointer"
+            onClick={() => onSelectBlock?.(a.id)}
+          />
         );
       })}
 

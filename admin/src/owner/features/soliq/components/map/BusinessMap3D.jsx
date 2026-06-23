@@ -85,12 +85,19 @@ const TYPE_GLYPH = {
   fuel: "⛽", office: "🏢", finance: "🏛️",
 };
 
-const BusinessMap3D = ({ businesses = [], mode = "map", activeId = null, onSelect }) => {
+const BusinessMap3D = ({
+  businesses = [],
+  mode = "map",
+  activeId = null,
+  activeBlockId = null,
+  onSelect,
+  onSelectBlock,
+}) => {
   const hostRef = useRef(null);
   const mapRef = useRef(null);
   const libRef = useRef(null);
   const layerRef = useRef([]); // joriy rejim elementlari (marker/circle)
-  const polysRef = useRef([]); // hudud poligonlari
+  const polysRef = useRef({}); // blockId -> { poly, color }
   const [status, setStatus] = useState("loading");
 
   // Xaritani bir marta quramiz + hudud poligonlari
@@ -101,7 +108,7 @@ const BusinessMap3D = ({ businesses = [], mode = "map", activeId = null, onSelec
         const lib = await loadMaps3d(API_KEY);
         if (cancelled || !hostRef.current) return;
         libRef.current = lib;
-        const { Map3DElement, Polygon3DElement, MapMode, AltitudeMode } = lib;
+        const { Map3DElement, Polygon3DInteractiveElement, MapMode, AltitudeMode } = lib;
 
         const map = new Map3DElement({ center: LOOK_AT, ...CAMERA, mode: MapMode.HYBRID });
         map.style.width = "100%";
@@ -109,11 +116,11 @@ const BusinessMap3D = ({ businesses = [], mode = "map", activeId = null, onSelec
         hostRef.current.replaceChildren(map);
         mapRef.current = map;
 
-        // hududlar — yig'im darajasi rangida (kontur)
+        // hududlar — yig'im darajasi rangida, bosiladigan (interaktiv)
         MAHALLA_AREAS.forEach((a) => {
           const color = blockTierColor(a, businesses);
           const ring = a.path.map((p) => ({ ...p, altitude: 0 }));
-          const poly = new Polygon3DElement({
+          const poly = new Polygon3DInteractiveElement({
             outerCoordinates: ring,
             altitudeMode: AltitudeMode.CLAMP_TO_GROUND,
             extruded: false,
@@ -122,8 +129,9 @@ const BusinessMap3D = ({ businesses = [], mode = "map", activeId = null, onSelec
             strokeWidth: 3,
             drawsOccludedSegments: false,
           });
+          poly.addEventListener("gmp-click", () => onSelectBlock?.(a.id));
           map.append(poly);
-          polysRef.current.push(poly);
+          polysRef.current[a.id] = { poly, color };
         });
 
         setStatus("ready");
@@ -226,10 +234,37 @@ const BusinessMap3D = ({ businesses = [], mode = "map", activeId = null, onSelec
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeId, status]);
 
+  // tanlangan hudud (blok) — to'ldirishni yoritish + kamera uchadi
+  useEffect(() => {
+    if (status !== "ready") return;
+    Object.entries(polysRef.current).forEach(([id, { poly, color }]) => {
+      const on = id === activeBlockId;
+      poly.fillColor = hexToRgba(color, on ? 0.4 : 0.1);
+      poly.strokeWidth = on ? 5 : 3;
+    });
+    if (activeBlockId && mapRef.current) {
+      const area = MAHALLA_AREAS.find((a) => a.id === activeBlockId);
+      if (area) {
+        const c = centroid(area.path);
+        mapRef.current.flyCameraTo({
+          endCamera: { center: { ...c, altitude: GROUND_ALT }, tilt: 60, range: 900, heading: 20 },
+          durationMillis: 1300,
+        });
+      }
+    }
+  }, [activeBlockId, status]);
+
   if (status === "fallback") {
     return (
       <div className="h-full w-full p-2">
-        <BusinessMapFallback businesses={businesses} mode={mode} activeId={activeId} onSelect={onSelect} />
+        <BusinessMapFallback
+          businesses={businesses}
+          mode={mode}
+          activeId={activeId}
+          activeBlockId={activeBlockId}
+          onSelect={onSelect}
+          onSelectBlock={onSelectBlock}
+        />
       </div>
     );
   }

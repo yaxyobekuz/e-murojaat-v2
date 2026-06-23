@@ -177,7 +177,7 @@ const BusinessDetailPanel = ({ business, onClose }) => {
       <ModalWrapper
         name={MODAL.SOLIQ_BUSINESS_HISTORY}
         title="Soliq tarixi"
-        className="max-w-2xl border border-[rgb(var(--card-border))] bg-card text-foreground"
+        className="max-w-2xl !border-[rgb(var(--card-border))] !bg-[hsl(240_6%_9%)] !text-foreground [&_*]:border-[rgb(var(--card-border))]"
       >
         <BusinessTaxHistoryModal />
       </ModalWrapper>

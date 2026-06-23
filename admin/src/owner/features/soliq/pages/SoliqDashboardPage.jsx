@@ -4,25 +4,44 @@
 import { useMemo } from "react";
 
 import useObjectState from "@/shared/hooks/useObjectState";
-import { BUSINESSES, businessSummary, filterBusinesses } from "../mock/soliq.businesses";
+import { MAHALLA_AREAS } from "../mock/soliq.mapAreas";
+import {
+  BUSINESSES,
+  businessSummary,
+  blockSummary,
+  filterBusinesses,
+} from "../mock/soliq.businesses";
 import BusinessMapBackground from "../components/map/BusinessMapBackground";
 import SoliqKpiRow from "../components/SoliqKpiRow";
 import BusinessFilters from "../components/BusinessFilters";
 import BusinessLegend from "../components/BusinessLegend";
 import BusinessDetailPanel from "../components/BusinessDetailPanel";
+import BlockDetailPanel from "../components/BlockDetailPanel";
 import SoliqBottomBar from "../components/SoliqBottomBar";
 import BusinessListOverlay from "../components/BusinessListOverlay";
 
 const SoliqDashboardPage = () => {
-  const { filters, mode, activeId, setField } = useObjectState({
+  const { filters, mode, activeId, activeBlockId, setField, setFields } = useObjectState({
     filters: { large: false, debtor: false, isNew: false },
     mode: "map",
     activeId: null,
+    activeBlockId: null,
   });
 
   const businesses = useMemo(() => filterBusinesses(BUSINESSES, filters), [filters]);
   const summary = useMemo(() => businessSummary(businesses), [businesses]);
   const active = useMemo(() => businesses.find((b) => b.id === activeId) || null, [businesses, activeId]);
+
+  // tanlangan hudud yig'indisi (joriy filtrdagi bizneslar bo'yicha)
+  const activeBlock = useMemo(() => {
+    if (!activeBlockId) return null;
+    const area = MAHALLA_AREAS.find((a) => a.id === activeBlockId);
+    return area ? blockSummary(area.id, area.name, businesses) : null;
+  }, [activeBlockId, businesses]);
+
+  // biznes tanlash → hudud panelini yopadi; hudud tanlash → biznes panelini yopadi
+  const selectBusiness = (id) => setFields({ activeId: id === activeId ? null : id, activeBlockId: null });
+  const selectBlock = (id) => setFields({ activeBlockId: id === activeBlockId ? null : id, activeId: null });
 
   return (
     <div className="relative h-[calc(100vh-7rem)] w-full overflow-hidden rounded-2xl border border-[rgb(var(--card-border))] bg-card">
@@ -32,7 +51,9 @@ const SoliqDashboardPage = () => {
           businesses={businesses}
           mode={mode === "list" ? "map" : mode}
           activeId={activeId}
-          onSelect={(id) => setField("activeId", id === activeId ? null : id)}
+          activeBlockId={activeBlockId}
+          onSelect={selectBusiness}
+          onSelectBlock={selectBlock}
         />
       </div>
 
@@ -75,14 +96,27 @@ const SoliqDashboardPage = () => {
         </div>
       )}
 
+      {/* O'ng — hudud statistikasi (hudud bosilganda; biznes paneli bilan birga chiqmaydi) */}
+      {activeBlock && (
+        <div className="pointer-events-none absolute right-4 top-4 z-20 max-h-[calc(100%-2rem)] overflow-y-auto">
+          <div className="pointer-events-auto">
+            <BlockDetailPanel
+              summary={activeBlock}
+              onClose={() => setField("activeBlockId", null)}
+              onSelectBusiness={selectBusiness}
+            />
+          </div>
+        </div>
+      )}
+
       {/* Ro'yxat rejimi — chapda, filtr panelidan past boshlanadi (o'ngdagi detail bilan kesishmaydi) */}
       {mode === "list" && (
-        <div className="pointer-events-none absolute bottom-20 left-4 top-[230px] z-10 flex items-start">
-          <div className="pointer-events-auto">
+        <div className="pointer-events-none absolute bottom-20 left-4 top-[230px] z-10">
+          <div className="pointer-events-auto h-full">
             <BusinessListOverlay
               businesses={businesses}
               activeId={activeId}
-              onSelect={(id) => setField("activeId", id)}
+              onSelect={selectBusiness}
             />
           </div>
         </div>

@@ -6,12 +6,12 @@ import { BUSINESS_TYPES, COLLECTION_TIERS } from "../mock/soliq.businesses";
 const shortMln = (n) => `${(n / 1_000_000).toFixed(1)} mln`;
 
 const BusinessListOverlay = ({ businesses = [], activeId, onSelect }) => (
-  <div className="surface-overlay flex max-h-full w-80 flex-col rounded-xl p-2">
-    <div className="flex items-center justify-between px-2 py-1.5">
+  <div className="surface-overlay flex h-full max-h-full w-80 flex-col rounded-xl p-2">
+    <div className="flex shrink-0 items-center justify-between px-2 py-1.5">
       <h4 className="text-[13px] font-semibold">Bizneslar</h4>
       <span className="text-[11px] text-foreground/45">{businesses.length} ta</span>
     </div>
-    <div className="flex flex-col gap-0.5 overflow-y-auto pr-0.5">
+    <div className="soliq-scroll flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto pr-1.5">
       {businesses.length === 0 && (
         <p className="px-2 py-4 text-center text-xs text-foreground/40">Biznes topilmadi</p>
       )}
