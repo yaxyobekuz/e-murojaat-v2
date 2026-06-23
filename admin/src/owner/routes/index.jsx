@@ -7,6 +7,7 @@ import {
 } from "@/owner/features/yer";
 import {
   SoliqDashboardPage,
+  SoliqBusinessesPage,
   SoliqDebtorsPage,
 } from "@/owner/features/soliq";
 import {
@@ -24,6 +25,7 @@ const OwnerRoutes = () => (
     <Route path="yer/reyestr" element={<YerRegistryPage />} />
     <Route path="yer/arizalar" element={<YerRequestsPage />} />
     <Route path="soliq" element={<SoliqDashboardPage />} />
+    <Route path="soliq/bizneslar" element={<SoliqBusinessesPage />} />
     <Route path="soliq/qarzdorlar" element={<SoliqDebtorsPage />} />
     <Route path="obodonlashtirish" element={<ObodDashboardPage />} />
     <Route path="obodonlashtirish/loyihalar" element={<ObodProjectsPage />} />
