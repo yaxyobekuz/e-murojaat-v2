@@ -18,12 +18,14 @@ const BigStat = ({ icon: Icon, label, value, accent, subs, source }) => (
   </Panel>
 );
 
+// Real footage — LoremFlickr (haqiqiy Flickr fotosuratlari): mashina / ko'cha / kamera
+const fl = (kw, lock) => `https://loremflickr.com/640/360/${kw}?lock=${lock}`;
 const EVENTS = [
-  { id: "e1", kind: "avto", title: "Begona avtomashina kirdi", plate: "95 A 472 KM", place: "Sanoat zonasi", time: "03:14", cam: "CAM-041" },
-  { id: "e2", kind: "odam", title: "Notanish shaxs aniqlandi", place: "Maktab-7 hovlisi", time: "02:51", cam: "CAM-072" },
-  { id: "e3", kind: "avto", title: "Ro'yxatdan o'tmagan avto", plate: "30 B 109 AA", place: "Bozor kirishi", time: "02:03", cam: "CAM-015" },
-  { id: "e4", kind: "odam", title: "Tungi shubhali harakat", place: "Avtostansiya", time: "01:42", cam: "CAM-028" },
-  { id: "e5", kind: "avto", title: "Tezlik oshirish", plate: "01 A 777 BC", place: "Markaziy ko'cha", time: "00:58", cam: "CAM-003" },
+  { id: "e1", kind: "avto", title: "Begona avtomashina kirdi", plate: "95 A 472 KM", place: "Sanoat zonasi", time: "03:14", cam: "CAM-041", img: fl("car,traffic,night", 21) },
+  { id: "e2", kind: "odam", title: "Notanish shaxs aniqlandi", place: "Maktab-7 hovlisi", time: "02:51", cam: "CAM-072", img: fl("street,night,surveillance", 52) },
+  { id: "e3", kind: "avto", title: "Ro'yxatdan o'tmagan avto", plate: "30 B 109 AA", place: "Bozor kirishi", time: "02:03", cam: "CAM-015", img: fl("car,street", 33) },
+  { id: "e4", kind: "odam", title: "Tungi shubhali harakat", place: "Avtostansiya", time: "01:42", cam: "CAM-028", img: fl("cctv,street,night", 64) },
+  { id: "e5", kind: "avto", title: "Tezlik oshirish", plate: "01 A 777 BC", place: "Markaziy ko'cha", time: "00:58", cam: "CAM-003", img: fl("car,road", 47) },
 ];
 const NET = [
   { icon: Camera, label: "Kameralar", value: 28, c: CY }, { icon: Car, label: "Avto nazorat", value: 6, c: A },
