@@ -2,7 +2,7 @@
 // Brigadalar/Texnika/Profilaktika (har biri boshqariladigan CRUD jadval).
 import { useMemo, useState } from "react";
 import { Flame, Droplets, LifeBuoy, Truck, Bell, Activity, MapPin, Gauge, Radio, ShieldAlert, Siren, CheckCircle2, Wrench, ClipboardCheck, Video } from "lucide-react";
-import { CmdRoot, CmdHeader, Panel, StatTile, BarRow, RadialGauge, RatingList, CmdTable, CctvMonitor, hexA } from "@/shared/components/ui/command/primitives";
+import { CmdRoot, CmdHeader, Panel, StatTile, BarRow, RadialGauge, RatingList, CmdTable, VideoWall, hexA } from "@/shared/components/ui/command/primitives";
 
 const A = "#f59e0b";
 const CY = "#22d3ee";
@@ -11,12 +11,13 @@ const NAV = ["Umumiy", "Hodisalar", "Brigadalar", "Texnika", "Profilaktika"];
 // Real footage — Pexels (yong'in/tutun/qutqaruv) + poster real rasm (LoremFlickr)
 const fl = (kw, lock) => `https://loremflickr.com/640/360/${kw}?lock=${lock}`;
 const vid = (id, file) => `https://videos.pexels.com/video-files/${id}/${file}.mp4`;
-const FVV_EVENTS = [
-  { id: "f1", kind: "fire", title: "Yong'in — bino", badge: "Brigada-1 · joyida", place: "Sanoat zonasi", time: "03:14", cam: "FVV-CAM-01", img: fl("fire,building", 11), video: vid(4205697, "4205697-sd_640_360_30fps") },
-  { id: "f2", kind: "gas", title: "Gaz sizishi signali", badge: "Brigada-2 yo'lda", place: "Gaz taqsimlagich", time: "02:40", cam: "FVV-CAM-02", img: fl("smoke,gas", 22), video: vid(856973, "856973-sd_640_360_25fps") },
-  { id: "f3", kind: "rescue", title: "Qutqaruv — liftda odam", badge: "Brigada-3", place: "Eski shahar", time: "01:10", cam: "FVV-CAM-03", img: fl("firefighter,rescue", 33), video: vid(4328514, "4328514-sd_640_360_30fps") },
-  { id: "f4", kind: "fire", title: "Tutun datchigi ishga tushdi", badge: "Tekshiruvda", place: "Bozor", time: "22:05", cam: "FVV-CAM-04", img: fl("fire,flames", 44), video: vid(2835998, "2835998-sd_640_360_24fps") },
-  { id: "f5", kind: "fire", title: "Transformator yong'ini", badge: "Brigada-1", place: "Transformator", time: "21:30", cam: "FVV-CAM-05", img: fl("fire,electric", 55), video: vid(2715412, "2715412-sd_640_360_30fps") },
+const FVV_FEEDS = [
+  { id: "w1", cam: "FVV-CAM-01", place: "Sanoat zonasi", status: "Yong'in", color: "#ef4444", img: fl("fire,building", 11), video: vid(4205697, "4205697-sd_640_360_30fps") },
+  { id: "w2", cam: "FVV-CAM-02", place: "Gaz taqsimlagich", status: "Gaz", color: "#06b6d4", img: fl("smoke,gas", 22), video: vid(856973, "856973-sd_640_360_25fps") },
+  { id: "w3", cam: "FVV-CAM-03", place: "Eski shahar", status: "Qutqaruv", color: "#22d3ee", img: fl("firefighter,rescue", 33), video: vid(4328514, "4328514-sd_640_360_30fps") },
+  { id: "w4", cam: "FVV-CAM-04", place: "Bozor", status: "Tutun", color: "#f59e0b", img: fl("fire,flames", 44), video: vid(2835998, "2835998-sd_640_360_24fps") },
+  { id: "w5", cam: "FVV-CAM-05", place: "Transformator", status: "Yong'in", color: "#ef4444", img: fl("fire,electric", 55), video: vid(2715412, "2715412-sd_640_360_30fps") },
+  { id: "w6", cam: "FVV-CAM-06", place: "Markaziy ko'cha", status: "Nazorat", color: "#22c55e", img: fl("street,night", 66), video: vid(2099536, "2099536-sd_640_360_30fps") },
 ];
 
 const BigStat = ({ icon: Icon, label, value, accent, subs, source }) => (
@@ -114,8 +115,8 @@ const FvvDashboardPage = () => {
               <BigStat icon={Droplets} label="Gaz / suv" value="2 162" accent={CY} source="Gidrant reyestri" subs={[{ k: "Gidrant", v: 16 }, { k: "Faol", v: 14 }, { k: "Gaz signal", v: 4 }, { k: "Qamrov", v: "88%" }]} />
             </div>
             <div className="flex flex-col gap-3 xl:col-span-6">
-              <Panel title="Operativ monitoring — jonli footage" icon={Video} accent={A} right="JONLI" source="FVV hodisa kameralari" className="flex-1" bodyClass="min-h-0">
-                <CctvMonitor events={FVV_EVENTS} accent={A} />
+              <Panel title="Video devor — jonli kamera feed" icon={Video} accent={A} right={`${FVV_FEEDS.length} kamera · JONLI`} source="FVV hodisa kameralari" className="flex-1" bodyClass="min-h-0">
+                <VideoWall feeds={FVV_FEEDS} accent={A} />
               </Panel>
             </div>
             <div className="flex flex-col gap-3 xl:col-span-3">

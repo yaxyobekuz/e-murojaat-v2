@@ -369,6 +369,30 @@ export const CctvMonitor = ({ events, accent }) => {
   );
 };
 
+// ── Video devor (multi-feed) — bir vaqtda bir nechta jonli kamera (FVV uchun) ──
+export const VideoWall = ({ feeds, accent }) => {
+  const { time } = useClock();
+  const FILTER = "grayscale(0.4) contrast(1.15) saturate(0.7) brightness(0.92)";
+  return (
+    <div className="grid h-full grid-cols-2 gap-2 p-2 lg:grid-cols-3">
+      {feeds.map((f) => (
+        <div key={f.id} className="relative aspect-video overflow-hidden rounded-lg border border-white/10 bg-black">
+          {f.video ? <video src={f.video} poster={f.img} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" style={{ filter: FILTER }} />
+            : <div className="absolute inset-0" style={{ background: "linear-gradient(135deg,#0b1220,#1a2233)" }} />}
+          <div className="absolute inset-0 opacity-[0.13]" style={{ backgroundImage: "repeating-linear-gradient(0deg, rgba(255,255,255,0.4) 0 1px, transparent 1px 3px)" }} />
+          <div className="absolute inset-0" style={{ background: "radial-gradient(circle at 50% 50%, transparent 58%, rgba(0,0,0,0.5) 100%)", mixBlendMode: "multiply" }} />
+          <div className="absolute left-1.5 top-1.5 flex items-center gap-1 rounded bg-black/60 px-1.5 py-0.5"><Circle className="size-1.5 animate-pulse fill-rose-500 text-rose-500" /><span className="font-mono text-[8px] font-semibold text-white/80">{f.cam}</span></div>
+          <div className="absolute right-1.5 top-1.5 rounded bg-black/60 px-1.5 py-0.5 font-mono text-[8px] text-emerald-300">{time}</div>
+          <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-1 p-1.5" style={{ background: "linear-gradient(0deg, rgba(0,0,0,0.8), transparent)" }}>
+            <span className="flex items-center gap-1 truncate text-[9px] text-white/75"><MapPin className="size-2.5" /> {f.place}</span>
+            {f.status && <span className="shrink-0 rounded px-1.5 py-0.5 text-[8.5px] font-bold uppercase" style={{ background: hexA(f.color || accent, 0.9), color: "#fff" }}>{f.status}</span>}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 // ── Dark CRUD jadval (qo'shish/o'chirish) — command uslubi ──
 const TONE = { yashil: "#22c55e", qizil: "#ef4444", sariq: "#f59e0b", kok: "#38bdf8", kulrang: "#94a3b8" };
 export const CmdTable = ({ title, icon, accent, columns, rows, setRows, source, right }) => {
