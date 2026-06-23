@@ -17,7 +17,7 @@ import {
 import { TalimDashboardPage } from "@/owner/features/talim";
 import { IibDashboardPage, IibMapPage } from "@/owner/features/iib";
 import { FvvDashboardPage, FvvMapPage } from "@/owner/features/fvv";
-import { YoshlarDashboardPage } from "@/owner/features/yoshlar";
+import { YoshlarDashboardPage, YoshlarProjectsPage } from "@/owner/features/yoshlar";
 
 const OwnerRoutes = () => (
   <Routes>
@@ -36,6 +36,7 @@ const OwnerRoutes = () => (
     <Route path="fvv" element={<FvvDashboardPage />} />
     <Route path="fvv/xarita" element={<FvvMapPage />} />
     <Route path="yoshlar" element={<YoshlarDashboardPage />} />
+    <Route path="yoshlar/loyihalar" element={<YoshlarProjectsPage />} />
     <Route path="*" element={<Navigate to="yer" replace />} />
   </Routes>
 );

@@ -1,4 +1,4 @@
-import { LayoutDashboard, Trees, Users, Home, Landmark, Map, GraduationCap, Shield, Flame, Store, TriangleAlert } from "lucide-react";
+import { LayoutDashboard, Trees, Users, Home, Landmark, Map, GraduationCap, Shield, Flame, Store, TriangleAlert, Layers } from "lucide-react";
 
 const ownerSidebar = [
   {
@@ -45,7 +45,10 @@ const ownerSidebar = [
     key: "yoshlar",
     title: "Yoshlar",
     icon: Users,
-    items: [{ title: "Bosh sahifa", url: "/owner/yoshlar", icon: Home }],
+    items: [
+      { title: "Command Center", url: "/owner/yoshlar", icon: Home },
+      { title: "Loyihalar", url: "/owner/yoshlar/loyihalar", icon: Layers },
+    ],
   },
 ];
 
