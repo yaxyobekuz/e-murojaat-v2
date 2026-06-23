@@ -97,9 +97,12 @@ const CSS = `
 .tcc-kpi{background:rgba(15,26,36,.8);border:1px solid ${T.border};border-radius:16px;padding:14px 16px}
 .tcc-kpi .lab{font-size:11px;color:${T.muted};font-weight:600;text-transform:uppercase;letter-spacing:.4px}
 .tcc-kpi .val{font-family:"JetBrains Mono";font-size:30px;font-weight:700;margin-top:6px}
-.tcc-tbl{width:100%;border-collapse:collapse;font-size:12.5px}
-.tcc-tbl th{text-align:left;color:${T.muted};font-weight:600;font-size:10.5px;text-transform:uppercase;padding:7px 6px;border-bottom:1px solid ${T.border}}
-.tcc-tbl td{padding:8px 6px;border-bottom:1px solid rgba(255,255,255,.05)}
+.tcc-tbl{width:100%!important;min-width:0!important;border-collapse:collapse;font-size:12.5px}
+.tcc-tbl thead{background:transparent!important}
+.tcc-tbl th{text-align:left!important;color:${T.muted}!important;font-weight:600;font-size:10.5px;text-transform:uppercase;padding:7px 6px!important;border-bottom:1px solid ${T.border}}
+.tcc-tbl tbody{border:0!important}
+.tcc-tbl tbody tr{background:transparent!important}
+.tcc-tbl td{padding:8px 6px!important;border-bottom:1px solid rgba(255,255,255,.06)!important;color:${T.text}}
 .tcc-bar{height:6px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
 .tcc-bar>i{display:block;height:100%;border-radius:99px}
 .tcc-c3{grid-column:span 3}.tcc-c4{grid-column:span 4}.tcc-c5{grid-column:span 5}.tcc-c6{grid-column:span 6}.tcc-c7{grid-column:span 7}.tcc-c8{grid-column:span 8}.tcc-c12{grid-column:span 12}
