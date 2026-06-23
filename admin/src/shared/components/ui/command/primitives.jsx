@@ -1,7 +1,7 @@
 // Command-center primitivlari — admin to'q palitrasiga moslangan (bg-card, white/0.07
 // border, glow aksent). Bitta mahalla (Navbahor MFY) miqyosi. Funksional, qayta ishlatiladi.
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { CircleDot, Power, Search, Video, VideoOff, Circle, Info, X, Database, Clock } from "lucide-react";
+import { CircleDot, Power, Video, VideoOff, Circle, Info, X, Database, Clock, Plus, Trash2 } from "lucide-react";
 
 import { EChart } from "@/shared/components/ui/chart3d/EChart";
 
@@ -22,7 +22,7 @@ export const useClock = () => {
 };
 
 // ── Header ──
-export const CmdHeader = ({ brand, place, nav, accent }) => {
+export const CmdHeader = ({ brand, place, nav, accent, active, onNav }) => {
   const { time, date } = useClock();
   return (
     <div className="flex items-center justify-between gap-4 rounded-xl border border-[rgb(var(--card-border))] bg-card px-4 py-2">
@@ -34,12 +34,16 @@ export const CmdHeader = ({ brand, place, nav, accent }) => {
         </div>
       </div>
       <div className="hidden items-center gap-1 lg:flex">
-        {nav.map((n, i) => (
-          <button key={n} className="flex items-center gap-1 rounded px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider transition-colors"
-            style={i === 0 ? { background: hexA(accent, 0.16), color: accent } : { color: "hsl(var(--muted-foreground))" }}>
-            {i === 1 && <Search className="size-3" />}{n}
-          </button>
-        ))}
+        {nav.map((n, i) => {
+          const on = active != null ? n === active : i === 0;
+          return (
+            <button key={n} onClick={() => onNav?.(n)}
+              className="flex items-center gap-1 rounded px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider transition-colors hover:text-white"
+              style={on ? { background: hexA(accent, 0.18), color: accent } : { color: "hsl(var(--muted-foreground))" }}>
+              {n}
+            </button>
+          );
+        })}
       </div>
       <div className="flex items-center gap-3">
         <div className="text-right leading-tight">
@@ -296,3 +300,70 @@ export const CmdRoot = ({ accent, system = "Ma'lumotlar bazasi", place = "", chi
 
 // kamera demo yasash
 export const makeCams = (locs, seedBase) => locs.map((loc, i) => ({ id: `c${i}`, loc, online: rng(seedBase + i) > 0.16, img: `https://picsum.photos/seed/${seedBase}-${i}/320/200?grayscale` }));
+
+// ── Dark CRUD jadval (qo'shish/o'chirish) — command uslubi ──
+const TONE = { yashil: "#22c55e", qizil: "#ef4444", sariq: "#f59e0b", kok: "#38bdf8", kulrang: "#94a3b8" };
+export const CmdTable = ({ title, icon, accent, columns, rows, setRows, source, right }) => {
+  const [open, setOpen] = useState(false);
+  const blank = () => Object.fromEntries(columns.map((c) => [c.key, c.type === "select" ? c.options[0].value : ""]));
+  const [form, setForm] = useState(blank);
+  const submit = () => { setRows([{ id: `r${Date.now()}`, ...form }, ...rows]); setForm(blank()); setOpen(false); };
+  const del = (id) => setRows(rows.filter((r) => r.id !== id));
+  return (
+    <Panel title={title} icon={icon} accent={accent} source={source} right={right}
+      bodyClass="relative">
+      <div className="flex items-center justify-end px-3 pt-2">
+        <button onClick={() => setOpen(true)} className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-[11px] font-semibold text-white" style={{ background: hexA(accent, 0.9) }}>
+          <Plus className="size-3.5" /> Qo'shish
+        </button>
+      </div>
+      <div className="overflow-x-auto p-2">
+        <table className="w-full min-w-[480px] text-left">
+          <thead><tr className="text-[9.5px] uppercase tracking-wider text-foreground/40" style={{ borderBottom: `1px solid ${hexA(accent, 0.2)}` }}>
+            {columns.map((c) => <th key={c.key} className="px-3 py-2 font-semibold">{c.label}</th>)}<th />
+          </tr></thead>
+          <tbody>
+            {rows.length === 0 && <tr><td colSpan={columns.length + 1} className="px-3 py-6 text-center text-[12px] text-foreground/40">Ma'lumot yo'q — "Qo'shish"</td></tr>}
+            {rows.map((r) => (
+              <tr key={r.id} className="text-[12px] text-foreground/85 transition-colors hover:bg-white/[0.03]" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                {columns.map((c) => (
+                  <td key={c.key} className="px-3 py-2.5">
+                    {c.type === "status" ? (
+                      <span className="rounded-full px-2 py-0.5 text-[10.5px] font-medium" style={{ background: hexA(TONE[c.tone?.(r[c.key]) || "kulrang"], 0.16), color: TONE[c.tone?.(r[c.key]) || "kulrang"] }}>{r[c.key]}</span>
+                    ) : c.type === "number" ? <span className="font-mono tabular-nums">{r[c.key]}</span> : r[c.key]}
+                  </td>
+                ))}
+                <td className="px-3 py-2.5 text-right"><button onClick={() => del(r.id)} className="text-foreground/40 hover:text-rose-400"><Trash2 className="size-3.5" /></button></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {open && (
+        <div className="fixed inset-0 z-50 grid place-items-center bg-black/60 p-4" onClick={() => setOpen(false)}>
+          <div className="w-full max-w-sm rounded-2xl border border-[rgb(var(--card-border))] bg-card p-5 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="mb-3 flex items-center justify-between"><h4 className="text-sm font-bold">{title} — yangi</h4><button onClick={() => setOpen(false)} className="text-foreground/50 hover:text-foreground"><X className="size-4" /></button></div>
+            <div className="flex flex-col gap-3">
+              {columns.map((c) => (
+                <label key={c.key} className="flex flex-col gap-1">
+                  <span className="text-[11px] text-foreground/55">{c.label}</span>
+                  {c.type === "select" ? (
+                    <select value={form[c.key]} onChange={(e) => setForm({ ...form, [c.key]: e.target.value })} className="rounded-lg border border-[rgb(var(--card-border))] bg-background px-3 py-2 text-[13px] outline-none">
+                      {c.options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+                    </select>
+                  ) : (
+                    <input type={c.type === "number" ? "number" : "text"} value={form[c.key]} onChange={(e) => setForm({ ...form, [c.key]: c.type === "number" ? Number(e.target.value) : e.target.value })} placeholder={c.label} className="rounded-lg border border-[rgb(var(--card-border))] bg-background px-3 py-2 text-[13px] outline-none" />
+                  )}
+                </label>
+              ))}
+            </div>
+            <div className="mt-4 flex justify-end gap-2">
+              <button onClick={() => setOpen(false)} className="rounded-lg px-3 py-2 text-[12px] text-foreground/60 hover:bg-white/5">Bekor</button>
+              <button onClick={submit} className="rounded-lg px-4 py-2 text-[12px] font-semibold text-white" style={{ background: hexA(accent, 0.9) }}>Saqlash</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </Panel>
+  );
+};
