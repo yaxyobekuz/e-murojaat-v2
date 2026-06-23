@@ -1,98 +1,92 @@
-// Yashil makon — ko'chat ekish hisoboti. Nechta ekildi vs reja, qayerga ekildi,
-// mavsum (bahor/kuz), yashilmakon.eco ga kiritilgan %, tirik qolish, ko'kalamzorlik %.
-import { TreePine, Target, Database, Sprout, Leaf } from "lucide-react";
+// Yashil makon — Command Center. Ma'lumot o'zgarmagan. Survival radar, qoplama ringi,
+// ekologik impact (O₂/CO₂), impact simulyatori, 2026→2030 prognozi.
+import { TreePine, Target, Database, Sprout, Leaf, Wind, Cloud, Activity, Sparkles } from "lucide-react";
 
-import GlassStatCard from "@/shared/components/ui/glass/GlassStatCard";
+import { CmdRoot, CmdHeader, Panel, Donut } from "@/shared/components/ui/command/primitives";
 import StatusBadge from "@/shared/components/ui/badge/StatusBadge";
-import ChartCard from "@/shared/components/ui/chart/ChartCard";
-import StackedBar from "@/shared/components/ui/chart/StackedBar";
-import BreakdownBar from "@/shared/components/ui/chart/BreakdownBar";
-import DonutChart from "@/shared/components/ui/chart/DonutChart";
 import DataTable from "@/shared/components/ui/table/DataTable";
-import ObodPageHeader from "../components/ObodPageHeader";
 import {
-  YM_PLACE,
-  YM_PLANTINGS,
-  YM_SEASON_TREND,
-  YM_SEASON_SERIES,
-  YM_BY_MAHALLA,
-  YM_BY_TYPE,
-  TREE_TYPE,
-  SEASON,
-  ymSummary as s,
+  YM_PLACE, YM_PLANTINGS, YM_BY_TYPE, TREE_TYPE, SEASON, ymSummary as s,
 } from "../mock/yashilMakon.data";
+import { ymImpact as im, ymInsights, ymTrends } from "../mock/insights";
+import { InsightCard, ProgressRing, AIInsightPanel, TrendNarrative, SectionTitle, Reveal } from "../components/insight/kit";
+import { SurvivalRadar } from "../components/insight/Radar";
+import { ImpactSimulator, FutureProjection } from "../components/insight/Simulators";
+
+const ACCENT = "#22c55e";
+const TYPE_COLORS = { ornamental: "#22c55e", fruit: "#f59e0b", conifer: "#06b6d4", shrub: "#84cc16" };
+const donutData = YM_BY_TYPE.map((d) => ({ name: TREE_TYPE[d.key], value: d.value, color: TYPE_COLORS[d.key] }));
 
 const rows = [...YM_PLANTINGS].sort((a, b) => b.count - a.count);
-
 const columns = [
-  { key: "mahalla", header: "Mahalla", render: (r) => <span className="font-medium">{r.mahalla}</span> },
+  { key: "mahalla", header: "Mahalla", render: (r) => <span className="font-medium text-white">{r.mahalla}</span> },
   { key: "site", header: "Joy", render: (r) => r.site },
-  { key: "coords", header: "Koordinata", render: (r) => <span className="tabular-nums text-xs text-foreground/60">{r.coords}</span> },
+  { key: "coords", header: "Koordinata", render: (r) => <span className="text-xs text-white/50">{r.coords}</span> },
   { key: "type", header: "Turi", render: (r) => TREE_TYPE[r.type] },
-  {
-    key: "season",
-    header: "Mavsum",
-    align: "center",
-    render: (r) => <StatusBadge tone={r.season === "spring" ? "done" : "progress"}>{SEASON[r.season]}</StatusBadge>,
-  },
-  { key: "count", header: "Soni", align: "right", render: (r) => <span className="tabular-nums font-semibold">{r.count.toLocaleString("uz-UZ")}</span> },
-  {
-    key: "entered",
-    header: "yashilmakon.eco",
-    align: "center",
-    render: (r) =>
-      r.entered ? (
-        <StatusBadge tone="done">Kiritilgan</StatusBadge>
-      ) : (
-        <StatusBadge tone="danger">Kiritilmagan</StatusBadge>
-      ),
-  },
-  { key: "survival", header: "Tirik qolgan", align: "right", render: (r) => <span className="tabular-nums">{r.survivalPct}%</span> },
+  { key: "season", header: "Mavsum", align: "center", render: (r) => <StatusBadge tone={r.season === "spring" ? "done" : "progress"}>{SEASON[r.season]}</StatusBadge> },
+  { key: "count", header: "Soni", align: "right", render: (r) => <span className="font-semibold text-white">{r.count.toLocaleString("uz-UZ")}</span> },
+  { key: "entered", header: "yashilmakon.eco", align: "center", render: (r) => <StatusBadge tone={r.entered ? "done" : "danger"}>{r.entered ? "Kiritilgan" : "Kiritilmagan"}</StatusBadge> },
+  { key: "survival", header: "Tirik qolgan", align: "right", render: (r) => `${r.survivalPct}%` },
 ];
 
 const YashilMakonPage = () => (
-  <div className="flex flex-col gap-5">
-    <ObodPageHeader
-      title="Yashil makon — ko'chat ekish"
-      subtitle={`Daraxt ekish hisoboti · bahor/kuz mavsumi · ${YM_PLACE}`}
-      legal="Asos: Yashil makon dasturi (yillik 200 mln) · platforma yashilmakon.eco · PF-47 → 30% ko'kalamzorlik · demo"
-    />
+  <CmdRoot accent={ACCENT} system="Yashil makon platformasi — yashilmakon.eco (demo)" place={YM_PLACE}>
+    <CmdHeader brand="YASHIL MAKON MARKAZI" place={YM_PLACE} accent={ACCENT} nav={["Ekologiya", "Ekishlar"]} active="Ekologiya" />
 
-    <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
-      <GlassStatCard label="Ekilgan ko'chat" value={s.planted} icon={TreePine} accent="emerald" glow />
-      <GlassStatCard label="Yillik rejaga" value={s.completionPct} suffix="%" icon={Target} accent="cyan" />
-      <GlassStatCard label="Tizimga kiritilgan" value={s.enteredPct} suffix="%" icon={Database} accent="yellow" />
-      <GlassStatCard label="Tirik qolgan" value={s.survivalPct} suffix="%" icon={Sprout} accent="emerald" />
-      <GlassStatCard label="Ko'kalamzorlik" value={s.greenCoverage} suffix="%" icon={Leaf} accent="purple" />
+    {/* Insight kartalar — ekologik impact bilan */}
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <InsightCard i={0} icon={TreePine} label="Ekilgan ko'chat" value={s.planted} accent={ACCENT}
+        trend={{ dir: "up", text: "mavsum" }}
+        equivalents={[{ icon: "🌳", text: `~${im.mahallasGreen} mahalla yashil qoplamasi` }, { icon: "📍", text: `${YM_PLANTINGS.length} ekish nuqtasi` }]} />
+      <InsightCard i={1} icon={Wind} label="CO₂ yutilishi" value={im.co2} suffix=" t/yil" accent="#06b6d4"
+        equivalents={[{ icon: "🚗", text: `~${Math.round(im.co2 / 4.6)} ta avtomobil chiqindisi` }]} />
+      <InsightCard i={2} icon={Cloud} label="O₂ ajralishi" value={im.o2} suffix=" t/yil" accent={ACCENT}
+        equivalents={[{ icon: "🫁", text: `~${(im.o2 * 2).toLocaleString("uz-UZ")} kishilik kislorod` }]} />
+      <InsightCard i={3} icon={Sprout} label="Tirik qolish" value={s.survivalPct} suffix="%" accent={ACCENT}
+        trend={{ dir: "up", text: "+8%" }}
+        equivalents={[{ icon: "💧", text: "Sug'orish tizimi faol" }]} />
     </div>
 
-    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-      <ChartCard
-        title="Mavsumiy ekish — bahor / kuz"
-        insight={`Reja: ${s.yearPlan.toLocaleString("uz-UZ")} · Ekildi: ${s.planted.toLocaleString("uz-UZ")} (${s.completionPct}%)`}
-      >
-        <StackedBar data={YM_SEASON_TREND} series={YM_SEASON_SERIES} unit="ta" />
-      </ChartCard>
-
-      <ChartCard
-        title="Ko'chat turlari"
-        insight="Manzarali, mevali, ignabargli va buta nisbati"
-      >
-        <DonutChart data={YM_BY_TYPE} labelMap={TREE_TYPE} colors={["#16a34a", "#d97706", "#0891b2", "#84cc16"]} />
-      </ChartCard>
+    {/* Progress ringlar */}
+    <div className="grid grid-cols-1 gap-3 lg:grid-cols-4">
+      <Reveal i={0}><Panel title="Yillik reja" icon={Target} accent={ACCENT}>
+        <ProgressRing value={s.planted} target={s.yearPlan} label="Reja bajarilishi" accent={ACCENT} forecast="2026 IV chorak" unit=" ta" />
+      </Panel></Reveal>
+      <Reveal i={1}><Panel title="Tizimga kiritish" icon={Database} accent="#06b6d4">
+        <ProgressRing value={s.enteredPct} label="yashilmakon.eco" accent="#06b6d4" forecast="kun yakuniga" />
+      </Panel></Reveal>
+      <Reveal i={2}><Panel title="Ko'kalamzorlik" icon={Leaf} accent={ACCENT}>
+        <ProgressRing value={s.greenCoverage} target={30} label="Qoplama (PF-47)" accent={ACCENT} forecast="2030 maqsad" unit="%" />
+      </Panel></Reveal>
+      <Reveal i={3}><Panel title="Tirik qolish radari" icon={Sprout} accent={ACCENT}>
+        <div className="p-1"><SurvivalRadar data={im.radar} accent={ACCENT} height={188} /></div>
+      </Panel></Reveal>
     </div>
 
-    <ChartCard
-      title="Mahalla bo'yicha ekilgan ko'chatlar"
-      insight={`Tizimga kiritilgan: ${s.enteredPct}% · qolgan qismi yashilmakon.eco ga kiritilishi kerak`}
-    >
-      <BreakdownBar data={[...YM_BY_MAHALLA].sort((a, b) => b.value - a.value)} color="#16a34a" />
-    </ChartCard>
+    {/* AI + trend + tur */}
+    <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+      <Reveal i={0}><Panel title="AI ekologik tahlil" icon={Activity} accent={ACCENT}><AIInsightPanel insights={ymInsights} accent={ACCENT} /></Panel></Reveal>
+      <Reveal i={1}><Panel title="Tendensiya" icon={Sparkles} accent={ACCENT}><TrendNarrative items={ymTrends} accent={ACCENT} /></Panel></Reveal>
+      <Reveal i={2}><Panel title="Ko'chat turlari" icon={TreePine} accent={ACCENT}><div className="p-2"><Donut data={donutData} accent={ACCENT} height={196} /></div></Panel></Reveal>
+    </div>
 
-    <ChartCard title="Ekish yozuvlari — qayerga ekildi" insight={`${YM_PLANTINGS.length} ekish nuqtasi · koordinata bilan`}>
-      <DataTable columns={columns} rows={rows} getKey={(r) => r.id} />
-    </ChartCard>
-  </div>
+    {/* WOW: simulyator + prognoz */}
+    <div className="space-y-2">
+      <SectionTitle accent={ACCENT}>Stsenariy modellashtirish</SectionTitle>
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+        <Reveal i={0}><Panel title="Impact simulyatori" icon={Sparkles} accent={ACCENT} source="Modellashtirish (demo)">
+          <ImpactSimulator basePlanted={s.planted} baseCoverage={s.greenCoverage} accent={ACCENT} />
+        </Panel></Reveal>
+        <Reveal i={1}><Panel title="2026 → 2030 prognozi" icon={Target} accent={ACCENT} source="PF-47 prognoz (demo)">
+          <FutureProjection baseCoverage={s.greenCoverage} target={30} accent={ACCENT} />
+        </Panel></Reveal>
+      </div>
+    </div>
+
+    <Reveal i={0}><Panel title="Ekish yozuvlari — qayerga ekildi" icon={Database} accent={ACCENT} bodyClass="p-2">
+      <DataTable columns={columns} rows={rows} getKey={(r) => r.id} variant="glass" />
+    </Panel></Reveal>
+  </CmdRoot>
 );
 
 export default YashilMakonPage;

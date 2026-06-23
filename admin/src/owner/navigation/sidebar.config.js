@@ -40,11 +40,12 @@ const ownerSidebar = [
     title: "Obodonlashtirish",
     icon: Trees,
     items: [
-      { title: "Bosh sahifa", url: "/owner/obodonlashtirish", icon: Home },
+      { title: "Ijroiya panel", url: "/owner/obodonlashtirish", icon: Home },
       { title: "Axlat mashinasi", url: "/owner/obodonlashtirish/axlat", icon: Truck },
       { title: "Gaz mashinasi", url: "/owner/obodonlashtirish/assenizatsiya", icon: Droplets },
       { title: "Yashil makon", url: "/owner/obodonlashtirish/yashil-makon", icon: TreePine },
       { title: "Tozalov & hashar", url: "/owner/obodonlashtirish/hashar", icon: Sparkles },
+      { title: "Xarita", url: "/owner/obodonlashtirish/xarita", icon: Map },
     ],
   },
   {

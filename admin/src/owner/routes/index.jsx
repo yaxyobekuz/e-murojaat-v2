@@ -13,6 +13,7 @@ import {
 import {
   ObodDashboardPage,
   ObodProjectsPage,
+  ObodExecPage,
   AxlatPage,
   AssenizatsiyaPage,
   YashilMakonPage,
@@ -32,7 +33,8 @@ const OwnerRoutes = () => (
     <Route path="soliq" element={<SoliqDashboardPage />} />
     <Route path="soliq/bizneslar" element={<SoliqBusinessesPage />} />
     <Route path="soliq/qarzdorlar" element={<SoliqDebtorsPage />} />
-    <Route path="obodonlashtirish" element={<ObodDashboardPage />} />
+    <Route path="obodonlashtirish" element={<ObodExecPage />} />
+    <Route path="obodonlashtirish/xarita" element={<ObodDashboardPage />} />
     <Route path="obodonlashtirish/loyihalar" element={<ObodProjectsPage />} />
     <Route path="obodonlashtirish/axlat" element={<AxlatPage />} />
     <Route path="obodonlashtirish/assenizatsiya" element={<AssenizatsiyaPage />} />
