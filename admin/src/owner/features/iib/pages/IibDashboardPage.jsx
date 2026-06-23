@@ -41,7 +41,8 @@ const nextCar = (cam) => {
     ? (Math.random() < 0.7 ? genNumber(pick(REGIONS.filter((r) => !MAHALLA_REG.includes(r)))) : genNumber("01"))
     : pick(REGISTERED);
   const d = new Date();
-  return { id: CARID, plate, foreign, cam, time: `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`, ts: Date.now(), img: fl("car,street,traffic", CARID * 7 + 11) };
+  const dir = cam.startsWith("Kirish") ? "Kirim" : cam.startsWith("Chiqish") ? "Chiqim" : (Math.random() < 0.5 ? "Kirim" : "Chiqim");
+  return { id: CARID, plate, foreign, cam, dir, time: `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`, ts: Date.now(), img: fl("car,street,traffic", CARID * 7 + 11) };
 };
 
 /* ───────── CSS ───────── */
@@ -271,6 +272,9 @@ const IibDashboardPage = () => {
   const [foreign, setForeign] = useState(58);
   const [selCam, setSelCam] = useState(null);
   const [selCar, setSelCar] = useState(null);
+  const [registry, setRegistry] = useState(() => Array.from({ length: 36 }, () => { const c = nextCar(pick(CAMS)); return { ...c, time: `${pad(ri(6, 20))}:${pad(ri(0, 59))}:${pad(ri(0, 59))}` }; }).sort((a, b) => (a.time < b.time ? 1 : -1)));
+  const [regOpen, setRegOpen] = useState(false);
+  const [regFilter, setRegFilter] = useState("all");
 
   useEffect(() => {
     if (reduced) return; let stop = false;
@@ -278,6 +282,7 @@ const IibDashboardPage = () => {
       if (stop) return;
       const car = nextCar(pick(CAMS));
       setCars((p) => [car, ...p].slice(0, 14));
+      setRegistry((p) => [car, ...p].slice(0, 300));
       setPassed((n) => n + 1);
       if (car.foreign) { setForeign((n) => n + 1); setAlarms((p) => [{ ...car, date: new Date().toLocaleString("uz-UZ"), checked: false }, ...p].slice(0, 10)); }
       setTimeout(tick, ri(2000, 4000));
@@ -307,7 +312,7 @@ const IibDashboardPage = () => {
         {/* HERO KPI */}
         <div className="scc-hero">
           <div className="scc-safe"><div style={{ fontSize: 11, color: "#9fe3c4", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".5px" }}>Jinoyatsiz kunlar</div><div className="big">{fmt(safeDays)}</div><div style={{ fontSize: 11.5, color: T.muted, marginTop: 6 }}>Navbahor MFY · uzluksiz</div></div>
-          <div className="scc-kpi"><div className="lab">Bugun o'tgan avto</div><div className="val" style={{ color: T.text }}>{fmt(passed)}</div><div style={{ fontSize: 11, color: T.alarm, marginTop: 2 }}>shundan begona: {fmt(foreign)}</div></div>
+          <div className="scc-kpi" role="button" tabIndex={0} style={{ cursor: "pointer" }} onClick={() => setRegOpen(true)} onKeyDown={(e) => e.key === "Enter" && setRegOpen(true)}><div className="lab">Bugun o'tgan avto</div><div className="val" style={{ color: T.text }}>{fmt(passed)}</div><div style={{ fontSize: 11, marginTop: 2 }}><span style={{ color: T.alarm }}>begona: {fmt(foreign)}</span> · <span style={{ color: T.gold }}>kirim/chiqim jurnali →</span></div></div>
           <div className="scc-kpi"><div className="lab">Profilaktik hisob</div><div className="val" style={{ color: T.gold }}>{fmt(prof)}</div><div style={{ fontSize: 11, color: T.muted, marginTop: 2 }}>shaxs</div></div>
           <div className="scc-kpi"><div className="lab">Ochiq 102 murojaat</div><div className="val" style={{ color: T.teal }}>{fmt(open102)}</div><div style={{ fontSize: 11, color: T.muted, marginTop: 2 }}>ko'rib chiqilmoqda</div></div>
         </div>
@@ -408,6 +413,34 @@ const IibDashboardPage = () => {
       </div>
       {selCam != null && <CameraModal idx={selCam} onClose={() => setSelCam(null)} />}
       {selCar && <CarModal car={selCar} onClose={() => setSelCar(null)} />}
+      {regOpen && createPortal(
+        <div className="scc-modal" onClick={() => setRegOpen(false)}>
+          <div className="scc-mbox" style={{ width: "min(980px,96vw)" }} onClick={(e) => e.stopPropagation()}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+              <div><div style={{ fontFamily: '"Space Grotesk"', fontWeight: 700, fontSize: 17 }}>Kirim / chiqim jurnali — bugun</div><div style={{ fontSize: 11, color: T.muted }}>Navbahor MFY · qaysi avto qachon qaysi kameradan ro'yxatga olingan</div></div>
+              <button className="scc-x" onClick={() => setRegOpen(false)}>×</button>
+            </div>
+            <div style={{ display: "flex", gap: 8, marginBottom: 10, flexWrap: "wrap" }}>
+              {[["all", `Hammasi · ${registry.length}`], ["kirim", `Kirim · ${registry.filter((c) => c.dir === "Kirim").length}`], ["chiqim", `Chiqim · ${registry.filter((c) => c.dir === "Chiqim").length}`], ["begona", `Begona · ${registry.filter((c) => c.foreign).length}`]].map(([k, l]) => (
+                <button key={k} className="scc-btn" onClick={() => setRegFilter(k)} style={regFilter === k ? { borderColor: T.gold, color: T.gold } : {}}>{l}</button>
+              ))}
+            </div>
+            <div style={{ maxHeight: "64vh", overflowY: "auto" }}>
+              <table className="scc-tbl"><thead><tr><th>Davlat raqami</th><th>Vaqt</th><th>Kamera</th><th>Yo'nalish</th><th>Holat</th></tr></thead>
+                <tbody>{registry.filter((c) => regFilter === "all" || (regFilter === "kirim" && c.dir === "Kirim") || (regFilter === "chiqim" && c.dir === "Chiqim") || (regFilter === "begona" && c.foreign)).map((c) => (
+                  <tr key={c.id} style={{ cursor: "pointer" }} onClick={() => setSelCar(c)}>
+                    <td><UzPlate plate={c.plate} size="sm" /></td>
+                    <td className="mono">{c.time}</td>
+                    <td style={{ color: T.muted }}>{c.cam}</td>
+                    <td><span className="scc-pill" style={c.dir === "Kirim" ? { background: "rgba(47,191,135,.16)", color: T.green } : { background: "rgba(224,169,59,.16)", color: T.gold }}>{c.dir === "Kirim" ? "→ Kirim" : "← Chiqim"}</span></td>
+                    <td><span className="scc-pill" style={c.foreign ? { background: "rgba(255,77,77,.16)", color: T.alarm } : { background: "rgba(47,191,135,.16)", color: T.green }}>{c.foreign ? "begona" : "ro'yxatda"}</span></td>
+                  </tr>))}
+                </tbody>
+              </table>
+            </div>
+            <div style={{ marginTop: 10 }}><span className="scc-pill">DEMO · qatorni bosing — avto tafsiloti (rasm + kamera)</span></div>
+          </div>
+        </div>, document.body)}
     </div>
   );
 };
