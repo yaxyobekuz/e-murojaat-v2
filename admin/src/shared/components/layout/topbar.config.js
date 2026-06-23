@@ -45,7 +45,10 @@ const topbarModules = [
     title: "Ta'lim",
     icon: GraduationCap,
     base: "/owner/talim",
-    items: [{ title: "Analitika", url: "/owner/talim", end: true }],
+    items: [
+      { title: "Analitika", url: "/owner/talim", end: true },
+      { title: "Umumiy ma'lumotlar", url: "/owner/talim/malumotlar" },
+    ],
   },
   {
     key: "iib",

@@ -18,7 +18,7 @@ import {
   YashilMakonPage,
   HasharPage,
 } from "@/owner/features/obodonlashtirish";
-import { TalimDashboardPage } from "@/owner/features/talim";
+import { TalimDashboardPage, TalimDataPage, TalimStudentPage } from "@/owner/features/talim";
 import { IibDashboardPage, IibMapPage } from "@/owner/features/iib";
 import { FvvDashboardPage, FvvMapPage } from "@/owner/features/fvv";
 import { YoshlarDashboardPage, YoshlarProjectsPage } from "@/owner/features/yoshlar";
@@ -39,6 +39,8 @@ const OwnerRoutes = () => (
     <Route path="obodonlashtirish/yashil-makon" element={<YashilMakonPage />} />
     <Route path="obodonlashtirish/hashar" element={<HasharPage />} />
     <Route path="talim" element={<TalimDashboardPage />} />
+    <Route path="talim/malumotlar" element={<TalimDataPage />} />
+    <Route path="talim/oquvchi/:id" element={<TalimStudentPage />} />
     <Route path="iib" element={<IibDashboardPage />} />
     <Route path="iib/xarita" element={<IibMapPage />} />
     <Route path="fvv" element={<FvvDashboardPage />} />
