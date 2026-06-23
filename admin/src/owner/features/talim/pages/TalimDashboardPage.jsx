@@ -2,6 +2,7 @@
 // Imzo: Sankey oqim ("bola qayoqqa ketadi") + hex-grid "tirik mahalla".
 // Dramatik markaz: "Ta'limdan chetda qolgan bolalar soni". ECharts + SVG. Namunaviy mahalla, real milliy.
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import * as echarts from "echarts";
 
 /* ───────── Tokenlar ───────── */
@@ -86,7 +87,6 @@ const CSS = `
 .tcc-exp{border:1px solid ${T.border};background:rgba(255,255,255,.03);border-radius:8px;width:28px;height:28px;display:grid;place-items:center;cursor:pointer;color:${T.muted};flex:0 0 auto}
 .tcc-exp:hover{color:${T.text};border-color:${T.gold}}
 .tcc-ch{width:100%;overflow:hidden;position:relative}
-.tcc-card{overflow:hidden}
 .tcc-note{font-size:11px;color:${T.muted};margin-top:8px}
 .tcc-pill{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;background:rgba(224,169,59,.14);color:${T.gold}}
 .tcc-pill.real{background:rgba(47,191,135,.14);color:${T.green}}
@@ -107,9 +107,9 @@ const CSS = `
 .tcc-bar{height:6px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
 .tcc-bar>i{display:block;height:100%;border-radius:99px}
 .tcc-c3{grid-column:span 3}.tcc-c4{grid-column:span 4}.tcc-c5{grid-column:span 5}.tcc-c6{grid-column:span 6}.tcc-c7{grid-column:span 7}.tcc-c8{grid-column:span 8}.tcc-c12{grid-column:span 12}
-.tcc-modal{position:fixed;inset:0;z-index:80;background:rgba(5,10,15,.7);display:grid;place-items:center;padding:18px;backdrop-filter:blur(4px);animation:tccFade .2s ease}
+.tcc-modal{position:fixed;inset:0;z-index:99999;background:rgba(5,10,15,.78);display:grid;place-items:center;padding:18px;backdrop-filter:blur(4px);animation:tccFade .2s ease}
 @keyframes tccFade{from{opacity:0}}
-.tcc-mbox{background:${T.panel};border:1px solid ${T.border};border-radius:18px;width:min(1100px,96vw);height:min(82vh,820px);display:flex;flex-direction:column;padding:16px 18px;box-shadow:0 40px 100px rgba(0,0,0,.7);
+.tcc-mbox{color:${T.text};font-family:Inter,system-ui,sans-serif;background:${T.panel};border:1px solid ${T.border};border-radius:18px;width:min(1100px,96vw);height:min(82vh,820px);display:flex;flex-direction:column;padding:16px 18px;box-shadow:0 40px 100px rgba(0,0,0,.7);
  transform:scale(.92);opacity:0;animation:tccGrow .28s cubic-bezier(.2,.8,.2,1) forwards}
 @keyframes tccGrow{to{transform:scale(1);opacity:1}}
 .tcc-mbox .mc{flex:1;min-height:0}
@@ -164,13 +164,20 @@ function EPanel({ title, subtitle, note, option, className = "tcc-c6", delay = 0
         <button className="tcc-exp" aria-label={`${title} — kengaytirish`} title="Kengaytirish" onClick={() => setOpen(true)}>⤢</button></div>
       <div className="tcc-ch" ref={ref} style={{ height }} />
       {note && <div className="tcc-note">{note}</div>}
-      {open && (
+      {open && createPortal(
         <div className="tcc-modal" role="dialog" aria-modal="true" aria-label={title} onClick={() => setOpen(false)}>
           <div className="tcc-mbox" onClick={(e) => e.stopPropagation()}>
-            <div className="hd"><div><div className="t" style={{ fontSize: 16 }}>{title}</div><div className="s">{subtitle} · Esc — yopish</div></div><button className="tcc-x" aria-label="Yopish" onClick={() => setOpen(false)}>×</button></div>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+              <div>
+                <div style={{ fontFamily: '"Space Grotesk",Inter,sans-serif', fontWeight: 700, fontSize: 16, color: T.text }}>{title}</div>
+                <div style={{ fontSize: 11.5, color: T.muted }}>{subtitle} · Esc — yopish</div>
+              </div>
+              <button className="tcc-x" aria-label="Yopish" onClick={() => setOpen(false)}>×</button>
+            </div>
             <div className="mc" ref={mref} />
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
