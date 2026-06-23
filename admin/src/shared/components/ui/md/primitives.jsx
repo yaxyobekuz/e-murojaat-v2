@@ -40,6 +40,19 @@ export const MdNavbar = ({ crumb, title }) => {
   );
 };
 
+// ── Tablar (MD pill uslubi) ──
+export const MdTabs = ({ tabs, active, onChange, color = "info" }) => (
+  <div className="mb-5 inline-flex flex-wrap gap-1 rounded-xl bg-white p-1 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.12)]">
+    {tabs.map((t) => (
+      <button key={t} onClick={() => onChange(t)}
+        className="rounded-lg px-4 py-1.5 text-[13px] font-medium transition-colors"
+        style={active === t ? { background: grad(color), color: "#fff" } : { color: "#7b809a" }}>
+        {t}
+      </button>
+    ))}
+  </div>
+);
+
 // ── Statistika kartasi (gradient ikon + raqam + foiz) ──
 export const MdStatCard = ({ color = "info", icon: Icon, title, count, delta, deltaColor = "success", note }) => (
   <div className={`${CARD} relative px-4 pb-3 pt-1`}>

@@ -1,7 +1,7 @@
 // FVV — "Smart Operation Center". Header navlari funksional tab: Umumiy + Hodisalar/
 // Brigadalar/Texnika/Profilaktika (har biri boshqariladigan CRUD jadval).
 import { useMemo, useState } from "react";
-import { Flame, Droplets, LifeBuoy, Truck, Video, Activity, MapPin, Gauge, Radio, ShieldAlert, Siren, CheckCircle2, Wrench, ClipboardCheck } from "lucide-react";
+import { Flame, Droplets, LifeBuoy, Truck, Bell, Activity, MapPin, Gauge, Radio, ShieldAlert, Siren, CheckCircle2, Wrench, ClipboardCheck } from "lucide-react";
 import { CmdRoot, CmdHeader, Panel, StatTile, BarRow, RadialGauge, RatingList, CmdTable, hexA } from "@/shared/components/ui/command/primitives";
 import Ops3DMap from "@/shared/components/ui/command/Ops3DMap";
 
@@ -30,7 +30,7 @@ const NET = [
   { icon: ShieldAlert, label: "Qism", value: 1, c: A },
   { icon: Truck, label: "Texnika", value: 5, c: A },
   { icon: Droplets, label: "Suv ombori", value: 2, c: CY },
-  { icon: Video, label: "Kameralar", value: 28, c: "#22c55e" },
+  { icon: Bell, label: "Signalizatsiya", value: 64, c: "#22c55e" },
   { icon: Radio, label: "Brigadalar", value: 3, c: A },
 ];
 const RATINGS = [["Markaziy", 98], ["Bog' mahalla", 96], ["Maktab-7", 95], ["Park", 94], ["Stadion", 92], ["Yangi qurilish", 90], ["Bozor atrofi", 84], ["Sanoat zonasi", 71]].map(([label, pct]) => ({ label, pct }));
