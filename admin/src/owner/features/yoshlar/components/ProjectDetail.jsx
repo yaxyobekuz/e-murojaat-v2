@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { X, Users, GraduationCap, MapPin, CalendarDays } from "lucide-react";
 
 import GlassStatusBadge from "@/shared/components/ui/glass/GlassStatusBadge";
+import ProjectLogo from "./ProjectLogo";
 import { PROJECT_CATEGORIES, PROJECT_STATUS } from "../mock/youth.projects";
 
 const compact = (n) => {
@@ -21,7 +22,6 @@ const Stat = ({ icon: Icon, value, label, color }) => (
 
 const ProjectDetail = ({ project, onClose }) => {
   if (!project) return null;
-  const Icon = project.icon;
   const cat = PROJECT_CATEGORIES[project.category];
   const st = PROJECT_STATUS[project.status];
 
@@ -40,12 +40,7 @@ const ProjectDetail = ({ project, onClose }) => {
         <button onClick={onClose} aria-label="Yopish" className="absolute right-3 top-3 grid size-7 place-items-center rounded-lg text-white/50 hover:bg-white/10 hover:text-white">
           <X className="size-4" />
         </button>
-        <span
-          className="grid size-14 place-items-center rounded-2xl"
-          style={{ background: `rgba(${project.glow},0.18)`, color: `rgb(${project.glow})`, boxShadow: `0 0 26px rgba(${project.glow},0.45)` }}
-        >
-          <Icon className="size-7" />
-        </span>
+        <ProjectLogo project={project} size={56} iconSize={28} />
         <h3 className="mt-3 text-lg font-bold text-white">{project.name}</h3>
         <p className="mt-0.5 text-[13px] text-white/55">{project.tagline}</p>
         <div className="mt-2 flex items-center gap-2">

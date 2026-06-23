@@ -46,7 +46,7 @@ const ownerSidebar = [
     title: "Yoshlar",
     icon: Users,
     items: [
-      { title: "Command Center", url: "/owner/yoshlar", icon: Home },
+      { title: "Analitika", url: "/owner/yoshlar", icon: Home },
       { title: "Loyihalar", url: "/owner/yoshlar/loyihalar", icon: Layers },
     ],
   },

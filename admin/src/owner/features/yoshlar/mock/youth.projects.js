@@ -5,6 +5,11 @@ import {
   Crown, Trophy, HeartPulse, Code2, Globe2, Palette, Music4,
 } from "lucide-react";
 
+// Loyiha logosini rasmiy domeni favikonidan oladi (Google favicon servisi — barqaror, CORS yo'q).
+// Logo yuklanmasa, karta `icon` (lucide) ga qaytadi.
+export const projectLogo = (domain) =>
+  `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+
 // Loyiha kategoriyalari (filtr uchun)
 export const PROJECT_CATEGORIES = {
   education: { key: "education", label: "Ta'lim", color: "#22c55e" },
@@ -29,6 +34,7 @@ export const PROJECTS = [
     tagline: "Chet tillarini bepul o'rganish dasturi",
     category: "language",
     icon: Languages,
+    logo: "ibratfarzandlari.uz",
     glow: "96,165,250",
     status: "active",
     description:
@@ -46,6 +52,7 @@ export const PROJECTS = [
     tagline: "Zamonaviy kasblar va AI ta'limi",
     category: "it",
     icon: BrainCircuit,
+    logo: "gov.uz",
     glow: "34,211,238",
     status: "recruiting",
     description:
@@ -63,6 +70,7 @@ export const PROJECTS = [
     tagline: "Startap akselerator va investitsiya",
     category: "startup",
     icon: Rocket,
+    logo: "uzcombinator.uz",
     glow: "52,211,153",
     status: "active",
     description:
@@ -80,6 +88,7 @@ export const PROJECTS = [
     tagline: "Qizlar uchun ko'nikma va liderlik",
     category: "women",
     icon: Crown,
+    logo: "gov.uz",
     glow: "244,114,182",
     status: "active",
     description:
@@ -97,6 +106,7 @@ export const PROJECTS = [
     tagline: "Raqamli savodxonlik va kitobxonlik",
     category: "education",
     icon: BookOpen,
+    logo: "mutolaa.com",
     glow: "34,197,94",
     status: "active",
     description:
@@ -114,6 +124,7 @@ export const PROJECTS = [
     tagline: "Shaxmat va intellektual rivojlanish",
     category: "culture",
     icon: Trophy,
+    logo: "uzchess.uz",
     glow: "250,204,21",
     status: "active",
     description:
@@ -131,6 +142,7 @@ export const PROJECTS = [
     tagline: "IT mutaxassislar tayyorlash dasturi",
     category: "it",
     icon: Code2,
+    logo: "uzbekcoders.uz",
     glow: "34,211,238",
     status: "recruiting",
     description:
@@ -148,6 +160,7 @@ export const PROJECTS = [
     tagline: "Ehtiyojmand yoshlarni qo'llab-quvvatlash",
     category: "education",
     icon: HeartPulse,
+    logo: "yoshlardaftari.uz",
     glow: "248,113,113",
     status: "active",
     description:
@@ -165,6 +178,7 @@ export const PROJECTS = [
     tagline: "Madaniyat, sport, IT, kitobxonlik, bandlik",
     category: "culture",
     icon: Music4,
+    logo: "yoshlar.gov.uz",
     glow: "192,132,252",
     status: "active",
     description:
@@ -182,6 +196,7 @@ export const PROJECTS = [
     tagline: "Kontrakt va olimpiada qo'llab-quvvatlash",
     category: "education",
     icon: GraduationCap,
+    logo: "yoshlar.gov.uz",
     glow: "34,197,94",
     status: "recruiting",
     description:
@@ -199,6 +214,7 @@ export const PROJECTS = [
     tagline: "Tadbirkorlikka kirish va mikrogrant",
     category: "startup",
     icon: Globe2,
+    logo: "yoshlar.gov.uz",
     glow: "52,211,153",
     status: "upcoming",
     description:
@@ -216,6 +232,7 @@ export const PROJECTS = [
     tagline: "Dizayn, san'at va kreativ kasblar",
     category: "culture",
     icon: Palette,
+    logo: "yoshlar.gov.uz",
     glow: "251,191,36",
     status: "active",
     description:

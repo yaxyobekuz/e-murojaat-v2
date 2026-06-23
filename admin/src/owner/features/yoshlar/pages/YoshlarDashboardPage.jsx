@@ -54,7 +54,7 @@ const YoshlarDashboardPage = () => {
             <div className="flex items-center gap-2">
               <span className="size-2 animate-pulse rounded-full bg-cyan-400" />
               <h1 className="bg-gradient-to-r from-cyan-200 via-white to-blue-200 bg-clip-text text-xl font-bold tracking-tight text-transparent">
-                Yoshlar Command Center
+                Yoshlar Analitikasi
               </h1>
             </div>
             <p className="mt-0.5 text-[12px] text-white/45">

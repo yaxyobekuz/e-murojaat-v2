@@ -69,7 +69,7 @@ const topbarModules = [
     icon: Users,
     base: "/owner/yoshlar",
     items: [
-      { title: "Command Center", url: "/owner/yoshlar", end: true },
+      { title: "Analitika", url: "/owner/yoshlar", end: true },
       { title: "Loyihalar", url: "/owner/yoshlar/loyihalar" },
     ],
   },

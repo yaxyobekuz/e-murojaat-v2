@@ -5,6 +5,7 @@ import { Users, GraduationCap, MapPin, ArrowRight } from "lucide-react";
 
 import GlassStatusBadge from "@/shared/components/ui/glass/GlassStatusBadge";
 import GlowCard from "./ui/GlowCard";
+import ProjectLogo from "./ProjectLogo";
 import { PROJECT_CATEGORIES, PROJECT_STATUS } from "../mock/youth.projects";
 
 const compact = (n) => {
@@ -22,19 +23,13 @@ const Mini = ({ icon: Icon, value, label }) => (
 );
 
 const ProjectCard = ({ project, onOpen }) => {
-  const Icon = project.icon;
   const cat = PROJECT_CATEGORIES[project.category];
   const st = PROJECT_STATUS[project.status];
 
   return (
     <GlowCard glow={project.glow} className="flex h-full flex-col">
       <div className="flex items-start justify-between gap-2">
-        <span
-          className="grid size-11 place-items-center rounded-2xl"
-          style={{ background: `rgba(${project.glow},0.14)`, color: `rgb(${project.glow})`, boxShadow: `0 0 18px rgba(${project.glow},0.35)` }}
-        >
-          <Icon className="size-5" strokeWidth={2} />
-        </span>
+        <ProjectLogo project={project} size={44} iconSize={20} />
         <GlassStatusBadge tone={st.tone}>{st.label}</GlassStatusBadge>
       </div>
 
