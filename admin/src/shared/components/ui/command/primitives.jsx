@@ -291,8 +291,9 @@ export const MahallaMap = ({ blocks, accent, legend }) => {
 // ── Root wrapper (manba kontekstini ta'minlaydi) ──
 export const CmdRoot = ({ accent, system = "Ma'lumotlar bazasi", place = "", children }) => (
   <SourceContext.Provider value={{ system, place }}>
-    <div className="flex flex-col gap-3 rounded-2xl p-3"
-      style={{ background: `radial-gradient(circle at 50% 0%, ${hexA(accent, 0.06)}, hsl(var(--background)) 60%)`, backgroundImage: "linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)", backgroundSize: "100% 100%, 34px 34px, 34px 34px" }}>
+    {/* dark class — Smart Center har doim to'q (app light rejimda ham buzilmaydi) */}
+    <div className="dark flex flex-col gap-3 rounded-2xl p-3 text-foreground"
+      style={{ background: `radial-gradient(circle at 50% 0%, ${hexA(accent, 0.08)}, #070b14 62%)`, backgroundImage: "linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)", backgroundSize: "100% 100%, 34px 34px, 34px 34px" }}>
       {children}
     </div>
   </SourceContext.Provider>
@@ -379,6 +380,17 @@ const SENSOR_META = {
   co: { label: "CO", unit: "ppm", max: 400, icon: AlertTriangle, color: "#a78bfa" },
 };
 const fmtS = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+const UNITS = [
+  { n: "Brigada-1 (ATs-40)", s: "Joyida" }, { n: "Brigada-2 (AN-50)", s: "Yo'lda" },
+  { n: "Tez yordam", s: "Yo'lda" }, { n: "IIB ekipaji", s: "Chaqirildi" },
+];
+const LOG = [
+  { t: "03:14", m: "Chaqiruv qabul qilindi — Sanoat zonasi" },
+  { t: "03:15", m: "Brigada-1 yo'lga chiqdi" },
+  { t: "03:17", m: "Suv manbai aniqlandi (gidrant-14)" },
+  { t: "03:19", m: "Brigada-1 joyiga yetib bordi" },
+  { t: "03:20", m: "O'chirish ishlari boshlandi" },
+];
 
 export const DispatchConsole = ({ incidents, accent }) => {
   const [id, setId] = useState(incidents[0]?.id);
@@ -468,6 +480,35 @@ export const DispatchConsole = ({ incidents, accent }) => {
               </div>
             );
           })}
+        </div>
+
+        {/* yo'naltirilgan kuchlar + voqealar jurnali */}
+        <div className="grid flex-1 gap-2 sm:grid-cols-2">
+          <div className="rounded-lg border border-white/8 bg-white/[0.02] p-2.5">
+            <div className="mb-2 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-foreground/45"><Truck className="size-3" style={{ color: accent }} /> Yo'naltirilgan kuchlar</div>
+            <div className="flex flex-col gap-1">
+              {UNITS.map((u, i) => {
+                const c = u.s === "Joyida" ? "#22c55e" : u.s === "Yo'lda" ? accent : "#94a3b8";
+                return (
+                  <div key={i} className="flex items-center justify-between rounded px-2 py-1.5 text-[11px]" style={{ background: hexA(c, 0.07) }}>
+                    <span className="flex items-center gap-1.5 text-foreground/80"><span className="size-1.5 rounded-full" style={{ background: c }} /> {u.n}</span>
+                    <span className="text-[10px] font-medium" style={{ color: c }}>{u.s}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          <div className="rounded-lg border border-white/8 bg-white/[0.02] p-2.5">
+            <div className="mb-2 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-foreground/45"><Navigation className="size-3" style={{ color: accent }} /> Voqealar jurnali</div>
+            <div className="flex flex-col gap-2">
+              {LOG.map((l, i) => (
+                <div key={i} className="flex items-start gap-2 text-[10.5px]">
+                  <span className="shrink-0 font-mono text-foreground/35">{l.t}</span>
+                  <span className="flex items-start gap-1.5 text-foreground/75"><span className="mt-1 size-1.5 shrink-0 rounded-full" style={{ background: accent }} /> {l.m}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
