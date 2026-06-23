@@ -4,7 +4,7 @@ import { Globe2 } from "lucide-react";
 
 import GlassCard from "@/shared/components/ui/glass/GlassCard";
 
-const Map3D = lazy(() => import("./Map3D"));
+const MapboxMap = lazy(() => import("./MapboxMap"));
 
 const Fallback = () => (
   <div className="grid h-full w-full place-items-center rounded-xl bg-card text-foreground/40">
@@ -20,20 +20,20 @@ const MapSection = () => (
           <Globe2 className="size-[18px]" strokeWidth={2} />
         </span>
         <div>
-          <h3 className="text-sm font-semibold">Photorealistic 3D kadastr xaritasi</h3>
+          <h3 className="text-sm font-semibold">Interaktiv 3D kadastr xaritasi</h3>
           <p className="mt-0.5 text-xs text-foreground/45">
-            Sarnovul MFY, Baliqchi tumani, Andijon — markerni bosib obyekt ma'lumotini ko'ring
+            Sarnovul MFY, Baliqchi tumani, Andijon — uchastka yoki binoni bosib ma'lumotini ko'ring
           </p>
         </div>
       </div>
       <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[11px] font-medium text-emerald-400">
-        Jonli ko'rinish
+        Mapbox GL · Jonli
       </span>
     </div>
 
-    <div className="mt-3 h-[460px] w-full">
+    <div className="mt-3 h-[560px] w-full">
       <Suspense fallback={<Fallback />}>
-        <Map3D />
+        <MapboxMap />
       </Suspense>
     </div>
   </GlassCard>
