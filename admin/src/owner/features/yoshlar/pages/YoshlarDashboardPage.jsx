@@ -37,8 +37,10 @@ const YoshlarDashboardPage = () => {
   };
 
   return (
-    <div className="relative min-h-[calc(100vh-7rem)] w-full overflow-hidden rounded-2xl border border-white/10 bg-[radial-gradient(120%_120%_at_50%_0%,#0d1424_0%,#070a12_60%)] p-4">
-      {/* fon grid + glow */}
+    <div className="relative min-h-[calc(100vh-7rem)] w-full overflow-hidden rounded-2xl border border-cyan-400/15 bg-[#070a12] p-4">
+      {/* opaque dark base — global purple fonni to'sadi */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_120%_at_50%_0%,#0d1424_0%,#070a12_60%)]" />
+      {/* fon grid + cyan glow (modul aksenti) */}
       <div className="pointer-events-none absolute inset-0 opacity-[0.18] [background-image:linear-gradient(rgba(6,182,212,0.18)_1px,transparent_1px),linear-gradient(90deg,rgba(6,182,212,0.18)_1px,transparent_1px)] [background-size:46px_46px]" />
       <div className="pointer-events-none absolute -left-32 top-10 size-72 rounded-full bg-cyan-500/15 blur-[120px]" />
       <div className="pointer-events-none absolute -right-24 bottom-10 size-80 rounded-full bg-blue-600/15 blur-[120px]" />

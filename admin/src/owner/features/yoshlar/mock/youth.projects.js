@@ -124,7 +124,7 @@ export const PROJECTS = [
     tagline: "Shaxmat va intellektual rivojlanish",
     category: "culture",
     icon: Trophy,
-    logo: "uzchess.uz",
+    logo: "uzchesss.uz",
     glow: "250,204,21",
     status: "active",
     description:

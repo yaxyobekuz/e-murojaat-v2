@@ -1,24 +1,12 @@
-// "Live" hisoblagich — yuklanganda 0 dan o'sadi (useCountUp), keyin mock interval bilan
-// mayda tebranib turadi (real-time tuyg'usi). live=false bo'lsa faqat count-up bo'ladi.
-import { useEffect, useState } from "react";
-
+// Hisoblagich — yuklanganda 0 dan target qiymatga bir marta o'sadi (count-up).
+// Tebranish YO'Q — value o'zgarmasa qayta animatsiya bo'lmaydi (barqaror).
 import { useCountUp } from "@/shared/components/ui/counter/AnimatedCounter";
 
 const fmt = (n) => Math.round(n).toLocaleString("uz-UZ");
 
-const LiveCounter = ({ value, live = true, jitter = 0.0015, suffix = "", className = "" }) => {
-  // live tebranish — value atrofida mayda ofset (0 = ofsetsiz)
-  const [wobble, setWobble] = useState(0);
-  const display = useCountUp(value + wobble, 1200);
-
-  useEffect(() => {
-    if (!live) return undefined;
-    const id = setInterval(() => {
-      setWobble(Math.round(value * jitter * Math.sin(Date.now() / 900)));
-    }, 2600);
-    return () => clearInterval(id);
-  }, [value, live, jitter]);
-
+// live prop saqlanadi (API mosligi uchun), lekin endi tebranishga sabab bo'lmaydi.
+const LiveCounter = ({ value, suffix = "", className = "" }) => {
+  const display = useCountUp(value, 1200);
   return (
     <span className={className}>
       {fmt(display)}

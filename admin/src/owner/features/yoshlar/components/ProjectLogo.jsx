@@ -1,4 +1,6 @@
-// Loyiha logosi — rasmiy domen favikoni. Yuklanmasa lucide ikonkasiga qaytadi.
+// Loyiha logosi — rasmiy domen favikoni, toza oq/och tagchada (brend o'z rangida).
+// Glass kartaga ozoda 'badge' bo'lib tushadi: accent halqa + yumshoq glow.
+// Yuklanmasa lucide ikonkasiga qaytadi.
 import { useState } from "react";
 
 import { projectLogo } from "../mock/youth.projects";
@@ -10,13 +12,12 @@ const ProjectLogo = ({ project, size = 44, iconSize = 20 }) => {
 
   return (
     <span
-      className="grid place-items-center overflow-hidden rounded-2xl"
+      className="grid place-items-center overflow-hidden rounded-2xl bg-white/95 ring-1"
       style={{
         width: size,
         height: size,
-        background: `rgba(${project.glow},0.14)`,
-        color: `rgb(${project.glow})`,
         boxShadow: `0 0 18px rgba(${project.glow},0.35)`,
+        "--tw-ring-color": `rgba(${project.glow},0.45)`,
       }}
     >
       {showLogo ? (
@@ -28,7 +29,7 @@ const ProjectLogo = ({ project, size = 44, iconSize = 20 }) => {
           className="size-2/3 object-contain"
         />
       ) : (
-        <Icon style={{ width: iconSize, height: iconSize }} strokeWidth={2} />
+        <Icon style={{ width: iconSize, height: iconSize, color: `rgb(${project.glow})` }} strokeWidth={2} />
       )}
     </span>
   );
