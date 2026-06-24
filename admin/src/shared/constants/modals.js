@@ -16,4 +16,6 @@ export const MODAL = Object.freeze({
   MUROJAAT_ORG_CREATE: "murojaat:orgCreate",
 
   MSK_APPEAL_DETAIL: "msk:appealDetail",
+
+  GAZ_STREET_DETAIL: "gaz:streetDetail",
 });

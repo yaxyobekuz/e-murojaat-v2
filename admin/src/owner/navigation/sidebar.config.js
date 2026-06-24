@@ -1,4 +1,4 @@
-import { LayoutDashboard, Trees, Users, Home, Landmark, Map, GraduationCap, Shield, Flame, Store, TriangleAlert, Layers, Truck, Droplets, TreePine, Sparkles, Zap, Wrench, ClipboardList } from "lucide-react";
+import { LayoutDashboard, Trees, Users, Home, Landmark, Map, GraduationCap, Shield, Flame, Store, TriangleAlert, Layers, Truck, Droplets, TreePine, Sparkles, Zap, Wrench, ClipboardList, Fuel, Route as RouteIcon } from "lucide-react";
 
 const ownerSidebar = [
   {
@@ -70,6 +70,15 @@ const ownerSidebar = [
     items: [
       { title: "Analitika", url: "/owner/msk", icon: Home },
       { title: "Arizalar", url: "/owner/msk/arizalar", icon: ClipboardList },
+    ],
+  },
+  {
+    key: "gaz",
+    title: "Gaz ta'minoti",
+    icon: Fuel,
+    items: [
+      { title: "Analitika", url: "/owner/gaz", icon: Home },
+      { title: "Ko'chalar", url: "/owner/gaz/kochalar", icon: RouteIcon },
     ],
   },
 ];
