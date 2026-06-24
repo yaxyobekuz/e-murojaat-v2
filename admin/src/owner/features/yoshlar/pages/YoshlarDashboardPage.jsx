@@ -16,6 +16,7 @@ import SectionsStrip from "../components/SectionsStrip";
 import YouthRadar from "../components/YouthRadar";
 import YouthRegistry from "../components/YouthRegistry";
 import GrantTracker from "../components/GrantTracker";
+import { YouthReforms } from "../components/YouthReforms";
 
 const YoshlarDashboardPage = () => {
   const { activeId, mission, missionIdx, setField, setFields } = useObjectState({
@@ -143,6 +144,15 @@ const YoshlarDashboardPage = () => {
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
           <YouthRegistry />
           <GrantTracker />
+        </div>
+
+        {/* Islohotlar — bandlik, tashabbusli budjet, El-yurt umidi, Mehribonlik uyi */}
+        <div>
+          <div className="mb-2 flex items-center gap-2">
+            <h2 className="text-[15px] font-semibold text-foreground">Davlat islohotlari</h2>
+            <span className="text-[12px] text-foreground/40">bandlik · stipendiya · ijtimoiy himoya</span>
+          </div>
+          <YouthReforms />
         </div>
       </div>
 

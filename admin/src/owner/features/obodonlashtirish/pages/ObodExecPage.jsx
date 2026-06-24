@@ -3,7 +3,7 @@
 import {
   Truck, Droplets, TreePine, Sparkles, Gauge, Wind, Cloud, Ruler, Boxes, Award, Activity,
   CheckCircle2, AlertTriangle, Clock, ListChecks, Target, Database, Leaf, Sprout, Users, Trophy,
-  Waypoints, MapPin, Radio, ScanLine, ShieldCheck,
+  Waypoints, MapPin, Radio, ScanLine, ShieldCheck, Vote, Wallet, MessageSquareWarning,
 } from "lucide-react";
 
 import { formatMoney } from "@/shared/utils/formatMoney";
@@ -24,15 +24,24 @@ import { GasFlow } from "../components/insight/GasFlow";
 import { ObodRealMap } from "../components/insight/ObodRealMap";
 import { TreePassport } from "../components/insight/TreePassport";
 import { RatingTable } from "../components/insight/RatingTable";
+import { ParticipatoryBudget } from "../components/insight/ParticipatoryBudget";
+import { EcoCitizen } from "../components/insight/EcoCitizen";
+import { CitizenReports } from "../components/insight/CitizenReports";
 import { treeSummary } from "../mock/treePassport.data";
 import { ratingSummary } from "../mock/operatorRating.data";
+import { pbSummary } from "../mock/participatoryBudget.data";
+import { ecoSummary } from "../mock/ecoCitizen.data";
+import { reportsSummary } from "../mock/citizenReports.data";
 
 const PLACE = "Baliqchi tumani, Andijon";
-const C = { exec: "#10b981", axlat: "#22d3ee", gaz: "#3b82f6", ym: "#22c55e", hashar: "#b794f6", live: "#34d399", rating: "#f59e0b" };
+const C = { exec: "#10b981", axlat: "#22d3ee", gaz: "#3b82f6", ym: "#22c55e", hashar: "#b794f6", live: "#34d399", rating: "#f59e0b", budget: "#f59e0b", eco: "#22c55e", reports: "#8b5cf6" };
 
 const NAV = [
   { id: "live", label: "Jonli kuzatuv", icon: Radio, color: C.live },
   { id: "exec", label: "Umumiy", icon: Gauge, color: C.exec },
+  { id: "budget", label: "Tashabbusli budjet", icon: Vote, color: C.budget },
+  { id: "reports", label: "Xalq nazorati", icon: MessageSquareWarning, color: C.reports },
+  { id: "eco", label: "Eko-faol fuqaro", icon: Leaf, color: C.eco },
   { id: "axlat", label: "Axlat", icon: Truck, color: C.axlat },
   { id: "gaz", label: "Gaz mashinasi", icon: Droplets, color: C.gaz },
   { id: "ym", label: "Yashil makon", icon: TreePine, color: C.ym },
@@ -91,6 +100,48 @@ const ObodExecPage = () => (
       <Reveal i={0}><Panel title="AI ijroiya xulosasi" icon={Activity} accent={C.exec}><AIInsightPanel insights={execInsights} accent={C.exec} /></Panel></Reveal>
       <Reveal i={1}><Panel title="Tuman yutuqlari" icon={Award} accent={C.exec}><BadgeStrip badges={obodBadges} /></Panel></Reveal>
     </div>
+
+    {/* ══════════ TASHABBUSLI BUDJET ══════════ */}
+    <SectionBanner id="budget" icon={Vote} title="Tashabbusli budjet" sub="Fuqarolar loyihalarni taklif qiladi va ovoz beradi · openbudget.uz" accent={C.budget} />
+    <Kpis>
+      <InsightCard i={0} icon={Vote} label="Jami loyihalar" value={pbSummary.total} accent={C.budget}
+        equivalents={[{ icon: "🗳️", text: `${pbSummary.voting} ta ovoz berilmoqda` }]} />
+      <InsightCard i={1} icon={Users} label="Jami ovozlar" value={pbSummary.totalVotes} accent={C.budget}
+        equivalents={[{ icon: "👤", text: "«Bir fuqaro, bir ovoz»" }]} />
+      <InsightCard i={2} icon={CheckCircle2} label="G'olib loyihalar" value={pbSummary.won} accent="#22c55e"
+        equivalents={[{ icon: "🏗️", text: "Moliyalashtirildi" }]} />
+      <InsightCard i={3} icon={Wallet} label="Ajratilgan budjet" value={pbSummary.allocated} formatter={formatMoney} accent={C.budget}
+        equivalents={[{ icon: "💰", text: "Mahalla loyihalariga" }]} />
+    </Kpis>
+    <Reveal i={0}><Panel title="Loyihalar — ovoz berish" icon={Vote} accent={C.budget} source="openbudget.uz uslubi (demo)" bodyClass="p-0"><ParticipatoryBudget /></Panel></Reveal>
+
+    {/* ══════════ XALQ NAZORATI ══════════ */}
+    <SectionBanner id="reports" icon={MessageSquareWarning} title="Xalq nazorati — fuqaro shikoyatlari" sub="Foto + manzil bilan xabar · fuqaro tasdiqlashi bilan yopiladi · xalqnazorati.uz" accent={C.reports} />
+    <Kpis>
+      <InsightCard i={0} icon={MessageSquareWarning} label="Jami shikoyat" value={reportsSummary.total} accent={C.reports}
+        equivalents={[{ icon: "📋", text: `${reportsSummary.active} ta jarayonda` }]} />
+      <InsightCard i={1} icon={CheckCircle2} label="Fuqaro tasdiqladi" value={reportsSummary.confirmedPct} suffix="%" accent="#22c55e"
+        equivalents={[{ icon: "✅", text: `${reportsSummary.confirmed} ta yopildi` }]} />
+      <InsightCard i={2} icon={AlertTriangle} label="Muddati o'tgan" value={reportsSummary.overdue} accent="#ef4444"
+        equivalents={[{ icon: "⏰", text: "24/72 soat SLA" }]} />
+      <InsightCard i={3} icon={Clock} label="O'rtacha javob" value={reportsSummary.avgSla} suffix=" soat" accent={C.reports}
+        equivalents={[{ icon: "⚡", text: "Hal qilish vaqti" }]} />
+    </Kpis>
+    <Reveal i={0}><Panel title="Shikoyatlar — foto va holat" icon={MessageSquareWarning} accent={C.reports} source="xalqnazorati.uz uslubi (demo)" bodyClass="p-0"><CitizenReports /></Panel></Reveal>
+
+    {/* ══════════ EKO-FAOL FUQARO ══════════ */}
+    <SectionBanner id="eco" icon={Leaf} title="Eko-faol fuqaro" sub="Oilalar eko-ballari · «Yashil oila» status · mukofotlar · ecofaolfuqaro.uz" accent={C.eco} />
+    <Kpis>
+      <InsightCard i={0} icon={Leaf} label="Eko-ballar (jami)" value={ecoSummary.totalPoints} accent={C.eco}
+        equivalents={[{ icon: "🌳", text: `${ecoSummary.totalTrees} daraxt ekilgan` }]} />
+      <InsightCard i={1} icon={ShieldCheck} label="Yashil oilalar" value={ecoSummary.greenFamilies} accent="#22c55e"
+        equivalents={[{ icon: "🌿", text: `${ecoSummary.families} oiladan` }]} />
+      <InsightCard i={2} icon={Sprout} label="Quyosh panellari" value={ecoSummary.totalSolar} suffix=" kW" accent="#eab308"
+        equivalents={[{ icon: "☀️", text: "+100 ball/kW" }]} />
+      <InsightCard i={3} icon={Award} label="Mukofotlar" value={4} accent={C.eco}
+        equivalents={[{ icon: "🚗", text: "Elektromobil · velosiped" }]} />
+    </Kpis>
+    <Reveal i={0}><Panel title="Eko-faollik reytingi va ball tizimi" icon={Leaf} accent={C.eco} source="ecofaolfuqaro.uz uslubi (demo)" bodyClass="p-0"><EcoCitizen /></Panel></Reveal>
 
     {/* ══════════ AXLAT ══════════ */}
     <SectionBanner id="axlat" icon={Truck} title="Axlat mashinasi" sub="Qattiq maishiy chiqindi — VM 95/648-son" accent={C.axlat} />

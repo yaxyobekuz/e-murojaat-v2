@@ -54,8 +54,8 @@ export const RatingTable = () => {
         </div>
       )}
 
-      <div className="overflow-hidden rounded-lg border border-[rgb(var(--card-border))]">
-        <table className="w-full text-[12px]">
+      <div className="glass-table overflow-hidden rounded-lg border border-[rgb(var(--card-border))]">
+        <table className="w-full text-[12px] [&_tbody_tr]:bg-transparent [&_tbody_tr:last-child]:bg-transparent">
           <thead className="bg-card">
             <tr className="border-b border-[rgb(var(--card-border))] text-foreground/55">
               <th className="px-3 py-2 text-left font-medium">#</th>
