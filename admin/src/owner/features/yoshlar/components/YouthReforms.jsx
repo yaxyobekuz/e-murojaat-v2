@@ -1,6 +1,7 @@
-// Yoshlar islohotlari — 4 panel: Bandlik dasturlari, Tashabbusli budjet,
-// El-yurt umidi, Mehribonlik uyi bitiruvchilari. Theme-aware.
-import { Briefcase, Vote, GraduationCap, HeartHandshake, Home, BookOpen, Globe2 } from "lucide-react";
+// Yoshlar islohotlari — STATISTIKA EMAS. Animatsiyali metaforalar:
+// Bandlik = oqar voronka, El-yurt umidi = dunyo xaritasida uchish, Mehribonlik = qalb to'lishi.
+import { motion } from "framer-motion";
+import { Briefcase, GraduationCap, HeartHandshake, Vote, Home, BookOpen, Plane } from "lucide-react";
 
 import { cn } from "@/shared/utils/cn";
 import { formatMoney } from "@/shared/utils/formatMoney";
@@ -12,15 +13,6 @@ import {
   ORPHAN_GRADUATES, orphanSummary,
 } from "../mock/reforms.data";
 
-const TONE = {
-  done: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30",
-  new: "bg-blue-500/15 text-blue-600 dark:text-blue-400 border-blue-500/30",
-  progress: "bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30",
-};
-const Chip = ({ tone, children }) => (
-  <span className={cn("inline-flex items-center rounded-md border px-1.5 py-0.5 text-[10px] font-medium whitespace-nowrap", TONE[tone] || TONE.new)}>{children}</span>
-);
-
 const Head = ({ icon: Icon, glow, title, sub }) => (
   <div className="mb-3 flex items-center gap-2">
     <span className="grid size-8 place-items-center rounded-lg" style={{ background: `rgba(${glow},0.15)`, color: `rgb(${glow})` }}><Icon className="size-4" /></span>
@@ -31,81 +23,45 @@ const Head = ({ icon: Icon, glow, title, sub }) => (
   </div>
 );
 
-// ── 1. Bandlik dasturlari ──
-const Employment = () => (
-  <GlowCard tilt={false} glow="52,211,153" className="flex flex-col">
-    <Head icon={Briefcase} glow="52,211,153" title="Bandlik dasturlari" sub="Yoshlar biznesi · Kelajakka qadam · maqsad vs erishilgan" />
-    <div className="mb-3 rounded-xl border border-[rgb(var(--card-border))] bg-muted/40 px-3 py-2 text-center">
-      <span className="font-mono text-[18px] font-bold tabular-nums text-foreground">{employmentSummary.reached.toLocaleString("uz-UZ")}</span>
-      <span className="text-foreground/45"> / {employmentSummary.target.toLocaleString("uz-UZ")} yosh ish bilan ta'minlandi ({employmentSummary.pct}%)</span>
-    </div>
-    <div className="space-y-2.5">
-      {EMPLOYMENT_PROGRAMS.map((p) => {
-        const pct = Math.round((p.reached / p.target) * 100);
-        return (
-          <div key={p.key}>
-            <div className="mb-1 flex items-center justify-between text-[11.5px]">
-              <span className="flex items-center gap-1 text-foreground/75">{p.icon} {p.name}</span>
-              <span className="font-mono tabular-nums" style={{ color: p.color }}>{p.reached.toLocaleString("uz-UZ")} / {p.target.toLocaleString("uz-UZ")}</span>
-            </div>
-            <div className="h-2 overflow-hidden rounded-full bg-foreground/5">
-              <div className="h-full rounded-full" style={{ width: `${pct}%`, background: p.color, boxShadow: `0 0 8px ${p.color}80` }} />
-            </div>
-          </div>
-        );
-      })}
-    </div>
-    {/* voronka */}
-    <div className="mt-3 border-t border-[rgb(var(--card-border))] pt-3">
-      <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-foreground/45">Bandlik voronkasi</div>
-      <div className="space-y-1">
-        {EMPLOYMENT_FUNNEL.map((f, i) => (
-          <div key={i} className="flex items-center gap-2">
-            <span className="w-32 shrink-0 text-[11px] text-foreground/65">{f.stage}</span>
-            <div className="h-4 flex-1 overflow-hidden rounded bg-foreground/5">
-              <div className="h-full rounded" style={{ width: `${(f.value / EMPLOYMENT_FUNNEL[0].value) * 100}%`, background: f.color }} />
-            </div>
-            <span className="w-16 shrink-0 text-right font-mono text-[11px] tabular-nums text-foreground/70">{(f.value / 1000).toFixed(0)}k</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  </GlowCard>
-);
-
-// ── 2. Tashabbusli budjet (yoshlar) ──
-const Initiatives = () => {
-  const maxV = Math.max(...YOUTH_INITIATIVES.map((p) => p.votes), 1);
+// ── 1. BANDLIK — oqar voronka (har bosqich torayadi, oqim harakatlanadi) ──
+const Employment = () => {
+  const W = 420, top = EMPLOYMENT_FUNNEL[0].value;
   return (
-    <GlowCard tilt={false} glow="245,158,11" className="flex flex-col">
-      <Head icon={Vote} glow="245,158,11" title="Tashabbusli budjet" sub="Yosh g'oyalarini moliyalashtirish · ovoz berish" />
-      <div className="mb-3 grid grid-cols-3 gap-2 text-center">
-        {[
-          { k: "Loyihalar", v: initiativeSummary.total },
-          { k: "Ovozlar", v: initiativeSummary.totalVotes.toLocaleString("uz-UZ") },
-          { k: "Ajratildi", v: formatMoney(initiativeSummary.allocated), small: true },
-        ].map((m, i) => (
-          <div key={i} className="rounded-xl border border-[rgb(var(--card-border))] bg-muted/40 px-2 py-2">
-            <div className={cn("font-mono font-bold tabular-nums text-foreground", m.small ? "text-[11px]" : "text-[15px]")}>{m.v}</div>
-            <div className="text-[9.5px] text-foreground/45">{m.k}</div>
-          </div>
-        ))}
+    <GlowCard tilt={false} glow="52,211,153" className="flex flex-col">
+      <Head icon={Briefcase} glow="52,211,153" title="Bandlik dasturlari" sub="Yoshlar oqimi: ro'yxat → o'qish → ish" />
+      <div className="mb-3 text-center text-[12px] text-foreground/60">
+        <span className="font-mono text-[20px] font-bold text-foreground">{employmentSummary.reached.toLocaleString("uz-UZ")}</span> yosh ish bilan ta'minlandi · <b className="text-emerald-600 dark:text-emerald-400">{employmentSummary.pct}%</b>
       </div>
-      <div className="max-h-[260px] space-y-1.5 overflow-y-auto">
-        {YOUTH_INITIATIVES.map((p) => (
-          <div key={p.id} className="rounded-lg border border-[rgb(var(--card-border))] bg-card p-2">
-            <div className="flex items-center justify-between">
-              <span className="text-[12px] font-medium text-foreground">{p.title}</span>
-              <Chip tone={p.status === "won" ? "done" : p.status === "voting" ? "new" : "progress"}>
-                {p.status === "won" ? "G'olib" : p.status === "voting" ? "Ovoz berilmoqda" : "Ko'rilmoqda"}
-              </Chip>
-            </div>
-            <div className="mt-1 flex items-center gap-2 text-[10.5px] text-foreground/50">
-              <span>{p.mahalla}</span>·<span>{p.votes.toLocaleString("uz-UZ")} ovoz</span>·<span className="font-mono">{formatMoney(p.cost)}</span>
-            </div>
-            <div className="mt-1 h-1 overflow-hidden rounded-full bg-foreground/5">
-              <div className="h-full rounded-full bg-amber-500" style={{ width: `${(p.votes / maxV) * 100}%` }} />
-            </div>
+      {/* voronka */}
+      <svg viewBox={`0 0 ${W} 200`} className="w-full">
+        {EMPLOYMENT_FUNNEL.map((f, i) => {
+          const wTop = (f.value / top) * W;
+          const wBot = (i < EMPLOYMENT_FUNNEL.length - 1 ? EMPLOYMENT_FUNNEL[i + 1].value : f.value * 0.8) / top * W;
+          const y = i * 48 + 6, h = 40;
+          const x1 = (W - wTop) / 2, x2 = (W - wBot) / 2;
+          return (
+            <g key={i}>
+              <motion.path d={`M${x1},${y} L${x1 + wTop},${y} L${x2 + wBot},${y + h} L${x2},${y + h} Z`}
+                initial={{ opacity: 0, scaleY: 0 }} animate={{ opacity: 1, scaleY: 1 }} transition={{ delay: i * 0.15, duration: 0.6 }}
+                fill={f.color} fillOpacity={0.35} stroke={f.color} strokeWidth={1.5} style={{ transformOrigin: `${W / 2}px ${y}px` }} />
+              {/* oqim nuqtalari (pastga harakat) */}
+              {[0, 1, 2].map((k) => (
+                <motion.circle key={k} cx={W / 2 + (k - 1) * 14} r={2.2} fill={f.color}
+                  animate={{ cy: [y, y + h], opacity: [0, 1, 0] }}
+                  transition={{ duration: 1.6, repeat: Infinity, delay: i * 0.2 + k * 0.4, ease: "easeIn" }} />
+              ))}
+              <text x={W / 2} y={y + h / 2 + 1} textAnchor="middle" dominantBaseline="middle" className="fill-foreground font-medium" style={{ fontSize: 10 }}>{f.stage}</text>
+              <text x={W / 2} y={y + h / 2 + 12} textAnchor="middle" dominantBaseline="middle" className="font-mono" style={{ fontSize: 9, fill: f.color }}>{(f.value / 1000).toFixed(0)}k</text>
+            </g>
+          );
+        })}
+      </svg>
+      {/* dasturlar mini */}
+      <div className="mt-2 grid grid-cols-2 gap-1.5">
+        {EMPLOYMENT_PROGRAMS.map((p) => (
+          <div key={p.key} className="flex items-center gap-1.5 rounded-lg border border-[rgb(var(--card-border))] bg-muted/40 px-2 py-1 text-[10.5px]">
+            <span>{p.icon}</span><span className="flex-1 truncate text-foreground/70">{p.name}</span>
+            <b className="font-mono" style={{ color: p.color }}>{Math.round((p.reached / p.target) * 100)}%</b>
           </div>
         ))}
       </div>
@@ -113,76 +69,133 @@ const Initiatives = () => {
   );
 };
 
-// ── 3. El-yurt umidi ──
+// ── 2. TASHABBUSLI BUDJET (yoshlar) — ovoz to'lqini ──
+const Initiatives = () => {
+  const maxV = Math.max(...YOUTH_INITIATIVES.map((p) => p.votes), 1);
+  return (
+    <GlowCard tilt={false} glow="245,158,11" className="flex flex-col">
+      <Head icon={Vote} glow="245,158,11" title="Tashabbusli budjet" sub="Yosh g'oyalari · ovoz balandligi" />
+      <div className="mb-2 text-center text-[12px] text-foreground/60">
+        <b className="font-mono text-foreground">{initiativeSummary.totalVotes.toLocaleString("uz-UZ")}</b> ovoz · <b className="text-amber-600 dark:text-amber-400">{formatMoney(initiativeSummary.allocated)}</b> ajratildi
+      </div>
+      {/* ovoz ustunlari (balandlik = ovoz) */}
+      <div className="flex items-end justify-between gap-1 px-1" style={{ height: 130 }}>
+        {[...YOUTH_INITIATIVES].sort((a, b) => b.votes - a.votes).map((p, i) => {
+          const h = Math.max(12, (p.votes / maxV) * 110);
+          const color = p.status === "won" ? "#22c55e" : p.status === "voting" ? "#f59e0b" : "#94a3b8";
+          return (
+            <div key={p.id} className="group relative flex flex-1 flex-col items-center justify-end" title={`${p.title} · ${p.votes} ovoz`}>
+              <span className="mb-0.5 font-mono text-[8px] tabular-nums text-foreground/50">{p.votes}</span>
+              <motion.div initial={{ height: 0 }} animate={{ height: h }} transition={{ delay: i * 0.06, type: "spring", stiffness: 120, damping: 16 }}
+                className="w-full rounded-t" style={{ background: `linear-gradient(0deg, ${color}, ${color}aa)`, boxShadow: `0 0 8px ${color}66` }} />
+            </div>
+          );
+        })}
+      </div>
+      <div className="mt-1.5 flex justify-around text-[8.5px] text-foreground/45">
+        <span>🟢 G'olib</span><span>🟡 Ovoz berilmoqda</span><span>⚪ Ko'rilmoqda</span>
+      </div>
+    </GlowCard>
+  );
+};
+
+// ── 3. EL-YURT UMIDI — dunyo xaritasida uchish ──
+const COUNTRY_POS = {
+  "AQSH": { x: 18, y: 42 }, "Buyuk Britaniya": { x: 46, y: 30 }, "Germaniya": { x: 50, y: 33 },
+  "Yaponiya": { x: 86, y: 44 }, "Janubiy Koreya": { x: 83, y: 46 }, "Singapur": { x: 78, y: 62 },
+  "Italiya": { x: 51, y: 40 }, "Fransiya": { x: 47, y: 36 },
+};
+const HOME = { x: 64, y: 40 }; // O'zbekiston (taxminiy)
+
 const Scholarships = () => (
   <GlowCard tilt={false} glow="34,211,238" className="flex flex-col">
-    <Head icon={GraduationCap} glow="34,211,238" title="El-yurt umidi" sub="Chet elda o'qish stipendiyalari" />
-    <div className="mb-3 grid grid-cols-3 gap-2 text-center">
-      {[
-        { icon: BookOpen, k: "O'qimoqda", v: scholarshipSummary.studying },
-        { icon: GraduationCap, k: "Tanlandi", v: scholarshipSummary.selected },
-        { icon: Globe2, k: "Davlatlar", v: scholarshipSummary.countries },
-      ].map((m, i) => (
-        <div key={i} className="rounded-xl border border-[rgb(var(--card-border))] bg-muted/40 px-2 py-2">
-          <m.icon className="mx-auto size-4 text-cyan-600 dark:text-cyan-400" />
-          <div className="mt-1 font-mono text-[16px] font-bold tabular-nums text-foreground">{m.v}</div>
-          <div className="text-[9.5px] text-foreground/45">{m.k}</div>
-        </div>
-      ))}
+    <Head icon={GraduationCap} glow="34,211,238" title="El-yurt umidi" sub="Talabalar dunyo bo'ylab uchmoqda" />
+    <div className="relative overflow-hidden rounded-xl border border-[rgb(var(--card-border))] bg-muted/30" style={{ height: 180 }}>
+      <svg viewBox="0 0 100 70" preserveAspectRatio="none" className="absolute inset-0 h-full w-full opacity-30">
+        {/* sodda kontinent shakllari */}
+        <rect x="10" y="30" width="20" height="20" rx="4" fill="hsl(var(--foreground)/0.15)" />
+        <rect x="42" y="26" width="22" height="20" rx="4" fill="hsl(var(--foreground)/0.15)" />
+        <rect x="74" y="38" width="18" height="22" rx="4" fill="hsl(var(--foreground)/0.15)" />
+      </svg>
+      <svg viewBox="0 0 100 70" className="absolute inset-0 h-full w-full">
+        {/* uy nuqtasi */}
+        <circle cx={HOME.x} cy={HOME.y} r={2} fill="#22d3ee" />
+        <text x={HOME.x} y={HOME.y - 3} textAnchor="middle" fontSize={2.4} className="fill-foreground/70">🇺🇿</text>
+        {/* uchish yo'llari + samolyot */}
+        {SCHOLARSHIPS.filter((s) => s.status === "studying").slice(0, 7).map((s, i) => {
+          const pos = COUNTRY_POS[s.country] || { x: 50, y: 35 };
+          return (
+            <g key={s.id}>
+              <path id={`fly-${i}`} d={`M${HOME.x},${HOME.y} Q${(HOME.x + pos.x) / 2},${Math.min(HOME.y, pos.y) - 12} ${pos.x},${pos.y}`}
+                fill="none" stroke={hexFly(i)} strokeWidth={0.4} strokeDasharray="1.5 1.5" opacity={0.6} />
+              <circle cx={pos.x} cy={pos.y} r={1.6} fill={hexFly(i)} />
+              <motion.g animate={{ offsetDistance: ["0%", "100%"] }} transition={{ duration: 3 + i * 0.4, repeat: Infinity, ease: "easeInOut", delay: i * 0.3 }}
+                style={{ offsetPath: `path("M${HOME.x},${HOME.y} Q${(HOME.x + pos.x) / 2},${Math.min(HOME.y, pos.y) - 12} ${pos.x},${pos.y}")`, offsetRotate: "auto" }}>
+                <text fontSize={3}>✈️</text>
+              </motion.g>
+            </g>
+          );
+        })}
+      </svg>
+      <div className="absolute left-2 top-2 rounded-lg bg-card/80 px-2 py-1 backdrop-blur-md">
+        <span className="font-mono text-[14px] font-bold text-cyan-600 dark:text-cyan-400">{scholarshipSummary.studying}</span>
+        <span className="text-[10px] text-foreground/55"> talaba · {scholarshipSummary.countries} davlat</span>
+      </div>
     </div>
-    <div className="max-h-[230px] space-y-1 overflow-y-auto">
-      {SCHOLARSHIPS.map((s) => (
-        <div key={s.id} className="flex items-center justify-between rounded-lg border border-[rgb(var(--card-border))] bg-card px-2.5 py-1.5">
-          <div className="leading-tight">
-            <div className="text-[12px] font-medium text-foreground">{s.name}</div>
-            <div className="text-[10px] text-foreground/50">{s.country} · {s.field} · {s.level}</div>
-          </div>
-          <Chip tone={s.status === "studying" ? "done" : s.status === "selected" ? "new" : "progress"}>
-            {s.status === "studying" ? "O'qimoqda" : s.status === "selected" ? "Tanlandi" : "Ariza"}
-          </Chip>
-        </div>
+    {/* davlatlar chiplari */}
+    <div className="mt-2 flex flex-wrap gap-1">
+      {SCHOLARSHIPS.slice(0, 8).map((s) => (
+        <span key={s.id} className="flex items-center gap-1 rounded-full border border-[rgb(var(--card-border))] bg-muted/40 px-2 py-0.5 text-[10px] text-foreground/70">
+          <Plane className="size-2.5 text-cyan-500" /> {s.name} → {s.country}
+        </span>
       ))}
     </div>
   </GlowCard>
 );
 
-// ── 4. Mehribonlik uyi bitiruvchilari ──
+// ── 4. MEHRIBONLIK UYI — qalb/qamrov to'lishi ──
+const CareHeart = ({ value, total, label, icon: Icon, color }) => {
+  const pct = Math.round((value / total) * 100);
+  return (
+    <div className="flex flex-col items-center">
+      <div className="relative size-20">
+        <svg viewBox="0 0 100 100" className="size-full">
+          <defs><clipPath id={`clip-${label}`}><path d="M50,88 C20,62 8,44 8,30 C8,16 18,8 30,8 C40,8 47,14 50,22 C53,14 60,8 70,8 C82,8 92,16 92,30 C92,44 80,62 50,88 Z" /></clipPath></defs>
+          <path d="M50,88 C20,62 8,44 8,30 C8,16 18,8 30,8 C40,8 47,14 50,22 C53,14 60,8 70,8 C82,8 92,16 92,30 C92,44 80,62 50,88 Z" fill="hsl(var(--muted))" />
+          <motion.rect x="0" width="100" clipPath={`url(#clip-${label})`} fill={color}
+            initial={{ y: 100, height: 0 }} animate={{ y: 100 - pct, height: pct }} transition={{ duration: 1.2, ease: "easeOut" }} />
+          <path d="M50,88 C20,62 8,44 8,30 C8,16 18,8 30,8 C40,8 47,14 50,22 C53,14 60,8 70,8 C82,8 92,16 92,30 C92,44 80,62 50,88 Z" fill="none" stroke={color} strokeWidth={3} />
+        </svg>
+        <div className="absolute inset-0 flex items-center justify-center"><Icon className="size-5" style={{ color }} /></div>
+      </div>
+      <div className="mt-1 font-mono text-[13px] font-bold tabular-nums text-foreground">{value}/{total}</div>
+      <div className="text-[10px] text-foreground/50">{label}</div>
+    </div>
+  );
+};
+
 const Orphans = () => (
   <GlowCard tilt={false} glow="168,139,250" className="flex flex-col">
-    <Head icon={HeartHandshake} glow="168,139,250" title="Mehribonlik uyi bitiruvchilari" sub="Uy-joy · ish · ta'lim qo'llab-quvvatlash" />
-    <div className="mb-3 grid grid-cols-3 gap-2 text-center">
-      {[
-        { icon: Home, k: "Uy-joy", v: `${orphanSummary.housing}/${orphanSummary.total}` },
-        { icon: Briefcase, k: "Ish bilan", v: `${orphanSummary.job}/${orphanSummary.total}` },
-        { icon: BookOpen, k: "O'qishda", v: `${orphanSummary.study}/${orphanSummary.total}` },
-      ].map((m, i) => (
-        <div key={i} className="rounded-xl border border-[rgb(var(--card-border))] bg-muted/40 px-2 py-2">
-          <m.icon className="mx-auto size-4 text-violet-600 dark:text-violet-400" />
-          <div className="mt-1 font-mono text-[14px] font-bold tabular-nums text-foreground">{m.v}</div>
-          <div className="text-[9.5px] text-foreground/45">{m.k}</div>
-        </div>
-      ))}
+    <Head icon={HeartHandshake} glow="168,139,250" title="Mehribonlik uyi bitiruvchilari" sub="G'amxo'rlik qamrovi to'lib bormoqda" />
+    <div className="grid grid-cols-3 gap-2 py-3">
+      <CareHeart value={orphanSummary.housing} total={orphanSummary.total} label="Uy-joy" icon={Home} color="#a78bfa" />
+      <CareHeart value={orphanSummary.job} total={orphanSummary.total} label="Ish bilan" icon={Briefcase} color="#34d399" />
+      <CareHeart value={orphanSummary.study} total={orphanSummary.total} label="O'qishda" icon={BookOpen} color="#22d3ee" />
     </div>
-    <div className="max-h-[230px] space-y-1 overflow-y-auto">
+    {/* bitiruvchilar */}
+    <div className="mt-1 flex flex-wrap gap-1.5">
       {ORPHAN_GRADUATES.map((o) => (
-        <div key={o.id} className="flex items-center justify-between rounded-lg border border-[rgb(var(--card-border))] bg-card px-2.5 py-1.5">
-          <div className="leading-tight">
-            <div className="text-[12px] font-medium text-foreground">{o.name} <span className="text-foreground/40">· {o.age} yosh</span></div>
-            <div className="flex gap-1 mt-0.5">
-              {o.housing && <span className="text-[9px]">🏠</span>}
-              {o.job && <span className="text-[9px]">💼</span>}
-              {o.study && <span className="text-[9px]">📚</span>}
-              <span className="text-[10px] text-foreground/45">{o.mahalla}</span>
-            </div>
-          </div>
-          <Chip tone={o.status === "full" ? "done" : o.status === "partial" ? "progress" : "new"}>
-            {o.status === "full" ? "To'liq qamrov" : o.status === "partial" ? "Qisman" : "Kutilmoqda"}
-          </Chip>
-        </div>
+        <span key={o.id} className="flex items-center gap-1 rounded-full border border-[rgb(var(--card-border))] bg-muted/40 px-2 py-0.5 text-[10px] text-foreground/70">
+          {o.name}
+          {o.housing && "🏠"}{o.job && "💼"}{o.study && "📚"}
+        </span>
       ))}
     </div>
   </GlowCard>
 );
+
+// hexFly — uchish yo'li ranglari
+function hexFly(i) { return ["#22d3ee", "#a78bfa", "#34d399", "#f59e0b", "#f472b6", "#60a5fa", "#fbbf24"][i % 7]; }
 
 export const YouthReforms = () => (
   <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
