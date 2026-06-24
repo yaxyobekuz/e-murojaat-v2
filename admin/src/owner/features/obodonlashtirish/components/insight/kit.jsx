@@ -280,3 +280,31 @@ export const SectionTitle = ({ children, accent }) => (
     <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/55">{children}</span>
   </div>
 );
+
+// ── Yirik bo'lim banneri (modullar orasida ajratuvchi) ──
+export const SectionBanner = ({ id, icon: Icon, title, sub, accent }) => (
+  <div id={id} className="flex items-center gap-3 scroll-mt-20 rounded-xl border px-4 py-2.5"
+    style={{ borderColor: hexA(accent, 0.25), background: `linear-gradient(90deg, ${hexA(accent, 0.1)}, transparent)` }}>
+    <span className="grid size-9 place-items-center rounded-xl" style={{ background: hexA(accent, 0.16), color: accent, boxShadow: `0 0 16px ${hexA(accent, 0.4)}` }}>
+      {Icon && <Icon className="size-[18px]" />}
+    </span>
+    <div className="leading-tight">
+      <div className="text-[14px] font-bold tracking-wide text-white">{title}</div>
+      {sub && <div className="text-[10.5px] text-white/45">{sub}</div>}
+    </div>
+  </div>
+);
+
+// ── Yopishqoq bo'lim navigatsiyasi (chiplar) ──
+export const AnchorNav = ({ items, accent }) => (
+  <div className="sticky top-2 z-20 -mx-1 flex flex-wrap gap-2 rounded-xl border border-white/[0.08] bg-black/60 px-2 py-2 backdrop-blur-xl">
+    {items.map((it) => (
+      <a key={it.id} href={`#${it.id}`}
+        className="flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-medium text-white/70 transition-colors hover:text-white"
+        style={{ borderColor: hexA(it.color || accent, 0.3) }}>
+        {it.icon && <it.icon className="size-3.5" style={{ color: it.color || accent }} />}
+        {it.label}
+      </a>
+    ))}
+  </div>
+);

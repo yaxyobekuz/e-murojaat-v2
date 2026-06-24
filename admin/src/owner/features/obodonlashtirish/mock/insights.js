@@ -161,6 +161,62 @@ export const obodBadges = (() => {
   ];
 })();
 
+// ───────────────────────── XARITA BLOKLARI (mahalla bo'yicha) ─────────────────────────
+const STATUS_RGB = { done: "#22c55e", late: "#f59e0b", missed: "#ef4444", new: "#3b82f6", dispatched: "#f59e0b", rejected: "#ef4444" };
+
+export const axlatMapBlocks = AXLAT_ROUTES.map((r) => ({
+  name: r.mahalla,
+  color: STATUS_RGB[r.status],
+  metric: r.status === "missed" ? "✕" : `${r.collectedVolume}m³`,
+  detail: `${r.name} · ${r.status === "missed" ? "kelmadi" : r.status === "late" ? "kechikdi" : "keldi"} · ${r.houses} xonadon`,
+}));
+export const axlatMapLegend = [
+  { color: "#22c55e", label: "Keldi" }, { color: "#f59e0b", label: "Kechikdi" }, { color: "#ef4444", label: "Kelmadi" },
+];
+
+export const assenMapBlocks = (() => {
+  const by = {};
+  ASSEN_ORDERS.forEach((o) => {
+    by[o.mahalla] = by[o.mahalla] || { n: 0, sla: 0, done: 0 };
+    by[o.mahalla].n += 1;
+    if (o.status === "done") { by[o.mahalla].sla += o.slaDays; by[o.mahalla].done += 1; }
+  });
+  return Object.entries(by).map(([name, v]) => {
+    const avg = v.done ? v.sla / v.done : 99;
+    const color = avg <= 1.5 ? "#22c55e" : avg <= 2.5 ? "#f59e0b" : "#ef4444";
+    return { name, color, metric: `${v.n}`, detail: `${v.n} buyurtma · o'rtacha ${v.done ? Math.round(avg * 10) / 10 : "—"} kun` };
+  });
+})();
+export const assenMapLegend = [
+  { color: "#22c55e", label: "Tez (<1.5 kun)" }, { color: "#f59e0b", label: "O'rta" }, { color: "#ef4444", label: "Sekin" },
+];
+
+export const ymMapBlocks = (() => {
+  const by = {};
+  YM_PLANTINGS.forEach((p) => {
+    by[p.mahalla] = by[p.mahalla] || { count: 0, surv: 0, n: 0 };
+    by[p.mahalla].count += p.count; by[p.mahalla].surv += p.survivalPct; by[p.mahalla].n += 1;
+  });
+  return Object.entries(by).map(([name, v]) => {
+    const surv = Math.round(v.surv / v.n);
+    const color = surv >= 90 ? "#22c55e" : surv >= 85 ? "#84cc16" : "#f59e0b";
+    return { name, color, metric: v.count.toLocaleString("uz-UZ"), detail: `${v.count.toLocaleString("uz-UZ")} ko'chat · ${surv}% tirik` };
+  });
+})();
+export const ymMapLegend = [
+  { color: "#22c55e", label: "≥90% tirik" }, { color: "#84cc16", label: "85-90%" }, { color: "#f59e0b", label: "<85%" },
+];
+
+export const hasharMapBlocks = HASHAR_RANKING.map((r) => ({
+  name: r.key,
+  color: r.value >= 90 ? "#22c55e" : r.value >= 75 ? "#84cc16" : r.value >= 65 ? "#f59e0b" : "#ef4444",
+  metric: `${r.value}`,
+  detail: `Tozalik reytingi: ${r.value} ball`,
+}));
+export const hasharMapLegend = [
+  { color: "#22c55e", label: "A'lo (≥90)" }, { color: "#84cc16", label: "Yaxshi" }, { color: "#f59e0b", label: "O'rta" }, { color: "#ef4444", label: "Past" },
+];
+
 // ───────────────────────── TUMAN SALOMATLIK INDEKSI ─────────────────────────
 // 4 modul ballarining vaznli o'rtachasi → 0..100
 export const districtHealth = (() => {

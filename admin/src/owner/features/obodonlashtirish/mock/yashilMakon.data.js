@@ -49,9 +49,17 @@ export const YM_PLANTINGS = Array.from({ length: 32 }, (_, i) => {
     count,
     entered,
     survivalPct,
+    lat,
+    lng,
     coords: `${lat}, ${lng}`,
   };
 });
+
+// Xarita uchun koordinata chegaralari (normalizatsiya)
+export const YM_BOUNDS = {
+  minLat: BASE_LAT - 0.024, maxLat: BASE_LAT + 0.024,
+  minLng: BASE_LNG - 0.03, maxLng: BASE_LNG + 0.03,
+};
 
 const totalPlanted = YM_PLANTINGS.reduce((s, p) => s + p.count, 0);
 
