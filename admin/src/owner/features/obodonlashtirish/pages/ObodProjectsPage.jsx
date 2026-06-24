@@ -28,7 +28,7 @@ const ProjectCard = ({ p, i }) => {
   return (
     <Reveal i={i}>
       <motion.div whileHover={{ y: -4 }} transition={{ type: "spring", stiffness: 280, damping: 22 }}
-        className="group relative h-full overflow-hidden rounded-2xl border bg-white/[0.03] p-4 backdrop-blur-xl"
+        className="group relative h-full overflow-hidden rounded-2xl border bg-foreground/[0.03] p-4 backdrop-blur-xl"
         style={{ borderColor: hexA(t.color, 0.18) }}>
         <div className="pointer-events-none absolute -right-8 -top-8 size-28 rounded-full opacity-30 blur-2xl transition-opacity group-hover:opacity-60"
           style={{ background: `radial-gradient(circle, ${hexA(t.color, 0.5)}, transparent 70%)` }} />
@@ -40,8 +40,8 @@ const ProjectCard = ({ p, i }) => {
               <t.icon className="size-[18px]" />
             </span>
             <div className="leading-tight">
-              <div className="text-[13px] font-semibold text-white">{p.name}</div>
-              <div className="text-[10.5px] text-white/45">{p.info.typeLabel}</div>
+              <div className="text-[13px] font-semibold text-foreground">{p.name}</div>
+              <div className="text-[10.5px] text-foreground/45">{p.info.typeLabel}</div>
             </div>
           </div>
           <span className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold" style={{ background: hexA(st.color, 0.16), color: st.color }}>{st.label}</span>
@@ -50,10 +50,10 @@ const ProjectCard = ({ p, i }) => {
         {/* progress */}
         <div className="relative mt-4">
           <div className="mb-1 flex items-center justify-between text-[10.5px]">
-            <span className="text-white/50">Bajarilishi</span>
+            <span className="text-foreground/50">Bajarilishi</span>
             <span className="font-mono font-bold tabular-nums" style={{ color: st.color }}>{p.info.progress}%</span>
           </div>
-          <div className="h-2 overflow-hidden rounded-full bg-white/5">
+          <div className="h-2 overflow-hidden rounded-full bg-foreground/5">
             <motion.div initial={{ width: 0 }} animate={{ width: `${p.info.progress}%` }} transition={{ delay: 0.2 + i * 0.04, duration: 0.9, ease: "easeOut" }}
               className="h-full rounded-full" style={{ background: `linear-gradient(90deg, ${hexA(st.color, 0.5)}, ${st.color})`, boxShadow: `0 0 10px ${hexA(st.color, 0.6)}` }} />
           </div>
@@ -61,21 +61,21 @@ const ProjectCard = ({ p, i }) => {
 
         {/* byudjet / sarflangan */}
         <div className="relative mt-4 grid grid-cols-2 gap-2">
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-2.5 py-2">
-            <div className="text-[9px] uppercase tracking-wider text-white/35">Byudjet</div>
-            <div className="mt-0.5 font-mono text-[12px] font-semibold tabular-nums text-white">{formatMoney(p.info.budgetUzs)}</div>
+          <div className="rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] px-2.5 py-2">
+            <div className="text-[9px] uppercase tracking-wider text-foreground/35">Byudjet</div>
+            <div className="mt-0.5 font-mono text-[12px] font-semibold tabular-nums text-foreground">{formatMoney(p.info.budgetUzs)}</div>
           </div>
-          <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-2.5 py-2">
-            <div className="text-[9px] uppercase tracking-wider text-white/35">Sarflangan</div>
+          <div className="rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] px-2.5 py-2">
+            <div className="text-[9px] uppercase tracking-wider text-foreground/35">Sarflangan</div>
             <div className="mt-0.5 font-mono text-[12px] font-semibold tabular-nums" style={{ color: hexA(st.color, 0.95) }}>{formatMoney(p.info.spentUzs)}</div>
           </div>
         </div>
 
         {/* daraxt soni (bor bo'lsa) */}
         {p.info.trees > 0 && (
-          <div className="relative mt-2 flex items-center gap-1.5 text-[11px] text-white/60">
+          <div className="relative mt-2 flex items-center gap-1.5 text-[11px] text-foreground/60">
             <Sprout className="size-3.5" style={{ color: "#22c55e" }} />
-            <span className="font-mono font-semibold text-white">{p.info.trees.toLocaleString("uz-UZ")}</span> ko'chat ekilgan
+            <span className="font-mono font-semibold text-foreground">{p.info.trees.toLocaleString("uz-UZ")}</span> ko'chat ekilgan
           </div>
         )}
       </motion.div>
@@ -84,7 +84,7 @@ const ProjectCard = ({ p, i }) => {
 };
 
 const ObodProjectsPage = () => (
-  <CmdRoot accent={ACCENT} system="Obodonlashtirish loyihalari reyestri (demo)" place={PLACE}>
+  <CmdRoot accent={ACCENT} dark={false} system="Obodonlashtirish loyihalari reyestri (demo)" place={PLACE}>
     <CmdHeader brand="LOYIHALAR NAZORATI" place={PLACE} accent={ACCENT} nav={["Loyihalar", "Holat"]} active="Loyihalar" />
 
     {/* KPI insight qatori */}

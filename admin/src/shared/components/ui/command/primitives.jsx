@@ -38,7 +38,7 @@ export const CmdHeader = ({ brand, place, nav, accent, active, onNav }) => {
           const on = active != null ? n === active : i === 0;
           return (
             <button key={n} onClick={() => onNav?.(n)}
-              className="flex items-center gap-1 rounded px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider transition-colors hover:text-white"
+              className="flex items-center gap-1 rounded px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider transition-colors hover:text-foreground"
               style={on ? { background: hexA(accent, 0.18), color: accent } : { color: "hsl(var(--muted-foreground))" }}>
               {n}
             </button>
@@ -61,7 +61,7 @@ const SourceOverlay = ({ title, source, accent, onClose }) => {
   const { system, place } = useContext(SourceContext);
   const { time } = useClock();
   return (
-    <div className="absolute inset-0 z-40 flex flex-col gap-2 p-3 backdrop-blur-sm" style={{ background: "rgba(8,8,10,0.92)" }} onClick={onClose}>
+    <div className="absolute inset-0 z-40 flex flex-col gap-2 p-3 backdrop-blur-sm" style={{ background: "hsl(var(--popover) / 0.95)" }} onClick={onClose}>
       <div className="flex items-center justify-between">
         <span className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest" style={{ color: accent }}><Database className="size-3.5" /> Ma'lumot manbasi</span>
         <button onClick={onClose} className="text-foreground/50 hover:text-foreground"><X className="size-4" /></button>
@@ -79,7 +79,7 @@ const SourceOverlay = ({ title, source, accent, onClose }) => {
   );
 };
 const Field = ({ k, v, accent }) => (
-  <div className="flex items-start justify-between gap-3 rounded border border-white/5 bg-white/[0.02] px-2 py-1">
+  <div className="flex items-start justify-between gap-3 rounded border border-foreground/5 bg-foreground/[0.02] px-2 py-1">
     <span className="text-foreground/45">{k}</span>
     <span className="text-right font-medium" style={{ color: accent }}>{v}</span>
   </div>
@@ -105,7 +105,7 @@ export const Panel = ({ title, icon: Icon, accent, right, source, clickToSource,
         </div>
       )}
       <div className={`min-h-0 flex-1 ${clickToSource ? "cursor-pointer" : ""} ${bodyClass}`} onClick={clickToSource ? () => setOpen(true) : undefined}>{children}</div>
-      <button onClick={() => setOpen(true)} className="flex items-center gap-1.5 px-3 py-1 text-[9px] text-foreground/40 transition-colors hover:text-foreground/70" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+      <button onClick={() => setOpen(true)} className="flex items-center gap-1.5 px-3 py-1 text-[9px] text-foreground/40 transition-colors hover:text-foreground/70" style={{ borderTop: "1px solid rgb(var(--card-border))" }}>
         <Database className="size-2.5" style={{ color: hexA(accent, 0.7) }} /> Manba: <span className="truncate" style={{ color: hexA(accent, 0.85) }}>{src}</span>
       </button>
       {open && <SourceOverlay title={title} source={src} accent={accent} onClose={() => setOpen(false)} />}
@@ -119,7 +119,7 @@ export const StatTile = ({ icon: Icon, label, value, accent, highlight, source }
   const [show, setShow] = useState(false);
   return (
     <button onClick={() => setShow((s) => !s)} title={`Manba: ${source || system}`}
-      className="relative flex items-center gap-2.5 overflow-hidden rounded-xl border bg-card px-3 py-2 text-left transition-colors hover:border-white/20"
+      className="relative flex items-center gap-2.5 overflow-hidden rounded-xl border bg-card px-3 py-2 text-left transition-colors hover:border-foreground/20"
       style={{ borderColor: highlight ? hexA(accent, 0.5) : "rgb(var(--card-border))", boxShadow: highlight ? `0 0 18px ${hexA(accent, 0.22)}` : "none" }}>
       <span className="grid size-8 shrink-0 place-items-center rounded-md" style={{ background: hexA(accent, 0.14), color: accent }}>{Icon && <Icon className="size-4" />}</span>
       <div className="min-w-0 leading-tight">
@@ -127,7 +127,7 @@ export const StatTile = ({ icon: Icon, label, value, accent, highlight, source }
         <div className="font-mono text-[15px] font-bold tabular-nums text-foreground" style={{ textShadow: highlight ? `0 0 10px ${hexA(accent, 0.55)}` : "none" }}>{value}</div>
       </div>
       {show && (
-        <span className="absolute inset-x-0 bottom-0 flex items-center gap-1 truncate bg-black/85 px-2 py-0.5 text-[8.5px]" style={{ color: accent }}>
+        <span className="absolute inset-x-0 bottom-0 flex items-center gap-1 truncate bg-popover/95 px-2 py-0.5 text-[8.5px]" style={{ color: accent }}>
           <Database className="size-2.5" /> {source || system}
         </span>
       )}
@@ -149,7 +149,7 @@ export const RadialGauge = ({ value, label, sub, accent, size = 96 }) => {
   return (
     <div className="flex flex-col items-center gap-1 p-2">
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="7" />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="hsl(var(--foreground) / 0.1)" strokeWidth="7" />
         <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={accent} strokeWidth="7" strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={off} style={{ filter: `drop-shadow(0 0 5px ${hexA(accent, 0.7)})`, transition: "stroke-dashoffset 0.8s" }} />
       </svg>
       <div className="-mt-[60%] flex flex-col items-center" style={{ marginTop: -size * 0.62 }}>
@@ -166,8 +166,8 @@ export const RadialGauge = ({ value, label, sub, accent, size = 96 }) => {
 // ── Donut (EChart) ──
 export const Donut = ({ data, accent, height = 200 }) => {
   const option = useMemo(() => ({
-    tooltip: { trigger: "item", backgroundColor: "#16161a", borderColor: hexA(accent, 0.4), textStyle: { color: "#fff", fontSize: 11 } },
-    legend: { bottom: 0, textStyle: { color: "rgba(255,255,255,0.55)", fontSize: 10 }, icon: "circle", itemWidth: 8, itemHeight: 8 },
+    tooltip: { trigger: "item", backgroundColor: "hsl(var(--popover))", borderColor: hexA(accent, 0.4), textStyle: { color: "hsl(var(--popover-foreground))", fontSize: 11 } },
+    legend: { bottom: 0, textStyle: { color: "hsl(var(--muted-foreground))", fontSize: 10 }, icon: "circle", itemWidth: 8, itemHeight: 8 },
     series: [{ type: "pie", radius: ["48%", "72%"], center: ["50%", "44%"], avoidLabelOverlap: false, label: { show: false }, data: data.map((d) => ({ ...d, itemStyle: { color: d.color } })) }],
   }), [data, accent]);
   return <EChart option={option} height={height} />;
@@ -179,9 +179,9 @@ export const AreaSpark = ({ accent, height = 150, seed = 1 }) => {
     const data = Array.from({ length: 32 }, (_, i) => Math.round(40 + 26 * Math.sin((i + seed) / 4) + i * 1.2 + ((i * seed) % 5) * 4));
     return {
       grid: { left: 6, right: 10, top: 12, bottom: 16 },
-      xAxis: { type: "category", boundaryGap: false, data: data.map((_, i) => i), axisLine: { lineStyle: { color: "rgba(255,255,255,0.1)" } }, axisLabel: { show: false }, axisTick: { show: false } },
-      yAxis: { type: "value", splitLine: { lineStyle: { color: "rgba(255,255,255,0.05)" } }, axisLabel: { color: "rgba(255,255,255,0.3)", fontSize: 9 } },
-      tooltip: { trigger: "axis", backgroundColor: "#16161a", borderColor: hexA(accent, 0.4), textStyle: { color: "#fff", fontSize: 11 } },
+      xAxis: { type: "category", boundaryGap: false, data: data.map((_, i) => i), axisLine: { lineStyle: { color: "rgb(var(--card-border))" } }, axisLabel: { show: false }, axisTick: { show: false } },
+      yAxis: { type: "value", splitLine: { lineStyle: { color: "rgb(var(--card-border))" } }, axisLabel: { color: "hsl(var(--muted-foreground))", fontSize: 9 } },
+      tooltip: { trigger: "axis", backgroundColor: "hsl(var(--popover))", borderColor: hexA(accent, 0.4), textStyle: { color: "hsl(var(--popover-foreground))", fontSize: 11 } },
       series: [{ type: "line", smooth: true, symbol: "none", data, lineStyle: { width: 2.4, color: accent, shadowColor: accent, shadowBlur: 12 }, areaStyle: { color: { type: "linear", x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: hexA(accent, 0.45) }, { offset: 1, color: hexA(accent, 0) }] } } }],
     };
   }, [accent, seed]);
@@ -206,7 +206,7 @@ export const RatingList = ({ items, accent }) => (
 export const FeedList = ({ items, accent }) => (
   <div className="max-h-full overflow-y-auto">
     {items.map((it, i) => (
-      <div key={i} title={`${it.place} · ${it.time}`} className="flex cursor-pointer items-start gap-2 px-3 py-1.5 transition-colors hover:bg-foreground/[0.04]" style={{ borderBottom: i < items.length - 1 ? "1px solid rgba(255,255,255,0.05)" : "none" }}>
+      <div key={i} title={`${it.place} · ${it.time}`} className="flex cursor-pointer items-start gap-2 px-3 py-1.5 transition-colors hover:bg-foreground/[0.04]" style={{ borderBottom: i < items.length - 1 ? "1px solid rgb(var(--card-border))" : "none" }}>
         <span className="mt-1 size-2 shrink-0 rounded-full" style={{ background: it.color || accent, boxShadow: `0 0 6px ${it.color || accent}` }} />
         <div className="min-w-0 flex-1 leading-tight">
           <div className="truncate text-[11px] text-foreground/85">{it.title}</div>
@@ -222,7 +222,7 @@ export const FeedList = ({ items, accent }) => (
 export const CameraGrid = ({ items, accent, cols = "lg:grid-cols-6" }) => (
   <div className={`grid grid-cols-2 gap-2 p-3 sm:grid-cols-3 ${cols}`}>
     {items.map((c) => (
-      <div key={c.id} className="group relative overflow-hidden rounded-lg border border-white/10 bg-black">
+      <div key={c.id} className="group relative overflow-hidden rounded-lg border border-foreground/10 bg-black">
         <div className="relative aspect-video">
           {c.online ? (
             <>
@@ -271,7 +271,7 @@ export const MahallaMap = ({ blocks, accent, legend }) => {
           return (
             <g key={i} className="cursor-pointer" onClick={() => setActive(isA ? null : i)}>
               <path d={d} fill={hexA(col, isA ? 0.6 : 0.3)} stroke={hexA(col, isA ? 1 : 0.85)} strokeWidth={isA ? 2.2 : 1} filter={isA ? "url(#mm-glow)" : undefined} />
-              <text x={cx} y={cy - 3} textAnchor="middle" className="pointer-events-none fill-white font-medium" style={{ fontSize: 8, textShadow: "0 1px 2px #000" }}>{c.b.name}</text>
+              <text x={cx} y={cy - 3} textAnchor="middle" className="pointer-events-none fill-foreground font-medium" style={{ fontSize: 8, textShadow: "0 1px 2px #000" }}>{c.b.name}</text>
               {c.b.metric != null && <text x={cx} y={cy + 7} textAnchor="middle" className="pointer-events-none font-mono" style={{ fontSize: 8, fill: col }}>{c.b.metric}</text>}
             </g>
           );
@@ -279,9 +279,9 @@ export const MahallaMap = ({ blocks, accent, legend }) => {
       </svg>
       {legend && <div className="absolute bottom-2 left-3 flex gap-3 text-[8.5px] text-foreground/55">{legend.map((l, i) => <span key={i} className="flex items-center gap-1"><span className="size-2 rounded-sm" style={{ background: l.color }} /> {l.label}</span>)}</div>}
       {sel && (
-        <div className="absolute right-2 top-2 rounded-lg border border-white/10 bg-black/75 px-3 py-2 backdrop-blur">
-          <div className="text-[11px] font-semibold text-white">{sel.name}</div>
-          {sel.detail && <div className="mt-0.5 text-[10px] text-white/60">{sel.detail}</div>}
+        <div className="absolute right-2 top-2 rounded-lg border border-foreground/10 bg-popover/90 px-3 py-2 backdrop-blur">
+          <div className="text-[11px] font-semibold text-foreground">{sel.name}</div>
+          {sel.detail && <div className="mt-0.5 text-[10px] text-foreground/60">{sel.detail}</div>}
         </div>
       )}
     </div>
@@ -289,11 +289,17 @@ export const MahallaMap = ({ blocks, accent, legend }) => {
 };
 
 // ── Root wrapper (manba kontekstini ta'minlaydi) ──
-export const CmdRoot = ({ accent, system = "Ma'lumotlar bazasi", place = "", children }) => (
+// dark prop (default true) — IIB/FVV kabi doim qora; obod theme-aware uchun dark={false}.
+export const CmdRoot = ({ accent, system = "Ma'lumotlar bazasi", place = "", dark = true, children }) => (
   <SourceContext.Provider value={{ system, place }}>
-    {/* dark class — Smart Center har doim to'q (app light rejimda ham buzilmaydi) */}
-    <div className="dark flex flex-col gap-3 rounded-2xl p-3 text-foreground"
-      style={{ background: `radial-gradient(circle at 50% 0%, ${hexA(accent, 0.08)}, #070b14 62%)`, backgroundImage: "linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)", backgroundSize: "100% 100%, 34px 34px, 34px 34px" }}>
+    <div className={`${dark ? "dark" : ""} cmd-root flex flex-col gap-3 rounded-2xl p-3 text-foreground`}
+      style={{
+        background: dark
+          ? `radial-gradient(circle at 50% 0%, ${hexA(accent, 0.08)}, #070b14 62%)`
+          : `radial-gradient(circle at 50% 0%, ${hexA(accent, 0.1)}, hsl(var(--background)) 60%)`,
+        backgroundImage: `linear-gradient(${hexA(accent, 0.04)} 1px, transparent 1px), linear-gradient(90deg, ${hexA(accent, 0.04)} 1px, transparent 1px)`,
+        backgroundSize: "100% 100%, 34px 34px, 34px 34px",
+      }}>
       {children}
     </div>
   </SourceContext.Provider>
@@ -315,7 +321,7 @@ export const CctvMonitor = ({ events, accent }) => {
   };
   return (
     <div className="grid h-full gap-2 p-2 lg:grid-cols-3">
-      <div className="flex max-h-[440px] flex-col overflow-y-auto rounded-lg border border-white/8 bg-white/[0.02]">
+      <div className="flex max-h-[440px] flex-col overflow-y-auto rounded-lg border border-foreground/8 bg-foreground/[0.02]">
         <div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-foreground/45">Kirish hodisalari ({events.length})</div>
         {events.map((e) => {
           const on = e.id === ev.id;
@@ -323,19 +329,19 @@ export const CctvMonitor = ({ events, accent }) => {
           const Icon = meta.icon;
           const col = meta.color;
           return (
-            <button key={e.id} onClick={() => setId(e.id)} className="flex items-start gap-2 px-3 py-2 text-left transition-colors hover:bg-white/[0.04]" style={{ background: on ? hexA(accent, 0.12) : "transparent", borderLeft: `2px solid ${on ? accent : "transparent"}` }}>
+            <button key={e.id} onClick={() => setId(e.id)} className="flex items-start gap-2 px-3 py-2 text-left transition-colors hover:bg-foreground/[0.04]" style={{ background: on ? hexA(accent, 0.12) : "transparent", borderLeft: `2px solid ${on ? accent : "transparent"}` }}>
               <span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded" style={{ background: hexA(col, 0.16), color: col }}><Icon className="size-3.5" /></span>
               <div className="min-w-0 flex-1 leading-tight">
                 <div className="truncate text-[11.5px] font-medium text-foreground/90">{e.title}</div>
                 <div className="flex items-center gap-1 text-[9px] text-foreground/40"><MapPin className="size-2.5" /> {e.place} · {e.time}</div>
-                {e.plate && <div className="mt-0.5 inline-block rounded bg-white/10 px-1 font-mono text-[9.5px] text-white/80">{e.plate}</div>}
+                {e.plate && <div className="mt-0.5 inline-block rounded bg-foreground/10 px-1 font-mono text-[9.5px] text-foreground/80">{e.plate}</div>}
               </div>
             </button>
           );
         })}
       </div>
       <div className="flex flex-col gap-2 lg:col-span-2">
-        <div className="relative aspect-video w-full overflow-hidden rounded-lg border border-white/10 bg-black">
+        <div className="relative aspect-video w-full overflow-hidden rounded-lg border border-foreground/10 bg-black">
           {ev.video ? (
             <video key={ev.id} src={ev.video} poster={ev.img} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" style={{ filter: CCTV_FILTER }} />
           ) : ev.img ? <img src={ev.img} alt={ev.title} className="absolute inset-0 h-full w-full object-cover" style={{ filter: CCTV_FILTER }} />
@@ -348,11 +354,11 @@ export const CctvMonitor = ({ events, accent }) => {
           <div className="absolute right-2 top-2 rounded bg-black/65 px-2 py-0.5 font-mono text-[10px] text-emerald-300">{ev.cam} · {time}</div>
           <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-3" style={{ background: "linear-gradient(0deg, rgba(0,0,0,0.85), transparent)" }}>
             <div className="leading-tight">
-              <div className="text-[12.5px] font-semibold text-white">{ev.title}</div>
-              <div className="flex items-center gap-1 text-[10px] text-white/60"><MapPin className="size-3" /> {ev.place}</div>
+              <div className="text-[12.5px] font-semibold text-foreground">{ev.title}</div>
+              <div className="flex items-center gap-1 text-[10px] text-foreground/60"><MapPin className="size-3" /> {ev.place}</div>
             </div>
-            {ev.plate ? <div className="rounded-md border-2 border-white/70 bg-black/40 px-2 py-1 font-mono text-[16px] font-bold tracking-wider text-white">{ev.plate}</div>
-              : ev.badge ? <div className="rounded-md px-2 py-1 text-[11px] font-bold uppercase tracking-wider text-white" style={{ background: hexA(accent, 0.85) }}>{ev.badge}</div> : null}
+            {ev.plate ? <div className="rounded-md border-2 border-foreground/70 bg-black/40 px-2 py-1 font-mono text-[16px] font-bold tracking-wider text-foreground">{ev.plate}</div>
+              : ev.badge ? <div className="rounded-md px-2 py-1 text-[11px] font-bold uppercase tracking-wider text-foreground" style={{ background: hexA(accent, 0.85) }}>{ev.badge}</div> : null}
           </div>
         </div>
         <div className="grid grid-cols-4 gap-2">
@@ -361,7 +367,7 @@ export const CctvMonitor = ({ events, accent }) => {
               {e.img ? <img src={e.img} alt={e.cam} className="absolute inset-0 h-full w-full object-cover" style={{ filter: CCTV_FILTER }} /> : <div className="absolute inset-0" style={{ background: "linear-gradient(135deg,#0b1220,#1a2233)" }} />}
               <span className="absolute inset-0 bg-black/20" />
               <Circle className="absolute right-1 top-1 size-1.5 animate-pulse fill-rose-500 text-rose-500" />
-              <span className="absolute bottom-0.5 left-1 font-mono text-[8px] text-white/80" style={{ textShadow: "0 1px 2px #000" }}>{e.cam}</span>
+              <span className="absolute bottom-0.5 left-1 font-mono text-[8px] text-foreground/80" style={{ textShadow: "0 1px 2px #000" }}>{e.cam}</span>
             </button>
           ))}
         </div>
@@ -420,12 +426,12 @@ export const DispatchConsole = ({ incidents, accent }) => {
   return (
     <div className="grid h-full gap-2 p-2 lg:grid-cols-3">
       {/* faol chaqiruvlar */}
-      <div className="flex max-h-[450px] flex-col overflow-y-auto rounded-lg border border-white/8 bg-white/[0.02]">
+      <div className="flex max-h-[450px] flex-col overflow-y-auto rounded-lg border border-foreground/8 bg-foreground/[0.02]">
         <div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-foreground/45">Faol chaqiruvlar ({incidents.length})</div>
         {incidents.map((i) => {
           const on = i.id === inc.id;
           return (
-            <button key={i.id} onClick={() => setId(i.id)} className="flex items-start gap-2 px-3 py-2 text-left transition-colors hover:bg-white/[0.04]" style={{ background: on ? hexA(accent, 0.12) : "transparent", borderLeft: `2px solid ${on ? accent : "transparent"}` }}>
+            <button key={i.id} onClick={() => setId(i.id)} className="flex items-start gap-2 px-3 py-2 text-left transition-colors hover:bg-foreground/[0.04]" style={{ background: on ? hexA(accent, 0.12) : "transparent", borderLeft: `2px solid ${on ? accent : "transparent"}` }}>
               <span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded" style={{ background: hexA(SEV[i.sev], 0.16), color: SEV[i.sev] }}><Flame className="size-3.5" /></span>
               <div className="min-w-0 flex-1 leading-tight">
                 <div className="truncate text-[11.5px] font-medium text-foreground/90">{i.type}</div>
@@ -439,7 +445,7 @@ export const DispatchConsole = ({ incidents, accent }) => {
 
       {/* tafsilot */}
       <div className="flex flex-col gap-2 lg:col-span-2">
-        <div className="flex items-center justify-between rounded-lg border border-white/8 bg-white/[0.02] px-3 py-2">
+        <div className="flex items-center justify-between rounded-lg border border-foreground/8 bg-foreground/[0.02] px-3 py-2">
           <div className="leading-tight">
             <div className="flex items-center gap-2 text-[14px] font-semibold text-foreground"><Flame className="size-4" style={{ color: SEV[inc.sev] }} /> {inc.type}</div>
             <div className="flex items-center gap-1 text-[10.5px] text-foreground/50"><MapPin className="size-3" /> {inc.place}</div>
@@ -448,7 +454,7 @@ export const DispatchConsole = ({ incidents, accent }) => {
         </div>
 
         {/* ETA ring + timeline */}
-        <div className="grid items-center gap-3 rounded-lg border border-white/8 bg-white/[0.02] p-3 sm:grid-cols-[auto_1fr]">
+        <div className="grid items-center gap-3 rounded-lg border border-foreground/8 bg-foreground/[0.02] p-3 sm:grid-cols-[auto_1fr]">
           <div className="relative grid place-items-center">
             <svg width="96" height="96" className="-rotate-90"><circle cx="48" cy="48" r={r} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="7" /><circle cx="48" cy="48" r={r} fill="none" stroke={arrived ? "#22c55e" : accent} strokeWidth="7" strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={circ * (1 - (arrived ? 1 : pct / 100))} style={{ transition: "stroke-dashoffset 1s linear", filter: `drop-shadow(0 0 5px ${hexA(arrived ? "#22c55e" : accent, 0.7)})` }} /></svg>
             <div className="absolute flex flex-col items-center"><span className="font-mono text-[15px] font-bold" style={{ color: arrived ? "#22c55e" : accent }}>{arrived ? "✓" : fmtS(eta)}</span><span className="text-[8px] text-foreground/45">{arrived ? "yetib bordi" : "ETA"}</span></div>
@@ -473,10 +479,10 @@ export const DispatchConsole = ({ incidents, accent }) => {
             const m = SENSOR_META[k]; const v = sensors[k]; const p = Math.min(100, (v / m.max) * 100);
             const danger = p > 65;
             return (
-              <div key={k} className="rounded-lg border border-white/8 bg-white/[0.02] p-2">
+              <div key={k} className="rounded-lg border border-foreground/8 bg-foreground/[0.02] p-2">
                 <div className="flex items-center gap-1 text-[9px] uppercase tracking-wider text-foreground/45"><m.icon className="size-3" style={{ color: m.color }} /> {m.label}</div>
                 <div className="font-mono text-[16px] font-bold tabular-nums" style={{ color: danger ? "#ef4444" : "#fff" }}>{v}<span className="ml-0.5 text-[9px] text-foreground/40">{m.unit}</span></div>
-                <div className="mt-1 h-1 overflow-hidden rounded-full bg-white/5"><div className="h-full rounded-full transition-all duration-700" style={{ width: `${p}%`, background: danger ? "#ef4444" : m.color }} /></div>
+                <div className="mt-1 h-1 overflow-hidden rounded-full bg-foreground/5"><div className="h-full rounded-full transition-all duration-700" style={{ width: `${p}%`, background: danger ? "#ef4444" : m.color }} /></div>
               </div>
             );
           })}
@@ -484,7 +490,7 @@ export const DispatchConsole = ({ incidents, accent }) => {
 
         {/* yo'naltirilgan kuchlar + voqealar jurnali */}
         <div className="grid flex-1 gap-2 sm:grid-cols-2">
-          <div className="rounded-lg border border-white/8 bg-white/[0.02] p-2.5">
+          <div className="rounded-lg border border-foreground/8 bg-foreground/[0.02] p-2.5">
             <div className="mb-2 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-foreground/45"><Truck className="size-3" style={{ color: accent }} /> Yo'naltirilgan kuchlar</div>
             <div className="flex flex-col gap-1">
               {UNITS.map((u, i) => {
@@ -498,7 +504,7 @@ export const DispatchConsole = ({ incidents, accent }) => {
               })}
             </div>
           </div>
-          <div className="rounded-lg border border-white/8 bg-white/[0.02] p-2.5">
+          <div className="rounded-lg border border-foreground/8 bg-foreground/[0.02] p-2.5">
             <div className="mb-2 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-foreground/45"><Navigation className="size-3" style={{ color: accent }} /> Voqealar jurnali</div>
             <div className="flex flex-col gap-2">
               {LOG.map((l, i) => (
@@ -522,15 +528,15 @@ export const VideoWall = ({ feeds, accent }) => {
   return (
     <div className="grid h-full grid-cols-2 gap-2 p-2 lg:grid-cols-3">
       {feeds.map((f) => (
-        <div key={f.id} className="relative aspect-video overflow-hidden rounded-lg border border-white/10 bg-black">
+        <div key={f.id} className="relative aspect-video overflow-hidden rounded-lg border border-foreground/10 bg-black">
           {f.video ? <video src={f.video} poster={f.img} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" style={{ filter: FILTER }} />
             : <div className="absolute inset-0" style={{ background: "linear-gradient(135deg,#0b1220,#1a2233)" }} />}
           <div className="absolute inset-0 opacity-[0.13]" style={{ backgroundImage: "repeating-linear-gradient(0deg, rgba(255,255,255,0.4) 0 1px, transparent 1px 3px)" }} />
           <div className="absolute inset-0" style={{ background: "radial-gradient(circle at 50% 50%, transparent 58%, rgba(0,0,0,0.5) 100%)", mixBlendMode: "multiply" }} />
-          <div className="absolute left-1.5 top-1.5 flex items-center gap-1 rounded bg-black/60 px-1.5 py-0.5"><Circle className="size-1.5 animate-pulse fill-rose-500 text-rose-500" /><span className="font-mono text-[8px] font-semibold text-white/80">{f.cam}</span></div>
+          <div className="absolute left-1.5 top-1.5 flex items-center gap-1 rounded bg-black/60 px-1.5 py-0.5"><Circle className="size-1.5 animate-pulse fill-rose-500 text-rose-500" /><span className="font-mono text-[8px] font-semibold text-foreground/80">{f.cam}</span></div>
           <div className="absolute right-1.5 top-1.5 rounded bg-black/60 px-1.5 py-0.5 font-mono text-[8px] text-emerald-300">{time}</div>
           <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-1 p-1.5" style={{ background: "linear-gradient(0deg, rgba(0,0,0,0.8), transparent)" }}>
-            <span className="flex items-center gap-1 truncate text-[9px] text-white/75"><MapPin className="size-2.5" /> {f.place}</span>
+            <span className="flex items-center gap-1 truncate text-[9px] text-foreground/75"><MapPin className="size-2.5" /> {f.place}</span>
             {f.status && <span className="shrink-0 rounded px-1.5 py-0.5 text-[8.5px] font-bold uppercase" style={{ background: hexA(f.color || accent, 0.9), color: "#fff" }}>{f.status}</span>}
           </div>
         </div>
@@ -551,7 +557,7 @@ export const CmdTable = ({ title, icon, accent, columns, rows, setRows, source, 
     <Panel title={title} icon={icon} accent={accent} source={source} right={right}
       bodyClass="relative">
       <div className="flex items-center justify-end px-3 pt-2">
-        <button onClick={() => setOpen(true)} className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-[11px] font-semibold text-white" style={{ background: hexA(accent, 0.9) }}>
+        <button onClick={() => setOpen(true)} className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-[11px] font-semibold text-foreground" style={{ background: hexA(accent, 0.9) }}>
           <Plus className="size-3.5" /> Qo'shish
         </button>
       </div>
@@ -563,7 +569,7 @@ export const CmdTable = ({ title, icon, accent, columns, rows, setRows, source, 
           <tbody>
             {rows.length === 0 && <tr><td colSpan={columns.length + 1} className="px-3 py-6 text-center text-[12px] text-foreground/40">Ma'lumot yo'q — "Qo'shish"</td></tr>}
             {rows.map((r) => (
-              <tr key={r.id} className="text-[12px] text-foreground/85 transition-colors hover:bg-white/[0.03]" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+              <tr key={r.id} className="text-[12px] text-foreground/85 transition-colors hover:bg-foreground/[0.03]" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
                 {columns.map((c) => (
                   <td key={c.key} className="px-3 py-2.5">
                     {c.type === "status" ? (
@@ -596,8 +602,8 @@ export const CmdTable = ({ title, icon, accent, columns, rows, setRows, source, 
               ))}
             </div>
             <div className="mt-4 flex justify-end gap-2">
-              <button onClick={() => setOpen(false)} className="rounded-lg px-3 py-2 text-[12px] text-foreground/60 hover:bg-white/5">Bekor</button>
-              <button onClick={submit} className="rounded-lg px-4 py-2 text-[12px] font-semibold text-white" style={{ background: hexA(accent, 0.9) }}>Saqlash</button>
+              <button onClick={() => setOpen(false)} className="rounded-lg px-3 py-2 text-[12px] text-foreground/60 hover:bg-foreground/5">Bekor</button>
+              <button onClick={submit} className="rounded-lg px-4 py-2 text-[12px] font-semibold text-foreground" style={{ background: hexA(accent, 0.9) }}>Saqlash</button>
             </div>
           </div>
         </div>

@@ -43,7 +43,7 @@ const ObodDashboardPage = () => {
             className={cn(
               "pointer-events-auto flex items-center gap-1.5 rounded-full border px-3.5 py-2 text-[12px] font-medium transition-colors",
               showGreen
-                ? "border-transparent bg-emerald-600 text-white"
+                ? "border-transparent bg-emerald-600 text-foreground"
                 : "surface-overlay text-foreground/75 hover:text-foreground",
             )}
           >

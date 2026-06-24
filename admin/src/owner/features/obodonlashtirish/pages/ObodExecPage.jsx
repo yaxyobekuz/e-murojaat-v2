@@ -50,7 +50,7 @@ const execInsights = [
 const Kpis = ({ children }) => <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">{children}</div>;
 
 const ObodExecPage = () => (
-  <CmdRoot accent={C.exec} system="Obodonlashtirish ijroiya paneli (demo)" place={PLACE}>
+  <CmdRoot accent={C.exec} dark={false} system="Obodonlashtirish ijroiya paneli (demo)" place={PLACE}>
     <CmdHeader brand="OBODONLASHTIRISH — IJROIYA MARKAZI" place={PLACE} accent={C.exec} nav={["Umumiy"]} active="Umumiy" />
 
     <AnchorNav items={NAV} accent={C.exec} />

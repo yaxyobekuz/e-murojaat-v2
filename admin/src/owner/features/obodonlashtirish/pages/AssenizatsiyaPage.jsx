@@ -27,7 +27,7 @@ const delayedFeed = ASSEN_ORDERS.filter((o) => o.status === "new" || o.status ==
 const order = { new: 0, dispatched: 1, done: 2, rejected: 3 };
 const rows = [...ASSEN_ORDERS].sort((a, b) => order[a.status] - order[b.status]);
 const columns = [
-  { key: "number", header: "Buyurtma", render: (r) => <span className="font-medium text-white">{r.number}</span> },
+  { key: "number", header: "Buyurtma", render: (r) => <span className="font-medium text-foreground">{r.number}</span> },
   { key: "address", header: "Manzil", render: (r) => r.address },
   { key: "created", header: "Yuborilgan", render: (r) => formatDateUz(r.createdDate) },
   { key: "completed", header: "Bajarilgan", render: (r) => r.completedDate ? formatDateUz(r.completedDate) : "—" },
@@ -37,7 +37,7 @@ const columns = [
 ];
 
 const AssenizatsiyaPage = () => (
-  <CmdRoot accent={ACCENT} system="Assenizatsiya dispetcherligi (demo)" place={ASSEN_PLACE}>
+  <CmdRoot accent={ACCENT} dark={false} system="Assenizatsiya dispetcherligi (demo)" place={ASSEN_PLACE}>
     <CmdHeader brand="ASSENIZATSIYA MARKAZI" place={ASSEN_PLACE} accent={ACCENT} nav={["Dispetcher", "Buyurtmalar"]} active="Dispetcher" />
 
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -76,7 +76,7 @@ const AssenizatsiyaPage = () => (
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
       <Reveal i={0}><Panel title="Buyurtmalar oqimi — 12 oy" icon={Droplets} accent={ACCENT} className="lg:col-span-2"><AreaSpark accent={ACCENT} seed={7} height={190} /></Panel></Reveal>
       <Reveal i={1}><Panel title="Kechikkan / kutilayotgan" icon={Clock} accent="#f59e0b">
-        {delayedFeed.length ? <FeedList items={delayedFeed} accent="#f59e0b" /> : <div className="grid h-full place-items-center p-6 text-[11px] text-white/40">Navbat bo'sh ✓</div>}
+        {delayedFeed.length ? <FeedList items={delayedFeed} accent="#f59e0b" /> : <div className="grid h-full place-items-center p-6 text-[11px] text-foreground/40">Navbat bo'sh ✓</div>}
       </Panel></Reveal>
     </div>
 

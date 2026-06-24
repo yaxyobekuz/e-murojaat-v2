@@ -26,7 +26,7 @@ const missedFeed = im.missedRoutes.map((r) => ({
 
 const rows = [...AXLAT_ROUTES].sort((a, b) => ({ missed: 0, late: 1, done: 2 }[a.status] - { missed: 0, late: 1, done: 2 }[b.status]));
 const columns = [
-  { key: "name", header: "Marshrut", render: (r) => <span className="font-medium text-white">{r.name}</span> },
+  { key: "name", header: "Marshrut", render: (r) => <span className="font-medium text-foreground">{r.name}</span> },
   { key: "mahalla", header: "Mahalla", render: (r) => r.mahalla },
   { key: "norm", header: "Norma", render: (r) => SCHEDULE_NORM[r.norm] },
   { key: "last", header: "Oxirgi kelgan", render: (r) => r.status === "missed" ? <span className="text-rose-400">Kelmadi</span> : <span>{formatDateUz(r.lastDate)} {r.lastArrival}{r.lateMin > 0 && <span className="text-amber-400"> (+{r.lateMin}d)</span>}</span> },
@@ -36,7 +36,7 @@ const columns = [
 ];
 
 const AxlatPage = () => (
-  <CmdRoot accent={ACCENT} system="Toza hudud — chiqindi boshqaruvi (demo)" place={AXLAT_PLACE}>
+  <CmdRoot accent={ACCENT} dark={false} system="Toza hudud — chiqindi boshqaruvi (demo)" place={AXLAT_PLACE}>
     <CmdHeader brand="AXLAT NAZORAT MARKAZI" place={AXLAT_PLACE} accent={ACCENT} nav={["Operativ", "Marshrutlar"]} active="Operativ" />
 
     {/* Insight kartalar */}
@@ -81,7 +81,7 @@ const AxlatPage = () => (
         ))}</div>
       </Panel></Reveal>
       <Reveal i={1}><Panel title="Kelmay qolish ogohlantirishi" icon={AlertTriangle} accent="#ef4444">
-        {missedFeed.length ? <FeedList items={missedFeed} accent="#ef4444" /> : <div className="grid h-full place-items-center p-6 text-[11px] text-white/40">Barcha marshrutlar xizmat ko'rsatildi ✓</div>}
+        {missedFeed.length ? <FeedList items={missedFeed} accent="#ef4444" /> : <div className="grid h-full place-items-center p-6 text-[11px] text-foreground/40">Barcha marshrutlar xizmat ko'rsatildi ✓</div>}
       </Panel></Reveal>
     </div>
 

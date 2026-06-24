@@ -23,7 +23,7 @@ const recentFeed = [...HASHAR_EVENTS].sort((a, b) => b.date.localeCompare(a.date
 const rows = [...HASHAR_EVENTS].sort((a, b) => b.date.localeCompare(a.date));
 const columns = [
   { key: "date", header: "Sana", render: (r) => formatDateUz(r.date) },
-  { key: "mahalla", header: "Mahalla", render: (r) => <span className="font-medium text-white">{r.mahalla}</span> },
+  { key: "mahalla", header: "Mahalla", render: (r) => <span className="font-medium text-foreground">{r.mahalla}</span> },
   { key: "type", header: "Tur", render: (r) => <StatusBadge tone={TYPE_TONE[r.type]}>{EVENT_TYPE[r.type]}</StatusBadge> },
   { key: "participants", header: "Ishtirokchi", align: "right", render: (r) => r.participants },
   { key: "area", header: "Maydon", align: "right", render: (r) => `${r.areaHa} ga` },
@@ -32,7 +32,7 @@ const columns = [
 ];
 
 const HasharPage = () => (
-  <CmdRoot accent={ACCENT} system="Mahalla obodonlashtirish — PQ-234 (demo)" place={HASHAR_PLACE}>
+  <CmdRoot accent={ACCENT} dark={false} system="Mahalla obodonlashtirish — PQ-234 (demo)" place={HASHAR_PLACE}>
     <CmdHeader brand="HASHAR & TOZALOV MARKAZI" place={HASHAR_PLACE} accent={ACCENT} nav={["Jamoatchilik", "Tadbirlar"]} active="Jamoatchilik" />
 
     {/* Nishonlar — yutuqlar */}

@@ -31,7 +31,7 @@ export const InsightCard = ({ icon: Icon, label, value, formatter, suffix, accen
     <motion.div
       whileHover={{ y: -4 }}
       transition={{ type: "spring", stiffness: 280, damping: 22 }}
-      className="group relative h-full overflow-hidden rounded-2xl border bg-white/[0.03] p-4 backdrop-blur-xl"
+      className="group relative h-full overflow-hidden rounded-2xl border bg-foreground/[0.03] p-4 backdrop-blur-xl"
       style={{ borderColor: hexA(accent, 0.18), boxShadow: `0 0 0 1px ${hexA(accent, 0.04)}, inset 0 1px 0 ${hexA("#ffffff", 0.05)}` }}
     >
       {/* glow */}
@@ -46,17 +46,17 @@ export const InsightCard = ({ icon: Icon, label, value, formatter, suffix, accen
       </div>
 
       <div className="relative mt-3">
-        <div className="font-mono text-[26px] font-bold leading-none tabular-nums text-white" style={{ textShadow: `0 0 18px ${hexA(accent, 0.45)}` }}>
+        <div className="font-mono text-[26px] font-bold leading-none tabular-nums text-foreground" style={{ textShadow: `0 0 18px ${hexA(accent, 0.45)}` }}>
           <Count value={value} formatter={formatter} suffix={suffix} decimals={decimals} />
         </div>
-        <div className="mt-1.5 text-[11px] font-medium uppercase tracking-wider text-white/45">{label}</div>
+        <div className="mt-1.5 text-[11px] font-medium uppercase tracking-wider text-foreground/45">{label}</div>
       </div>
 
       {equivalents.length > 0 && (
         <div className="relative mt-3 space-y-1 border-t pt-2.5" style={{ borderColor: hexA(accent, 0.1) }}>
-          <div className="text-[9px] font-semibold uppercase tracking-[0.18em] text-white/30">Ya'ni</div>
+          <div className="text-[9px] font-semibold uppercase tracking-[0.18em] text-foreground/30">Ya'ni</div>
           {equivalents.map((e, k) => (
-            <div key={k} className="flex items-center gap-1.5 text-[11.5px] text-white/70">
+            <div key={k} className="flex items-center gap-1.5 text-[11.5px] text-foreground/70">
               <span className="text-sm leading-none">{e.icon}</span>
               <span>{e.text}</span>
             </div>
@@ -89,16 +89,16 @@ export const TrendNarrative = ({ items, accent }) => (
       const t = TREND[it.dir] || TREND.flat;
       return (
         <motion.div key={i} variants={fadeUp} initial="hidden" animate="show" custom={i}
-          className="flex items-start gap-2.5 px-3 py-2" style={{ borderBottom: i < items.length - 1 ? `1px solid ${hexA("#ffffff", 0.05)}` : "none" }}>
+          className="flex items-start gap-2.5 px-3 py-2" style={{ borderBottom: i < items.length - 1 ? "1px solid rgb(var(--card-border))" : "none" }}>
           <span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-lg" style={{ background: hexA(t.color, 0.15), color: t.color }}>
             <t.Icon className="size-3.5" />
           </span>
           <div className="min-w-0 leading-snug">
             <div className="flex items-center gap-2">
-              <span className="text-[12px] font-semibold text-white/85">{it.title}</span>
+              <span className="text-[12px] font-semibold text-foreground/85">{it.title}</span>
               {it.value != null && <span className="font-mono text-[12px] font-bold tabular-nums" style={{ color: t.color }}>{it.value}</span>}
             </div>
-            <div className="text-[10.5px] text-white/45">{it.note}</div>
+            <div className="text-[10.5px] text-foreground/45">{it.note}</div>
           </div>
         </motion.div>
       );
@@ -117,18 +117,18 @@ export const ProgressRing = ({ value, target, label, accent, forecast, unit = ""
     <div className="flex flex-col items-center gap-2 p-3">
       <div className="relative" style={{ width: size, height: size }}>
         <svg width={size} height={size} className="-rotate-90">
-          <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="9" />
+          <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="hsl(var(--foreground) / 0.1)" strokeWidth="9" />
           <motion.circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={accent} strokeWidth="9" strokeLinecap="round"
             strokeDasharray={circ} strokeDashoffset={off}
             style={{ filter: `drop-shadow(0 0 7px ${hexA(accent, 0.8)})` }} />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span className="font-mono text-2xl font-bold tabular-nums" style={{ color: accent, textShadow: `0 0 14px ${hexA(accent, 0.6)}` }}>{animated}%</span>
-          {target != null && <span className="font-mono text-[9px] tabular-nums text-white/40">{value.toLocaleString("uz-UZ")} / {target.toLocaleString("uz-UZ")}{unit}</span>}
+          {target != null && <span className="font-mono text-[9px] tabular-nums text-foreground/40">{value.toLocaleString("uz-UZ")} / {target.toLocaleString("uz-UZ")}{unit}</span>}
         </div>
       </div>
       <div className="text-center leading-tight">
-        <div className="text-[11px] font-medium text-white/75">{label}</div>
+        <div className="text-[11px] font-medium text-foreground/75">{label}</div>
         {forecast && <div className="mt-0.5 text-[9.5px]" style={{ color: hexA(accent, 0.9) }}>Prognoz: {forecast}</div>}
       </div>
     </div>
@@ -140,11 +140,11 @@ export const AIInsightPanel = ({ insights, accent }) => (
   <div className="space-y-2 p-3">
     {insights.map((ins, i) => (
       <motion.div key={i} variants={fadeUp} initial="hidden" animate="show" custom={i}
-        className="flex items-start gap-2.5 rounded-xl border border-white/[0.06] bg-white/[0.02] p-2.5">
+        className="flex items-start gap-2.5 rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] p-2.5">
         <span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-lg" style={{ background: hexA(ins.tone || accent, 0.15), color: ins.tone || accent }}>
           <Sparkles className="size-3.5" />
         </span>
-        <p className="text-[11.5px] leading-snug text-white/75">{ins.text}</p>
+        <p className="text-[11.5px] leading-snug text-foreground/75">{ins.text}</p>
       </motion.div>
     ))}
   </div>
@@ -160,8 +160,8 @@ export const BadgeStrip = ({ badges }) => (
         style={{ borderColor: hexA(b.color, 0.4), background: hexA(b.color, 0.08), boxShadow: `0 0 18px ${hexA(b.color, 0.2)}` }}>
         <span className="text-lg leading-none">{b.icon}</span>
         <div className="leading-tight">
-          <div className="text-[11px] font-bold text-white">{b.title}</div>
-          <div className="text-[9.5px] text-white/55">{b.sub}</div>
+          <div className="text-[11px] font-bold text-foreground">{b.title}</div>
+          <div className="text-[9.5px] text-foreground/55">{b.sub}</div>
         </div>
       </motion.div>
     ))}
@@ -176,14 +176,14 @@ export const Leaderboard = ({ items, accent, unit = "" }) => (
       const color = i < 3 ? MEDAL[i] : accent;
       return (
         <motion.div key={it.label} variants={fadeUp} initial="hidden" animate="show" custom={i}
-          className="flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 transition-colors hover:bg-white/[0.03]"
+          className="flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 transition-colors hover:bg-foreground/[0.03]"
           style={i < 3 ? { background: hexA(color, 0.06) } : undefined}>
           <span className="grid size-6 shrink-0 place-items-center rounded-md font-mono text-[11px] font-bold"
             style={{ background: hexA(color, i < 3 ? 0.18 : 0.08), color }}>
             {i < 3 ? <Trophy className="size-3" /> : i + 1}
           </span>
-          <span className="flex-1 truncate text-[12px] text-white/80">{it.label}</span>
-          <div className="h-1.5 w-16 overflow-hidden rounded-full bg-white/5">
+          <span className="flex-1 truncate text-[12px] text-foreground/80">{it.label}</span>
+          <div className="h-1.5 w-16 overflow-hidden rounded-full bg-foreground/5">
             <motion.div initial={{ width: 0 }} animate={{ width: `${it.pct}%` }} transition={{ delay: 0.2 + i * 0.05, duration: 0.8 }}
               className="h-full rounded-full" style={{ background: color, boxShadow: `0 0 8px ${hexA(color, 0.6)}` }} />
           </div>
@@ -201,16 +201,16 @@ export const ScoreMeter = ({ score, label, accent, max = 100, hint }) => {
   return (
     <div className="p-3">
       <div className="flex items-end justify-between">
-        <span className="text-[11px] font-medium uppercase tracking-wider text-white/50">{label}</span>
+        <span className="text-[11px] font-medium uppercase tracking-wider text-foreground/50">{label}</span>
         <span className="font-mono text-xl font-bold tabular-nums" style={{ color: accent, textShadow: `0 0 12px ${hexA(accent, 0.5)}` }}>
-          {animated}<span className="text-[11px] text-white/30">/{max}</span>
+          {animated}<span className="text-[11px] text-foreground/30">/{max}</span>
         </span>
       </div>
-      <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/5">
+      <div className="mt-2 h-2 overflow-hidden rounded-full bg-foreground/5">
         <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 1, ease: "easeOut" }}
           className="h-full rounded-full" style={{ background: `linear-gradient(90deg, ${hexA(accent, 0.5)}, ${accent})`, boxShadow: `0 0 10px ${hexA(accent, 0.6)}` }} />
       </div>
-      {hint && <div className="mt-1.5 text-[10px] text-white/40">{hint}</div>}
+      {hint && <div className="mt-1.5 text-[10px] text-foreground/40">{hint}</div>}
     </div>
   );
 };
@@ -224,25 +224,25 @@ export const ExecScore = ({ score, parts, accent }) => {
     <div className="grid grid-cols-1 items-center gap-6 p-5 lg:grid-cols-[auto_1fr]">
       <div className="relative mx-auto" style={{ width: size, height: size }}>
         <svg width={size} height={size} className="-rotate-90">
-          <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="13" />
+          <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="hsl(var(--foreground) / 0.1)" strokeWidth="13" />
           <motion.circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={accent} strokeWidth="13" strokeLinecap="round"
             strokeDasharray={circ} strokeDashoffset={off} style={{ filter: `drop-shadow(0 0 12px ${hexA(accent, 0.85)})` }} />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="font-mono text-[52px] font-bold leading-none tabular-nums text-white" style={{ textShadow: `0 0 26px ${hexA(accent, 0.7)}` }}>{animated}</span>
-          <span className="font-mono text-[11px] tracking-wider text-white/40">/ 100</span>
+          <span className="font-mono text-[52px] font-bold leading-none tabular-nums text-foreground" style={{ textShadow: `0 0 26px ${hexA(accent, 0.7)}` }}>{animated}</span>
+          <span className="font-mono text-[11px] tracking-wider text-foreground/40">/ 100</span>
           <span className="mt-1 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider" style={{ background: hexA(accent, 0.16), color: accent }}>{grade}</span>
         </div>
       </div>
       <div className="space-y-2.5">
-        <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/45">Tarkibiy ko'rsatkichlar</div>
+        <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">Tarkibiy ko'rsatkichlar</div>
         {parts.map((p, i) => (
           <div key={i}>
             <div className="mb-1 flex items-center justify-between text-[11.5px]">
-              <span className="text-white/70">{p.label}</span>
+              <span className="text-foreground/70">{p.label}</span>
               <span className="font-mono font-bold tabular-nums" style={{ color: p.accent }}>{p.value}</span>
             </div>
-            <div className="h-1.5 overflow-hidden rounded-full bg-white/5">
+            <div className="h-1.5 overflow-hidden rounded-full bg-foreground/5">
               <motion.div initial={{ width: 0 }} animate={{ width: `${p.value}%` }} transition={{ delay: 0.3 + i * 0.08, duration: 0.9 }}
                 className="h-full rounded-full" style={{ background: p.accent, boxShadow: `0 0 8px ${hexA(p.accent, 0.6)}` }} />
             </div>
@@ -257,7 +257,7 @@ export const ExecScore = ({ score, parts, accent }) => {
 export const ModuleTile = ({ icon: Icon, title, score, accent, sub, onClick, i = 0 }) => (
   <Reveal i={i}>
     <motion.button onClick={onClick} whileHover={{ y: -4 }} transition={{ type: "spring", stiffness: 280, damping: 22 }}
-      className="group relative w-full overflow-hidden rounded-2xl border bg-white/[0.03] p-4 text-left backdrop-blur-xl"
+      className="group relative w-full overflow-hidden rounded-2xl border bg-foreground/[0.03] p-4 text-left backdrop-blur-xl"
       style={{ borderColor: hexA(accent, 0.2) }}>
       <div className="pointer-events-none absolute -right-6 -top-6 size-24 rounded-full opacity-40 blur-2xl transition-opacity group-hover:opacity-80"
         style={{ background: `radial-gradient(circle, ${hexA(accent, 0.6)}, transparent 70%)` }} />
@@ -267,8 +267,8 @@ export const ModuleTile = ({ icon: Icon, title, score, accent, sub, onClick, i =
         </span>
         <span className="font-mono text-2xl font-bold tabular-nums" style={{ color: accent, textShadow: `0 0 14px ${hexA(accent, 0.55)}` }}>{score}</span>
       </div>
-      <div className="relative mt-3 text-[13px] font-semibold text-white">{title}</div>
-      <div className="text-[10.5px] text-white/45">{sub}</div>
+      <div className="relative mt-3 text-[13px] font-semibold text-foreground">{title}</div>
+      <div className="text-[10.5px] text-foreground/45">{sub}</div>
     </motion.button>
   </Reveal>
 );
@@ -277,7 +277,7 @@ export const ModuleTile = ({ icon: Icon, title, score, accent, sub, onClick, i =
 export const SectionTitle = ({ children, accent }) => (
   <div className="flex items-center gap-2 px-1">
     <span className="h-3.5 w-1 rounded-full" style={{ background: accent, boxShadow: `0 0 8px ${accent}` }} />
-    <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/55">{children}</span>
+    <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/55">{children}</span>
   </div>
 );
 
@@ -289,18 +289,18 @@ export const SectionBanner = ({ id, icon: Icon, title, sub, accent }) => (
       {Icon && <Icon className="size-[18px]" />}
     </span>
     <div className="leading-tight">
-      <div className="text-[14px] font-bold tracking-wide text-white">{title}</div>
-      {sub && <div className="text-[10.5px] text-white/45">{sub}</div>}
+      <div className="text-[14px] font-bold tracking-wide text-foreground">{title}</div>
+      {sub && <div className="text-[10.5px] text-foreground/45">{sub}</div>}
     </div>
   </div>
 );
 
 // ── Yopishqoq bo'lim navigatsiyasi (chiplar) ──
 export const AnchorNav = ({ items, accent }) => (
-  <div className="sticky top-2 z-20 -mx-1 flex flex-wrap gap-2 rounded-xl border border-white/[0.08] bg-black/60 px-2 py-2 backdrop-blur-xl">
+  <div className="sticky top-2 z-20 -mx-1 flex flex-wrap gap-2 rounded-xl border border-foreground/[0.08] bg-popover/90 px-2 py-2 backdrop-blur-xl">
     {items.map((it) => (
       <a key={it.id} href={`#${it.id}`}
-        className="flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-medium text-white/70 transition-colors hover:text-white"
+        className="flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-medium text-foreground/70 transition-colors hover:text-foreground"
         style={{ borderColor: hexA(it.color || accent, 0.3) }}>
         {it.icon && <it.icon className="size-3.5" style={{ color: it.color || accent }} />}
         {it.label}

@@ -19,18 +19,18 @@ const donutData = YM_BY_TYPE.map((d) => ({ name: TREE_TYPE[d.key], value: d.valu
 
 const rows = [...YM_PLANTINGS].sort((a, b) => b.count - a.count);
 const columns = [
-  { key: "mahalla", header: "Mahalla", render: (r) => <span className="font-medium text-white">{r.mahalla}</span> },
+  { key: "mahalla", header: "Mahalla", render: (r) => <span className="font-medium text-foreground">{r.mahalla}</span> },
   { key: "site", header: "Joy", render: (r) => r.site },
-  { key: "coords", header: "Koordinata", render: (r) => <span className="text-xs text-white/50">{r.coords}</span> },
+  { key: "coords", header: "Koordinata", render: (r) => <span className="text-xs text-foreground/50">{r.coords}</span> },
   { key: "type", header: "Turi", render: (r) => TREE_TYPE[r.type] },
   { key: "season", header: "Mavsum", align: "center", render: (r) => <StatusBadge tone={r.season === "spring" ? "done" : "progress"}>{SEASON[r.season]}</StatusBadge> },
-  { key: "count", header: "Soni", align: "right", render: (r) => <span className="font-semibold text-white">{r.count.toLocaleString("uz-UZ")}</span> },
+  { key: "count", header: "Soni", align: "right", render: (r) => <span className="font-semibold text-foreground">{r.count.toLocaleString("uz-UZ")}</span> },
   { key: "entered", header: "yashilmakon.eco", align: "center", render: (r) => <StatusBadge tone={r.entered ? "done" : "danger"}>{r.entered ? "Kiritilgan" : "Kiritilmagan"}</StatusBadge> },
   { key: "survival", header: "Tirik qolgan", align: "right", render: (r) => `${r.survivalPct}%` },
 ];
 
 const YashilMakonPage = () => (
-  <CmdRoot accent={ACCENT} system="Yashil makon platformasi — yashilmakon.eco (demo)" place={YM_PLACE}>
+  <CmdRoot accent={ACCENT} dark={false} system="Yashil makon platformasi — yashilmakon.eco (demo)" place={YM_PLACE}>
     <CmdHeader brand="YASHIL MAKON MARKAZI" place={YM_PLACE} accent={ACCENT} nav={["Ekologiya", "Ekishlar"]} active="Ekologiya" />
 
     {/* Insight kartalar — ekologik impact bilan */}

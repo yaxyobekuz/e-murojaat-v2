@@ -45,19 +45,19 @@ export const GasFlow = ({ nodes, accent, height = 280 }) => {
         <motion.circle cx={cx} cy={cy} r={34} fill="none" stroke={accent} strokeWidth={1.5}
           animate={{ r: [34, 46], opacity: [0.6, 0] }} transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }} />
         <circle cx={cx} cy={cy} r={22} fill={hexA(accent, 0.2)} stroke={accent} strokeWidth={1.5} />
-        <text x={cx} y={cy - 1} textAnchor="middle" className="fill-white font-semibold" style={{ fontSize: 9 }}>QABUL</text>
-        <text x={cx} y={cy + 10} textAnchor="middle" className="fill-white/60" style={{ fontSize: 7 }}>nuqtasi</text>
+        <text x={cx} y={cy - 1} textAnchor="middle" className="fill-foreground font-semibold" style={{ fontSize: 9 }}>QABUL</text>
+        <text x={cx} y={cy + 10} textAnchor="middle" className="fill-foreground" style={{ fontSize: 7 }}>nuqtasi</text>
 
         {pts.map((p, i) => (
           <g key={`node-${i}`}>
             <circle cx={p.x} cy={p.y} r={13} fill={hexA(accent, 0.12)} stroke={hexA(accent, 0.6)} strokeWidth={1} />
-            <text x={p.x} y={p.y + 3} textAnchor="middle" className="fill-white font-mono" style={{ fontSize: 8 }}>{p.value}</text>
-            <text x={p.x} y={p.y - 18} textAnchor="middle" className="fill-white/70" style={{ fontSize: 7.5 }}>{p.name}</text>
+            <text x={p.x} y={p.y + 3} textAnchor="middle" className="fill-foreground font-mono" style={{ fontSize: 8 }}>{p.value}</text>
+            <text x={p.x} y={p.y - 18} textAnchor="middle" className="fill-foreground" style={{ fontSize: 7.5 }}>{p.name}</text>
           </g>
         ))}
       </svg>
 
-      <div className="absolute bottom-2 left-3 flex items-center gap-1.5 text-[9px] text-white/50">
+      <div className="absolute bottom-2 left-3 flex items-center gap-1.5 text-[9px] text-foreground/50">
         <Truck className="size-3" style={{ color: accent }} /> Yo'ldagi mashina · raqam = buyurtma soni
       </div>
     </div>
