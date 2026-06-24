@@ -9,6 +9,7 @@ import {
   YAxis,
 } from "recharts";
 import { formatMoney } from "@/shared/utils/formatMoney";
+import { useChartColors } from "./chartColors";
 
 // 12 oylik dinamika (yig'ilgan soliq/sarf). data: [{ month, value }]
 const TrendChart = ({
@@ -18,6 +19,7 @@ const TrendChart = ({
   isMoney = false,
   unit = "",
 }) => {
+  const c = useChartColors();
   if (!data.length) {
     return (
       <div className="flex h-[260px] items-center justify-center text-sm text-zinc-400">
@@ -38,10 +40,10 @@ const TrendChart = ({
             <stop offset="100%" stopColor={color} stopOpacity={0} />
           </linearGradient>
         </defs>
-        <CartesianGrid strokeDasharray="3 3" stroke="#eef0f3" vertical={false} />
-        <XAxis dataKey="month" tick={{ fontSize: 11, fill: "#71717a" }} tickLine={false} axisLine={false} />
+        <CartesianGrid strokeDasharray="3 3" stroke={c.grid} vertical={false} />
+        <XAxis dataKey="month" tick={{ fontSize: 11, fill: c.axis }} tickLine={false} axisLine={false} />
         <YAxis
-          tick={{ fontSize: 11, fill: "#71717a" }}
+          tick={{ fontSize: 11, fill: c.axis }}
           tickLine={false}
           axisLine={false}
           allowDecimals={false}
@@ -49,7 +51,8 @@ const TrendChart = ({
         />
         <Tooltip
           formatter={(v) => [fmt(v), "Qiymat"]}
-          contentStyle={{ borderRadius: 8, border: "1px solid #e4e4e7", fontSize: 12 }}
+          contentStyle={c.tooltip}
+          labelStyle={c.tooltipLabel}
         />
         <Area type="monotone" dataKey="value" stroke={color} strokeWidth={2} fill="url(#trendFill)" />
       </AreaChart>

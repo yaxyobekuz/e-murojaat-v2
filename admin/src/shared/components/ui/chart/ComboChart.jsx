@@ -10,6 +10,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { useChartColors } from "./chartColors";
 
 const ComboChart = ({
   data = [],
@@ -21,6 +22,7 @@ const ComboChart = ({
   lineColor = "#ef4444",
   height = 300,
 }) => {
+  const c = useChartColors();
   if (!data.length) {
     return (
       <div className="flex h-[300px] items-center justify-center text-sm text-zinc-400">
@@ -34,14 +36,15 @@ const ComboChart = ({
   return (
     <ResponsiveContainer width="100%" height={height}>
       <ComposedChart data={data} margin={{ top: 8, right: 8, left: 4, bottom: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#eef0f3" vertical={false} />
-        <XAxis dataKey="month" tick={{ fontSize: 11, fill: "#71717a" }} tickLine={false} axisLine={false} />
-        <YAxis tickFormatter={fmt} tick={{ fontSize: 11, fill: "#71717a" }} tickLine={false} axisLine={false} />
+        <CartesianGrid strokeDasharray="3 3" stroke={c.grid} vertical={false} />
+        <XAxis dataKey="month" tick={{ fontSize: 11, fill: c.axis }} tickLine={false} axisLine={false} />
+        <YAxis tickFormatter={fmt} tick={{ fontSize: 11, fill: c.axis }} tickLine={false} axisLine={false} />
         <Tooltip
           formatter={(v, n) => [v.toLocaleString("uz-UZ"), n]}
-          contentStyle={{ borderRadius: 8, border: "1px solid #e4e4e7", fontSize: 12 }}
+          contentStyle={c.tooltip}
+          labelStyle={c.tooltipLabel}
         />
-        <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
+        <Legend iconType="circle" wrapperStyle={{ fontSize: 12, color: c.legend }} />
         <Bar dataKey={barKey} name={barLabel} fill={barColor} radius={[3, 3, 0, 0]} barSize={18} />
         {lineKey && (
           <Line type="monotone" dataKey={lineKey} name={lineLabel} stroke={lineColor} strokeWidth={2} dot={false} />
