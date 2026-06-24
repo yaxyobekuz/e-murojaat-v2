@@ -25,14 +25,29 @@ const useProjection = () =>
     });
   }, []);
 
-const ObodMapFallback = ({ active, showGreen = false, onSelect }) => {
+const ObodMapFallback = ({ active, showGreen = false, onSelect, plantings = null }) => {
   const project = useProjection();
+  const maxCount = plantings?.length ? Math.max(...plantings.map((p) => p.count), 1) : 1;
 
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
       className="h-full w-full rounded-xl bg-[radial-gradient(circle_at_30%_20%,rgba(20,184,166,0.10),transparent_60%)]"
     >
+      {/* Ekilgan ko'chat nuqtalari (real koordinata) */}
+      {plantings?.map((p, i) => {
+        if (p.lat == null || p.lng == null) return null;
+        const c = project(p);
+        const sz = 7 + (p.count / maxCount) * 9;
+        const col = p.survivalPct >= 90 ? "#22c55e" : p.survivalPct >= 85 ? "#65a30d" : "#ca8a04";
+        return (
+          <g key={`pl-${i}`}>
+            <circle cx={c.x} cy={c.y} r={sz} fill={col} fillOpacity={0.85} />
+            <text x={c.x} y={c.y - sz - 2} textAnchor="middle" className="pointer-events-none fill-foreground text-[9px] font-mono">{p.count}</text>
+            <text x={c.x} y={c.y + 3} textAnchor="middle" dominantBaseline="middle" className="pointer-events-none text-[9px]">🌳</text>
+          </g>
+        );
+      })}
       {/* Yashil maydonlar (faqat showGreen) */}
       {showGreen &&
         OBOD_PROJECTS.filter(isGreen).map((p) => {
@@ -47,7 +62,7 @@ const ObodMapFallback = ({ active, showGreen = false, onSelect }) => {
                 y={c.y}
                 textAnchor="middle"
                 dominantBaseline="middle"
-                className="pointer-events-none fill-white text-[12px] font-semibold"
+                className="pointer-events-none fill-foreground text-[12px] font-semibold"
               >
                 🌳 {p.info.trees}
               </text>

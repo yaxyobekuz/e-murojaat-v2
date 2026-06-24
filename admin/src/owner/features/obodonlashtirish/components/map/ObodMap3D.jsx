@@ -117,6 +117,13 @@ const ObodMap3D = ({ showGreen = false, activeId = null, onSelect, plantings = n
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Watchdog — 7s ichida xarita tayyor bo'lmasa, fallback (sxema) ko'rsatamiz
+  useEffect(() => {
+    if (status !== "loading") return undefined;
+    const id = setTimeout(() => setStatus((s) => (s === "loading" ? "fallback" : s)), 7000);
+    return () => clearTimeout(id);
+  }, [status]);
+
   // Yashil maydon rejimi — zona + daraxt markerlarini qo'shish/olib tashlash
   useEffect(() => {
     if (status !== "ready" || !mapRef.current || !libRef.current) return;
@@ -223,6 +230,7 @@ const ObodMap3D = ({ showGreen = false, activeId = null, onSelect, plantings = n
           <ObodMapFallback
             active={activeProject}
             showGreen={showGreen}
+            plantings={plantings}
             onSelect={(p) => onSelect?.(p.id)}
           />
         </div>
