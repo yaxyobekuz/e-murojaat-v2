@@ -23,9 +23,12 @@ const GazAnalyticsPage = () => {
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-xl font-semibold tracking-tight">Gaz ta'minoti analitikasi</h1>
+          <h1 className="text-xl font-semibold tracking-tight">
+            Gaz ta'minoti analitikasi
+          </h1>
           <p className="mt-0.5 text-sm text-foreground/50">
-            Sarnovul MFY · gazlashtirish va gaz balon ta'minoti (ko'cha darajasida, mix)
+            Sarnovul MFY · gazlashtirish va gaz balon ta'minoti (ko'cha
+            darajasida, mix)
           </p>
         </div>
         {hasFilter && (
@@ -43,10 +46,7 @@ const GazAnalyticsPage = () => {
       <GazFilters value={state} onChange={setField} />
       <KpiStrip summary={summary} />
 
-      <GlassChartCard
-        title="Ko'cha bo'yicha ta'minot holati"
-        insight="Qizil/qora ko'chalar — balon kelmay qo'ygan yoki gaz deyarli yo'q"
-      >
+      <GlassChartCard title="Ko'cha bo'yicha ta'minot holati">
         <SupplyHeatmap data={heatmap || []} />
       </GlassChartCard>
 
