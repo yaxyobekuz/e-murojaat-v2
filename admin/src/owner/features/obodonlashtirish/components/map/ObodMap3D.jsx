@@ -45,12 +45,13 @@ const circleRing = (center, radiusM = 130, steps = 40) => {
 // Marker balandligi — yerga nisbatan (yer moduli kabi 25m, shunda yer ostiga tushmaydi)
 const MARKER_ALT = 25;
 
-const ObodMap3D = ({ showGreen = false, activeId = null, onSelect }) => {
+const ObodMap3D = ({ showGreen = false, activeId = null, onSelect, plantings = null }) => {
   const hostRef = useRef(null);
   const mapRef = useRef(null);
   const libRef = useRef(null);
   const greenPolysRef = useRef([]); // yashil zonalar (showGreen rejimida)
   const greenMarkersRef = useRef([]); // daraxt markerlari
+  const plantingMarkersRef = useRef([]); // ekish nuqtalari (real koordinata)
   const constructionElsRef = useRef([]); // qurilish doira + markerlari (eng tepada turishi kerak)
   const [status, setStatus] = useState("loading"); // loading | ready | fallback
 
@@ -165,6 +166,31 @@ const ObodMap3D = ({ showGreen = false, activeId = null, onSelect }) => {
     constructionElsRef.current.forEach((el) => map.append(el));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showGreen, status]);
+
+  // Ekish nuqtalari — har ko'chat ekilgan joy real koordinatasiga 🌳 marker
+  useEffect(() => {
+    if (status !== "ready" || !mapRef.current || !libRef.current) return;
+    const map = mapRef.current;
+    const { Marker3DInteractiveElement, PinElement } = libRef.current;
+
+    plantingMarkersRef.current.forEach((el) => el.remove());
+    plantingMarkersRef.current = [];
+    if (!plantings || !plantings.length) return;
+
+    plantings.forEach((p) => {
+      if (p.lat == null || p.lng == null) return;
+      // tirik qolishga qarab rang
+      const bg = p.survivalPct >= 90 ? "#16a34a" : p.survivalPct >= 85 ? "#65a30d" : "#ca8a04";
+      const pin = new PinElement({ background: bg, borderColor: "#14532d", glyph: "🌳", scale: 1.1 });
+      const marker = new Marker3DInteractiveElement({
+        position: { lat: p.lat, lng: p.lng, altitude: MARKER_ALT },
+        label: `${p.count.toLocaleString("uz-UZ")} ko'chat`,
+      });
+      marker.append(pin);
+      map.append(marker);
+      plantingMarkersRef.current.push(marker);
+    });
+  }, [plantings, status]);
 
   // Tanlangan loyihaga kamera uchadi
   useEffect(() => {

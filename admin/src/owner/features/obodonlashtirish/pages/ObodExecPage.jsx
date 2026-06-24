@@ -7,22 +7,21 @@ import {
 } from "lucide-react";
 
 import { formatMoney } from "@/shared/utils/formatMoney";
-import { CmdRoot, CmdHeader, Panel, Donut, MahallaMap, BarRow } from "@/shared/components/ui/command/primitives";
+import { CmdRoot, CmdHeader, Panel, Donut, BarRow } from "@/shared/components/ui/command/primitives";
 import { axlatSummary, AXLAT_OPERATOR_RATING, RATING_LABELS } from "../mock/axlat.data";
 import { assenSummary, ASSEN_BY_MAHALLA } from "../mock/assenizatsiya.data";
-import { ymSummary, YM_PLANTINGS, YM_BOUNDS, YM_BY_MAHALLA } from "../mock/yashilMakon.data";
+import { ymSummary, YM_PLANTINGS, YM_BY_MAHALLA } from "../mock/yashilMakon.data";
 import { hasharSummary } from "../mock/hashar.data";
 import {
   districtHealth, axlatImpact, assenImpact, ymImpact, hasharImpact, obodBadges,
-  axlatMapBlocks, axlatMapLegend, assenMapBlocks, assenMapLegend,
-  ymMapBlocks, ymMapLegend, hasharMapBlocks, hasharMapLegend,
+  axlatMapLegend, assenMapLegend, hasharMapLegend,
 } from "../mock/insights";
 import {
   InsightCard, ExecScore, AIInsightPanel, BadgeStrip, Leaderboard, ProgressRing,
   SectionBanner, AnchorNav, Reveal,
 } from "../components/insight/kit";
 import { GasFlow } from "../components/insight/GasFlow";
-import { ForestMap } from "../components/insight/ForestMap";
+import { ObodRealMap } from "../components/insight/ObodRealMap";
 
 const PLACE = "Baliqchi tumani, Andijon";
 const C = { exec: "#10b981", axlat: "#22d3ee", gaz: "#3b82f6", ym: "#22c55e", hashar: "#b794f6", live: "#34d399" };
@@ -60,8 +59,8 @@ const ObodExecPage = () => (
     <SectionBanner id="live" icon={Radio} title="Jonli kuzatuv — yashil makon" sub="Ekilgan daraxtlar xaritada · har nuqta — real ekish joyi" accent={C.live} />
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-[1fr_300px]">
       <Reveal i={0}>
-        <Panel title="Daraxtlar xaritasi" icon={MapPin} accent={C.live} source="Ekish joylari (koordinata) — demo" bodyClass="p-2">
-          <ForestMap plantings={YM_PLANTINGS} bounds={YM_BOUNDS} total={ymSummary.planted} survival={ymSummary.survivalPct} accent={C.live} height={380} />
+        <Panel title="Daraxtlar xaritasi (real 3D)" icon={MapPin} accent={C.live} source="Google 3D · ekilgan ko'chat joylari" bodyClass="p-2">
+          <ObodRealMap accent={C.live} height={400} showGreen plantings={YM_PLANTINGS} label="Jonli · ekilgan ko'chatlar" />
         </Panel>
       </Reveal>
       <Reveal i={1}>
@@ -100,8 +99,8 @@ const ObodExecPage = () => (
         equivalents={[{ icon: "📊", text: `Ishonchlilik ${axlatImpact.reliabilityScore}` }]} />
     </Kpis>
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
-      <Reveal i={0}><Panel title="Marshrut xaritasi" icon={MapPin} accent={C.axlat} source="Mahalla xizmat holati (demo)" className="lg:col-span-2" bodyClass="h-[300px]">
-        <MahallaMap blocks={axlatMapBlocks} accent={C.axlat} legend={axlatMapLegend} />
+      <Reveal i={0}><Panel title="Marshrut xaritasi (real 3D)" icon={MapPin} accent={C.axlat} source="Google 3D · Baliqchi, Andijon" className="lg:col-span-2" bodyClass="p-2">
+        <ObodRealMap accent={C.axlat} height={300} label="Xizmat hududi" legend={axlatMapLegend} />
       </Panel></Reveal>
       <Reveal i={1}><Panel title="Operator reytingi (VM 648)" icon={Gauge} accent={C.axlat}><div className="p-2"><Donut data={axlatDonut} accent={C.axlat} height={250} /></div></Panel></Reveal>
     </div>
@@ -122,8 +121,8 @@ const ObodExecPage = () => (
       <Reveal i={0}><Panel title="Suyuq chiqindi oqimi" icon={Waypoints} accent={C.gaz} source="Mahalla → qabul nuqtasi (demo)">
         <GasFlow nodes={flowNodes} accent={C.gaz} height={280} />
       </Panel></Reveal>
-      <Reveal i={1}><Panel title="Xizmat xaritasi" icon={MapPin} accent={C.gaz} source="Mahalla bo'yicha SLA (demo)" bodyClass="h-[280px]">
-        <MahallaMap blocks={assenMapBlocks} accent={C.gaz} legend={assenMapLegend} />
+      <Reveal i={1}><Panel title="Xizmat xaritasi (real 3D)" icon={MapPin} accent={C.gaz} source="Google 3D · Baliqchi, Andijon" bodyClass="p-2">
+        <ObodRealMap accent={C.gaz} height={280} label="Xizmat hududi" legend={assenMapLegend} />
       </Panel></Reveal>
     </div>
 
@@ -143,7 +142,7 @@ const ObodExecPage = () => (
       <Reveal i={0}><Panel title="Yillik reja" icon={Target} accent={C.ym}><ProgressRing value={ymSummary.planted} target={ymSummary.yearPlan} label="Reja" accent={C.ym} forecast="2026 IV ch." unit=" ta" /></Panel></Reveal>
       <Reveal i={1}><Panel title="Tizimga kiritish" icon={Database} accent="#06b6d4"><ProgressRing value={ymSummary.enteredPct} label="yashilmakon.eco" accent="#06b6d4" /></Panel></Reveal>
       <Reveal i={2}><Panel title="Ko'kalamzorlik" icon={Leaf} accent={C.ym}><ProgressRing value={ymSummary.greenCoverage} target={30} label="Qoplama" accent={C.ym} forecast="2030" unit="%" /></Panel></Reveal>
-      <Reveal i={3}><Panel title="Ekish xaritasi" icon={MapPin} accent={C.ym} source="Qayerga ekildi (demo)" bodyClass="h-[210px]"><MahallaMap blocks={ymMapBlocks} accent={C.ym} legend={ymMapLegend} /></Panel></Reveal>
+      <Reveal i={3}><Panel title="Ekish xaritasi (real 3D)" icon={MapPin} accent={C.ym} source="Google 3D · ekilgan joylar" bodyClass="p-1"><ObodRealMap accent={C.ym} height={210} showGreen plantings={YM_PLANTINGS} label="Ekilgan joylar" /></Panel></Reveal>
     </div>
 
     {/* ══════════ HASHAR ══════════ */}
@@ -160,7 +159,7 @@ const ObodExecPage = () => (
     </Kpis>
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
       <Reveal i={0}><Panel title="«Eng toza mahalla» chempionati" icon={Trophy} accent={C.hashar}><Leaderboard items={hasharBoard} accent={C.hashar} unit=" ball" /></Panel></Reveal>
-      <Reveal i={1}><Panel title="Tozalik xaritasi" icon={MapPin} accent={C.hashar} source="Mahalla reytingi (demo)" bodyClass="h-[300px]"><MahallaMap blocks={hasharMapBlocks} accent={C.hashar} legend={hasharMapLegend} /></Panel></Reveal>
+      <Reveal i={1}><Panel title="Tozalik xaritasi (real 3D)" icon={MapPin} accent={C.hashar} source="Google 3D · Baliqchi, Andijon" bodyClass="p-2"><ObodRealMap accent={C.hashar} height={300} label="Mahalla hududi" legend={hasharMapLegend} /></Panel></Reveal>
     </div>
   </CmdRoot>
 );
