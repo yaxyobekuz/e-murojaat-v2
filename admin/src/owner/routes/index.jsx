@@ -23,6 +23,7 @@ import { TalimDashboardPage, TalimDataPage, TalimStudentPage } from "@/owner/fea
 import { IibDashboardPage, IibMapPage } from "@/owner/features/iib";
 import { FvvDashboardPage, FvvMapPage } from "@/owner/features/fvv";
 import { YoshlarDashboardPage, YoshlarProjectsPage } from "@/owner/features/yoshlar";
+import { ElektrDashboardPage } from "@/owner/features/elektr";
 
 const OwnerRoutes = () => (
   <Routes>
@@ -49,6 +50,7 @@ const OwnerRoutes = () => (
     <Route path="fvv/xarita" element={<FvvMapPage />} />
     <Route path="yoshlar" element={<YoshlarDashboardPage />} />
     <Route path="yoshlar/loyihalar" element={<YoshlarProjectsPage />} />
+    <Route path="elektr" element={<ElektrDashboardPage />} />
     <Route path="*" element={<Navigate to="yer" replace />} />
   </Routes>
 );
