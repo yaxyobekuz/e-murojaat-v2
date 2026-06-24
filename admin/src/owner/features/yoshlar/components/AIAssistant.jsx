@@ -19,25 +19,25 @@ const buildInsights = () => {
   return [
     {
       icon: ShieldAlert,
-      tone: "text-rose-300",
+      tone: "text-rose-600 dark:text-rose-300",
       title: "Risk aniqlash",
       text: `Eng yuqori risk — ${worst.name} (risk ${aiRiskScore(worst)}/100). Ishsizlik va migratsiya bosimi yuqori. Tezkor aralashuv tavsiya etiladi.`,
     },
     {
       icon: TrendingUp,
-      tone: "text-cyan-300",
+      tone: "text-cyan-600 dark:text-cyan-300",
       title: "Imkoniyat tahlili",
       text: `Eng katta imkoniyat — ${best.name} (indeks ${aiOpportunityScore(best)}/100). IT va tadbirkorlik markazi sifatida kuchaytirish mumkin.`,
     },
     {
       icon: PlaneTakeoff,
-      tone: "text-amber-300",
+      tone: "text-amber-600 dark:text-amber-300",
       title: "Migratsiya tahlili",
       text: `Hududda ${t.migration.toLocaleString("uz-UZ")} nafar migratsiya bosimi ostida. Mahalliy ish o'rinlari yaratish migratsiyani ~12% kamaytiradi (prognoz).`,
     },
     {
       icon: Sparkles,
-      tone: "text-emerald-300",
+      tone: "text-emerald-600 dark:text-emerald-300",
       title: "Bandlik prognozi",
       text: `Kelgusi 6 oyda o'rtacha bandlik ${avgForecast}% ga yetishi kutilmoqda. Grant + bootcamp dasturlari bilan +4-6% qo'shimcha o'sish mumkin.`,
     },
@@ -56,7 +56,7 @@ const AIAssistant = ({ onMission, missionActive }) => {
         onClick={() => setOpen((v) => !v)}
         whileHover={{ scale: 1.06 }}
         whileTap={{ scale: 0.96 }}
-        className="relative grid size-14 place-items-center rounded-full border border-cyan-400/40 bg-cyan-500/15 text-cyan-300 backdrop-blur-xl"
+        className="relative grid size-14 place-items-center rounded-full border border-cyan-400/40 bg-cyan-500/15 text-cyan-600 dark:text-cyan-300 backdrop-blur-xl"
         style={{ boxShadow: "0 0 28px rgba(6,182,212,0.5)" }}
         aria-label="AI yordamchi"
       >
@@ -75,15 +75,15 @@ const AIAssistant = ({ onMission, missionActive }) => {
           >
             <div className="flex items-center justify-between border-b border-foreground/10 px-4 py-3">
               <div className="flex items-center gap-2">
-                <span className="grid size-7 place-items-center rounded-lg bg-cyan-500/20 text-cyan-300">
+                <span className="grid size-7 place-items-center rounded-lg bg-cyan-500/20 text-cyan-600 dark:text-cyan-300">
                   <Bot className="size-4" />
                 </span>
                 <div>
                   <div className="text-[13px] font-semibold text-foreground">AI Komandir</div>
-                  <div className="text-[10px] text-cyan-300/70">Yoshlar tahlil yordamchisi</div>
+                  <div className="text-[10px] text-cyan-600 dark:text-cyan-300/70">Yoshlar tahlil yordamchisi</div>
                 </div>
               </div>
-              <span className="flex items-center gap-1 text-[10px] text-emerald-400">
+              <span className="flex items-center gap-1 text-[10px] text-emerald-600 dark:text-emerald-400">
                 <span className="size-1.5 animate-pulse rounded-full bg-emerald-400" /> onlayn
               </span>
             </div>
@@ -109,7 +109,7 @@ const AIAssistant = ({ onMission, missionActive }) => {
                 className={cn(
                   "flex w-full items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-[13px] font-semibold transition-colors",
                   missionActive
-                    ? "bg-rose-500/20 text-rose-300 border border-rose-400/40"
+                    ? "bg-rose-500/20 text-rose-600 dark:text-rose-300 border border-rose-400/40"
                     : "bg-cyan-500/90 text-white hover:bg-cyan-500",
                 )}
               >

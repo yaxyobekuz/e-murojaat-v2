@@ -30,7 +30,7 @@ const YouthRegistry = () => {
   return (
     <GlowCard tilt={false} glow="34,211,238" className="flex flex-col">
       <div className="mb-3 flex items-center gap-2">
-        <span className="grid size-8 place-items-center rounded-lg bg-cyan-500/15 text-cyan-400"><BookUser className="size-4" /></span>
+        <span className="grid size-8 place-items-center rounded-lg bg-cyan-500/15 text-cyan-600 dark:text-cyan-400"><BookUser className="size-4" /></span>
         <div className="leading-tight">
           <h3 className="text-[14px] font-semibold text-foreground">Yoshlar daftari</h3>
           <p className="text-[11px] text-foreground/50">Ehtiyojmand yoshlar reyestri va ko'rilgan chora</p>
@@ -63,7 +63,7 @@ const YouthRegistry = () => {
           {[["", "Hammasi"], ...Object.entries(YOUTH_DIRECTION).map(([k, v]) => [k, v.label])].map(([k, label]) => (
             <button key={k} onClick={() => setField("dir", k)}
               className={cn("rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors",
-                dir === k ? "border-cyan-400/50 bg-cyan-500/15 text-cyan-400" : "border-[rgb(var(--card-border))] text-foreground/55 hover:text-foreground")}>
+                dir === k ? "border-cyan-400/50 bg-cyan-500/15 text-cyan-600 dark:text-cyan-400" : "border-[rgb(var(--card-border))] text-foreground/55 hover:text-foreground")}>
               {label}
             </button>
           ))}
@@ -87,7 +87,7 @@ const YouthRegistry = () => {
             {rows.map((r) => (
               <tr key={r.id} className="border-b border-[rgb(var(--card-border))] transition-colors last:border-0 hover:bg-muted/40">
                 <td className="px-3 py-2">
-                  <div className="font-mono text-[11px] text-cyan-400">{r.id}</div>
+                  <div className="font-mono text-[11px] text-cyan-600 dark:text-cyan-400">{r.id}</div>
                   <div className="text-[11px] text-foreground/80">{r.name}</div>
                 </td>
                 <td className="px-3 py-2 font-mono tabular-nums text-foreground/70">{r.age} · {r.gender === "F" ? "Q" : "Y"}</td>

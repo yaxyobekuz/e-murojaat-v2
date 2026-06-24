@@ -123,7 +123,7 @@ const YoshlarDashboardPage = () => {
             </div>
             <div className="rounded-2xl border border-foreground/10 bg-card/70 p-3 backdrop-blur-xl">
               <div className="mb-1 flex items-center gap-1.5 text-[12px] font-semibold text-foreground/70">
-                <RadarIcon className="size-3.5 text-cyan-300" /> {active ? active.shortName : "Umumiy"} profil
+                <RadarIcon className="size-3.5 text-cyan-600 dark:text-cyan-300" /> {active ? active.shortName : "Umumiy"} profil
               </div>
               <YouthRadar data={radarProfile(active)} color={active ? "#22d3ee" : "#06b6d4"} height={170} />
             </div>

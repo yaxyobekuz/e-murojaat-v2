@@ -37,7 +37,7 @@ const MahallaRankList = ({ mahallas = [], activeId, onSelect }) => {
               </span>
               <span className="shrink-0 text-right">
                 <span className="block text-[11px] tabular-nums text-foreground/55">{m.youth.toLocaleString("uz-UZ")}</span>
-                <span className="block text-[10px] text-rose-300/80">{m.unemployed} ishsiz</span>
+                <span className="block text-[10px] text-rose-600 dark:text-rose-300/80">{m.unemployed} ishsiz</span>
               </span>
             </button>
           );

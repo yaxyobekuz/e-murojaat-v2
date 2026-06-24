@@ -31,7 +31,7 @@ const GrantTracker = () => {
   return (
     <GlowCard tilt={false} glow="52,211,153" className="flex flex-col">
       <div className="mb-3 flex items-center gap-2">
-        <span className="grid size-8 place-items-center rounded-lg bg-emerald-500/15 text-emerald-400"><Banknote className="size-4" /></span>
+        <span className="grid size-8 place-items-center rounded-lg bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"><Banknote className="size-4" /></span>
         <div className="leading-tight">
           <h3 className="text-[14px] font-semibold text-foreground">Grant va ish o'rni kuzatuvi</h3>
           <p className="text-[11px] text-foreground/50">Ariza → ko'rib chiqildi → berildi · ajratilgan mablag'</p>
@@ -43,7 +43,7 @@ const GrantTracker = () => {
         {[
           { icon: FileCheck2, k: "Arizalar", v: s.total },
           { icon: Banknote, k: "Ajratilgan", v: formatMoney(s.totalAmount), c: "text-emerald-500", small: true },
-          { icon: Briefcase, k: "Yangi ish o'rni", v: s.totalJobs, c: "text-cyan-400" },
+          { icon: Briefcase, k: "Yangi ish o'rni", v: s.totalJobs, c: "text-cyan-600 dark:text-cyan-400" },
           { icon: FileCheck2, k: "Tasdiqlangan", v: `${s.approvedPct}%` },
         ].map((m, i) => (
           <div key={i} className="rounded-xl border border-[rgb(var(--card-border))] bg-muted/40 px-3 py-2">
@@ -71,7 +71,7 @@ const GrantTracker = () => {
         {[["", "Hammasi"], ...Object.entries(GRANT_STATUS).map(([k, v]) => [k, v.label])].map(([k, label]) => (
           <button key={k} onClick={() => setField("status", k)}
             className={cn("rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors",
-              status === k ? "border-emerald-400/50 bg-emerald-500/15 text-emerald-400" : "border-[rgb(var(--card-border))] text-foreground/55 hover:text-foreground")}>
+              status === k ? "border-emerald-400/50 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400" : "border-[rgb(var(--card-border))] text-foreground/55 hover:text-foreground")}>
             {label}
           </button>
         ))}
@@ -93,12 +93,12 @@ const GrantTracker = () => {
             {rows.map((g) => (
               <tr key={g.id} className="border-b border-[rgb(var(--card-border))] transition-colors last:border-0 hover:bg-muted/40">
                 <td className="px-3 py-2">
-                  <div className="font-mono text-[11px] text-emerald-400">{g.id}</div>
+                  <div className="font-mono text-[11px] text-emerald-600 dark:text-emerald-400">{g.id}</div>
                   <div className="text-[11px] text-foreground/80">{g.applicant} · {g.mahalla}</div>
                 </td>
                 <td className="px-3 py-2 text-foreground/70">{GRANT_TYPE[g.type].label}</td>
                 <td className="px-3 py-2 text-right font-mono tabular-nums text-foreground/80">{g.amount ? formatMoney(g.amount) : "—"}</td>
-                <td className="px-3 py-2 text-center font-mono tabular-nums text-cyan-400">{g.jobs || "—"}</td>
+                <td className="px-3 py-2 text-center font-mono tabular-nums text-cyan-600 dark:text-cyan-400">{g.jobs || "—"}</td>
                 <td className="px-3 py-2 text-center"><Chip tone={GRANT_STATUS[g.status].tone}>{GRANT_STATUS[g.status].label}</Chip></td>
               </tr>
             ))}

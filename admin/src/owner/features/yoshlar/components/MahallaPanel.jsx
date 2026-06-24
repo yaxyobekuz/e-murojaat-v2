@@ -18,7 +18,7 @@ const Stat = ({ label, value, tone = "text-foreground" }) => (
   </div>
 );
 
-const AIRow = ({ icon: Icon, label, value, tone = "text-cyan-300", bar }) => (
+const AIRow = ({ icon: Icon, label, value, tone = "text-cyan-600 dark:text-cyan-300", bar }) => (
   <div className="rounded-xl border border-foreground/10 bg-muted/40 p-2.5">
     <div className="flex items-center gap-1.5 text-[11px] text-foreground/55">
       <Icon className="size-3.5" /> {label}
@@ -77,12 +77,12 @@ const MahallaPanel = ({ mahalla, onClose }) => {
 
         {/* asosiy raqamlar */}
         <div className="grid grid-cols-3 gap-2">
-          <Stat label="Yoshlar" value={mahalla.youth.toLocaleString("uz-UZ")} tone="text-cyan-300" />
-          <Stat label="Ishsiz" value={mahalla.unemployed} tone="text-rose-300" />
-          <Stat label="Talaba" value={mahalla.students} tone="text-emerald-300" />
-          <Stat label="IT" value={mahalla.itLearners} tone="text-cyan-300" />
-          <Stat label="Tadbirkor" value={mahalla.entrepreneurs} tone="text-emerald-300" />
-          <Stat label="Iqtidorli" value={mahalla.talented} tone="text-yellow-300" />
+          <Stat label="Yoshlar" value={mahalla.youth.toLocaleString("uz-UZ")} tone="text-cyan-600 dark:text-cyan-300" />
+          <Stat label="Ishsiz" value={mahalla.unemployed} tone="text-rose-600 dark:text-rose-300" />
+          <Stat label="Talaba" value={mahalla.students} tone="text-emerald-600 dark:text-emerald-300" />
+          <Stat label="IT" value={mahalla.itLearners} tone="text-cyan-600 dark:text-cyan-300" />
+          <Stat label="Tadbirkor" value={mahalla.entrepreneurs} tone="text-emerald-600 dark:text-emerald-300" />
+          <Stat label="Iqtidorli" value={mahalla.talented} tone="text-yellow-600 dark:text-yellow-300" />
         </div>
 
         {/* radar */}
@@ -96,21 +96,21 @@ const MahallaPanel = ({ mahalla, onClose }) => {
           <AIBadge /> <span className="text-[12px] font-medium text-foreground/70">Sun'iy intellekt tahlili</span>
         </div>
         <div className="grid grid-cols-2 gap-2">
-          <div className="text-rose-300">
-            <AIRow icon={ShieldAlert} label="Risk darajasi" value={`${risk}/100`} tone="text-rose-300" bar={risk} />
+          <div className="text-rose-600 dark:text-rose-300">
+            <AIRow icon={ShieldAlert} label="Risk darajasi" value={`${risk}/100`} tone="text-rose-600 dark:text-rose-300" bar={risk} />
           </div>
-          <div className="text-cyan-300">
-            <AIRow icon={TrendingUp} label="Imkoniyat indeksi" value={`${opp}/100`} tone="text-cyan-300" bar={opp} />
+          <div className="text-cyan-600 dark:text-cyan-300">
+            <AIRow icon={TrendingUp} label="Imkoniyat indeksi" value={`${opp}/100`} tone="text-cyan-600 dark:text-cyan-300" bar={opp} />
           </div>
-          <div className="text-emerald-300">
-            <AIRow icon={Briefcase} label="Bandlik prognozi (6 oy)" value={`${forecast}%`} tone="text-emerald-300" bar={forecast} />
+          <div className="text-emerald-600 dark:text-emerald-300">
+            <AIRow icon={Briefcase} label="Bandlik prognozi (6 oy)" value={`${forecast}%`} tone="text-emerald-600 dark:text-emerald-300" bar={forecast} />
           </div>
-          <AIRow icon={PlaneTakeoff} label="Migratsiya bosimi" value={`${mig.level} (${mig.value}%)`} tone={mig.tone === "danger" ? "text-rose-300" : mig.tone === "progress" ? "text-amber-300" : "text-emerald-300"} />
+          <AIRow icon={PlaneTakeoff} label="Migratsiya bosimi" value={`${mig.level} (${mig.value}%)`} tone={mig.tone === "danger" ? "text-rose-600 dark:text-rose-300" : mig.tone === "progress" ? "text-amber-600 dark:text-amber-300" : "text-emerald-600 dark:text-emerald-300"} />
         </div>
 
         {/* karyera tavsiyasi */}
         <div className="rounded-xl border border-cyan-400/20 bg-cyan-400/[0.06] p-3">
-          <div className="flex items-center gap-1.5 text-[11px] font-semibold text-cyan-300">
+          <div className="flex items-center gap-1.5 text-[11px] font-semibold text-cyan-600 dark:text-cyan-300">
             <Lightbulb className="size-3.5" /> AI karyera tavsiyasi
           </div>
           <p className="mt-1 text-[12px] leading-relaxed text-foreground/75">{career}</p>
