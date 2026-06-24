@@ -14,4 +14,6 @@ export const MODAL = Object.freeze({
   SVET_REQUEST_STATUS: "svet:requestStatus",
   MUROJAAT_APPEAL_ACTION: "murojaat:appealAction",
   MUROJAAT_ORG_CREATE: "murojaat:orgCreate",
+
+  MSK_APPEAL_DETAIL: "msk:appealDetail",
 });

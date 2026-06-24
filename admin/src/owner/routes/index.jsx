@@ -24,6 +24,7 @@ import { IibDashboardPage, IibMapPage } from "@/owner/features/iib";
 import { FvvDashboardPage, FvvMapPage } from "@/owner/features/fvv";
 import { YoshlarDashboardPage, YoshlarProjectsPage } from "@/owner/features/yoshlar";
 import { ElektrDashboardPage } from "@/owner/features/elektr";
+import { MskAnalyticsPage, MskAppealsPage } from "@/owner/features/msk";
 
 const OwnerRoutes = () => (
   <Routes>
@@ -51,6 +52,8 @@ const OwnerRoutes = () => (
     <Route path="yoshlar" element={<YoshlarDashboardPage />} />
     <Route path="yoshlar/loyihalar" element={<YoshlarProjectsPage />} />
     <Route path="elektr" element={<ElektrDashboardPage />} />
+    <Route path="msk" element={<MskAnalyticsPage />} />
+    <Route path="msk/arizalar" element={<MskAppealsPage />} />
     <Route path="*" element={<Navigate to="yer" replace />} />
   </Routes>
 );
