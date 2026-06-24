@@ -90,6 +90,12 @@ const CSS = `
 .fcc-btn:hover{border-color:${T.gold}}
 .fcc-staffgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
 .fcc-staffc{border:1px solid ${T.border};border-radius:12px;padding:11px 13px;background:rgba(255,255,255,.02)}
+.fcc table{min-width:0!important;width:100%}
+.fcc thead{background:transparent!important}
+.fcc tbody{border:0!important}
+.fcc tbody tr{background:transparent!important}
+.fcc th{color:${T.muted}!important;text-align:left!important;text-transform:none!important;font-weight:600!important;padding:7px 4px!important}
+.fcc td{color:${T.text}}
 .fcc-c3{grid-column:span 3}.fcc-c4{grid-column:span 4}.fcc-c5{grid-column:span 5}.fcc-c6{grid-column:span 6}.fcc-c7{grid-column:span 7}.fcc-c8{grid-column:span 8}.fcc-c12{grid-column:span 12}
 .fcc-modal{position:fixed;inset:0;z-index:99999;background:rgba(5,10,15,.78);display:grid;place-items:center;padding:18px;backdrop-filter:blur(4px)}
 .fcc-mbox{color:${T.text};font-family:Inter;background:${T.panel};border:1px solid ${T.border};border-radius:18px;width:min(900px,96vw);max-height:88vh;overflow:auto;display:flex;flex-direction:column;padding:18px 20px;box-shadow:0 40px 100px rgba(0,0,0,.7)}
