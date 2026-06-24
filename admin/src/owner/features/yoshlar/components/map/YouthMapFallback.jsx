@@ -47,10 +47,10 @@ const YouthMapFallback = ({ mahallas = [], activeId, onSelect }) => {
         return (
           <g key={m.id} className="cursor-pointer" onClick={() => onSelect?.(m.id)}>
             <circle cx={p.x} cy={p.y} r={active ? 17 : 14} fill={tier.color} stroke="#fff" strokeWidth={active ? 2.5 : 1.5} />
-            <text x={p.x} y={p.y + 0.5} textAnchor="middle" dominantBaseline="central" className="pointer-events-none fill-white text-[11px] font-bold">
+            <text x={p.x} y={p.y + 0.5} textAnchor="middle" dominantBaseline="central" className="pointer-events-none fill-foreground text-[11px] font-bold">
               {m.score}
             </text>
-            <text x={p.x} y={p.y + 28} textAnchor="middle" className="pointer-events-none fill-white/70 text-[9px]">
+            <text x={p.x} y={p.y + 28} textAnchor="middle" className="pointer-events-none fill-foreground text-[9px]">
               {m.shortName}
             </text>
           </g>

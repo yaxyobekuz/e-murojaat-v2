@@ -30,8 +30,8 @@ const GlowCard = ({ children, className = "", glow = "6,182,212", tilt = true, a
       onMouseLeave={onLeave}
       style={tilt ? { rotateX: rx, rotateY: ry, transformPerspective: 900 } : undefined}
       className={cn(
-        "group relative overflow-hidden rounded-2xl border border-cyan-400/10 bg-white/[0.03] p-4 backdrop-blur-xl",
-        "shadow-[0_8px_32px_-12px_rgba(0,0,0,0.6)] transition-colors",
+        "group relative overflow-hidden rounded-2xl border border-[rgb(var(--card-border))] bg-card p-4 backdrop-blur-xl",
+        "shadow-sm transition-colors",
         className,
       )}
       {...rest}

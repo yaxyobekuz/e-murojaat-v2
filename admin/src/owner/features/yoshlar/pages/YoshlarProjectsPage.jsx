@@ -13,13 +13,13 @@ import ProjectDetail from "../components/ProjectDetail";
 import { PROJECTS, PROJECT_CATEGORIES, projectTotals } from "../mock/youth.projects";
 
 const HeadStat = ({ icon: Icon, value, label, glow }) => (
-  <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 backdrop-blur-xl">
+  <div className="flex items-center gap-3 rounded-2xl border border-foreground/10 bg-muted/40 px-4 py-3 backdrop-blur-xl">
     <span className="grid size-10 place-items-center rounded-xl" style={{ background: `rgba(${glow},0.14)`, color: `rgb(${glow})` }}>
       <Icon className="size-5" />
     </span>
     <div>
-      <LiveCounter value={value} live={false} className="text-xl font-bold tabular-nums text-white" />
-      <div className="text-[12px] text-white/45">{label}</div>
+      <LiveCounter value={value} live={false} className="text-xl font-bold tabular-nums text-foreground" />
+      <div className="text-[12px] text-foreground/45">{label}</div>
     </div>
   </div>
 );
@@ -35,8 +35,8 @@ const YoshlarProjectsPage = () => {
   const active = useMemo(() => PROJECTS.find((p) => p.id === activeId) || null, [activeId]);
 
   return (
-    <div className="relative min-h-[calc(100vh-7rem)] w-full overflow-hidden rounded-2xl border border-cyan-400/15 bg-[#070a12] p-4">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_120%_at_50%_0%,#0d1424_0%,#070a12_60%)]" />
+    <div className="relative min-h-[calc(100vh-7rem)] w-full overflow-hidden rounded-2xl border border-cyan-400/15 bg-background p-4">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_120%_at_50%_0%,rgba(6,182,212,0.08),transparent_60%)]" />
       <div className="pointer-events-none absolute inset-0 opacity-[0.15] [background-image:linear-gradient(rgba(6,182,212,0.18)_1px,transparent_1px),linear-gradient(90deg,rgba(6,182,212,0.18)_1px,transparent_1px)] [background-size:46px_46px]" />
       <div className="pointer-events-none absolute -right-24 top-10 size-72 rounded-full bg-cyan-500/12 blur-[120px]" />
 
@@ -46,11 +46,11 @@ const YoshlarProjectsPage = () => {
           <div>
             <div className="flex items-center gap-2">
               <span className="size-2 animate-pulse rounded-full bg-cyan-400" />
-              <h1 className="bg-gradient-to-r from-cyan-200 via-white to-blue-200 bg-clip-text text-xl font-bold tracking-tight text-transparent">
+              <h1 className="bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-xl font-bold tracking-tight text-transparent dark:from-cyan-300 dark:to-blue-400">
                 Yoshlar loyihalari
               </h1>
             </div>
-            <p className="mt-0.5 text-[12px] text-white/45">Yoshlar ishlari agentligi · davlat dasturlari va tashabbuslari</p>
+            <p className="mt-0.5 text-[12px] text-foreground/45">Yoshlar ishlari agentligi · davlat dasturlari va tashabbuslari</p>
           </div>
         </div>
 
@@ -109,7 +109,7 @@ const Chip = ({ active, color, onClick, children }) => (
     onClick={onClick}
     className={cn(
       "rounded-full border px-3 py-1.5 text-[12px] font-medium transition-colors",
-      active ? "border-transparent text-[#07101a]" : "border-white/15 text-white/65 hover:text-white",
+      active ? "border-transparent text-background" : "border-foreground/15 text-foreground/65 hover:text-foreground",
     )}
     style={active ? { background: color || "#22d3ee" } : undefined}
   >

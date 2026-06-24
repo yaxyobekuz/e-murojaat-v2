@@ -3,7 +3,7 @@
 import {
   Truck, Droplets, TreePine, Sparkles, Gauge, Wind, Cloud, Ruler, Boxes, Award, Activity,
   CheckCircle2, AlertTriangle, Clock, ListChecks, Target, Database, Leaf, Sprout, Users, Trophy,
-  Waypoints, MapPin, Radio,
+  Waypoints, MapPin, Radio, ScanLine, ShieldCheck,
 } from "lucide-react";
 
 import { formatMoney } from "@/shared/utils/formatMoney";
@@ -22,9 +22,13 @@ import {
 } from "../components/insight/kit";
 import { GasFlow } from "../components/insight/GasFlow";
 import { ObodRealMap } from "../components/insight/ObodRealMap";
+import { TreePassport } from "../components/insight/TreePassport";
+import { RatingTable } from "../components/insight/RatingTable";
+import { treeSummary } from "../mock/treePassport.data";
+import { ratingSummary } from "../mock/operatorRating.data";
 
 const PLACE = "Baliqchi tumani, Andijon";
-const C = { exec: "#10b981", axlat: "#22d3ee", gaz: "#3b82f6", ym: "#22c55e", hashar: "#b794f6", live: "#34d399" };
+const C = { exec: "#10b981", axlat: "#22d3ee", gaz: "#3b82f6", ym: "#22c55e", hashar: "#b794f6", live: "#34d399", rating: "#f59e0b" };
 
 const NAV = [
   { id: "live", label: "Jonli kuzatuv", icon: Radio, color: C.live },
@@ -32,7 +36,9 @@ const NAV = [
   { id: "axlat", label: "Axlat", icon: Truck, color: C.axlat },
   { id: "gaz", label: "Gaz mashinasi", icon: Droplets, color: C.gaz },
   { id: "ym", label: "Yashil makon", icon: TreePine, color: C.ym },
+  { id: "passport", label: "Daraxt pasporti", icon: ScanLine, color: C.ym },
   { id: "hashar", label: "Hashar", icon: Sparkles, color: C.hashar },
+  { id: "rating", label: "Reyting", icon: Trophy, color: C.rating },
 ];
 
 const ymMaxMahalla = Math.max(...YM_BY_MAHALLA.map((m) => m.value), 1);
@@ -145,6 +151,24 @@ const ObodExecPage = () => (
       <Reveal i={3}><Panel title="Ekish xaritasi (real 3D)" icon={MapPin} accent={C.ym} source="Google 3D · ekilgan joylar" bodyClass="p-1"><ObodRealMap accent={C.ym} height={210} showGreen plantings={YM_PLANTINGS} label="Ekilgan joylar" /></Panel></Reveal>
     </div>
 
+    {/* ══════════ DARAXT PASPORTI ══════════ */}
+    <SectionBanner id="passport" icon={ScanLine} title="Daraxt pasporti" sub="Har daraxt — unikal ID, foto, bo'y, holat (yashilmakon.eco uslubida)" accent={C.ym} />
+    <Kpis>
+      <InsightCard i={0} icon={ScanLine} label="Pasportlangan daraxt" value={treeSummary.total} accent={C.ym}
+        equivalents={[{ icon: "🆔", text: "Har biri unikal ID bilan" }]} />
+      <InsightCard i={1} icon={ShieldCheck} label="Sog'lom" value={treeSummary.healthyPct} suffix="%" accent="#22c55e"
+        equivalents={[{ icon: "🌳", text: `${treeSummary.healthy} ta sog'lom` }]} />
+      <InsightCard i={2} icon={Database} label="Tizimga kiritilgan" value={treeSummary.enteredPct} suffix="%" accent="#06b6d4"
+        equivalents={[{ icon: "📡", text: "yashilmakon.eco" }]} />
+      <InsightCard i={3} icon={TreePine} label="O'rtacha bo'y" value={treeSummary.avgHeight} suffix=" sm" accent={C.ym}
+        equivalents={[{ icon: "📏", text: `${treeSummary.weak} zaif · ${treeSummary.dead} qurigan` }]} />
+    </Kpis>
+    <Reveal i={0}>
+      <Panel title="Daraxt reyestri — ID bo'yicha qidiruv" icon={ScanLine} accent={C.ym} source="Daraxt pasporti registri (demo)" bodyClass="p-0">
+        <TreePassport />
+      </Panel>
+    </Reveal>
+
     {/* ══════════ HASHAR ══════════ */}
     <SectionBanner id="hashar" icon={Sparkles} title="Tozalov & hashar" sub="Jamoatchilik faolligi · «Eng toza mahalla» · PQ-234" accent={C.hashar} />
     <Kpis>
@@ -161,6 +185,24 @@ const ObodExecPage = () => (
       <Reveal i={0}><Panel title="«Eng toza mahalla» chempionati" icon={Trophy} accent={C.hashar}><Leaderboard items={hasharBoard} accent={C.hashar} unit=" ball" /></Panel></Reveal>
       <Reveal i={1}><Panel title="Tozalik xaritasi (real 3D)" icon={MapPin} accent={C.hashar} source="Google 3D · Baliqchi, Andijon" bodyClass="p-2"><ObodRealMap accent={C.hashar} height={300} label="Mahalla hududi" legend={hasharMapLegend} /></Panel></Reveal>
     </div>
+
+    {/* ══════════ REYTING ══════════ */}
+    <SectionBanner id="rating" icon={Trophy} title="Operator / mahalla reytingi" sub="7 metrikli baholash (xalqnazorati.uz metodologiyasi)" accent={C.rating} />
+    <Kpis>
+      <InsightCard i={0} icon={Trophy} label="Yetakchi" value={ratingSummary.top.score} suffix=" ball" accent="#fbbf24"
+        equivalents={[{ icon: "🥇", text: ratingSummary.top.name }]} />
+      <InsightCard i={1} icon={ShieldCheck} label="A'lo darajadagilar" value={ratingSummary.excellent} accent="#22c55e"
+        equivalents={[{ icon: "✅", text: `${ratingSummary.count} mahalladan` }]} />
+      <InsightCard i={2} icon={Gauge} label="O'rtacha ball" value={ratingSummary.avg} suffix="/100" accent={C.rating}
+        equivalents={[{ icon: "📊", text: "7 metrik bo'yicha" }]} />
+      <InsightCard i={3} icon={AlertTriangle} label="E'tibor talab" value={ratingSummary.worst.score} suffix=" ball" accent="#ef4444"
+        equivalents={[{ icon: "⚠️", text: ratingSummary.worst.name }]} />
+    </Kpis>
+    <Reveal i={0}>
+      <Panel title="Reyting jadvali — 7 metrik" icon={Trophy} accent={C.rating} source="xalqnazorati.uz metodologiyasi (demo)" bodyClass="p-0">
+        <RatingTable />
+      </Panel>
+    </Reveal>
   </CmdRoot>
 );
 

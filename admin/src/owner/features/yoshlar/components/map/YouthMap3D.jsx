@@ -145,7 +145,7 @@ const YouthMap3D = ({ mahallas = [], activeId = null, missionTarget = null, onSe
     <div className="relative h-full w-full overflow-hidden rounded-2xl">
       <div ref={hostRef} className="h-full w-full" style={{ display: status === "ready" ? "block" : "none" }} />
       {status === "loading" && (
-        <div className="absolute inset-0 grid place-items-center text-white/60">
+        <div className="absolute inset-0 grid place-items-center text-foreground/60">
           <div className="flex flex-col items-center gap-2">
             <Loader2 className="size-6 animate-spin text-cyan-400" />
             <p className="text-xs">3D xarita yuklanmoqda…</p>

@@ -4,7 +4,7 @@ import { lazy, Suspense } from "react";
 const YouthMap3D = lazy(() => import("./YouthMap3D"));
 
 const Fallback = () => (
-  <div className="grid h-full w-full place-items-center text-white/40">
+  <div className="grid h-full w-full place-items-center text-foreground/40">
     <p className="text-xs">Xarita tayyorlanmoqda…</p>
   </div>
 );

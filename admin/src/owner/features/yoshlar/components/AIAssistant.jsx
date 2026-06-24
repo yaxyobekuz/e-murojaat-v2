@@ -71,15 +71,15 @@ const AIAssistant = ({ onMission, missionActive }) => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.96 }}
             transition={{ type: "spring", stiffness: 260, damping: 24 }}
-            className="absolute bottom-16 right-0 w-80 overflow-hidden rounded-2xl border border-cyan-400/20 bg-[#0b0f17]/90 backdrop-blur-2xl shadow-2xl"
+            className="absolute bottom-16 right-0 w-80 overflow-hidden rounded-2xl border border-cyan-400/20 bg-card/90 backdrop-blur-2xl shadow-2xl"
           >
-            <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
+            <div className="flex items-center justify-between border-b border-foreground/10 px-4 py-3">
               <div className="flex items-center gap-2">
                 <span className="grid size-7 place-items-center rounded-lg bg-cyan-500/20 text-cyan-300">
                   <Bot className="size-4" />
                 </span>
                 <div>
-                  <div className="text-[13px] font-semibold text-white">AI Komandir</div>
+                  <div className="text-[13px] font-semibold text-foreground">AI Komandir</div>
                   <div className="text-[10px] text-cyan-300/70">Yoshlar tahlil yordamchisi</div>
                 </div>
               </div>
@@ -92,17 +92,17 @@ const AIAssistant = ({ onMission, missionActive }) => {
               {insights.map((it) => {
                 const Icon = it.icon;
                 return (
-                  <div key={it.title} className="rounded-xl border border-white/10 bg-white/[0.03] p-2.5">
+                  <div key={it.title} className="rounded-xl border border-foreground/10 bg-muted/40 p-2.5">
                     <div className={cn("flex items-center gap-1.5 text-[11px] font-semibold", it.tone)}>
                       <Icon className="size-3.5" /> {it.title}
                     </div>
-                    <p className="mt-1 text-[12px] leading-relaxed text-white/70">{it.text}</p>
+                    <p className="mt-1 text-[12px] leading-relaxed text-foreground/70">{it.text}</p>
                   </div>
                 );
               })}
             </div>
 
-            <div className="border-t border-white/10 p-3">
+            <div className="border-t border-foreground/10 p-3">
               <button
                 type="button"
                 onClick={onMission}
@@ -116,7 +116,7 @@ const AIAssistant = ({ onMission, missionActive }) => {
                 <Crosshair className="size-4" />
                 {missionActive ? "Mission Mode faol — to'xtatish" : "Mission Mode'ni ishga tushirish"}
               </button>
-              <p className="mt-1.5 text-center text-[10px] text-white/40">
+              <p className="mt-1.5 text-center text-[10px] text-foreground/40">
                 AI kamerani muammoli mahallalarga avtomatik olib boradi
               </p>
             </div>

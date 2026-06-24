@@ -11,21 +11,21 @@ import {
 import AIBadge from "./ui/AIBadge";
 import YouthRadar from "./YouthRadar";
 
-const Stat = ({ label, value, tone = "text-white" }) => (
-  <div className="rounded-xl border border-white/10 bg-white/[0.03] px-2.5 py-2">
-    <div className="text-[10px] text-white/45">{label}</div>
+const Stat = ({ label, value, tone = "text-foreground" }) => (
+  <div className="rounded-xl border border-foreground/10 bg-muted/40 px-2.5 py-2">
+    <div className="text-[10px] text-foreground/45">{label}</div>
     <div className={cn("mt-0.5 text-[15px] font-bold tabular-nums", tone)}>{value}</div>
   </div>
 );
 
 const AIRow = ({ icon: Icon, label, value, tone = "text-cyan-300", bar }) => (
-  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-2.5">
-    <div className="flex items-center gap-1.5 text-[11px] text-white/55">
+  <div className="rounded-xl border border-foreground/10 bg-muted/40 p-2.5">
+    <div className="flex items-center gap-1.5 text-[11px] text-foreground/55">
       <Icon className="size-3.5" /> {label}
     </div>
     <div className={cn("mt-1 text-[13px] font-semibold", tone)}>{value}</div>
     {typeof bar === "number" && (
-      <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-white/10">
+      <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-foreground/10">
         <motion.div
           className="h-full rounded-full"
           initial={{ width: 0 }}
@@ -53,7 +53,7 @@ const MahallaPanel = ({ mahalla, onClose }) => {
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 30 }}
       transition={{ type: "spring", stiffness: 240, damping: 26 }}
-      className="w-[330px] overflow-hidden rounded-2xl border border-white/10 bg-[#0b0f17]/80 backdrop-blur-2xl shadow-2xl"
+      className="w-[330px] overflow-hidden rounded-2xl border border-foreground/10 bg-card/80 backdrop-blur-2xl shadow-2xl"
     >
       <div className="flex flex-col gap-3 p-4">
         {/* sarlavha + score */}
@@ -66,11 +66,11 @@ const MahallaPanel = ({ mahalla, onClose }) => {
               {mahalla.score}
             </div>
             <div>
-              <h3 className="text-[15px] font-semibold text-white">{mahalla.name}</h3>
+              <h3 className="text-[15px] font-semibold text-foreground">{mahalla.name}</h3>
               <span className="text-[11px] font-medium" style={{ color: tier.color }}>{tier.label}</span>
             </div>
           </div>
-          <button onClick={onClose} aria-label="Yopish" className="grid size-7 place-items-center rounded-lg text-white/50 hover:bg-white/10 hover:text-white">
+          <button onClick={onClose} aria-label="Yopish" className="grid size-7 place-items-center rounded-lg text-foreground/50 hover:bg-foreground/10 hover:text-foreground">
             <X className="size-4" />
           </button>
         </div>
@@ -86,14 +86,14 @@ const MahallaPanel = ({ mahalla, onClose }) => {
         </div>
 
         {/* radar */}
-        <div className="rounded-xl border border-white/10 bg-white/[0.02] pt-2">
-          <div className="px-3 text-[11px] font-medium text-white/55">Yoshlar profili</div>
+        <div className="rounded-xl border border-foreground/10 bg-muted/40 pt-2">
+          <div className="px-3 text-[11px] font-medium text-foreground/55">Yoshlar profili</div>
           <YouthRadar data={radarProfile(mahalla)} color={tier.color} height={170} />
         </div>
 
         {/* AI qatlamlari */}
         <div className="flex items-center gap-2">
-          <AIBadge /> <span className="text-[12px] font-medium text-white/70">Sun'iy intellekt tahlili</span>
+          <AIBadge /> <span className="text-[12px] font-medium text-foreground/70">Sun'iy intellekt tahlili</span>
         </div>
         <div className="grid grid-cols-2 gap-2">
           <div className="text-rose-300">
@@ -113,7 +113,7 @@ const MahallaPanel = ({ mahalla, onClose }) => {
           <div className="flex items-center gap-1.5 text-[11px] font-semibold text-cyan-300">
             <Lightbulb className="size-3.5" /> AI karyera tavsiyasi
           </div>
-          <p className="mt-1 text-[12px] leading-relaxed text-white/75">{career}</p>
+          <p className="mt-1 text-[12px] leading-relaxed text-foreground/75">{career}</p>
         </div>
       </div>
     </motion.div>

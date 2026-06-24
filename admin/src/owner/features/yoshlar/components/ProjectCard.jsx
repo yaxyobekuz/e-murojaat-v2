@@ -16,9 +16,9 @@ const compact = (n) => {
 
 const Mini = ({ icon: Icon, value, label }) => (
   <div className="flex items-center gap-1.5">
-    <Icon className="size-3.5 text-white/35" />
-    <span className="text-[12px] font-semibold tabular-nums text-white/85">{value}</span>
-    <span className="text-[10px] text-white/40">{label}</span>
+    <Icon className="size-3.5 text-foreground/35" />
+    <span className="text-[12px] font-semibold tabular-nums text-foreground/85">{value}</span>
+    <span className="text-[10px] text-foreground/40">{label}</span>
   </div>
 );
 
@@ -34,8 +34,8 @@ const ProjectCard = ({ project, active, onOpen }) => {
       </div>
 
       <div className="mt-3">
-        <h3 className="text-[15px] font-semibold text-white">{project.name}</h3>
-        <p className="mt-0.5 text-[12px] text-white/50">{project.tagline}</p>
+        <h3 className="text-[15px] font-semibold text-foreground">{project.name}</h3>
+        <p className="mt-0.5 text-[12px] text-foreground/50">{project.tagline}</p>
       </div>
 
       <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5">
@@ -46,11 +46,11 @@ const ProjectCard = ({ project, active, onOpen }) => {
 
       {/* progress */}
       <div className="mt-3">
-        <div className="mb-1 flex items-center justify-between text-[10px] text-white/45">
+        <div className="mb-1 flex items-center justify-between text-[10px] text-foreground/45">
           <span>Qamrov rejasi</span>
           <span className="font-semibold tabular-nums" style={{ color: cat.color }}>{project.progress}%</span>
         </div>
-        <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
+        <div className="h-1.5 overflow-hidden rounded-full bg-foreground/10">
           <motion.div
             className="h-full rounded-full"
             initial={{ width: 0 }}
@@ -65,7 +65,7 @@ const ProjectCard = ({ project, active, onOpen }) => {
       <button
         type="button"
         onClick={() => onOpen(project)}
-        className="mt-3 flex items-center justify-center gap-1.5 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-[12px] font-medium text-white/80 transition-colors hover:bg-white/[0.07]"
+        className="mt-3 flex items-center justify-center gap-1.5 rounded-xl border border-foreground/10 bg-muted/40 px-3 py-2 text-[12px] font-medium text-foreground/80 transition-colors hover:bg-foreground/[0.07]"
       >
         Batafsil <ArrowRight className="size-3.5" />
       </button>

@@ -14,6 +14,8 @@ import MahallaRankList from "../components/MahallaRankList";
 import AIAssistant from "../components/AIAssistant";
 import SectionsStrip from "../components/SectionsStrip";
 import YouthRadar from "../components/YouthRadar";
+import YouthRegistry from "../components/YouthRegistry";
+import GrantTracker from "../components/GrantTracker";
 
 const YoshlarDashboardPage = () => {
   const { activeId, mission, missionIdx, setField, setFields } = useObjectState({
@@ -37,9 +39,9 @@ const YoshlarDashboardPage = () => {
   };
 
   return (
-    <div className="relative min-h-[calc(100vh-7rem)] w-full overflow-hidden rounded-2xl border border-cyan-400/15 bg-[#070a12] p-4">
+    <div className="relative min-h-[calc(100vh-7rem)] w-full overflow-hidden rounded-2xl border border-cyan-400/15 bg-background p-4">
       {/* opaque dark base — global purple fonni to'sadi */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_120%_at_50%_0%,#0d1424_0%,#070a12_60%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_120%_at_50%_0%,rgba(6,182,212,0.08),transparent_60%)]" />
       {/* fon grid + cyan glow (modul aksenti) */}
       <div className="pointer-events-none absolute inset-0 opacity-[0.18] [background-image:linear-gradient(rgba(6,182,212,0.18)_1px,transparent_1px),linear-gradient(90deg,rgba(6,182,212,0.18)_1px,transparent_1px)] [background-size:46px_46px]" />
       <div className="pointer-events-none absolute -left-32 top-10 size-72 rounded-full bg-cyan-500/15 blur-[120px]" />
@@ -55,15 +57,15 @@ const YoshlarDashboardPage = () => {
           <div>
             <div className="flex items-center gap-2">
               <span className="size-2 animate-pulse rounded-full bg-cyan-400" />
-              <h1 className="bg-gradient-to-r from-cyan-200 via-white to-blue-200 bg-clip-text text-xl font-bold tracking-tight text-transparent">
+              <h1 className="bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-xl font-bold tracking-tight text-transparent dark:from-cyan-300 dark:to-blue-400">
                 Yoshlar Analitikasi
               </h1>
             </div>
-            <p className="mt-0.5 text-[12px] text-white/45">
+            <p className="mt-0.5 text-[12px] text-foreground/45">
               Yoshlar ishlari agentligi · {PLACE_LABEL} · 15 mahalla real-time monitoring
             </p>
           </div>
-          <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[11px] text-white/55 backdrop-blur-xl">
+          <div className="flex items-center gap-2 rounded-xl border border-foreground/10 bg-muted/40 px-3 py-1.5 text-[11px] text-foreground/55 backdrop-blur-xl">
             <span className="size-1.5 animate-pulse rounded-full bg-emerald-400" />
             Tizim faol · {new Date().toLocaleDateString("uz-UZ")}
           </div>
@@ -75,7 +77,7 @@ const YoshlarDashboardPage = () => {
         {/* xarita + reyting + radar */}
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_300px]">
           {/* xarita */}
-          <div className="relative h-[480px] overflow-hidden rounded-2xl border border-white/10">
+          <div className="relative h-[480px] overflow-hidden rounded-2xl border border-foreground/10">
             <YouthMapBackground
               mahallas={MAHALLAS}
               activeId={activeId}
@@ -119,8 +121,8 @@ const YoshlarDashboardPage = () => {
             <div className="h-[280px]">
               <MahallaRankList mahallas={MAHALLAS} activeId={activeId} onSelect={(id) => setField("activeId", id)} />
             </div>
-            <div className="rounded-2xl border border-white/10 bg-[#0b0f17]/70 p-3 backdrop-blur-xl">
-              <div className="mb-1 flex items-center gap-1.5 text-[12px] font-semibold text-white/70">
+            <div className="rounded-2xl border border-foreground/10 bg-card/70 p-3 backdrop-blur-xl">
+              <div className="mb-1 flex items-center gap-1.5 text-[12px] font-semibold text-foreground/70">
                 <RadarIcon className="size-3.5 text-cyan-300" /> {active ? active.shortName : "Umumiy"} profil
               </div>
               <YouthRadar data={radarProfile(active)} color={active ? "#22d3ee" : "#06b6d4"} height={170} />
@@ -131,10 +133,16 @@ const YoshlarDashboardPage = () => {
         {/* 10 maxsus bo'lim */}
         <div>
           <div className="mb-2 flex items-center gap-2">
-            <h2 className="text-[15px] font-semibold text-white">Yo'nalishlar</h2>
-            <span className="text-[12px] text-white/40">10 ta strategik bo'lim</span>
+            <h2 className="text-[15px] font-semibold text-foreground">Yo'nalishlar</h2>
+            <span className="text-[12px] text-foreground/40">10 ta strategik bo'lim</span>
           </div>
           <SectionsStrip />
+        </div>
+
+        {/* Yoshlar daftari + Grant kuzatuvi */}
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+          <YouthRegistry />
+          <GrantTracker />
         </div>
       </div>
 

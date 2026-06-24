@@ -12,7 +12,7 @@ const ProjectLogo = ({ project, size = 44, iconSize = 20 }) => {
 
   return (
     <span
-      className="grid place-items-center overflow-hidden rounded-2xl bg-white/95 ring-1"
+      className="grid place-items-center overflow-hidden rounded-2xl bg-zinc-100 ring-1 dark:bg-white/95"
       style={{
         width: size,
         height: size,

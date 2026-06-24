@@ -66,11 +66,11 @@ const KpiGrid = ({ totals }) => (
                 className={cn("text-[22px] font-bold tabular-nums tracking-tight", k.tone)}
               />
               <div className="mt-0.5 flex items-center gap-1.5">
-                <span className="truncate text-[12px] text-white/55">{k.label}</span>
+                <span className="truncate text-[12px] text-foreground/55">{k.label}</span>
               </div>
               <div className={cn("mt-1 inline-flex items-center gap-0.5 text-[11px] font-medium", up ? "text-emerald-400" : "text-rose-400")}>
                 {up ? "▲" : "▼"} {Math.abs(k.delta)}%
-                <span className="ml-1 text-white/30">oylik</span>
+                <span className="ml-1 text-foreground/30">oylik</span>
               </div>
             </div>
           </GlowCard>

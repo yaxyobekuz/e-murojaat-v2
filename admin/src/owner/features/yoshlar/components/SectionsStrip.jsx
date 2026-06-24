@@ -44,13 +44,13 @@ const SectionsStrip = () => {
                 <span className="grid size-9 place-items-center rounded-xl" style={{ background: `rgba(${s.glow},0.14)`, color: `rgb(${s.glow})` }}>
                   <Icon className="size-[18px]" />
                 </span>
-                <span className="text-[12px] font-medium text-white/70">{s.label}</span>
+                <span className="text-[12px] font-medium text-foreground/70">{s.label}</span>
               </div>
               <div className="mt-3">
-                <LiveCounter value={s.value} suffix={s.suffix || ""} live={false} className="text-xl font-bold tabular-nums text-white" />
-                <div className="mt-1 text-[11px] text-white/45">{s.note}</div>
+                <LiveCounter value={s.value} suffix={s.suffix || ""} live={false} className="text-xl font-bold tabular-nums text-foreground" />
+                <div className="mt-1 text-[11px] text-foreground/45">{s.note}</div>
               </div>
-              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
+              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-foreground/10">
                 <motion.div
                   className="h-full rounded-full"
                   initial={{ width: 0 }}
