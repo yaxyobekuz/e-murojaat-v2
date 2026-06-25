@@ -17,6 +17,7 @@ import YouthRadar from "../components/YouthRadar";
 import YouthRegistry from "../components/YouthRegistry";
 import GrantTracker from "../components/GrantTracker";
 import { YouthReforms } from "../components/YouthReforms";
+import { YouthDirections } from "../components/YouthDirections";
 
 const YoshlarDashboardPage = () => {
   const { activeId, mission, missionIdx, setField, setFields } = useObjectState({
@@ -153,6 +154,15 @@ const YoshlarDashboardPage = () => {
             <span className="text-[12px] text-foreground/40">bandlik · stipendiya · ijtimoiy himoya</span>
           </div>
           <YouthReforms />
+        </div>
+
+        {/* Agentlik yo'nalishlari — volontyorlik, beshta tashabbus, parlament, iqtidor, kreditlar, dolzarb, nogiron */}
+        <div>
+          <div className="mb-2 flex items-center gap-2">
+            <h2 className="text-[15px] font-semibold text-foreground">Agentlik yo'nalishlari</h2>
+            <span className="text-[12px] text-foreground/40">volontyorlik · tashabbuslar · iqtidor · kredit</span>
+          </div>
+          <YouthDirections />
         </div>
       </div>
 
