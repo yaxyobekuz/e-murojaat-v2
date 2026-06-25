@@ -60,7 +60,7 @@ const Employment = () => {
       <div className="mt-2 grid grid-cols-2 gap-1.5">
         {EMPLOYMENT_PROGRAMS.map((p) => (
           <div key={p.key} className="flex items-center gap-1.5 rounded-lg border border-[rgb(var(--card-border))] bg-muted/40 px-2 py-1 text-[10.5px]">
-            <span>{p.icon}</span><span className="flex-1 truncate text-foreground/70">{p.name}</span>
+            <p.icon className="size-3.5 shrink-0" style={{ color: p.color }} /><span className="flex-1 truncate text-foreground/70">{p.name}</span>
             <b className="font-mono" style={{ color: p.color }}>{Math.round((p.reached / p.target) * 100)}%</b>
           </div>
         ))}
@@ -93,7 +93,9 @@ const Initiatives = () => {
         })}
       </div>
       <div className="mt-1.5 flex justify-around text-[8.5px] text-foreground/45">
-        <span>🟢 G'olib</span><span>🟡 Ovoz berilmoqda</span><span>⚪ Ko'rilmoqda</span>
+        <span className="flex items-center gap-1"><i className="size-2 rounded-full bg-emerald-500" /> G'olib</span>
+        <span className="flex items-center gap-1"><i className="size-2 rounded-full bg-amber-500" /> Ovoz berilmoqda</span>
+        <span className="flex items-center gap-1"><i className="size-2 rounded-full bg-slate-400" /> Ko'rilmoqda</span>
       </div>
     </GlowCard>
   );
@@ -110,32 +112,30 @@ const HOME = { x: 64, y: 40 }; // O'zbekiston (taxminiy)
 const Scholarships = () => (
   <GlowCard tilt={false} glow="34,211,238" className="flex flex-col">
     <Head icon={GraduationCap} glow="34,211,238" title="El-yurt umidi" sub="Talabalar dunyo bo'ylab uchmoqda" />
-    <div className="relative overflow-hidden rounded-xl border border-[rgb(var(--card-border))] bg-muted/30" style={{ height: 180 }}>
-      <svg viewBox="0 0 100 70" preserveAspectRatio="none" className="absolute inset-0 h-full w-full opacity-30">
-        {/* sodda kontinent shakllari */}
-        <rect x="10" y="30" width="20" height="20" rx="4" fill="hsl(var(--foreground)/0.15)" />
-        <rect x="42" y="26" width="22" height="20" rx="4" fill="hsl(var(--foreground)/0.15)" />
-        <rect x="74" y="38" width="18" height="22" rx="4" fill="hsl(var(--foreground)/0.15)" />
-      </svg>
+    <div className="relative overflow-hidden rounded-xl border border-[rgb(var(--card-border))]" style={{ height: 180, background: "radial-gradient(ellipse at 50% 50%, rgba(34,211,238,0.06), hsl(var(--muted)/0.25))" }}>
+      {/* dotted-grid "dunyo" foni */}
+      <div className="absolute inset-0 opacity-50" style={{ backgroundImage: "radial-gradient(hsl(var(--foreground)/0.12) 1px, transparent 1px)", backgroundSize: "10px 10px" }} />
       <svg viewBox="0 0 100 70" className="absolute inset-0 h-full w-full">
-        {/* uy nuqtasi */}
-        <circle cx={HOME.x} cy={HOME.y} r={2} fill="#22d3ee" />
-        <text x={HOME.x} y={HOME.y - 3} textAnchor="middle" fontSize={2.4} className="fill-foreground/70">🇺🇿</text>
-        {/* uchish yo'llari + samolyot */}
+        {/* uchish yo'llari + lucide samolyot (emoji emas) */}
         {SCHOLARSHIPS.filter((s) => s.status === "studying").slice(0, 7).map((s, i) => {
           const pos = COUNTRY_POS[s.country] || { x: 50, y: 35 };
+          const d = `M${HOME.x},${HOME.y} Q${(HOME.x + pos.x) / 2},${Math.min(HOME.y, pos.y) - 12} ${pos.x},${pos.y}`;
           return (
             <g key={s.id}>
-              <path id={`fly-${i}`} d={`M${HOME.x},${HOME.y} Q${(HOME.x + pos.x) / 2},${Math.min(HOME.y, pos.y) - 12} ${pos.x},${pos.y}`}
-                fill="none" stroke={hexFly(i)} strokeWidth={0.4} strokeDasharray="1.5 1.5" opacity={0.6} />
-              <circle cx={pos.x} cy={pos.y} r={1.6} fill={hexFly(i)} />
+              <path d={d} fill="none" stroke={hexFly(i)} strokeWidth={0.4} strokeDasharray="1.5 1.5" opacity={0.5} />
+              <circle cx={pos.x} cy={pos.y} r={1.8} fill={hexFly(i)} style={{ filter: `drop-shadow(0 0 1px ${hexFly(i)})` }} />
+              <text x={pos.x} y={pos.y - 3} textAnchor="middle" fontSize={2.6} className="fill-foreground/65">{s.country}</text>
               <motion.g animate={{ offsetDistance: ["0%", "100%"] }} transition={{ duration: 3 + i * 0.4, repeat: Infinity, ease: "easeInOut", delay: i * 0.3 }}
-                style={{ offsetPath: `path("M${HOME.x},${HOME.y} Q${(HOME.x + pos.x) / 2},${Math.min(HOME.y, pos.y) - 12} ${pos.x},${pos.y}")`, offsetRotate: "auto" }}>
-                <text fontSize={3}>✈️</text>
+                style={{ offsetPath: `path("${d}")`, offsetRotate: "auto" }}>
+                <Plane x={-2} y={-2} width={4} height={4} style={{ color: hexFly(i) }} />
               </motion.g>
             </g>
           );
         })}
+        {/* uy — O'zbekiston */}
+        <circle cx={HOME.x} cy={HOME.y} r={3} fill="#22d3ee" style={{ filter: "drop-shadow(0 0 2px #22d3ee)" }} />
+        <circle cx={HOME.x} cy={HOME.y} r={1.4} fill="#fff" />
+        <text x={HOME.x} y={HOME.y + 6} textAnchor="middle" fontSize={3} className="fill-foreground font-semibold">O'zbekiston</text>
       </svg>
       <div className="absolute left-2 top-2 rounded-lg bg-card/80 px-2 py-1 backdrop-blur-md">
         <span className="font-mono text-[14px] font-bold text-cyan-600 dark:text-cyan-400">{scholarshipSummary.studying}</span>
@@ -185,9 +185,13 @@ const Orphans = () => (
     {/* bitiruvchilar */}
     <div className="mt-1 flex flex-wrap gap-1.5">
       {ORPHAN_GRADUATES.map((o) => (
-        <span key={o.id} className="flex items-center gap-1 rounded-full border border-[rgb(var(--card-border))] bg-muted/40 px-2 py-0.5 text-[10px] text-foreground/70">
+        <span key={o.id} className="flex items-center gap-1.5 rounded-full border border-[rgb(var(--card-border))] bg-muted/40 px-2 py-0.5 text-[10px] text-foreground/70">
           {o.name}
-          {o.housing && "🏠"}{o.job && "💼"}{o.study && "📚"}
+          <span className="flex items-center gap-0.5">
+            {o.housing && <Home className="size-3 text-[#a78bfa]" />}
+            {o.job && <Briefcase className="size-3 text-[#34d399]" />}
+            {o.study && <BookOpen className="size-3 text-[#22d3ee]" />}
+          </span>
         </span>
       ))}
     </div>

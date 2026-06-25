@@ -57,7 +57,9 @@ export const InsightCard = ({ icon: Icon, label, value, formatter, suffix, accen
           <div className="text-[9px] font-semibold uppercase tracking-[0.18em] text-foreground/30">Ya'ni</div>
           {equivalents.map((e, k) => (
             <div key={k} className="flex items-center gap-1.5 text-[11.5px] text-foreground/70">
-              <span className="text-sm leading-none">{e.icon}</span>
+              {typeof e.icon === "function"
+                ? <e.icon className="size-3.5 shrink-0" style={{ color: accent }} />
+                : <span className="text-sm leading-none">{e.icon}</span>}
               <span>{e.text}</span>
             </div>
           ))}
@@ -158,7 +160,9 @@ export const BadgeStrip = ({ badges }) => (
         whileHover={{ scale: 1.04 }}
         className="flex items-center gap-2 rounded-xl border px-3 py-2"
         style={{ borderColor: hexA(b.color, 0.4), background: hexA(b.color, 0.08), boxShadow: `0 0 18px ${hexA(b.color, 0.2)}` }}>
-        <span className="text-lg leading-none">{b.icon}</span>
+        {typeof b.icon === "function"
+          ? <b.icon className="size-5 shrink-0" style={{ color: b.color }} />
+          : <span className="text-lg leading-none">{b.icon}</span>}
         <div className="leading-tight">
           <div className="text-[11px] font-bold text-foreground">{b.title}</div>
           <div className="text-[9.5px] text-foreground/55">{b.sub}</div>

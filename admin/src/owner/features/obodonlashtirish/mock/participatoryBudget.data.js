@@ -1,6 +1,7 @@
 // Tashabbusli budjet — fuqarolar mahalla loyihalarini taklif qiladi va ovoz beradi.
 // Asos: openbudget.uz (KQ-666, 2024) — "bir fuqaro, bir ovoz". 2025 1-mavsum: 10.45 mln ovoz,
 // 2369 g'olib, 3.2 trln so'm. Demo — deterministik.
+import { Route, Volleyball, Trees, Droplet, School, Lightbulb } from "lucide-react";
 
 const rng = (seed) => {
   const x = Math.sin(seed * 77.3 + 13.9) * 43758.5453;
@@ -9,12 +10,12 @@ const rng = (seed) => {
 
 // Loyiha turi
 export const PB_TYPE = {
-  road: { label: "Yo'l ta'miri", icon: "🛣️" },
-  sport: { label: "Sport maydonchasi", icon: "⚽" },
-  park: { label: "Bolalar maydoni / park", icon: "🌳" },
-  water: { label: "Ichimlik suvi", icon: "💧" },
-  school: { label: "Maktab / bog'cha ta'miri", icon: "🏫" },
-  light: { label: "Ko'cha yoritish", icon: "💡" },
+  road: { label: "Yo'l ta'miri", icon: Route },
+  sport: { label: "Sport maydonchasi", icon: Volleyball },
+  park: { label: "Bolalar maydoni / park", icon: Trees },
+  water: { label: "Ichimlik suvi", icon: Droplet },
+  school: { label: "Maktab / bog'cha ta'miri", icon: School },
+  light: { label: "Ko'cha yoritish", icon: Lightbulb },
 };
 
 // Holat

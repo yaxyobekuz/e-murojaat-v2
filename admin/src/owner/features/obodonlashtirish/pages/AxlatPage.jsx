@@ -1,6 +1,6 @@
 // Axlat mashinasi — "Command Center". Ma'lumot o'sha-o'sha (axlat.data.js), faqat
 // taqdimot: insight kartalar, ballar, kelmay qolgan ogohlantirish, oqim, reyestr.
-import { Truck, CheckCircle2, AlertTriangle, Boxes, Wallet, Gauge, ShieldCheck, Activity } from "lucide-react";
+import { Activity, AlertTriangle, Boxes, CheckCircle2, CreditCard, Gauge, Home, Package, ShieldCheck, Truck, Wallet } from "lucide-react";
 
 import { formatMoney } from "@/shared/utils/formatMoney";
 import { formatDateUz } from "@/shared/utils/formatDate";
@@ -43,14 +43,14 @@ const AxlatPage = () => (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
       <InsightCard i={0} icon={Boxes} label="To'plangan hajm (oy)" value={s.collectedVolume} suffix=" m³" accent={ACCENT}
         decimals={1} trend={{ dir: "up", text: "+4%" }}
-        equivalents={[{ icon: "🚛", text: `${im.trucks} ta to'la axlat mashinasi` }, { icon: "📦", text: `Reja bajarilishi ${im.fulfillPct}%` }]} />
+        equivalents={[{ icon: Truck, text: `${im.trucks} ta to'la axlat mashinasi` }, { icon: Package, text: `Reja bajarilishi ${im.fulfillPct}%` }]} />
       <InsightCard i={1} icon={Truck} label="Bugungi marshrutlar" value={s.routes} accent={ACCENT}
-        equivalents={[{ icon: "✅", text: `${s.done} keldi · ${s.late} kechikdi` }, { icon: "🏠", text: `${AXLAT_ROUTES.reduce((a, r) => a + r.houses, 0).toLocaleString("uz-UZ")} xonadon` }]} />
+        equivalents={[{ icon: CheckCircle2, text: `${s.done} keldi · ${s.late} kechikdi` }, { icon: Home, text: `${AXLAT_ROUTES.reduce((a, r) => a + r.houses, 0).toLocaleString("uz-UZ")} xonadon` }]} />
       <InsightCard i={2} icon={AlertTriangle} label="Kelmay qolgan" value={s.missed} accent="#ef4444"
         trend={{ dir: s.missed > 1 ? "down" : "flat", text: s.missed > 1 ? "e'tibor" : "nazorat" }}
-        equivalents={[{ icon: "⚠️", text: `${im.missedRoutes.map((r) => r.mahalla).join(", ") || "yo'q"}` }]} />
+        equivalents={[{ icon: AlertTriangle, text: `${im.missedRoutes.map((r) => r.mahalla).join(", ") || "yo'q"}` }]} />
       <InsightCard i={3} icon={Wallet} label="Tarif yig'imi (oy)" value={s.tariffRevenue} formatter={formatMoney} accent={ACCENT}
-        equivalents={[{ icon: "💳", text: "7 840 so'm/kishi (2025)" }]} />
+        equivalents={[{ icon: CreditCard, text: "7 840 so'm/kishi (2025)" }]} />
     </div>
 
     {/* Ballar + AI */}

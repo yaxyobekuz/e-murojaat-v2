@@ -1,6 +1,6 @@
 // Gaz mashinasi (assenizatsiya) — Command Center. Ma'lumot o'zgarmagan.
 // SLA heat reyting, eng tez hududlar, kechikkan timeline, samaradorlik metri.
-import { Droplets, ListChecks, Clock, Boxes, Zap, Activity, Gauge, MapPin } from "lucide-react";
+import { Activity, Boxes, CheckCircle2, Clock, Droplets, Fuel, Gauge, Hourglass, ListChecks, MapPin, XCircle, Zap } from "lucide-react";
 
 import { formatDateUz } from "@/shared/utils/formatDate";
 import { CmdRoot, CmdHeader, Panel, Donut, AreaSpark, FeedList } from "@/shared/components/ui/command/primitives";
@@ -42,14 +42,14 @@ const AssenizatsiyaPage = () => (
 
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
       <InsightCard i={0} icon={ListChecks} label="Jami buyurtma" value={s.total} accent={ACCENT}
-        equivalents={[{ icon: "✅", text: `${s.done} bajarildi` }, { icon: "⏳", text: `${s.inProgress} jarayonda` }]} />
+        equivalents={[{ icon: CheckCircle2, text: `${s.done} bajarildi` }, { icon: Hourglass, text: `${s.inProgress} jarayonda` }]} />
       <InsightCard i={1} icon={Clock} label="O'rtacha SLA" value={s.avgSla} suffix=" kun" accent={ACCENT} decimals={1}
         trend={{ dir: s.avgSla <= 2 ? "up" : "flat", text: s.avgSla <= 2 ? "tez" : "o'rta" }}
-        equivalents={[{ icon: "⚡", text: im.heat[0] ? `Eng tez: ${im.heat[0].label}` : "—" }]} />
+        equivalents={[{ icon: Zap, text: im.heat[0] ? `Eng tez: ${im.heat[0].label}` : "—" }]} />
       <InsightCard i={2} icon={Boxes} label="Bo'shatilgan hajm" value={s.volume} suffix=" m³" accent={ACCENT}
-        equivalents={[{ icon: "🛢️", text: `${Math.round(s.volume / 8)} ta sisterna (8 m³)` }]} />
+        equivalents={[{ icon: Fuel, text: `${Math.round(s.volume / 8)} ta sisterna (8 m³)` }]} />
       <InsightCard i={3} icon={Droplets} label="Bajarildi" value={s.done} accent="#22c55e"
-        equivalents={[{ icon: "❌", text: `${s.rejected} rad etilgan` }]} />
+        equivalents={[{ icon: XCircle, text: `${s.rejected} rad etilgan` }]} />
     </div>
 
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">

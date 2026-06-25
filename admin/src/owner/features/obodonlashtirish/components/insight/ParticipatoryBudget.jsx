@@ -2,7 +2,7 @@
 // ko'tariladi, ovoz bosilganda to'lqin/ripple + raqam sakraydi, g'oliblar podiumda glow.
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Vote, Trophy, Check } from "lucide-react";
+import { Vote, Trophy, Check, HardHat } from "lucide-react";
 
 import { formatMoney } from "@/shared/utils/formatMoney";
 import { hexA } from "@/shared/components/ui/command/primitives";
@@ -31,7 +31,7 @@ const VoteCard = ({ p, i, voteCount, voted, onVote, maxVotes }) => {
 
       <div className="relative flex items-start justify-between gap-2 p-3">
         <div className="flex items-center gap-2">
-          <span className="text-xl">{t.icon}</span>
+          <span className="grid size-8 shrink-0 place-items-center rounded-lg" style={{ background: hexA(ACCENT, 0.14), color: ACCENT }}><t.icon className="size-4" /></span>
           <div className="leading-tight">
             <div className="text-[13px] font-semibold text-foreground">{p.title}</div>
             <div className="text-[10px] text-foreground/45">{p.mahalla} · {formatMoney(p.cost)}</div>
@@ -66,8 +66,8 @@ const VoteCard = ({ p, i, voteCount, voted, onVote, maxVotes }) => {
             </AnimatePresence>
           </button>
         ) : isWinner ? (
-          <div className="rounded-lg bg-emerald-500/10 px-3 py-2 text-center text-[12px] font-semibold text-emerald-600 dark:text-emerald-400">
-            🏗️ G'olib · {p.status === "building" ? `${p.progress}% bajarildi` : "moliyalashtirildi"}
+          <div className="flex items-center justify-center gap-1.5 rounded-lg bg-emerald-500/10 px-3 py-2 text-center text-[12px] font-semibold text-emerald-600 dark:text-emerald-400">
+            <HardHat className="size-3.5" /> G'olib · {p.status === "building" ? `${p.progress}% bajarildi` : "moliyalashtirildi"}
           </div>
         ) : (
           <div className="rounded-lg bg-rose-500/10 px-3 py-2 text-center text-[12px] text-rose-600 dark:text-rose-400">Yetarli ovoz yig'ilmadi</div>

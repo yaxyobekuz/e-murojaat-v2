@@ -1,7 +1,7 @@
 // Obodonlashtirish loyihalari — command-center kartalar gridi. Ma'lumot o'zgarmagan
 // (obod.projects.js). Har loyiha: tur ikonkasi, holat badge, glow progress, byudjet.
 import { motion } from "framer-motion";
-import { Route, Trees, Lightbulb, Sprout, Droplet, Layers, Coins, Activity, CheckCircle2 } from "lucide-react";
+import { Activity, Banknote, BarChart3, CheckCircle2, Coins, Droplet, Flag, Layers, Lightbulb, Route, Sprout, Trees, Wrench } from "lucide-react";
 
 import { formatMoney } from "@/shared/utils/formatMoney";
 import { CmdRoot, CmdHeader, hexA } from "@/shared/components/ui/command/primitives";
@@ -90,13 +90,13 @@ const ObodProjectsPage = () => (
     {/* KPI insight qatori */}
     <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
       <InsightCard i={0} icon={Layers} label="Jami loyihalar" value={obodSummary.count} accent={ACCENT}
-        equivalents={[{ icon: "✅", text: `${obodSummary.done} yakunlangan` }, { icon: "🔧", text: `${obodSummary.ongoing} jarayonda` }]} />
+        equivalents={[{ icon: CheckCircle2, text: `${obodSummary.done} yakunlangan` }, { icon: Wrench, text: `${obodSummary.ongoing} jarayonda` }]} />
       <InsightCard i={1} icon={Coins} label="Umumiy byudjet" value={obodSummary.budgetUzs} formatter={formatMoney} accent="#eab308"
-        equivalents={[{ icon: "💸", text: `${formatMoney(obodSummary.spentUzs)} sarflangan` }]} />
+        equivalents={[{ icon: Banknote, text: `${formatMoney(obodSummary.spentUzs)} sarflangan` }]} />
       <InsightCard i={2} icon={Activity} label="O'rtacha bajarilish" value={obodSummary.avgProgress} suffix="%" accent={ACCENT}
-        equivalents={[{ icon: "📊", text: "Barcha loyihalar bo'yicha" }]} />
+        equivalents={[{ icon: BarChart3, text: "Barcha loyihalar bo'yicha" }]} />
       <InsightCard i={3} icon={CheckCircle2} label="Yakunlangan" value={obodSummary.done} accent="#22c55e"
-        equivalents={[{ icon: "🏁", text: `${Math.round((obodSummary.done / obodSummary.count) * 100)}% loyihalar` }]} />
+        equivalents={[{ icon: Flag, text: `${Math.round((obodSummary.done / obodSummary.count) * 100)}% loyihalar` }]} />
     </div>
 
     {/* Loyiha kartalari */}

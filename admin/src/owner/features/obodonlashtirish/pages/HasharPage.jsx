@@ -1,6 +1,6 @@
 // Tozalov & hashar — Command Center. Ma'lumot o'zgarmagan. Jamoatchilik bali,
 // faol mahallalar, volontyor o'sishi, chempionat reytingi, nishonlar.
-import { Sparkles, Users, Ruler, TreePine, Trophy, Activity, Flag, Award } from "lucide-react";
+import { Activity, Award, Calendar, Flag, Ruler, Sparkles, Sprout, TreePine, TrendingUp, Trophy, Users, Volleyball } from "lucide-react";
 
 import { formatDateUz } from "@/shared/utils/formatDate";
 import { CmdRoot, CmdHeader, Panel, Donut, AreaSpark, FeedList } from "@/shared/components/ui/command/primitives";
@@ -41,14 +41,14 @@ const HasharPage = () => (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
       <InsightCard i={0} icon={Sparkles} label="Tadbirlar" value={s.events} accent={ACCENT}
         trend={{ dir: "up", text: "faol" }}
-        equivalents={[{ icon: "📅", text: "So'nggi 6 oy" }, { icon: "🤝", text: `${s.participants.toLocaleString("uz-UZ")} ishtirokchi` }]} />
+        equivalents={[{ icon: Calendar, text: "So'nggi 6 oy" }, { icon: Users, text: `${s.participants.toLocaleString("uz-UZ")} ishtirokchi` }]} />
       <InsightCard i={1} icon={Ruler} label="Tozalangan maydon" value={s.area} suffix=" ga" accent={ACCENT} decimals={1}
-        equivalents={[{ icon: "⚽", text: `${im.fields} ta futbol maydoni` }]} />
+        equivalents={[{ icon: Volleyball, text: `${im.fields} ta futbol maydoni` }]} />
       <InsightCard i={2} icon={Users} label="Ishtirokchilar" value={s.participants} accent={ACCENT}
         trend={{ dir: "up", text: "+12%" }}
-        equivalents={[{ icon: "📈", text: `O'rtacha ${Math.round(s.participants / s.events)} kishi/tadbir` }]} />
+        equivalents={[{ icon: TrendingUp, text: `O'rtacha ${Math.round(s.participants / s.events)} kishi/tadbir` }]} />
       <InsightCard i={3} icon={TreePine} label="Ekilgan daraxt" value={s.trees} accent="#22c55e"
-        equivalents={[{ icon: "🌱", text: "Hashar davomida" }]} />
+        equivalents={[{ icon: Sprout, text: "Hashar davomida" }]} />
     </div>
 
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">

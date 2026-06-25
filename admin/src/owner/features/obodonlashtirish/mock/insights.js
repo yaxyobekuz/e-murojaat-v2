@@ -1,5 +1,7 @@
 // Mavjud raqamlardan KELIB CHIQADIGAN insightlar (impact ekvivalenti, ballar, AI xulosa,
 // nishonlar, tuman salomatlik indeksi). Asl mock data O'ZGARMAYDI — faqat o'qiladi.
+import { Trophy, TreePine, Truck, Zap } from "lucide-react";
+
 import { axlatSummary, AXLAT_ROUTES } from "./axlat.data";
 import { assenSummary, ASSEN_ORDERS } from "./assenizatsiya.data";
 import { ymSummary, YM_PLANTINGS } from "./yashilMakon.data";
@@ -154,10 +156,10 @@ export const obodBadges = (() => {
   const topClean = HASHAR_RANKING[0];
   const bestRoute = [...AXLAT_ROUTES].filter((r) => r.status === "done").sort((a, b) => b.collectedVolume - a.collectedVolume)[0];
   return [
-    { icon: "🏆", title: "Eng toza mahalla", sub: topClean ? `${topClean.key} · ${topClean.value} ball` : "—", color: "#fbbf24" },
-    { icon: "🌳", title: "Yashil chempion", sub: `${ymSummary.survivalPct}% tirik qolish`, color: "#22c55e" },
-    { icon: "🚛", title: "Eng ishonchli marshrut", sub: bestRoute ? bestRoute.name : "—", color: "#22d3ee" },
-    { icon: "⚡", title: "Tez xizmat", sub: `${assenSummary.avgSla} kun o'rtacha SLA`, color: "#3b82f6" },
+    { icon: Trophy, title: "Eng toza mahalla", sub: topClean ? `${topClean.key} · ${topClean.value} ball` : "—", color: "#fbbf24" },
+    { icon: TreePine, title: "Yashil chempion", sub: `${ymSummary.survivalPct}% tirik qolish`, color: "#22c55e" },
+    { icon: Truck, title: "Eng ishonchli marshrut", sub: bestRoute ? bestRoute.name : "—", color: "#22d3ee" },
+    { icon: Zap, title: "Tez xizmat", sub: `${assenSummary.avgSla} kun o'rtacha SLA`, color: "#3b82f6" },
   ];
 })();
 

@@ -1,10 +1,6 @@
 // Obodonlashtirish — YAGONA umumiy sahifa. 4 modul (Axlat, Gaz, Yashil makon, Hashar)
 // bitta tartibli sahifada bo'limlar sifatida. Ma'lumot o'zgarmagan — mavjud mock + insights.
-import {
-  Truck, Droplets, TreePine, Sparkles, Gauge, Wind, Cloud, Ruler, Boxes, Award, Activity,
-  CheckCircle2, AlertTriangle, Clock, ListChecks, Target, Database, Leaf, Sprout, Users, Trophy,
-  Waypoints, MapPin, Radio, ScanLine, ShieldCheck, Vote, Wallet, MessageSquareWarning,
-} from "lucide-react";
+import { Activity, AlertTriangle, Award, Banknote, BarChart3, Boxes, Car, CheckCircle2, ClipboardList, Clock, Cloud, Database, Droplet, Droplets, Fuel, Gauge, Globe, HardHat, Hourglass, Leaf, ListChecks, MapPin, Medal, MessageSquareWarning, Radio, Ruler, ScanLine, ShieldCheck, Sparkles, Sprout, Sun, Target, TreePine, TrendingUp, Trophy, Truck, User, Users, Volleyball, Vote, Wallet, Waypoints, Wind, Zap } from "lucide-react";
 
 import { formatMoney } from "@/shared/utils/formatMoney";
 import { CmdRoot, CmdHeader, Panel, Donut, BarRow } from "@/shared/components/ui/command/primitives";
@@ -105,13 +101,13 @@ const ObodExecPage = () => (
     <SectionBanner id="budget" icon={Vote} title="Tashabbusli budjet" sub="Fuqarolar loyihalarni taklif qiladi va ovoz beradi · openbudget.uz" accent={C.budget} />
     <Kpis>
       <InsightCard i={0} icon={Vote} label="Jami loyihalar" value={pbSummary.total} accent={C.budget}
-        equivalents={[{ icon: "🗳️", text: `${pbSummary.voting} ta ovoz berilmoqda` }]} />
+        equivalents={[{ icon: Vote, text: `${pbSummary.voting} ta ovoz berilmoqda` }]} />
       <InsightCard i={1} icon={Users} label="Jami ovozlar" value={pbSummary.totalVotes} accent={C.budget}
-        equivalents={[{ icon: "👤", text: "«Bir fuqaro, bir ovoz»" }]} />
+        equivalents={[{ icon: User, text: "«Bir fuqaro, bir ovoz»" }]} />
       <InsightCard i={2} icon={CheckCircle2} label="G'olib loyihalar" value={pbSummary.won} accent="#22c55e"
-        equivalents={[{ icon: "🏗️", text: "Moliyalashtirildi" }]} />
+        equivalents={[{ icon: HardHat, text: "Moliyalashtirildi" }]} />
       <InsightCard i={3} icon={Wallet} label="Ajratilgan budjet" value={pbSummary.allocated} formatter={formatMoney} accent={C.budget}
-        equivalents={[{ icon: "💰", text: "Mahalla loyihalariga" }]} />
+        equivalents={[{ icon: Banknote, text: "Mahalla loyihalariga" }]} />
     </Kpis>
     <Reveal i={0}><Panel title="Loyihalar — ovoz berish" icon={Vote} accent={C.budget} source="openbudget.uz uslubi (demo)" bodyClass="p-0"><ParticipatoryBudget /></Panel></Reveal>
 
@@ -119,13 +115,13 @@ const ObodExecPage = () => (
     <SectionBanner id="reports" icon={MessageSquareWarning} title="Xalq nazorati — fuqaro shikoyatlari" sub="Foto + manzil bilan xabar · fuqaro tasdiqlashi bilan yopiladi · xalqnazorati.uz" accent={C.reports} />
     <Kpis>
       <InsightCard i={0} icon={MessageSquareWarning} label="Jami shikoyat" value={reportsSummary.total} accent={C.reports}
-        equivalents={[{ icon: "📋", text: `${reportsSummary.active} ta jarayonda` }]} />
+        equivalents={[{ icon: ClipboardList, text: `${reportsSummary.active} ta jarayonda` }]} />
       <InsightCard i={1} icon={CheckCircle2} label="Fuqaro tasdiqladi" value={reportsSummary.confirmedPct} suffix="%" accent="#22c55e"
-        equivalents={[{ icon: "✅", text: `${reportsSummary.confirmed} ta yopildi` }]} />
+        equivalents={[{ icon: CheckCircle2, text: `${reportsSummary.confirmed} ta yopildi` }]} />
       <InsightCard i={2} icon={AlertTriangle} label="Muddati o'tgan" value={reportsSummary.overdue} accent="#ef4444"
-        equivalents={[{ icon: "⏰", text: "24/72 soat SLA" }]} />
+        equivalents={[{ icon: Clock, text: "24/72 soat SLA" }]} />
       <InsightCard i={3} icon={Clock} label="O'rtacha javob" value={reportsSummary.avgSla} suffix=" soat" accent={C.reports}
-        equivalents={[{ icon: "⚡", text: "Hal qilish vaqti" }]} />
+        equivalents={[{ icon: Zap, text: "Hal qilish vaqti" }]} />
     </Kpis>
     <Reveal i={0}><Panel title="Shikoyatlar — foto va holat" icon={MessageSquareWarning} accent={C.reports} source="xalqnazorati.uz uslubi (demo)" bodyClass="p-0"><CitizenReports /></Panel></Reveal>
 
@@ -133,13 +129,13 @@ const ObodExecPage = () => (
     <SectionBanner id="eco" icon={Leaf} title="Eko-faol fuqaro" sub="Oilalar eko-ballari · «Yashil oila» status · mukofotlar · ecofaolfuqaro.uz" accent={C.eco} />
     <Kpis>
       <InsightCard i={0} icon={Leaf} label="Eko-ballar (jami)" value={ecoSummary.totalPoints} accent={C.eco}
-        equivalents={[{ icon: "🌳", text: `${ecoSummary.totalTrees} daraxt ekilgan` }]} />
+        equivalents={[{ icon: TreePine, text: `${ecoSummary.totalTrees} daraxt ekilgan` }]} />
       <InsightCard i={1} icon={ShieldCheck} label="Yashil oilalar" value={ecoSummary.greenFamilies} accent="#22c55e"
-        equivalents={[{ icon: "🌿", text: `${ecoSummary.families} oiladan` }]} />
+        equivalents={[{ icon: Sprout, text: `${ecoSummary.families} oiladan` }]} />
       <InsightCard i={2} icon={Sprout} label="Quyosh panellari" value={ecoSummary.totalSolar} suffix=" kW" accent="#eab308"
-        equivalents={[{ icon: "☀️", text: "+100 ball/kW" }]} />
+        equivalents={[{ icon: Sun, text: "+100 ball/kW" }]} />
       <InsightCard i={3} icon={Award} label="Mukofotlar" value={4} accent={C.eco}
-        equivalents={[{ icon: "🚗", text: "Elektromobil · velosiped" }]} />
+        equivalents={[{ icon: Car, text: "Elektromobil · velosiped" }]} />
     </Kpis>
     <Reveal i={0}><Panel title="Eko-faollik reytingi va ball tizimi" icon={Leaf} accent={C.eco} source="ecofaolfuqaro.uz uslubi (demo)" bodyClass="p-0"><EcoCitizen /></Panel></Reveal>
 
@@ -147,13 +143,13 @@ const ObodExecPage = () => (
     <SectionBanner id="axlat" icon={Truck} title="Axlat mashinasi" sub="Qattiq maishiy chiqindi — VM 95/648-son" accent={C.axlat} />
     <Kpis>
       <InsightCard i={0} icon={Boxes} label="To'plangan hajm" value={axlatSummary.collectedVolume} suffix=" m³" accent={C.axlat} decimals={1}
-        equivalents={[{ icon: "🚛", text: `${axlatImpact.trucks} ta mashina` }]} />
+        equivalents={[{ icon: Truck, text: `${axlatImpact.trucks} ta mashina` }]} />
       <InsightCard i={1} icon={CheckCircle2} label="Bajarildi" value={axlatSummary.completionPct} suffix="%" accent="#22c55e"
-        equivalents={[{ icon: "✅", text: `${axlatSummary.done}/${axlatSummary.routes} marshrut` }]} />
+        equivalents={[{ icon: CheckCircle2, text: `${axlatSummary.done}/${axlatSummary.routes} marshrut` }]} />
       <InsightCard i={2} icon={AlertTriangle} label="Kelmay qolgan" value={axlatSummary.missed} accent="#ef4444"
-        equivalents={[{ icon: "⚠️", text: axlatImpact.missedRoutes.map((r) => r.mahalla).join(", ") || "yo'q" }]} />
+        equivalents={[{ icon: AlertTriangle, text: axlatImpact.missedRoutes.map((r) => r.mahalla).join(", ") || "yo'q" }]} />
       <InsightCard i={3} icon={Gauge} label="Tozalik indeksi" value={axlatImpact.cleanlinessIndex} suffix="/100" accent={C.axlat}
-        equivalents={[{ icon: "📊", text: `Ishonchlilik ${axlatImpact.reliabilityScore}` }]} />
+        equivalents={[{ icon: BarChart3, text: `Ishonchlilik ${axlatImpact.reliabilityScore}` }]} />
     </Kpis>
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
       <Reveal i={0}><Panel title="Marshrut xaritasi (real 3D)" icon={MapPin} accent={C.axlat} source="Google 3D · Baliqchi, Andijon" className="lg:col-span-2" bodyClass="p-2">
@@ -166,13 +162,13 @@ const ObodExecPage = () => (
     <SectionBanner id="gaz" icon={Droplets} title="Gaz mashinasi — assenizatsiya" sub="Suyuq chiqindi · buyurtma asosida" accent={C.gaz} />
     <Kpis>
       <InsightCard i={0} icon={ListChecks} label="Jami buyurtma" value={assenSummary.total} accent={C.gaz}
-        equivalents={[{ icon: "✅", text: `${assenSummary.done} bajarildi` }]} />
+        equivalents={[{ icon: CheckCircle2, text: `${assenSummary.done} bajarildi` }]} />
       <InsightCard i={1} icon={Clock} label="O'rtacha SLA" value={assenSummary.avgSla} suffix=" kun" accent={C.gaz} decimals={1}
-        equivalents={[{ icon: "⚡", text: assenImpact.heat[0] ? `Tez: ${assenImpact.heat[0].label}` : "—" }]} />
+        equivalents={[{ icon: Zap, text: assenImpact.heat[0] ? `Tez: ${assenImpact.heat[0].label}` : "—" }]} />
       <InsightCard i={2} icon={Boxes} label="Bo'shatilgan hajm" value={assenSummary.volume} suffix=" m³" accent={C.gaz}
-        equivalents={[{ icon: "🛢️", text: `${Math.round(assenSummary.volume / 8)} sisterna` }]} />
+        equivalents={[{ icon: Fuel, text: `${Math.round(assenSummary.volume / 8)} sisterna` }]} />
       <InsightCard i={3} icon={Gauge} label="Samaradorlik" value={assenImpact.efficiency} suffix="/100" accent={C.gaz}
-        equivalents={[{ icon: "⏳", text: `${assenSummary.inProgress} jarayonda` }]} />
+        equivalents={[{ icon: Hourglass, text: `${assenSummary.inProgress} jarayonda` }]} />
     </Kpis>
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
       <Reveal i={0}><Panel title="Suyuq chiqindi oqimi" icon={Waypoints} accent={C.gaz} source="Mahalla → qabul nuqtasi (demo)">
@@ -187,13 +183,13 @@ const ObodExecPage = () => (
     <SectionBanner id="ym" icon={TreePine} title="Yashil makon" sub="Ko'chat ekish · ekologik ta'sir · yashilmakon.eco" accent={C.ym} />
     <Kpis>
       <InsightCard i={0} icon={TreePine} label="Ekilgan ko'chat" value={ymSummary.planted} accent={C.ym}
-        equivalents={[{ icon: "🌳", text: `~${ymImpact.mahallasGreen} mahalla qoplamasi` }]} />
+        equivalents={[{ icon: TreePine, text: `~${ymImpact.mahallasGreen} mahalla qoplamasi` }]} />
       <InsightCard i={1} icon={Wind} label="CO₂ yutilishi" value={ymImpact.co2} suffix=" t/yil" accent="#06b6d4"
-        equivalents={[{ icon: "🌍", text: "Ekologik foyda" }]} />
+        equivalents={[{ icon: Globe, text: "Ekologik foyda" }]} />
       <InsightCard i={2} icon={Cloud} label="O₂ ajralishi" value={ymImpact.o2} suffix=" t/yil" accent={C.ym}
-        equivalents={[{ icon: "🫁", text: `~${(ymImpact.o2 * 2).toLocaleString("uz-UZ")} kishilik` }]} />
+        equivalents={[{ icon: Wind, text: `~${(ymImpact.o2 * 2).toLocaleString("uz-UZ")} kishilik` }]} />
       <InsightCard i={3} icon={Sprout} label="Tirik qolish" value={ymSummary.survivalPct} suffix="%" accent={C.ym}
-        equivalents={[{ icon: "💧", text: "Sug'orish faol" }]} />
+        equivalents={[{ icon: Droplet, text: "Sug'orish faol" }]} />
     </Kpis>
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-4">
       <Reveal i={0}><Panel title="Yillik reja" icon={Target} accent={C.ym}><ProgressRing value={ymSummary.planted} target={ymSummary.yearPlan} label="Reja" accent={C.ym} forecast="2026 IV ch." unit=" ta" /></Panel></Reveal>
@@ -206,13 +202,13 @@ const ObodExecPage = () => (
     <SectionBanner id="passport" icon={ScanLine} title="Daraxt pasporti" sub="Har daraxt — unikal ID, foto, bo'y, holat (yashilmakon.eco uslubida)" accent={C.ym} />
     <Kpis>
       <InsightCard i={0} icon={ScanLine} label="Pasportlangan daraxt" value={treeSummary.total} accent={C.ym}
-        equivalents={[{ icon: "🆔", text: "Har biri unikal ID bilan" }]} />
+        equivalents={[{ icon: ScanLine, text: "Har biri unikal ID bilan" }]} />
       <InsightCard i={1} icon={ShieldCheck} label="Sog'lom" value={treeSummary.healthyPct} suffix="%" accent="#22c55e"
-        equivalents={[{ icon: "🌳", text: `${treeSummary.healthy} ta sog'lom` }]} />
+        equivalents={[{ icon: TreePine, text: `${treeSummary.healthy} ta sog'lom` }]} />
       <InsightCard i={2} icon={Database} label="Tizimga kiritilgan" value={treeSummary.enteredPct} suffix="%" accent="#06b6d4"
-        equivalents={[{ icon: "📡", text: "yashilmakon.eco" }]} />
+        equivalents={[{ icon: Radio, text: "yashilmakon.eco" }]} />
       <InsightCard i={3} icon={TreePine} label="O'rtacha bo'y" value={treeSummary.avgHeight} suffix=" sm" accent={C.ym}
-        equivalents={[{ icon: "📏", text: `${treeSummary.weak} zaif · ${treeSummary.dead} qurigan` }]} />
+        equivalents={[{ icon: Ruler, text: `${treeSummary.weak} zaif · ${treeSummary.dead} qurigan` }]} />
     </Kpis>
     <Reveal i={0}>
       <Panel title="Daraxt reyestri — ID bo'yicha qidiruv" icon={ScanLine} accent={C.ym} source="Daraxt pasporti registri (demo)" bodyClass="p-0">
@@ -224,13 +220,13 @@ const ObodExecPage = () => (
     <SectionBanner id="hashar" icon={Sparkles} title="Tozalov & hashar" sub="Jamoatchilik faolligi · «Eng toza mahalla» · PQ-234" accent={C.hashar} />
     <Kpis>
       <InsightCard i={0} icon={Sparkles} label="Tadbirlar" value={hasharSummary.events} accent={C.hashar}
-        equivalents={[{ icon: "🤝", text: `${hasharSummary.participants.toLocaleString("uz-UZ")} ishtirokchi` }]} />
+        equivalents={[{ icon: Users, text: `${hasharSummary.participants.toLocaleString("uz-UZ")} ishtirokchi` }]} />
       <InsightCard i={1} icon={Ruler} label="Tozalangan maydon" value={hasharSummary.area} suffix=" ga" accent={C.hashar} decimals={1}
-        equivalents={[{ icon: "⚽", text: `${hasharImpact.fields} futbol maydoni` }]} />
+        equivalents={[{ icon: Volleyball, text: `${hasharImpact.fields} futbol maydoni` }]} />
       <InsightCard i={2} icon={Users} label="Faollik bali" value={hasharImpact.engagement} suffix="/100" accent={C.hashar}
-        equivalents={[{ icon: "📈", text: "+12% o'sish" }]} />
+        equivalents={[{ icon: TrendingUp, text: "+12% o'sish" }]} />
       <InsightCard i={3} icon={Trophy} label="Top mahalla" value={hasharSummary.topMahalla.value} suffix=" ball" accent="#fbbf24"
-        equivalents={[{ icon: "🏆", text: hasharSummary.topMahalla.key }]} />
+        equivalents={[{ icon: Trophy, text: hasharSummary.topMahalla.key }]} />
     </Kpis>
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
       <Reveal i={0}><Panel title="«Eng toza mahalla» chempionati" icon={Trophy} accent={C.hashar}><Leaderboard items={hasharBoard} accent={C.hashar} unit=" ball" /></Panel></Reveal>
@@ -241,13 +237,13 @@ const ObodExecPage = () => (
     <SectionBanner id="rating" icon={Trophy} title="Operator / mahalla reytingi" sub="7 metrikli baholash (xalqnazorati.uz metodologiyasi)" accent={C.rating} />
     <Kpis>
       <InsightCard i={0} icon={Trophy} label="Yetakchi" value={ratingSummary.top.score} suffix=" ball" accent="#fbbf24"
-        equivalents={[{ icon: "🥇", text: ratingSummary.top.name }]} />
+        equivalents={[{ icon: Medal, text: ratingSummary.top.name }]} />
       <InsightCard i={1} icon={ShieldCheck} label="A'lo darajadagilar" value={ratingSummary.excellent} accent="#22c55e"
-        equivalents={[{ icon: "✅", text: `${ratingSummary.count} mahalladan` }]} />
+        equivalents={[{ icon: CheckCircle2, text: `${ratingSummary.count} mahalladan` }]} />
       <InsightCard i={2} icon={Gauge} label="O'rtacha ball" value={ratingSummary.avg} suffix="/100" accent={C.rating}
-        equivalents={[{ icon: "📊", text: "7 metrik bo'yicha" }]} />
+        equivalents={[{ icon: BarChart3, text: "7 metrik bo'yicha" }]} />
       <InsightCard i={3} icon={AlertTriangle} label="E'tibor talab" value={ratingSummary.worst.score} suffix=" ball" accent="#ef4444"
-        equivalents={[{ icon: "⚠️", text: ratingSummary.worst.name }]} />
+        equivalents={[{ icon: AlertTriangle, text: ratingSummary.worst.name }]} />
     </Kpis>
     <Reveal i={0}>
       <Panel title="Reyting jadvali — 7 metrik" icon={Trophy} accent={C.rating} source="xalqnazorati.uz metodologiyasi (demo)" bodyClass="p-0">

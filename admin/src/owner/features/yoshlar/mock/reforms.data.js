@@ -1,5 +1,7 @@
 // Yoshlar islohotlari — real davlat dasturlari asosida (demo, deterministik).
 // Bandlik, Tashabbusli budjet, El-yurt umidi, Mehribonlik uyi bitiruvchilari.
+import { Briefcase, GraduationCap, Wrench, Rocket } from "lucide-react";
+
 import { MAHALLAS } from "./youth.data";
 
 const rng = (seed) => {
@@ -10,10 +12,10 @@ const rng = (seed) => {
 // ───────── 1. BANDLIK DASTURLARI ─────────
 // Asos: "Yoshlar biznesi" (100k yoshga daromad), "Kelajakka qadam" (140k bitiruvchi ish bilan)
 export const EMPLOYMENT_PROGRAMS = [
-  { key: "biznes", name: "Yoshlar biznesi", desc: "Yoshlarga daromadli ish", target: 100000, reached: 71400, color: "#34d399", icon: "💼" },
-  { key: "kelajak", name: "Kelajakka qadam", desc: "Bitiruvchilarni ishga joylash", target: 140000, reached: 98200, color: "#22d3ee", icon: "🎓" },
-  { key: "kasb", name: "Kasb-hunar o'rgatish", desc: "Bepul kasbga tayyorlash", target: 60000, reached: 44800, color: "#a78bfa", icon: "🔧" },
-  { key: "subsidiya", name: "Tadbirkorlik subsidiyasi", desc: "Startap va biznes granti", target: 25000, reached: 16900, color: "#f59e0b", icon: "🚀" },
+  { key: "biznes", name: "Yoshlar biznesi", desc: "Yoshlarga daromadli ish", target: 100000, reached: 71400, color: "#34d399", icon: Briefcase },
+  { key: "kelajak", name: "Kelajakka qadam", desc: "Bitiruvchilarni ishga joylash", target: 140000, reached: 98200, color: "#22d3ee", icon: GraduationCap },
+  { key: "kasb", name: "Kasb-hunar o'rgatish", desc: "Bepul kasbga tayyorlash", target: 60000, reached: 44800, color: "#a78bfa", icon: Wrench },
+  { key: "subsidiya", name: "Tadbirkorlik subsidiyasi", desc: "Startap va biznes granti", target: 25000, reached: 16900, color: "#f59e0b", icon: Rocket },
 ];
 
 // Ish o'rni voronkasi (ariza → o'qish → joylashish)

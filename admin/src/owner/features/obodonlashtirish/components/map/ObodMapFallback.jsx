@@ -42,9 +42,8 @@ const ObodMapFallback = ({ active, showGreen = false, onSelect, plantings = null
         const col = p.survivalPct >= 90 ? "#22c55e" : p.survivalPct >= 85 ? "#65a30d" : "#ca8a04";
         return (
           <g key={`pl-${i}`}>
-            <circle cx={c.x} cy={c.y} r={sz} fill={col} fillOpacity={0.85} />
+            <circle cx={c.x} cy={c.y} r={sz} fill={col} fillOpacity={0.85} stroke={col} strokeWidth={1} />
             <text x={c.x} y={c.y - sz - 2} textAnchor="middle" className="pointer-events-none fill-foreground text-[9px] font-mono">{p.count}</text>
-            <text x={c.x} y={c.y + 3} textAnchor="middle" dominantBaseline="middle" className="pointer-events-none text-[9px]">🌳</text>
           </g>
         );
       })}
@@ -62,9 +61,9 @@ const ObodMapFallback = ({ active, showGreen = false, onSelect, plantings = null
                 y={c.y}
                 textAnchor="middle"
                 dominantBaseline="middle"
-                className="pointer-events-none fill-foreground text-[12px] font-semibold"
+                className="pointer-events-none fill-foreground text-[11px] font-semibold"
               >
-                🌳 {p.info.trees}
+                {p.info.trees} daraxt
               </text>
             </g>
           );
@@ -80,10 +79,7 @@ const ObodMapFallback = ({ active, showGreen = false, onSelect, plantings = null
               <animate attributeName="r" values="10;22;10" dur="1.8s" repeatCount="indefinite" />
               <animate attributeName="fill-opacity" values="0.5;0;0.5" dur="1.8s" repeatCount="indefinite" />
             </circle>
-            <circle cx={c.x} cy={c.y} r={8} fill="#d97706" />
-            <text x={c.x} y={c.y + 1} textAnchor="middle" dominantBaseline="middle" className="pointer-events-none text-[10px]">
-              🏗️
-            </text>
+            <circle cx={c.x} cy={c.y} r={8} fill="#d97706" stroke="#fff" strokeWidth={1.5} />
           </g>
         );
       })}

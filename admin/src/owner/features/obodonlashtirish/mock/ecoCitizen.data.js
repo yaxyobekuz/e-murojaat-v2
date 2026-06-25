@@ -1,6 +1,7 @@
 // Eko Faol Fuqaro — fuqaro/oila eko-faollik ballari + "Yashil oila" status + mukofotlar.
 // Asos: ecofaolfuqaro.uz — daraxt ekkani +50, quyosh +100/kW, tozalash +30, h.k.
 // "Yashil oila" → elektromobil tanlovi (Obod Mahalla). Demo — deterministik.
+import { TreePine, Sun, Trash2, Lightbulb, Footprints, Car, Bike, Home, Ticket } from "lucide-react";
 
 const rng = (seed) => {
   const x = Math.sin(seed * 83.1 + 27.7) * 43758.5453;
@@ -9,11 +10,11 @@ const rng = (seed) => {
 
 // Ball turlari (real koeffitsientlar)
 export const ECO_ACTIONS = [
-  { key: "tree", label: "Daraxt ekish / parvarish", points: 50, icon: "🌳" },
-  { key: "solar", label: "Quyosh paneli (1 kW)", points: 100, icon: "☀️" },
-  { key: "cleanup", label: "Hudud tozalash / saralash", points: 30, icon: "🧹" },
-  { key: "device", label: "Energiya tejovchi qurilma", points: 75, icon: "💡" },
-  { key: "walk", label: "Piyoda yurish (kun)", points: 15, icon: "🚶" },
+  { key: "tree", label: "Daraxt ekish / parvarish", points: 50, icon: TreePine },
+  { key: "solar", label: "Quyosh paneli (1 kW)", points: 100, icon: Sun },
+  { key: "cleanup", label: "Hudud tozalash / saralash", points: 30, icon: Trash2 },
+  { key: "device", label: "Energiya tejovchi qurilma", points: 75, icon: Lightbulb },
+  { key: "walk", label: "Piyoda yurish (kun)", points: 15, icon: Footprints },
 ];
 
 const NAMES = ["Karimovlar", "Yusupovlar", "Rahimovlar", "Ergashevlar", "Qodirovlar", "Saidovlar", "Nazarovlar", "Aliyevlar", "To'xtayevlar", "Yo'ldoshevlar"];
@@ -56,8 +57,8 @@ export const ecoSummary = (() => {
 
 // Mukofotlar (Obod Mahalla)
 export const ECO_REWARDS = [
-  { icon: "🚗", title: "Elektromobil", sub: "Yashil oila tanlovi g'olibiga", color: "#22c55e" },
-  { icon: "🚲", title: "Velosiped", sub: "Eko-faollarga oylik", color: "#06b6d4" },
-  { icon: "🏘️", title: "500 mln so'm", sub: "Mahalla yo'l/yoritishiga", color: "#f59e0b" },
-  { icon: "🎫", title: "Yashil chipta", sub: "Davlat xizmatiga 10% chegirma", color: "#a78bfa" },
+  { icon: Car, title: "Elektromobil", sub: "Yashil oila tanlovi g'olibiga", color: "#22c55e" },
+  { icon: Bike, title: "Velosiped", sub: "Eko-faollarga oylik", color: "#06b6d4" },
+  { icon: Home, title: "500 mln so'm", sub: "Mahalla yo'l/yoritishiga", color: "#f59e0b" },
+  { icon: Ticket, title: "Yashil chipta", sub: "Davlat xizmatiga 10% chegirma", color: "#a78bfa" },
 ];

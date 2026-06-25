@@ -16,7 +16,7 @@ const ReportCard = ({ r }) => {
     <div className="overflow-hidden rounded-xl border border-[rgb(var(--card-border))] bg-card">
       <div className="relative h-24 w-full overflow-hidden">
         <img src={r.photo} alt={r.type} loading="lazy" className="h-full w-full object-cover" />
-        <span className="absolute left-1.5 top-1.5 rounded bg-black/60 px-1.5 py-0.5 text-[10px] text-white">{t.icon} {t.label}</span>
+        <span className="absolute left-1.5 top-1.5 flex items-center gap-1 rounded bg-black/60 px-1.5 py-0.5 text-[10px] text-white"><t.icon className="size-3" /> {t.label}</span>
         {r.overdue && <span className="absolute right-1.5 top-1.5 flex items-center gap-0.5 rounded bg-rose-600 px-1.5 py-0.5 text-[9px] font-semibold text-white"><AlertTriangle className="size-2.5" /> Muddat o'tdi</span>}
       </div>
       <div className="p-2.5">

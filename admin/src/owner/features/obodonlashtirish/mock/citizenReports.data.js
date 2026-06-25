@@ -1,6 +1,7 @@
 // Xalq Nazorati — fuqaro shikoyatlari (foto + xarita pin) + kuzatuv.
 // Asos: xalqnazorati.uz — noqonuniy axlat, buzilgan yoritish, kesilgan daraxt → biriktirildi
 // → bajarildi → fuqaro tasdiqlaydi. 24/72s SLA. Demo — deterministik.
+import { Trash2, Lightbulb, TreePine, Route, Droplet, SprayCan } from "lucide-react";
 
 const rng = (seed) => {
   const x = Math.sin(seed * 91.7 + 33.1) * 43758.5453;
@@ -9,12 +10,12 @@ const rng = (seed) => {
 
 // Shikoyat turi
 export const REPORT_TYPE = {
-  dump: { label: "Noqonuniy axlat", icon: "🗑️" },
-  light: { label: "Buzilgan yoritish", icon: "💡" },
-  tree: { label: "Noqonuniy daraxt kesish", icon: "🌳" },
-  road: { label: "Yo'l buzilishi", icon: "🛣️" },
-  water: { label: "Suv oqishi / tarmoq", icon: "💧" },
-  sanitation: { label: "Sanitar holat", icon: "🧹" },
+  dump: { label: "Noqonuniy axlat", icon: Trash2 },
+  light: { label: "Buzilgan yoritish", icon: Lightbulb },
+  tree: { label: "Noqonuniy daraxt kesish", icon: TreePine },
+  road: { label: "Yo'l buzilishi", icon: Route },
+  water: { label: "Suv oqishi / tarmoq", icon: Droplet },
+  sanitation: { label: "Sanitar holat", icon: SprayCan },
 };
 
 // Holat (rules/02) — fuqaro tasdiqlashi bilan yopiladi
