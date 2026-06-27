@@ -24,6 +24,7 @@ import { ParticipatoryBudget } from "../components/insight/ParticipatoryBudget";
 import { EcoCitizen } from "../components/insight/EcoCitizen";
 import { CitizenReports } from "../components/insight/CitizenReports";
 import { SmartBins } from "../components/insight/SmartBins";
+import AxlatBinsMap from "../components/insight/AxlatBinsMap";
 import { treeSummary } from "../mock/treePassport.data";
 import { ratingSummary } from "../mock/operatorRating.data";
 import { pbSummary } from "../mock/participatoryBudget.data";
@@ -165,6 +166,11 @@ const ObodExecPage = () => (
     <Reveal i={0}>
       <Panel title="Chelaklar monitoringi" icon={Trash2} accent={C.axlat} source="Sensorli idish + GPS axlat mashinasi (demo)" bodyClass="p-0">
         <SmartBins />
+      </Panel>
+    </Reveal>
+    <Reveal i={1}>
+      <Panel title="Chiqindi qutilari va olib ketuvchi mashinalar (xarita)" icon={MapPin} accent={C.axlat} source="Qutilar to'lganligi + mashina joylashuvi (demo)" bodyClass="p-0">
+        <AxlatBinsMap />
       </Panel>
     </Reveal>
 

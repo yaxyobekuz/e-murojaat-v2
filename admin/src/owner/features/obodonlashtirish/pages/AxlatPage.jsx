@@ -13,6 +13,7 @@ import {
 } from "../mock/axlat.data";
 import { axlatImpact as im, axlatInsights, axlatTrends } from "../mock/insights";
 import { InsightCard, ProgressRing, AIInsightPanel, TrendNarrative, ScoreMeter, Reveal } from "../components/insight/kit";
+import AxlatBinsMap from "../components/insight/AxlatBinsMap";
 
 const ACCENT = "#22d3ee";
 
@@ -52,6 +53,13 @@ const AxlatPage = () => (
       <InsightCard i={3} icon={Wallet} label="Tarif yig'imi (oy)" value={s.tariffRevenue} formatter={formatMoney} accent={ACCENT}
         equivalents={[{ icon: CreditCard, text: "7 840 so'm/kishi (2025)" }]} />
     </div>
+
+    {/* Chelaklar joylashuvi + mashina (jonli xarita) */}
+    <Reveal i={0}>
+      <Panel title="Chelaklar va axlat mashinasi — jonli xarita" icon={Truck} accent={ACCENT} bodyClass="p-0">
+        <AxlatBinsMap />
+      </Panel>
+    </Reveal>
 
     {/* Ballar + AI */}
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
