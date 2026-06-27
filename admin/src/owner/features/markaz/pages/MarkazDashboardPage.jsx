@@ -42,7 +42,7 @@ function StatTile({ s }) {
   const nav = useNavigate();
   const Icon = s.icon;
   return (
-    <button type="button" onClick={() => nav(s.to)} className="surface group p-4 text-left transition hover:-translate-y-0.5 hover:border-brand-cyan/40">
+    <button type="button" onClick={() => nav(s.to)} className="group flex h-full flex-col justify-center rounded-xl border border-[rgb(var(--card-border))] bg-card/40 p-4 text-left transition-colors hover:border-brand-cyan/50 hover:bg-card/70">
       <div className="flex items-center gap-2.5">
         <span className={cn("grid size-9 shrink-0 place-items-center rounded-xl", CHIP[s.a])}><Icon className="size-[18px]" strokeWidth={2} /></span>
         <AnimatedCounter value={s.n} formatter={nf} className="text-2xl font-semibold tracking-tight tabular-nums" />
@@ -314,14 +314,14 @@ const MarkazDashboardPage = () => {
           <p className="mt-0.5 text-sm text-foreground/50">IIB · FVV · Ta'lim — yagona panel · {MAHALLA} · kartani/chartni bossangiz — manba sahifa ochiladi</p>
         </div>
 
-        {/* 1 — Umumiy ma'lumotlar: to'liq enli KPI-strip (faqat qiymatli kartalar) */}
-        <div>
-          <h2 className="mb-3 text-sm font-medium text-foreground/70">Umumiy ma'lumotlar — kalit ko'rsatkichlar</h2>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">{STATS.map((s) => <StatTile key={s.lab} s={s} />)}</div>
-        </div>
+        {/* 4 grid — 2 qator × 2 ustun */}
+        <div className="grid gap-5 xl:grid-cols-2">
+          {/* 1 — Umumiy ma'lumotlar (faqat qiymatli kartalar) */}
+          <GlassChartCard title="Umumiy ma'lumotlar" insight="Mahalla bo'yicha kalit ko'rsatkichlar" bodyClassName="flex">
+            <div className="grid h-full w-full grid-cols-2 gap-3 [grid-auto-rows:1fr]">{STATS.map((s) => <StatTile key={s.lab} s={s} />)}</div>
+          </GlassChartCard>
 
-        {/* 2 — Statistikalar | (Kameralar + Bildirishnomalar) */}
-        <div className="grid items-start gap-5 xl:grid-cols-2">
+          {/* 2 — Statistikalar */}
           <GlassChartCard title="Statistikalar" insight="Ta'lim · IIB · FVV kesimida">
             <div className="flex flex-col gap-4">
               {/* 1-qator: Ta'lim — maktablar davomat foizi (vertikal bar) */}
@@ -348,10 +348,11 @@ const MarkazDashboardPage = () => {
             </div>
           </GlassChartCard>
 
-          <div className="flex flex-col gap-5">
-            <GridKameralar />
-            <GridNotif />
-          </div>
+          {/* 3 — Barcha kameralar */}
+          <GridKameralar />
+
+          {/* 4 — Bildirishnomalar */}
+          <GridNotif />
         </div>
 
         <p className="text-xs text-foreground/40">Barcha ko'rsatkichlar — <b>namunaviy (demo)</b>.</p>
