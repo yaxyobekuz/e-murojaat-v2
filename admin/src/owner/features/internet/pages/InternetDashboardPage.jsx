@@ -7,6 +7,7 @@ import { useInternetAnalytics } from "../hooks/useInternetAnalytics";
 import InternetFilters from "../components/InternetFilters";
 import KpiStrip from "../components/KpiStrip";
 import StreetTable from "../components/StreetTable";
+import InternetCoverageMap from "../components/InternetCoverageMap";
 
 const labelOf = (data) => (key) => data.find((d) => d.key === key)?.label || key;
 
@@ -35,6 +36,8 @@ const InternetDashboardPage = () => {
       </div>
 
       <KpiStrip summary={summary} />
+
+      <InternetCoverageMap />
 
       <div className="grid gap-4 lg:grid-cols-2">
         <GlassChartCard
