@@ -1,4 +1,6 @@
 // Ta'lim — namunaviy (sintetik) ma'lumotlar. Faqat bitta mahalla ichki tizimi.
+import studentFace from "./assets/student-faceid.png";
+
 export const fmt = (n) => Math.round(n).toLocaleString("uz-UZ").replace(/,/g, " ");
 export const rng = (s) => { const x = Math.sin(s * 12.9898 + 78.233) * 43758.5453; return x - Math.floor(x); };
 export const dayLabel = (b) => { const d = new Date(2026, 5, 24); d.setDate(d.getDate() - b); return `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1).padStart(2, "0")}`; };
@@ -29,8 +31,7 @@ export const STUDENTS = Array.from({ length: 76 }, (_, i) => {
   const att = +(82 + rng(i * 5.9 + 4) * 17).toFixed(1);
   const inst = SCHOOLS3[rng(i * 6.3 + 5) < 0.86 ? Math.floor(rng(i * 7.1) * 2) : 2];
   const letter = ["A", "B", "V"][Math.floor(rng(i * 8.2) * 3)];
-  // O'quvchiga mos (yosh) + bir xil fon + har student uchun barqaror avatar (soqol yo'q, aksessuar kam)
-  const photo = `https://api.dicebear.com/9.x/avataaars/svg?seed=${encodeURIComponent(last + first + i)}&backgroundColor=0f1a24&backgroundType=solid&radius=0&facialHairProbability=0&accessoriesProbability=8`;
+  const photo = studentFace;
   return { id: `s${i}`, name: `${last}${female ? "a" : ""} ${first}`, gender: female ? "qiz" : "o'g'il", grade, letter, age: grade + 6, att, status: att < 90 ? "qoldiruvchi" : "doimiy", inst, photo };
 });
 export const getStudent = (id) => STUDENTS.find((s) => s.id === id) || null;

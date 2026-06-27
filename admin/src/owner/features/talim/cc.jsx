@@ -64,8 +64,8 @@ const CSS = `
 .tcc-bar{height:6px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}.tcc-bar>i{display:block;height:100%;border-radius:99px}
 .tcc input[type=range]{accent-color:${T.gold};height:4px}
 .tcc-scan{position:relative;border-radius:14px;overflow:hidden;border:2px solid rgba(45,212,191,.45);background:#05080d;width:100%;aspect-ratio:1/1;box-shadow:0 0 26px -6px rgba(45,212,191,.45)}
-.tcc-scan>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;filter:contrast(1.02)}
-.tcc-scan .vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(100% 92% at 50% 40%, rgba(5,8,13,0) 46%, rgba(5,8,13,.3) 80%, rgba(5,8,13,.7) 100%)}
+.tcc-scan>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 18%;filter:contrast(1.04) saturate(1.02)}
+.tcc-scan .vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(95% 85% at 50% 36%, rgba(5,8,13,0) 38%, rgba(5,8,13,.45) 72%, rgba(5,8,13,.92) 100%)}
 .tcc-scan .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(45,212,191,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(45,212,191,.07) 1px,transparent 1px);background-size:22px 22px;pointer-events:none}
 .tcc-scan .line{position:absolute;left:6%;right:6%;height:3px;border-radius:2px;background:linear-gradient(90deg,transparent,#2DD4BF,transparent);box-shadow:0 0 16px #2DD4BF;animation:tccScan 1.6s ease-in-out infinite}
 @keyframes tccScan{0%{top:7%}50%{top:90%}100%{top:7%}}

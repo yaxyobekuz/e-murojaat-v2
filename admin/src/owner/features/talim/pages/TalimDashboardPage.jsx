@@ -59,7 +59,7 @@ function LiveFaceId({ onPass }) {
         {feed.length === 0 && <div style={{ fontSize: 12, color: T.muted, padding: "6px 2px" }}>Kutilmoqda…</div>}
         {feed.map((f) => (
           <div className="tcc-feedrow" key={f.id}>
-            <img src={f.photo} alt="" style={{ width: 32, height: 32, borderRadius: "50%", objectFit: "cover", border: `1px solid ${T.border}`, background: "#0f1a24" }} />
+            <img src={f.photo} alt="" style={{ width: 32, height: 32, borderRadius: "50%", objectFit: "cover", objectPosition: "50% 18%", border: `1px solid ${T.border}`, background: "#0f1a24" }} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontSize: 12.5, fontWeight: 600, color: T.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{surname(f.name)} <span style={{ color: T.muted, fontWeight: 400 }}>· {f.grade}-{f.letter}</span></div>
             </div>
