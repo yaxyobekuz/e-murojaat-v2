@@ -1,4 +1,5 @@
 // Operator/mahalla reytingi — 7 metrikli jadval + qatorni bosganda metrik breakdown.
+import { Fragment } from "react";
 import { Trophy, Info } from "lucide-react";
 
 import { hexA } from "@/shared/components/ui/command/primitives";
@@ -72,8 +73,8 @@ export const RatingTable = () => {
               const isOpen = open === row.name;
               const medalColor = i < 3 ? MEDAL[i] : "hsl(var(--muted-foreground))";
               return (
-                <>
-                  <tr key={row.name} onClick={() => setField("open", isOpen ? null : row.name)}
+                <Fragment key={row.name}>
+                  <tr onClick={() => setField("open", isOpen ? null : row.name)}
                     className="cursor-pointer border-b border-[rgb(var(--card-border))] transition-colors hover:bg-foreground/[0.03]"
                     style={isOpen ? { background: hexA(ACCENT, 0.05) } : undefined}>
                     <td className="px-3 py-2">
@@ -88,8 +89,8 @@ export const RatingTable = () => {
                     <td className="px-3 py-2 text-right font-mono text-[14px] font-bold tabular-nums" style={{ color: ACCENT, textShadow: `0 0 10px ${hexA(ACCENT, 0.4)}` }}>{row.score}</td>
                     <td className="px-3 py-2 text-center"><StatusBadge tone={row.tierTone}>{row.tier}</StatusBadge></td>
                   </tr>
-                  {isOpen && <tr key={`${row.name}-bd`}><td colSpan={7} className="p-0"><Breakdown row={row} /></td></tr>}
-                </>
+                  {isOpen && <tr><td colSpan={7} className="p-0"><Breakdown row={row} /></td></tr>}
+                </Fragment>
               );
             })}
           </tbody>
