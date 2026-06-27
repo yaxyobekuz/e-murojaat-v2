@@ -29,7 +29,8 @@ export const STUDENTS = Array.from({ length: 76 }, (_, i) => {
   const att = +(82 + rng(i * 5.9 + 4) * 17).toFixed(1);
   const inst = SCHOOLS3[rng(i * 6.3 + 5) < 0.86 ? Math.floor(rng(i * 7.1) * 2) : 2];
   const letter = ["A", "B", "V"][Math.floor(rng(i * 8.2) * 3)];
-  const photo = `https://randomuser.me/api/portraits/${female ? "women" : "men"}/${(i * 7 + 3) % 90}.jpg`;
+  // O'quvchiga mos (yosh) + bir xil fon + har student uchun barqaror avatar (soqol yo'q, aksessuar kam)
+  const photo = `https://api.dicebear.com/9.x/avataaars/svg?seed=${encodeURIComponent(last + first + i)}&backgroundColor=0f1a24&backgroundType=solid&radius=0&facialHairProbability=0&accessoriesProbability=8`;
   return { id: `s${i}`, name: `${last}${female ? "a" : ""} ${first}`, gender: female ? "qiz" : "o'g'il", grade, letter, age: grade + 6, att, status: att < 90 ? "qoldiruvchi" : "doimiy", inst, photo };
 });
 export const getStudent = (id) => STUDENTS.find((s) => s.id === id) || null;
