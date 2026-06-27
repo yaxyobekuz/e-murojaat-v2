@@ -47,7 +47,7 @@ const MARKER_ALT = 25;
 
 // bare=true → faqat xarita foni (qurilish markerlari, yashil zonalar yo'q). Tashqi `markers` chiziladi.
 // range — kamera masofasi (metr); kichikroq = yaqinroq ko'rinish.
-const ObodMap3D = ({ showGreen = false, activeId = null, onSelect, plantings = null, markers = null, bare = false, range }) => {
+const ObodMap3D = ({ showGreen = false, activeId = null, onSelect, plantings = null, markers = null, zones = null, bare = false, range }) => {
   const hostRef = useRef(null);
   const mapRef = useRef(null);
   const libRef = useRef(null);
@@ -55,6 +55,7 @@ const ObodMap3D = ({ showGreen = false, activeId = null, onSelect, plantings = n
   const greenMarkersRef = useRef([]); // daraxt markerlari
   const plantingMarkersRef = useRef([]); // ekish nuqtalari (real koordinata)
   const customMarkersRef = useRef([]); // umumiy markerlar (chiqindi qutilari, mashina ...)
+  const customZonesRef = useRef([]); // umumiy zonalar (chiqindi maydoni ...)
   const constructionElsRef = useRef([]); // qurilish doira + markerlari (eng tepada turishi kerak)
   const [status, setStatus] = useState("loading"); // loading | ready | fallback
 
@@ -231,6 +232,33 @@ const ObodMap3D = ({ showGreen = false, activeId = null, onSelect, plantings = n
       customMarkersRef.current.push(marker);
     });
   }, [markers, status]);
+
+  // Umumiy zonalar — {polygon:[{lat,lng}], color}. Chiqindi maydoni va h.k.
+  useEffect(() => {
+    if (status !== "ready" || !mapRef.current || !libRef.current) return;
+    const map = mapRef.current;
+    const { Polygon3DElement, AltitudeMode } = libRef.current;
+
+    customZonesRef.current.forEach((el) => el.remove());
+    customZonesRef.current = [];
+    if (!zones || !zones.length) return;
+
+    zones.forEach((z) => {
+      if (!z.polygon?.length) return;
+      const col = z.color || "#22d3ee";
+      const poly = new Polygon3DElement({
+        outerCoordinates: z.polygon.map((p) => ({ ...p, altitude: CIRCLE_ALT })),
+        altitudeMode: AltitudeMode.RELATIVE_TO_GROUND,
+        extruded: false,
+        fillColor: hexToRgba(col, 0.28),
+        strokeColor: col,
+        strokeWidth: 3,
+        drawsOccludedSegments: true,
+      });
+      map.append(poly);
+      customZonesRef.current.push(poly);
+    });
+  }, [zones, status]);
 
   // Tanlangan loyihaga kamera uchadi
   useEffect(() => {
