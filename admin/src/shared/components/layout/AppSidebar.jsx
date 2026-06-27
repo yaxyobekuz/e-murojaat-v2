@@ -1,5 +1,5 @@
 // Icons
-import { ChevronLeft, ChevronRight, ArrowLeftToLine } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronDown, ArrowLeftToLine } from "lucide-react";
 
 // React
 import { useState } from "react";
@@ -28,6 +28,9 @@ import { useIsMobile } from "@/shared/hooks/useMobile";
 
 // Constants
 import { ROLES } from "@/shared/constants/roles";
+
+// Utils
+import { cn } from "@/shared/utils/cn";
 
 // Role-specific sidebar configurations
 import { ownerSidebar } from "@/owner";
@@ -136,22 +139,12 @@ const Main = () => {
           {/* Ichma-ich ko'rinish: chap chiziq + indent (icon mode'da olib tashlanadi) */}
           <SidebarMenu className="ml-3.5 gap-px border-l border-sidebar-border px-2.5 group-data-[collapsible=icon]:ml-0 group-data-[collapsible=icon]:border-0 group-data-[collapsible=icon]:px-0">
             {current.items.map((subItem) => (
-              <SidebarMenuItem key={subItem.title}>
-                <SidebarMenuButton
-                  asChild
-                  tooltip={subItem.title}
-                  className="h-auto py-2"
-                  isActive={pathname === subItem.url}
-                >
-                  <Link
-                    to={subItem.url}
-                    onClick={isMobile ? toggleSidebar : undefined}
-                  >
-                    {subItem.icon && <subItem.icon strokeWidth={1.5} />}
-                    <span>{subItem.title}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              <SubItem
+                key={subItem.title}
+                item={subItem}
+                pathname={pathname}
+                onNavigate={isMobile ? toggleSidebar : undefined}
+              />
             ))}
           </SidebarMenu>
         </SidebarGroup>
@@ -185,6 +178,72 @@ const Main = () => {
         </SidebarMenu>
       </SidebarGroup>
     </SidebarContent>
+  );
+};
+
+// Modul ichidagi bo'lim. children bo'lsa — uchinchi daraja (ichki sahifalar) ochiladi.
+const SubItem = ({ item, pathname, onNavigate }) => {
+  const hasChildren = item.children?.length > 0;
+  const childActive = hasChildren && item.children.some((c) => pathname === c.url);
+  const [open, setOpen] = useState(childActive);
+
+  if (!hasChildren) {
+    return (
+      <SidebarMenuItem>
+        <SidebarMenuButton
+          asChild
+          tooltip={item.title}
+          className="h-auto py-2"
+          isActive={pathname === item.url}
+        >
+          <Link to={item.url} onClick={onNavigate}>
+            {item.icon && <item.icon strokeWidth={1.5} />}
+            <span>{item.title}</span>
+          </Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    );
+  }
+
+  return (
+    <>
+      <SidebarMenuItem>
+        <SidebarMenuButton
+          tooltip={item.title}
+          className="h-auto py-2"
+          isActive={childActive}
+          onClick={() => setOpen((v) => !v)}
+        >
+          {item.icon && <item.icon strokeWidth={1.5} />}
+          <span>{item.title}</span>
+          <ChevronDown
+            size={16}
+            strokeWidth={1.5}
+            className={cn(
+              "ml-auto transition-transform group-data-[collapsible=icon]:hidden",
+              open && "rotate-180",
+            )}
+          />
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+
+      {open &&
+        item.children.map((child) => (
+          <SidebarMenuItem key={child.title} className="ml-3.5 border-l border-sidebar-border pl-2 group-data-[collapsible=icon]:ml-0 group-data-[collapsible=icon]:border-0 group-data-[collapsible=icon]:pl-0">
+            <SidebarMenuButton
+              asChild
+              tooltip={child.title}
+              className="h-auto py-2"
+              isActive={pathname === child.url}
+            >
+              <Link to={child.url} onClick={onNavigate}>
+                {child.icon && <child.icon strokeWidth={1.5} />}
+                <span>{child.title}</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        ))}
+    </>
   );
 };
 

@@ -15,11 +15,15 @@ const linkClass = ({ isActive }) =>
       : "text-foreground/60 hover:text-foreground",
   );
 
+// Modulning barcha base yo'llari (bir nechta marshrutni qamragan modul uchun bases[])
+const basesOf = (m) => m.bases || [m.base];
+
 // URL qaysi modulga tegishli ekanini topadi (eng uzun mos base)
 const moduleForPath = (pathname) =>
-  [...topbarModules]
+  topbarModules
+    .flatMap((m) => basesOf(m).map((base) => ({ m, base })))
     .sort((a, b) => b.base.length - a.base.length)
-    .find((m) => pathname.startsWith(m.base)) || topbarModules[0];
+    .find(({ base }) => pathname.startsWith(base))?.m || topbarModules[0];
 
 const TopBar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);

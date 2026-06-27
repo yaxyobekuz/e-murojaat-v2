@@ -1,4 +1,4 @@
-import { LayoutDashboard, LayoutGrid, Trees, Users, Home, Landmark, Map, GraduationCap, Shield, Flame, Store, TriangleAlert, Layers, Zap, Wrench, ClipboardList, Fuel, Route as RouteIcon } from "lucide-react";
+import { LayoutDashboard, LayoutGrid, Trees, Users, Home, Landmark, Map, GraduationCap, Shield, Flame, Store, TriangleAlert, Layers, Zap, Wrench, ClipboardList, Fuel, Route as RouteIcon, Network, Wifi, Container } from "lucide-react";
 
 const ownerSidebar = [
   {
@@ -42,14 +42,6 @@ const ownerSidebar = [
     ],
   },
   {
-    key: "obodonlashtirish",
-    title: "Obodonlashtirish",
-    icon: Trees,
-    items: [
-      { title: "Obodonlashtirish", url: "/owner/obodonlashtirish", icon: Home },
-    ],
-  },
-  {
     key: "yoshlar",
     title: "Yoshlar",
     icon: Users,
@@ -59,27 +51,45 @@ const ownerSidebar = [
     ],
   },
   {
-    key: "elektr",
-    title: "Elektr energiya",
-    icon: Zap,
-    items: [{ title: "Analitika", url: "/owner/elektr", icon: Home }],
-  },
-  {
-    key: "msk",
-    title: "MSK (Servis)",
-    icon: Wrench,
+    key: "infratuzilma",
+    title: "Infratuzilma xizmatlari",
+    icon: Network,
     items: [
-      { title: "Analitika", url: "/owner/msk", icon: Home },
-      { title: "Arizalar", url: "/owner/msk/arizalar", icon: ClipboardList },
-    ],
-  },
-  {
-    key: "gaz",
-    title: "Gaz ta'minoti",
-    icon: Fuel,
-    items: [
-      { title: "Analitika", url: "/owner/gaz", icon: Home },
-      { title: "Ko'chalar", url: "/owner/gaz/kochalar", icon: RouteIcon },
+      { title: "Elektr energiya", url: "/owner/elektr", icon: Zap },
+      { title: "Suyultirilgan gaz", url: "/owner/suyuq-gaz", icon: Container },
+      { title: "Internet", url: "/owner/internet", icon: Wifi },
+      {
+        title: "Gaz ta'minoti",
+        url: "/owner/gaz",
+        icon: Fuel,
+        children: [
+          { title: "Analitika", url: "/owner/gaz", icon: Home },
+          { title: "Ko'chalar", url: "/owner/gaz/kochalar", icon: RouteIcon },
+        ],
+      },
+      {
+        title: "Obodonlashtirish",
+        url: "/owner/obodonlashtirish",
+        icon: Trees,
+        children: [
+          { title: "Bajarilish", url: "/owner/obodonlashtirish", icon: Home },
+          { title: "Xarita", url: "/owner/obodonlashtirish/xarita", icon: Map },
+          { title: "Loyihalar", url: "/owner/obodonlashtirish/loyihalar", icon: Layers },
+          { title: "Axlat", url: "/owner/obodonlashtirish/axlat", icon: ClipboardList },
+          { title: "Assenizatsiya", url: "/owner/obodonlashtirish/assenizatsiya", icon: ClipboardList },
+          { title: "Yashil makon", url: "/owner/obodonlashtirish/yashil-makon", icon: Trees },
+          { title: "Hashar", url: "/owner/obodonlashtirish/hashar", icon: Users },
+        ],
+      },
+      {
+        title: "MSK (Servis)",
+        url: "/owner/msk",
+        icon: Wrench,
+        children: [
+          { title: "Analitika", url: "/owner/msk", icon: Home },
+          { title: "Arizalar", url: "/owner/msk/arizalar", icon: ClipboardList },
+        ],
+      },
     ],
   },
 ];

@@ -1,4 +1,4 @@
-import { Map, Landmark, Trees, GraduationCap, Shield, Flame, Users, Zap, Wrench, Fuel, LayoutGrid } from "lucide-react";
+import { Map, Landmark, GraduationCap, Shield, Flame, Users, Network, LayoutGrid } from "lucide-react";
 
 // TopBar modullari (drill-in). Har modul: key (kod), title (UI), icon, base (root url),
 // items[] (ichki bo'limlar). Modulga bosilsa TopBar shu modul ichiga almashadi.
@@ -31,15 +31,6 @@ const topbarModules = [
       { title: "Analitika", url: "/owner/soliq", end: true },
       { title: "Bizneslar", url: "/owner/soliq/bizneslar" },
       { title: "Qarzdorlar", url: "/owner/soliq/qarzdorlar" },
-    ],
-  },
-  {
-    key: "obodonlashtirish",
-    title: "Obodonlashtirish",
-    icon: Trees,
-    base: "/owner/obodonlashtirish",
-    items: [
-      { title: "Obodonlashtirish", url: "/owner/obodonlashtirish", end: true },
     ],
   },
   {
@@ -83,30 +74,26 @@ const topbarModules = [
     ],
   },
   {
-    key: "elektr",
-    title: "Elektr energiya",
-    icon: Zap,
-    base: "/owner/elektr",
-    items: [{ title: "Analitika", url: "/owner/elektr", end: true }],
-  },
-  {
-    key: "msk",
-    title: "MSK (Servis)",
-    icon: Wrench,
-    base: "/owner/msk",
-    items: [
-      { title: "Analitika", url: "/owner/msk", end: true },
-      { title: "Arizalar", url: "/owner/msk/arizalar" },
+    key: "infratuzilma",
+    title: "Infratuzilma xizmatlari",
+    icon: Network,
+    base: "/owner/infratuzilma",
+    // Bir nechta marshrutni qamraydi — moduleForPath shu bases ro'yxati orqali aniqlaydi
+    bases: [
+      "/owner/elektr",
+      "/owner/suyuq-gaz",
+      "/owner/internet",
+      "/owner/gaz",
+      "/owner/obodonlashtirish",
+      "/owner/msk",
     ],
-  },
-  {
-    key: "gaz",
-    title: "Gaz ta'minoti",
-    icon: Fuel,
-    base: "/owner/gaz",
     items: [
-      { title: "Analitika", url: "/owner/gaz", end: true },
-      { title: "Ko'chalar", url: "/owner/gaz/kochalar" },
+      { title: "Elektr energiya", url: "/owner/elektr", end: true },
+      { title: "Suyultirilgan gaz", url: "/owner/suyuq-gaz" },
+      { title: "Internet", url: "/owner/internet" },
+      { title: "Gaz ta'minoti", url: "/owner/gaz" },
+      { title: "Obodonlashtirish", url: "/owner/obodonlashtirish" },
+      { title: "MSK (Servis)", url: "/owner/msk" },
     ],
   },
 ];
