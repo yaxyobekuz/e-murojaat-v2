@@ -7,26 +7,24 @@
 - Sahifa juda katta monitorda ko'rsatiladi — shu sababli elementlar ko'proq joylashtirilishi kerak.
 - Default font size: 10px - 12px (maksimum).
 
-## Xarita
+## Xarita (3D — Mapbox GL)
 
-- Asosiy modulda xarita.svg fayli mavjud — bu xarita Sarnovul mahallasiga tegishli.
-- Xarita orqa fonda to'liq ravishda qoplanadi.
-- Xaritani erkin ravishda zoom qilish va harakatlantirish mumkin bo'lishi kerak.
+- Xarita Mapbox GL orqali 3D ko'rinishda chiziladi — markaz: **Andijon shahri**.
+- Uylar Mapbox'ning real bino izlari (footprint) sifatida balandlikka qarab 3D ko'tariladi.
+- Xarita orqa fonda to'liq ravishda qoplanadi (`yer` moduli patterni: `mapConfig`/`mapLayers`/`mapInteractions`).
+- Xaritani erkin zoom/pan/orbit qilish mumkin. Tanlangan bino oqaradi (feature-state).
 
 ## Elementlar
 
-- Xaritada elementlar mavjud, har bir elementga id berilgan.
-- id ga qarab element turini bilish mumkin:
-  1. Uy
-  2. Dala
-  3. Yo'l
-  4. Zavod
-- Sahifada elementni tanlash orqali ko'plab ma'lumotlarni olish mumkin bo'lishi kerak.
+- Binoga bosilganda `buildingElement` real binodan barqaror "element" yasaydi (id koordinatadan hash).
+- Bino balandlik/yuzasiga qarab tur oladi: katta/baland → `zavod`, qolganlari → `uy`.
+- `elementData.elementInfo` shu turdan deterministik mock kartochka generatsiya qiladi.
+- Tanlangan elementning batafsil ma'lumoti o'ng panelda ko'rsatiladi.
 
 ## Holatlar
 
 1. Hech qanday element belgilanmaganda
-   - Sarnovul mahallasining umumiy ma'lumotlari ko'rinib turishi kerak.
+   - Andijon shahrining umumiy ma'lumotlari ko'rinib turishi kerak.
 2. Element belgilanganda
    - O'ng tomonning yarmida element to'g'risida juda ko'plab statistika va ma'lumotlar ko'rsatiladi.
 

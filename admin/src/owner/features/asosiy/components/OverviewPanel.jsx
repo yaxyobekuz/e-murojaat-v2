@@ -1,9 +1,8 @@
-// Hech narsa tanlanmaganda — Sarnovul mahallasining umumiy ma'lumotlari.
+// Hech narsa tanlanmaganda — Andijon shahrining umumiy ma'lumotlari.
 import { MapPin } from "lucide-react";
 
 import MiniDonut from "./MiniDonut";
 import { OVERVIEW } from "../data/mahallaData";
-import { TYPE_COUNTS, ELEMENT_TYPES } from "../data/mapElements";
 
 const nf = (v) => Math.round(v).toLocaleString("uz-UZ").replace(/,/g, " ");
 
@@ -31,7 +30,7 @@ const OverviewPanel = () => {
           <MapPin className="size-3.5" /> {OVERVIEW.region}
         </div>
         <h2 className="mt-0.5 text-lg font-semibold leading-tight tracking-tight">{OVERVIEW.name}</h2>
-        <p className="text-[11px] text-foreground/45">Mahalla bo'yicha umumiy ko'rsatkichlar · namunaviy ma'lumot</p>
+        <p className="text-[11px] text-foreground/45">Shahar bo'yicha umumiy ko'rsatkichlar · namunaviy ma'lumot</p>
       </div>
 
       {/* hero KPI */}
@@ -66,12 +65,12 @@ const OverviewPanel = () => {
         <div className="rounded-xl border border-[rgb(var(--card-border))] bg-card/40 p-3">
           <p className="mb-2 text-[11px] font-semibold text-foreground/75">Xaritadagi obyektlar</p>
           <div className="flex flex-col gap-1.5">
-            {Object.values(ELEMENT_TYPES).map((m) => (
-              <div key={m.key} className="flex items-center justify-between text-[11px]">
+            {OVERVIEW.mapObjects.map((m) => (
+              <div key={m.label} className="flex items-center justify-between text-[11px]">
                 <span className="flex items-center gap-1.5 text-foreground/70">
-                  <span className="size-2 rounded-sm" style={{ background: m.color }} /> {m.plural}
+                  <span className="size-2 rounded-sm" style={{ background: m.color }} /> {m.label}
                 </span>
-                <span className="font-semibold tabular-nums">{nf(TYPE_COUNTS[m.key] || 0)}</span>
+                <span className="font-semibold tabular-nums">{nf(m.value)}</span>
               </div>
             ))}
           </div>

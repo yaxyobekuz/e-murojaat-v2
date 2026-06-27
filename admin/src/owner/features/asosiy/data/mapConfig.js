@@ -15,8 +15,8 @@ export const BASEMAPS = [
 
 export const INITIAL_VIEW = {
   center: [MAP_CENTER.lng, MAP_CENTER.lat],
-  zoom: 16.2,
-  pitch: 60,
+  zoom: 18,
+  pitch: 62,
   bearing: -22,
   antialias: true,
 };

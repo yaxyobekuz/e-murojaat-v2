@@ -3,7 +3,7 @@
 import { X, Flame, Zap, Droplets, Wifi, Check, AlertTriangle } from "lucide-react";
 
 import { cn } from "@/shared/utils/cn";
-import { elementInfo, fmt } from "../data/mapElements";
+import { elementInfo, fmt } from "../data/elementData";
 
 const TONE = {
   success: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",

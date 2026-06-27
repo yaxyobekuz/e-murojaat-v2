@@ -1,51 +1,11 @@
-// xarita.svg ni o'qib, har bir elementni (uy/dala/yo'l/zavod) interaktiv obyektga aylantiradi.
-// Element turi id prefiksidan aniqlanadi. Har element uchun markaz (centroid) hisoblanadi —
-// label/marker joylashuvi uchun. Mock ma'lumot id dan deterministik (seed) — har render bir xil.
-import rawSvg from "../assets/xarita.svg?raw";
+// Tanlangan obyekt (uy/dala/yo'l/zavod) uchun deterministik boy mock ma'lumot.
+// Mock id dan seed bilan generatsiya qilinadi — bir obyekt har doim bir xil kartochka beradi.
 
-export const VIEWBOX = { w: 8000, h: 8000 };
-
-// id prefiksidan tur
 export const ELEMENT_TYPES = {
   uy: { key: "uy", label: "Uy", color: "#22d3ee", plural: "Uylar" },
   dala: { key: "dala", label: "Dala", color: "#10b981", plural: "Dalalar" },
   yol: { key: "yol", label: "Yo'l", color: "#f59e0b", plural: "Yo'llar" },
   zavod: { key: "zavod", label: "Zavod", color: "#a855f7", plural: "Zavodlar" },
-};
-
-const typeFromId = (id) => {
-  const base = id.replace(/_\d+$/, "").trim();
-  if (base === "magistral yol") return "yol";
-  if (ELEMENT_TYPES[base]) return base;
-  return null;
-};
-
-// ---- geometriya markazini topish (rect / path bbox) ----
-const numbers = (d) => (d.match(/-?\d*\.?\d+/g) || []).map(Number);
-
-const rectCenter = (el) => {
-  const x = +el.getAttribute("x") || 0;
-  const y = +el.getAttribute("y") || 0;
-  const w = +el.getAttribute("width") || 0;
-  const h = +el.getAttribute("height") || 0;
-  return { cx: x + w / 2, cy: y + h / 2, area: w * h };
-};
-
-// path uchun: barcha koordinata juftlarining bbox markazi (yetarli aniq)
-const pathCenter = (el) => {
-  const nums = numbers(el.getAttribute("d") || "");
-  const xs = [];
-  const ys = [];
-  for (let i = 0; i + 1 < nums.length; i += 2) {
-    xs.push(nums[i]);
-    ys.push(nums[i + 1]);
-  }
-  if (!xs.length) return { cx: 0, cy: 0, area: 0 };
-  const minX = Math.min(...xs);
-  const maxX = Math.max(...xs);
-  const minY = Math.min(...ys);
-  const maxY = Math.max(...ys);
-  return { cx: (minX + maxX) / 2, cy: (minY + maxY) / 2, area: (maxX - minX) * (maxY - minY) };
 };
 
 // ---- deterministik seed (string -> 0..1) ----
@@ -57,7 +17,6 @@ const hash = (str) => {
   }
   return (h >>> 0) / 4294967295;
 };
-// seedlangan random fabrikasi (har element uchun barqaror ketma-ketlik)
 export const seeded = (id) => {
   let s = Math.floor(hash(id) * 1e9) || 1;
   return () => {
@@ -68,88 +27,15 @@ export const seeded = (id) => {
 const ri = (rnd, a, b) => a + Math.floor(rnd() * (b - a + 1));
 const pick = (rnd, arr) => arr[Math.floor(rnd() * arr.length)];
 
-// ---- SVG ni parse qilish (faql bir marta, modul yuklanganda) ----
-const parseElements = () => {
-  if (typeof DOMParser === "undefined") return [];
-  const doc = new DOMParser().parseFromString(rawSvg, "image/svg+xml");
-  const nodes = Array.from(doc.querySelectorAll("[id]"));
-  const out = [];
-  let n = 0;
-
-  const shapeOf = (node) => {
-    const tag = node.tagName.toLowerCase();
-    return {
-      tag,
-      x: node.getAttribute("x"),
-      y: node.getAttribute("y"),
-      width: node.getAttribute("width"),
-      height: node.getAttribute("height"),
-      d: node.getAttribute("d"),
-      transform: node.getAttribute("transform"),
-      strokeWidth: node.getAttribute("stroke-width"),
-    };
-  };
-  const geoOf = (s) => (s.tag === "rect" ? rectCenter({ getAttribute: (k) => s[k] }) : pathCenter({ getAttribute: (k) => s[k] }));
-
-  nodes.forEach((node) => {
-    const id = node.getAttribute("id");
-    const type = typeFromId(id || "");
-    if (!type) return;
-    const tag = node.tagName.toLowerCase();
-    // <g> bo'lsa — ichidagi rect/path bolalarini olamiz; aks holda elementning o'zi
-    const rawShapes = tag === "g"
-      ? Array.from(node.querySelectorAll("rect, path")).map(shapeOf)
-      : [shapeOf(node)];
-    const shapes = rawShapes.filter((s) => s.d || s.width);
-    if (!shapes.length) return;
-    // markaz/bbox — eng katta yuzali shakldan
-    const geos = shapes.map(geoOf);
-    const main = geos.reduce((a, b) => (b.area > a.area ? b : a), geos[0]);
-    const area = geos.reduce((s, g) => s + g.area, 0);
-    out.push({
-      id,
-      type,
-      tag: shapes[0].tag,
-      shapes,
-      cx: main.cx,
-      cy: main.cy,
-      area,
-      attrs: shapes[0],
-      index: ++n,
-    });
-  });
-  return out;
-};
-
-export const MAP_ELEMENTS = parseElements();
-
-// markaz (kamera boshlang'ich nuqtasi) — barcha elementlar bbox markazi
-export const MAP_CENTER = (() => {
-  const pts = MAP_ELEMENTS.filter((e) => e.area >= 0);
-  if (!pts.length) return { cx: VIEWBOX.w / 2, cy: VIEWBOX.h / 2 };
-  const minX = Math.min(...pts.map((p) => p.cx));
-  const maxX = Math.max(...pts.map((p) => p.cx));
-  const minY = Math.min(...pts.map((p) => p.cy));
-  const maxY = Math.max(...pts.map((p) => p.cy));
-  return { cx: (minX + maxX) / 2, cy: (minY + maxY) / 2, minX, maxX, minY, maxY };
-})();
-
-// turlar bo'yicha hisob
-export const TYPE_COUNTS = MAP_ELEMENTS.reduce((acc, e) => {
-  acc[e.type] = (acc[e.type] || 0) + 1;
-  return acc;
-}, {});
-
-// ====================== Element bo'yicha boy mock ma'lumot ======================
 const FAMILY_NAMES = ["Azizov", "Karimov", "Rasulov", "Tursunov", "Yusupov", "Aliyev", "Saidov", "Qodirov", "Ergashev", "Olimov", "Nazarov", "Sobirov", "Mirzayev", "Hakimov", "Yo'ldoshev"];
 const FIRST_NAMES = ["Jasur", "Bekzod", "Sardor", "Otabek", "Akmal", "Bobur", "Aziz", "Sherzod", "Dilshod", "Ulug'bek"];
-const STREETS = ["Sarnovul", "Bog'", "Navbahor", "Guliston", "Mustaqillik", "Do'stlik", "Bahor", "Yangiobod", "Istiqlol", "Chashma"];
+const STREETS = ["Bobur shoh", "Navoiy", "Amir Temur", "Cho'lpon", "Fitrat", "Istiqlol", "Mustaqillik", "Yangiobod", "Fidokor", "Chashma"];
 const CROPS = ["Bug'doy", "Paxta", "Kartoshka", "Sabzavot", "Bog' (meva)", "Uzumzor", "Beda", "Makkajo'xori"];
-const FACTORIES = ["G'isht zavodi", "Non zavodi", "Mebel sexi", "To'qimachilik fabrikasi", "Oziq-ovqat sexi"];
+const FACTORIES = ["G'isht zavodi", "Non zavodi", "Mebel sexi", "To'qimachilik fabrikasi", "Oziq-ovqat sexi", "Savdo markazi", "Biznes markaz"];
 
-const fmt = (v) => Math.round(v).toLocaleString("uz-UZ").replace(/,/g, " ");
+export const fmt = (v) => Math.round(v).toLocaleString("uz-UZ").replace(/,/g, " ");
 
-const buildHouse = (rnd, el) => {
+const buildHouse = (rnd) => {
   const family = pick(rnd, FAMILY_NAMES);
   const members = ri(rnd, 1, 9);
   const street = pick(rnd, STREETS);
@@ -170,7 +56,7 @@ const buildHouse = (rnd, el) => {
       { label: "Yashovchilar", value: `${members} kishi` },
       { label: "Bolalar (0-18)", value: `${ri(rnd, 0, members)} ta` },
       { label: "Mehnatga layoqatli", value: `${ri(rnd, 1, members)} ta` },
-      { label: "Maydon", value: `${ri(rnd, 4, 12) * 100 / 10} sotix` },
+      { label: "Maydon", value: `${(ri(rnd, 4, 12) * 100) / 10} sotix` },
       { label: "Qurilgan yili", value: `${ri(rnd, 1965, 2022)}` },
     ],
     utilities: [
@@ -232,7 +118,7 @@ const buildFactory = (rnd) => {
   const workers = ri(rnd, 8, 240);
   return {
     title: name,
-    subtitle: `Ishlab chiqarish obyekti`,
+    subtitle: `Ishlab chiqarish / tijorat obyekti`,
     badge: rnd() < 0.85 ? "Faoliyatda" : "To'xtatilgan",
     badgeTone: rnd() < 0.85 ? "success" : "danger",
     facts: [
@@ -256,5 +142,3 @@ export const elementInfo = (el) => {
   const data = (BUILDERS[el.type] || buildHouse)(rnd, el);
   return { ...data, type: el.type, typeMeta: ELEMENT_TYPES[el.type], id: el.id };
 };
-
-export { fmt };

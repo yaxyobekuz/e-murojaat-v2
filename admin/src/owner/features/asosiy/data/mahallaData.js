@@ -30,13 +30,13 @@ export const TOP_CARDS = [
 
 // ===== Overview paneli (hech narsa tanlanmaganda) =====
 export const OVERVIEW = {
-  name: "Sarnovul mahalla fuqarolar yig'ini",
-  region: "Andijon viloyati · Asaka tumani",
+  name: "Andijon shahri",
+  region: "Andijon viloyati · Markaz",
   hero: [
-    { label: "Aholi", value: "7 842", sub: "doimiy yashovchi" },
-    { label: "Hudud", value: "412 ga", sub: "umumiy maydon" },
-    { label: "Honadon", value: "1 640", sub: "ro'yxatdagi" },
-    { label: "Ko'chalar", value: "38", sub: "umumiy" },
+    { label: "Aholi", value: "468 ming", sub: "doimiy yashovchi" },
+    { label: "Hudud", value: "74 km²", sub: "umumiy maydon" },
+    { label: "Honadon", value: "112 400", sub: "ro'yxatdagi" },
+    { label: "Mahallalar", value: "162", sub: "umumiy" },
   ],
   // aholi tarkibi (donut)
   population: [
@@ -52,12 +52,19 @@ export const OVERVIEW = {
     { label: "Internet", value: 84, color: "#38bdf8" },
     { label: "Markazlashgan kanalizatsiya", value: 62, color: "#a78bfa" },
   ],
+  // xaritadagi obyektlar (shahar bo'yicha)
+  mapObjects: [
+    { label: "Turar-joy binolari", value: 112400, color: "#22d3ee" },
+    { label: "Tijorat obyektlari", value: 8650, color: "#a855f7" },
+    { label: "Ko'chalar", value: 1240, color: "#f59e0b" },
+    { label: "Yashil hududlar", value: 86, color: "#10b981" },
+  ],
   // ijtimoiy obyektlar
   facilities: [
-    { label: "Maktab", value: 3, icon: GraduationCap },
-    { label: "Bog'cha", value: 4, icon: Home },
-    { label: "Poliklinika", value: 1, icon: Sparkles },
-    { label: "Masjid", value: 2, icon: Building2 },
+    { label: "Maktab", value: 64, icon: GraduationCap },
+    { label: "Bog'cha", value: 98, icon: Home },
+    { label: "Poliklinika", value: 21, icon: Sparkles },
+    { label: "Masjid", value: 34, icon: Building2 },
   ],
 };
 
