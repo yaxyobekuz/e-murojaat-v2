@@ -45,9 +45,21 @@ const circleRing = (center, radiusM = 130, steps = 40) => {
 // Marker balandligi — yerga nisbatan (yer moduli kabi 25m, shunda yer ostiga tushmaydi)
 const MARKER_ALT = 25;
 
+// Nuqta atrofida kichik kvadrat (3D uy bloki uchun asos). sizeM — tomon (metr)
+const squareRing = (lat, lng, sizeM = 9) => {
+  const latM = sizeM / 111000;
+  const lngM = sizeM / (111000 * Math.cos((lat * Math.PI) / 180));
+  return [
+    { lat: lat - latM, lng: lng - lngM },
+    { lat: lat - latM, lng: lng + lngM },
+    { lat: lat + latM, lng: lng + lngM },
+    { lat: lat + latM, lng: lng - lngM },
+  ];
+};
+
 // bare=true → faqat xarita foni (qurilish markerlari, yashil zonalar yo'q). Tashqi `markers` chiziladi.
 // range — kamera masofasi (metr); kichikroq = yaqinroq ko'rinish.
-const ObodMap3D = ({ showGreen = false, activeId = null, onSelect, plantings = null, markers = null, zones = null, bare = false, range }) => {
+const ObodMap3D = ({ showGreen = false, activeId = null, onSelect, plantings = null, markers = null, zones = null, buildings = null, bare = false, range }) => {
   const hostRef = useRef(null);
   const mapRef = useRef(null);
   const libRef = useRef(null);
@@ -56,6 +68,7 @@ const ObodMap3D = ({ showGreen = false, activeId = null, onSelect, plantings = n
   const plantingMarkersRef = useRef([]); // ekish nuqtalari (real koordinata)
   const customMarkersRef = useRef([]); // umumiy markerlar (chiqindi qutilari, mashina ...)
   const customZonesRef = useRef([]); // umumiy zonalar (chiqindi maydoni ...)
+  const buildingsRef = useRef([]); // 3D uy bloklari (extruded poligon)
   const constructionElsRef = useRef([]); // qurilish doira + markerlari (eng tepada turishi kerak)
   const [status, setStatus] = useState("loading"); // loading | ready | fallback
 
@@ -259,6 +272,34 @@ const ObodMap3D = ({ showGreen = false, activeId = null, onSelect, plantings = n
       customZonesRef.current.push(poly);
     });
   }, [zones, status]);
+
+  // 3D uy bloklari — {lat,lng,height,color,label}. Extruded poligon = ko'tarilgan quti
+  useEffect(() => {
+    if (status !== "ready" || !mapRef.current || !libRef.current) return;
+    const map = mapRef.current;
+    const { Polygon3DElement, AltitudeMode } = libRef.current;
+
+    buildingsRef.current.forEach((el) => el.remove());
+    buildingsRef.current = [];
+    if (!buildings || !buildings.length) return;
+
+    buildings.forEach((b) => {
+      const col = b.color || "#06b6d4";
+      const h = b.height || 18;
+      const base = squareRing(b.lat, b.lng, b.sizeM || 9);
+      const box = new Polygon3DElement({
+        outerCoordinates: base.map((p) => ({ ...p, altitude: h })),
+        altitudeMode: AltitudeMode.RELATIVE_TO_GROUND,
+        extruded: true, // yerdan altitude balandlikkacha ko'tariladi = 3D quti
+        fillColor: hexToRgba(col, 0.92),
+        strokeColor: hexToRgba(col, 1),
+        strokeWidth: 1,
+        drawsOccludedSegments: true,
+      });
+      map.append(box);
+      buildingsRef.current.push(box);
+    });
+  }, [buildings, status]);
 
   // Tanlangan loyihaga kamera uchadi
   useEffect(() => {
