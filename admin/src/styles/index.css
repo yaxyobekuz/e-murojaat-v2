@@ -366,3 +366,31 @@ input[type="search"]::-ms-reveal {
   70% { transform: scale(0.98) rotate(1deg); box-shadow: 0 0 14px 1px rgba(251, 191, 36, 0.22); }
 }
 .gaz-flame { animation: gaz-flame 2.2s ease-in-out infinite; }
+
+/* ===== Asosiy moduli — interaktiv xarita animatsiyalari ===== */
+@keyframes asosiy-rise {
+  0%   { opacity: 0; transform: translateY(12px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.asosiy-rise { animation: asosiy-rise 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+@keyframes asosiy-fade {
+  0%   { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.asosiy-fade { animation: asosiy-fade 0.45s ease both; }
+
+@keyframes asosiy-slide {
+  0%   { opacity: 0; transform: translateX(18px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+.asosiy-slide { animation: asosiy-slide 0.4s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+@keyframes asosiy-grow {
+  0% { width: 0 !important; }
+}
+.asosiy-grow { animation: asosiy-grow 0.9s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .asosiy-rise, .asosiy-fade, .asosiy-slide, .asosiy-grow { animation: none !important; }
+}
