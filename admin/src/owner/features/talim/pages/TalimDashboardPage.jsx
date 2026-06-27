@@ -1,9 +1,132 @@
-// Ta'lim — Analitika (command-center). Sankey + hex + grafiklar. (Umumiy ma'lumotlar alohida sahifa.)
-import { useMemo, useState } from "react";
+// Ta'lim — Analitika (command-center). Jonli Face-ID + maktab ma'lumotlari + Sankey/hex/grafiklar.
+import { useMemo, useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { T, useInjectCC, useCountUp, EPanel, CcTop, tip, lineOpt, barOpt } from "../cc";
-import { M, fmt, dayLabel, trend30, classDist, INST } from "../data";
+import { M, fmt, dayLabel, trend30, classDist, INST, STUDENTS, rng } from "../data";
 import { InstitutionCard, StudentsBlock, StaffBlock } from "../sections";
+
+const pad2 = (n) => String(n).padStart(2, "0");
+const clockNow = () => { const d = new Date(); return `${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`; };
+const surname = (full) => full.split(" ")[0];
+
+// ── Chap panel: jonli Face-ID skaner (o'quvchilar birin-ketin o'tadi) ──
+function LiveFaceId({ onPass }) {
+  const order = useMemo(() => [...STUDENTS].sort((a, b) => rng(+a.id.slice(1) * 9.1) - rng(+b.id.slice(1) * 9.1)), []);
+  const [i, setI] = useState(0);
+  const [phase, setPhase] = useState("scan"); // scan | ok
+  const [feed, setFeed] = useState([]);
+  const cb = useRef(onPass); cb.current = onPass;
+  const cur = order[i % order.length];
+  useEffect(() => {
+    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const scanMs = reduce ? 600 : 1800, okMs = reduce ? 1100 : 2500;
+    const t1 = setTimeout(() => setPhase("ok"), scanMs);
+    const t2 = setTimeout(() => {
+      setFeed((f) => [{ id: cur.id + "-" + i, name: cur.name, photo: cur.photo, grade: cur.grade, letter: cur.letter, t: clockNow() }, ...f].slice(0, 6));
+      cb.current && cb.current();
+      setPhase("scan");
+      setI((v) => v + 1);
+    }, okMs);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, [i]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return (
+    <div className="tcc-card" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <div className="hd"><div><div className="t">Face-ID — jonli kirish</div><div className="s">{M.name} · maktab darvozasi</div></div><span className="tcc-live"><i />JONLI</span></div>
+      <div className="tcc-scan">
+        <img src={cur.photo} alt="" />
+        <div className="grid" />
+        {phase === "scan" ? (
+          <>
+            <div className="line" />
+            <span className="tag">● YUZ TEKSHIRILMOQDA</span>
+            <span className="tcc-cn tl" /><span className="tcc-cn tr" /><span className="tcc-cn bl" /><span className="tcc-cn br" />
+          </>
+        ) : (
+          <div className="ok"><b>✓</b></div>
+        )}
+      </div>
+      <div style={{ textAlign: "center" }}>
+        <div style={{ fontFamily: '"Space Grotesk"', fontWeight: 700, fontSize: 21, color: T.text, lineHeight: 1.1 }}>{surname(cur.name)}</div>
+        <div style={{ fontSize: 12.5, color: T.muted, marginTop: 2 }}>{cur.name.split(" ").slice(1).join(" ")} · {cur.grade}-{cur.letter} sinf</div>
+        <div style={{ marginTop: 8, fontSize: 13, fontWeight: 700, color: phase === "ok" ? T.green : T.teal }}>
+          {phase === "ok" ? "✓ Maktabga kirdi" : "Skaner ishlamoqda…"}
+        </div>
+      </div>
+      <div style={{ borderTop: `1px solid ${T.border}`, paddingTop: 10, display: "flex", flexDirection: "column", gap: 6 }}>
+        <div style={{ fontSize: 10.5, color: T.muted, textTransform: "uppercase", letterSpacing: ".6px", fontWeight: 700 }}>So'nggi o'tganlar</div>
+        {feed.length === 0 && <div style={{ fontSize: 12, color: T.muted, padding: "6px 2px" }}>Kutilmoqda…</div>}
+        {feed.map((f) => (
+          <div className="tcc-feedrow" key={f.id}>
+            <img src={f.photo} alt="" style={{ width: 32, height: 32, borderRadius: "50%", objectFit: "cover", border: `1px solid ${T.border}` }} />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 12.5, fontWeight: 600, color: T.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{surname(f.name)} <span style={{ color: T.muted, fontWeight: 400 }}>· {f.grade}-{f.letter}</span></div>
+            </div>
+            <div className="mono" style={{ fontSize: 11.5, color: T.green }}>{f.t}</div>
+            <span style={{ color: T.green, fontSize: 13 }}>✓</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const SCHOOLS_INFO = [
+  { n: "12-maktab", p: 1240, a: 95.2 },
+  { n: "47-maktab", p: 980, a: 93.8 },
+  { n: "Bilim xususiy maktabi", p: 320, a: 97.1 },
+];
+
+// ── O'ng panel: maktablar / umumiy ma'lumotlar ──
+function SchoolInfoPanel({ enteredToday }) {
+  const cov = +(((M.children6_18 - M.outOfSchool) / M.children6_18) * 100).toFixed(1);
+  const kpis = [
+    ["Jami o'quvchi", fmt(M.inSchool), T.text],
+    ["Bugun kirdi", fmt(enteredToday), T.green],
+    ["Umumiy qamrov", `${cov}%`, T.teal],
+    ["Maktablar", "3", T.gold],
+  ];
+  const att = [["Keldi", M.present, T.green], ["Sababli", M.excused, T.amber], ["Sababsiz", M.absent, T.alarm]];
+  const attTotal = att.reduce((s, [, v]) => s + v, 0);
+  return (
+    <div className="tcc-card" style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+      <div className="hd"><div><div className="t">Maktab ma'lumotlari</div><div className="s">{M.name} · {M.area}</div></div></div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 10 }}>
+        {kpis.map(([l, v, c]) => (
+          <div key={l} style={{ border: `1px solid ${T.border}`, borderRadius: 12, padding: "11px 12px", background: "rgba(255,255,255,.02)" }}>
+            <div style={{ fontSize: 10.5, color: T.muted, textTransform: "uppercase", letterSpacing: ".5px", fontWeight: 700 }}>{l}</div>
+            <div className="mono" style={{ fontSize: 23, fontWeight: 700, color: c, marginTop: 4 }}>{v}</div>
+          </div>
+        ))}
+      </div>
+      <div>
+        <div style={{ fontSize: 11, color: T.muted, textTransform: "uppercase", letterSpacing: ".6px", fontWeight: 700, marginBottom: 8 }}>Maktablar kesimi</div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+          {SCHOOLS_INFO.map((s) => { const c = s.a >= 96 ? T.green : s.a >= 94 ? T.teal : T.amber; return (
+            <div className="tcc-srow" key={s.n}>
+              <div style={{ width: 36, height: 36, borderRadius: 9, display: "grid", placeItems: "center", background: "rgba(45,212,191,.1)", color: T.teal, fontWeight: 700, fontSize: 13 }}>🏫</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 13.5, fontWeight: 600, color: T.text }}>{s.n}</div>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11.5, color: T.muted, marginTop: 3, marginBottom: 5 }}><span>{fmt(s.p)} o'quvchi</span><span style={{ color: c, fontWeight: 700 }}>davomat {s.a}%</span></div>
+                <div className="tcc-bar"><i style={{ width: `${s.a}%`, background: c }} /></div>
+              </div>
+            </div>
+          ); })}
+        </div>
+      </div>
+      <div>
+        <div style={{ fontSize: 11, color: T.muted, textTransform: "uppercase", letterSpacing: ".6px", fontWeight: 700, marginBottom: 8 }}>Bugungi davomat</div>
+        <div style={{ display: "flex", height: 14, borderRadius: 7, overflow: "hidden", border: `1px solid ${T.border}` }}>
+          {att.map(([l, v, c]) => <div key={l} title={`${l}: ${v}`} style={{ width: `${(v / attTotal) * 100}%`, background: c }} />)}
+        </div>
+        <div style={{ display: "flex", gap: 16, marginTop: 8, flexWrap: "wrap" }}>
+          {att.map(([l, v, c]) => <div key={l} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: T.muted }}><span style={{ width: 9, height: 9, borderRadius: 3, background: c }} />{l} <b style={{ color: T.text }}>{fmt(v)}</b></div>)}
+        </div>
+      </div>
+      <div className="tcc-note"><span className="tcc-pill">namunaviy · Face-ID demo</span></div>
+    </div>
+  );
+}
 
 const HEX = [["Markaziy", 99, 0], ["Bog'", 98, 1], ["Maktab-12", 99, 0], ["Bozor", 88, 5], ["Sanoat", 79, 9], ["Yangi daha", 95, 2], ["Maktab-47", 99, 0], ["Chekka", 84, 6], ["Park", 97, 1], ["Stadion", 96, 1], ["Tibbiyot", 98, 0], ["Eski mahalla", 82, 7]].map(([name, cov, out]) => ({ name, cov, out }));
 function HexGrid() {
@@ -30,6 +153,7 @@ const TalimDashboardPage = () => {
   useInjectCC();
   const nav = useNavigate();
   const [days, setDays] = useState(14);
+  const [entered, setEntered] = useState(2387);
   const out = useCountUp(M.outOfSchool); const cov = useCountUp(+(((M.children6_18 - M.outOfSchool) / M.children6_18) * 100).toFixed(1), 1500); const kids = useCountUp(M.children6_18, 1500); const chr = useCountUp(M.chronic);
 
   const sankey = useMemo(() => { const red = { itemStyle: { color: T.alarm }, label: { color: T.alarm } }; return { backgroundColor: "transparent", tooltip: { trigger: "item", ...tip }, series: [{ type: "sankey", left: 6, right: 130, top: 12, bottom: 12, nodeWidth: 13, nodeGap: 13, emphasis: { focus: "adjacency" }, draggable: false, label: { color: T.text, fontSize: 11 }, lineStyle: { color: "gradient", curveness: .5, opacity: .42 }, data: [{ name: "Bolalar 6–18", itemStyle: { color: T.gold } }, { name: "Maktabda o'qiyapti", itemStyle: { color: T.green } }, { name: "Maktabgacha tayyorlov", itemStyle: { color: T.teal } }, { name: "⚠ Chetda qolgan", ...red }, { name: "9-sinfni tugatdi", itemStyle: { color: T.gold } }, { name: "10-sinf (akademik)", itemStyle: { color: T.green } }, { name: "Kollej / texnikum", itemStyle: { color: T.teal } }, { name: "⚠ Hech qayerda", ...red }], links: [{ source: "Bolalar 6–18", target: "Maktabda o'qiyapti", value: 2540 }, { source: "Bolalar 6–18", target: "Maktabgacha tayyorlov", value: 109 }, { source: "Bolalar 6–18", target: "⚠ Chetda qolgan", value: 31, lineStyle: { color: T.alarm, opacity: .65 } }, { source: "Maktabda o'qiyapti", target: "9-sinfni tugatdi", value: 224 }, { source: "9-sinfni tugatdi", target: "10-sinf (akademik)", value: 150 }, { source: "9-sinfni tugatdi", target: "Kollej / texnikum", value: 65 }, { source: "9-sinfni tugatdi", target: "⚠ Hech qayerda", value: 9, lineStyle: { color: T.alarm, opacity: .65 } }] }] }; }, []);
@@ -42,6 +166,11 @@ const TalimDashboardPage = () => {
     <div className="tcc">
       <CcTop subtitle={`${M.name} · ${M.area}`} right={<select className="tcc-sel" value={days} onChange={(e) => setDays(+e.target.value)} aria-label="Sana filtri"><option value={7}>7 kun</option><option value={14}>14 kun</option><option value={30}>30 kun</option></select>} />
       <div className="tcc-wrap">
+        {/* ═══ JONLI FACE-ID + MAKTAB MA'LUMOTLARI (panel ikkiga bo'lingan) ═══ */}
+        <div className="tcc-split">
+          <LiveFaceId onPass={() => setEntered((v) => v + 1)} />
+          <SchoolInfoPanel enteredToday={entered} />
+        </div>
         <div className="tcc-hero">
           <div className="tcc-alarm"><div style={{ fontSize: 11, color: "#ffb3b3", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".6px" }}>⚠ Ta'limdan chetda qolgan bolalar</div><div className="big">{fmt(out)}</div><div style={{ fontSize: 11.5, color: T.muted, marginTop: 6 }}>6–18 yosh · ish 12 · kasallik 7 · noaniq 9 · ko'chgan 3</div></div>
           {[["Umumiy qamrov", `${cov.toFixed(1)}%`, T.green], ["Jami bola (6–18)", fmt(kids), T.text], ["Surunkali kelmaydigan", fmt(chr), T.amber]].map(([l, v, c], i) => <div className="tcc-kpi" key={i}><div className="lab">{l}</div><div className="val" style={{ color: c }}>{v}</div></div>)}

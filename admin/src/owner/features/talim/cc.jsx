@@ -63,6 +63,30 @@ const CSS = `
 .tcc-staffc:hover{border-color:rgba(45,212,191,.45);background:rgba(45,212,191,.05);transform:translateY(-2px)}
 .tcc-bar{height:6px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}.tcc-bar>i{display:block;height:100%;border-radius:99px}
 .tcc input[type=range]{accent-color:${T.gold};height:4px}
+.tcc-scan{position:relative;border-radius:14px;overflow:hidden;border:2px solid rgba(45,212,191,.45);background:#05080d;width:100%;aspect-ratio:1/1;box-shadow:0 0 26px -6px rgba(45,212,191,.45)}
+.tcc-scan>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(.12) contrast(1.05)}
+.tcc-scan .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(45,212,191,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(45,212,191,.07) 1px,transparent 1px);background-size:22px 22px;pointer-events:none}
+.tcc-scan .line{position:absolute;left:6%;right:6%;height:3px;border-radius:2px;background:linear-gradient(90deg,transparent,#2DD4BF,transparent);box-shadow:0 0 16px #2DD4BF;animation:tccScan 1.6s ease-in-out infinite}
+@keyframes tccScan{0%{top:7%}50%{top:90%}100%{top:7%}}
+.tcc-cn{position:absolute;width:26px;height:26px;border:3px solid #2DD4BF}
+.tcc-cn.tl{top:10px;left:10px;border-right:0;border-bottom:0;border-radius:6px 0 0 0}
+.tcc-cn.tr{top:10px;right:10px;border-left:0;border-bottom:0;border-radius:0 6px 0 0}
+.tcc-cn.bl{bottom:10px;left:10px;border-right:0;border-top:0;border-radius:0 0 0 6px}
+.tcc-cn.br{bottom:10px;right:10px;border-left:0;border-top:0;border-radius:0 0 6px 0}
+.tcc-scan .tag{position:absolute;left:10px;top:10px;font-size:10px;font-weight:700;color:#2DD4BF;background:rgba(0,0,0,.5);padding:2px 8px;border-radius:6px;letter-spacing:1px;font-family:"JetBrains Mono"}
+.tcc-scan .ok{position:absolute;inset:0;display:grid;place-items:center;background:rgba(47,191,135,.22);animation:tccOk .45s}
+.tcc-scan .ok b{font-size:64px;color:#2FBF87;text-shadow:0 0 24px rgba(47,191,135,.8)}
+@keyframes tccOk{from{opacity:0;transform:scale(.6)}}
+.tcc-feedrow{display:flex;align-items:center;gap:10px;padding:7px 8px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid ${T.border};animation:tccFeedIn .4s}
+@keyframes tccFeedIn{from{opacity:0;transform:translateX(-12px)}}
+.tcc-split{display:grid;grid-template-columns:minmax(300px,360px) 1fr;gap:14px;margin-bottom:16px}
+@media(max-width:960px){.tcc-split{grid-template-columns:1fr}}
+.tcc-live{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:700;letter-spacing:.6px;color:#2DD4BF}
+.tcc-live i{width:8px;height:8px;border-radius:50%;background:#2DD4BF;box-shadow:0 0 8px #2DD4BF;animation:tccBlink 1.1s infinite}
+@keyframes tccBlink{50%{opacity:.25}}
+.tcc-srow{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:11px;border:1px solid ${T.border};background:rgba(255,255,255,.02)}
+.tcc-bar{height:6px;border-radius:4px;background:rgba(255,255,255,.07);overflow:hidden}
+.tcc-bar>i{display:block;height:100%;border-radius:4px}
 .tcc-modal{position:fixed;inset:0;z-index:99999;background:rgba(5,10,15,.78);display:grid;place-items:center;padding:18px;backdrop-filter:blur(4px);animation:tccFade .2s ease}
 @keyframes tccFade{from{opacity:0}}
 .tcc-mbox{color:${T.text};font-family:Inter,system-ui,sans-serif;background:${T.panel};border:1px solid ${T.border};border-radius:18px;width:min(1080px,96vw);max-height:88vh;overflow:auto;display:flex;flex-direction:column;padding:18px 20px;box-shadow:0 40px 100px rgba(0,0,0,.7);transform:scale(.92);opacity:0;animation:tccGrow .28s cubic-bezier(.2,.8,.2,1) forwards}
