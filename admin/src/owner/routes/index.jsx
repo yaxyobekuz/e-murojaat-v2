@@ -24,6 +24,7 @@ import { IibDashboardPage, IibMapPage } from "@/owner/features/iib";
 import { FvvDashboardPage, FvvMapPage } from "@/owner/features/fvv";
 import { YoshlarDashboardPage, YoshlarProjectsPage } from "@/owner/features/yoshlar";
 import { ElektrDashboardPage } from "@/owner/features/elektr";
+import { InternetDashboardPage } from "@/owner/features/internet";
 import { MskAnalyticsPage, MskAppealsPage } from "@/owner/features/msk";
 import { GazAnalyticsPage, GazStreetsPage } from "@/owner/features/gaz";
 import { AsosiyDashboardPage } from "@/owner/features/asosiy";
@@ -55,6 +56,7 @@ const OwnerRoutes = () => (
     <Route path="yoshlar" element={<YoshlarDashboardPage />} />
     <Route path="yoshlar/loyihalar" element={<YoshlarProjectsPage />} />
     <Route path="elektr" element={<ElektrDashboardPage />} />
+    <Route path="internet" element={<InternetDashboardPage />} />
     <Route path="msk" element={<MskAnalyticsPage />} />
     <Route path="msk/arizalar" element={<MskAppealsPage />} />
     <Route path="gaz" element={<GazAnalyticsPage />} />

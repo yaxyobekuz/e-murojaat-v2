@@ -55,6 +55,10 @@ export const qk = Object.freeze({
     all: () => ["elektr"],
     analytics: (kind, params) => ["elektr", "analytics", kind, params],
   },
+  internet: {
+    all: () => ["internet"],
+    analytics: (kind, params) => ["internet", "analytics", kind, params],
+  },
   msk: {
     all: () => ["msk"],
     appeals: (params) => ["msk", "appeals", params],
