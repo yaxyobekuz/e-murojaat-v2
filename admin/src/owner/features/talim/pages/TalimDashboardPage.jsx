@@ -166,27 +166,33 @@ const TalimDashboardPage = () => {
     <div className="tcc">
       <CcTop subtitle={`${M.name} · ${M.area}`} right={<select className="tcc-sel" value={days} onChange={(e) => setDays(+e.target.value)} aria-label="Sana filtri"><option value={7}>7 kun</option><option value={14}>14 kun</option><option value={30}>30 kun</option></select>} />
       <div className="tcc-wrap">
-        {/* ═══ JONLI FACE-ID + MAKTAB MA'LUMOTLARI (panel ikkiga bo'lingan) ═══ */}
-        <div className="tcc-split">
-          <LiveFaceId onPass={() => setEntered((v) => v + 1)} />
-          <SchoolInfoPanel enteredToday={entered} />
-        </div>
+        {/* ═══ 1) ASOSIY KPI — eng muhim raqamlar (tepada) ═══ */}
         <div className="tcc-hero">
           <div className="tcc-alarm"><div style={{ fontSize: 11, color: "#ffb3b3", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".6px" }}>⚠ Ta'limdan chetda qolgan bolalar</div><div className="big">{fmt(out)}</div><div style={{ fontSize: 11.5, color: T.muted, marginTop: 6 }}>6–18 yosh · ish 12 · kasallik 7 · noaniq 9 · ko'chgan 3</div></div>
           {[["Umumiy qamrov", `${cov.toFixed(1)}%`, T.green], ["Jami bola (6–18)", fmt(kids), T.text], ["Surunkali kelmaydigan", fmt(chr), T.amber]].map(([l, v, c], i) => <div className="tcc-kpi" key={i}><div className="lab">{l}</div><div className="val" style={{ color: c }}>{v}</div></div>)}
         </div>
-        <div className="tcc-grid" style={{ marginBottom: 14 }}>
-          <div className="tcc-card tcc-c12" style={{ animationDelay: "120ms" }}><div className="hd"><div><div className="t">Tirik mahalla — qamrov</div><div className="s">Bloklar (hex)</div></div></div><div style={{ height: 300 }}><HexGrid /></div><div className="tcc-note"><span className="tcc-pill">namunaviy · qizil = past qamrov</span></div></div>
+        {/* ═══ 2) JONLI FACE-ID + MAKTAB MA'LUMOTLARI ═══ */}
+        <div className="tcc-split">
+          <LiveFaceId onPass={() => setEntered((v) => v + 1)} />
+          <SchoolInfoPanel enteredToday={entered} />
         </div>
-        <div className="tcc-grid">
-          <EPanel className="tcc-c4" delay={260} height={230} title="Qamrov radari" subtitle="Maktabgacha → 9-dan keyin" option={radar} note="Maktabgacha 78% · Boshlang'ich 99% · O'rta 97% · 9-dan keyin 96%" />
-          <EPanel className="tcc-c8" delay={300} height={230} title="Davomat tendentsiyasi" subtitle={`Oxirgi ${days} kun`} option={trend} note={<span className="tcc-pill">namunaviy</span>} />
-          <EPanel className="tcc-c5" delay={340} height={210} title="Sinflar bo'yicha taqsimot" subtitle="1–11-sinf o'quvchilari" option={classes} note={<span className="tcc-pill">namunaviy</span>} />
-          <EPanel className="tcc-c4" delay={380} height={210} title="Qizlar bo'yicha kesim" subtitle="Erta nikoh xavfi monitoringi" option={girls} note={<span><span className="tcc-pill">namunaviy</span> &nbsp;Qizlar 1245 · qamrov 98.9% · chetda 14</span>} />
-          <div className="tcc-card tcc-c3" style={{ animationDelay: "420ms" }}><div className="hd"><div><div className="t">Xavf guruhlari</div><div className="s">Maxsus e'tibor</div></div></div>
+        {/* ═══ 3) ENG QIMMATLI GRAFIKLAR — davomat trendi + qamrov radari ═══ */}
+        <div className="tcc-grid" style={{ marginBottom: 14 }}>
+          <EPanel className="tcc-c8" delay={120} height={250} title="Davomat tendentsiyasi" subtitle={`Oxirgi ${days} kun`} option={trend} note={<span className="tcc-pill">namunaviy</span>} />
+          <EPanel className="tcc-c4" delay={160} height={250} title="Qamrov radari" subtitle="Maktabgacha → 9-dan keyin" option={radar} note="Maktabgacha 78% · Boshlang'ich 99% · O'rta 97% · 9-dan keyin 96%" />
+        </div>
+        {/* ═══ 4) XAVF GURUHLARI + SINFLAR ═══ */}
+        <div className="tcc-grid" style={{ marginBottom: 14 }}>
+          <div className="tcc-card tcc-c6" style={{ animationDelay: "200ms" }}><div className="hd"><div><div className="t">Xavf guruhlari</div><div className="s">Maxsus e'tibor</div></div></div>
             <div style={{ display: "flex", flexDirection: "column", gap: 9, marginTop: 2 }}>{[["Kam ta'minlangan oila", 86, T.amber], ["Yetim / vasiylik", 9, T.teal], ["Nogironligi bor", 14, T.gold]].map(([l, n, c]) => <div key={l} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 10px", border: `1px solid ${T.border}`, borderRadius: 10, background: "rgba(255,255,255,.02)" }}><div className="mono" style={{ fontSize: 22, fontWeight: 700, color: c, minWidth: 40 }}>{n}</div><div style={{ fontSize: 11.5 }}>{l}</div></div>)}</div>
             <div className="tcc-note"><span className="tcc-pill">namunaviy</span></div>
           </div>
+          <EPanel className="tcc-c6" delay={240} height={230} title="Sinflar bo'yicha taqsimot" subtitle="1–11-sinf o'quvchilari" option={classes} note={<span className="tcc-pill">namunaviy</span>} />
+        </div>
+        {/* ═══ 5) KAMROQ KERAKLI — hex xarita + qizlar kesimi (pastda) ═══ */}
+        <div className="tcc-grid">
+          <div className="tcc-card tcc-c8" style={{ animationDelay: "300ms" }}><div className="hd"><div><div className="t">Tirik mahalla — qamrov</div><div className="s">Bloklar (hex)</div></div></div><div style={{ height: 260 }}><HexGrid /></div><div className="tcc-note"><span className="tcc-pill">namunaviy · qizil = past qamrov</span></div></div>
+          <EPanel className="tcc-c4" delay={340} height={260} title="Qizlar bo'yicha kesim" subtitle="Erta nikoh xavfi monitoringi" option={girls} note={<span><span className="tcc-pill">namunaviy</span> &nbsp;Qizlar 1245 · qamrov 98.9% · chetda 14</span>} />
         </div>
         {/* ═══ UMUMIY MA'LUMOTLAR (analitikada ham turaversin; bo'lim bosilsa to'liq sahifaga) ═══ */}
         <div className="tcc-h2" role="button" tabIndex={0} style={{ cursor: "pointer", marginTop: 26 }} onClick={() => nav("/owner/talim/malumotlar")} onKeyDown={(e) => e.key === "Enter" && nav("/owner/talim/malumotlar")}>
