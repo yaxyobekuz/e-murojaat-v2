@@ -1,5 +1,10 @@
 // Ta'lim — namunaviy (sintetik) ma'lumotlar. Faqat bitta mahalla ichki tizimi.
-import studentFace from "./assets/student-faceid.png";
+import boyFace1 from "./assets/student-faceid.png";
+import boyFace2 from "./assets/student-boy2.png";
+import girlFace from "./assets/student-girl.png";
+const BOY_FACES = [boyFace1, boyFace2];
+// Face-ID jonli skaner uchun 3 ta rasm (jins bilan)
+export const FACES = [{ photo: boyFace1, female: false }, { photo: boyFace2, female: false }, { photo: girlFace, female: true }];
 
 export const fmt = (n) => Math.round(n).toLocaleString("uz-UZ").replace(/,/g, " ");
 export const rng = (s) => { const x = Math.sin(s * 12.9898 + 78.233) * 43758.5453; return x - Math.floor(x); };
@@ -31,7 +36,8 @@ export const STUDENTS = Array.from({ length: 76 }, (_, i) => {
   const att = +(82 + rng(i * 5.9 + 4) * 17).toFixed(1);
   const inst = SCHOOLS3[rng(i * 6.3 + 5) < 0.86 ? Math.floor(rng(i * 7.1) * 2) : 2];
   const letter = ["A", "B", "V"][Math.floor(rng(i * 8.2) * 3)];
-  const photo = studentFace;
+  // Jinsga mos Face-ID rasm (o'g'il / qiz)
+  const photo = female ? girlFace : BOY_FACES[i % BOY_FACES.length];
   return { id: `s${i}`, name: `${last}${female ? "a" : ""} ${first}`, gender: female ? "qiz" : "o'g'il", grade, letter, age: grade + 6, att, status: att < 90 ? "qoldiruvchi" : "doimiy", inst, photo };
 });
 export const getStudent = (id) => STUDENTS.find((s) => s.id === id) || null;

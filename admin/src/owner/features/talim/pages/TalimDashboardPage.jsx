@@ -2,7 +2,7 @@
 import { useMemo, useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { T, useInjectCC, useCountUp, EPanel, CcTop, tip, lineOpt, barOpt } from "../cc";
-import { M, fmt, dayLabel, trend30, classDist, INST, STUDENTS, rng } from "../data";
+import { M, fmt, dayLabel, trend30, classDist, INST, STUDENTS, FACES } from "../data";
 import { InstitutionCard, StudentsBlock, StaffBlock } from "../sections";
 
 const pad2 = (n) => String(n).padStart(2, "0");
@@ -11,24 +11,37 @@ const surname = (full) => full.split(" ")[0];
 
 // ── Chap panel: jonli Face-ID skaner (o'quvchilar birin-ketin o'tadi) ──
 function LiveFaceId({ onPass }) {
-  const order = useMemo(() => [...STUDENTS].sort((a, b) => rng(+a.id.slice(1) * 9.1) - rng(+b.id.slice(1) * 9.1)), []);
-  const [i, setI] = useState(0);
+  const queue = useRef([]); const lastIdx = useRef(-1); const step = useRef(0);
+  // Keyingi rasm: 3 rasm aralash, har bosqichda hammasi 1 martadan, ketma-ket takror yo'q
+  const nextFace = () => {
+    if (queue.current.length === 0) {
+      const s = [0, 1, 2];
+      for (let k = s.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [s[k], s[j]] = [s[j], s[k]]; }
+      if (s[0] === lastIdx.current) [s[0], s[1]] = [s[1], s[0]];
+      queue.current = s;
+    }
+    const idx = queue.current.shift(); lastIdx.current = idx;
+    const f = FACES[idx];
+    const pool = STUDENTS.filter((s) => s.gender === (f.female ? "qiz" : "o'g'il"));
+    const st = pool[Math.floor(Math.random() * pool.length)];
+    return { photo: f.photo, name: st.name, grade: st.grade, letter: st.letter, key: `f${step.current++}` };
+  };
+  const [cur, setCur] = useState(nextFace);
   const [phase, setPhase] = useState("scan"); // scan | ok
   const [feed, setFeed] = useState([]);
   const cb = useRef(onPass); cb.current = onPass;
-  const cur = order[i % order.length];
   useEffect(() => {
     const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const scanMs = reduce ? 600 : 1800, okMs = reduce ? 1100 : 2500;
     const t1 = setTimeout(() => setPhase("ok"), scanMs);
     const t2 = setTimeout(() => {
-      setFeed((f) => [{ id: cur.id + "-" + i, name: cur.name, photo: cur.photo, grade: cur.grade, letter: cur.letter, t: clockNow() }, ...f].slice(0, 6));
+      setFeed((f) => [{ id: cur.key, name: cur.name, photo: cur.photo, grade: cur.grade, letter: cur.letter, t: clockNow() }, ...f].slice(0, 6));
       cb.current && cb.current();
       setPhase("scan");
-      setI((v) => v + 1);
+      setCur(nextFace());
     }, okMs);
     return () => { clearTimeout(t1); clearTimeout(t2); };
-  }, [i]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [cur]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="tcc-card" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
