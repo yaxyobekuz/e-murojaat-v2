@@ -1,13 +1,13 @@
-// IIB operativ xaritasi — Navbahor MFY, Asaka tumani, Andijon (prototip, demo).
+// IIB operativ xaritasi — Sarnovul MFY, Baliqchi tumani, Andijon (prototip, demo).
 // Mahalla bloklarga bo'lingan. Har blok xavfsizlik holatiga qarab bo'yaladi:
 //   calm     = yashil  (tinch)
 //   alert    = sariq   (diqqat — kichik signal/qoidabuzarlik)
 //   incident = qizil   (hodisa — faol chaqiruv)
 // Har blokda hodisa "nuqtalari" (begona avto, 102 signali, ...) va kameralar bor.
-// Koordinatalar Asaka markazi atrofida (taxminiy, demo uchun).
+// Koordinatalar Sarnovul markazi atrofida (taxminiy, demo uchun).
 
 export const MAP_CENTER = { lat: 40.639, lng: 72.239 };
-export const MAP_PLACE_LABEL = "Navbahor MFY, Asaka tumani, Andijon";
+export const MAP_PLACE_LABEL = "Sarnovul MFY, Baliqchi tumani, Andijon";
 
 // Xavfsizlik holati ranglari — rules/02 holat rang xaritasi
 export const SECURITY_STATUS = {

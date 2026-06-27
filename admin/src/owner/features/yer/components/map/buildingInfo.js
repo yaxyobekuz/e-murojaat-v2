@@ -53,7 +53,7 @@ const centroid = (ring) => {
 };
 
 export const buildingInfo = (feature) => {
-  const ring = feature.geometry?.coordinates?.[0] || [[72.344, 40.782]];
+  const ring = feature.geometry?.coordinates?.[0] || [[71.8604, 40.9034]];
   const [lng, lat] = centroid(ring);
   const seed = hashStr(`${lng.toFixed(5)},${lat.toFixed(5)}`);
 

@@ -1,5 +1,5 @@
 // Mahalla FVV — "FAVQULODDA VAZIYATLAR KOMANDAVOY MARKAZI". Quyuq, premium, yagona sahifa.
-// FAQAT DEMO (backend/sensor/IoT yo'q) · faqat Navbahor MFY. Imzo: jonli sensor devori +
+// FAQAT DEMO (backend/sensor/IoT yo'q) · faqat Sarnovul MFY. Imzo: jonli sensor devori +
 // favqulodda ALARM (hodisa turi + manzil + brigada ETA). ECharts + setInterval simulyatsiya.
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -16,7 +16,7 @@ const now = () => { const d = new Date(); return `${pad(d.getHours())}:${pad(d.g
 
 /* ───────── Sensorlar ───────── */
 const SENSOR_DEF = [
-  { id: "smoke", name: "Tutun / yong'in", loc: "Navbahor ko'chasi 14-uy", unit: "%", warn: 40, danger: 70, base: 8, span: 16 },
+  { id: "smoke", name: "Tutun / yong'in", loc: "Sarnovul ko'chasi 14-uy", unit: "%", warn: 40, danger: 70, base: 8, span: 16 },
   { id: "gas", name: "Maishiy gaz (CH₄)", loc: "Bog' ko'chasi", unit: "%LEL", warn: 20, danger: 40, base: 5, span: 12 },
   { id: "water", name: "Suv sathi / sel", loc: "Ariq yoqasi", unit: "sm", warn: 90, danger: 140, base: 42, span: 30 },
   { id: "seismic", name: "Seysmik (magnituda)", loc: "MFY posti", unit: "M", warn: 3.5, danger: 5, base: 0.6, span: 1.2 },
@@ -28,7 +28,7 @@ const statusColor = { normal: T.green, ogohlik: T.amber, xavf: T.alarm };
 const initSensors = () => SENSOR_DEF.map((s) => ({ ...s, val: +(s.base + Math.random() * s.span * 0.5).toFixed(s.id === "seismic" ? 1 : 0), trend: Array.from({ length: 16 }, () => +(s.base + Math.random() * s.span * 0.4).toFixed(1)) }));
 
 /* ───────── Hodisalar ───────── */
-const STREETS = ["Navbahor ko'chasi", "Bog' ko'chasi", "Markaziy ko'cha", "Istiqlol ko'chasi", "Yangihayot ko'chasi", "Sanoat ko'chasi"];
+const STREETS = ["Sarnovul ko'chasi", "Navoiy ko'chasi", "Bobur ko'chasi", "Amir Temur ko'chasi", "Fidokor ko'chasi", "Istiqlol ko'chasi"];
 const INC_TYPES = {
   fire: { name: "YONG'IN", icon: "🔥", color: T.alarm }, gas: { name: "GAZ SIZISHI", icon: "💨", color: T.gold },
   flood: { name: "SUV TOSHQINI", icon: "🌊", color: T.teal }, tech: { name: "TEXNOGEN AVARIYA", icon: "⚙️", color: "#a78bfa" },
@@ -197,7 +197,7 @@ const FvvDashboardPage = () => {
     <div className="fcc">
       <div className="fcc-top">
         <div className="fcc-emb">FVV</div>
-        <div style={{ marginRight: "auto" }}><div className="nm">Favqulodda Vaziyatlar Komandavoy Markazi</div><div className="sb">Navbahor MFY · Yunusobod tumani, Toshkent · ~4 200 aholi · ~980 xonadon</div></div>
+        <div style={{ marginRight: "auto" }}><div className="nm">Favqulodda Vaziyatlar Komandavoy Markazi</div><div className="sb">Sarnovul MFY · Baliqchi tumani, Andijon · ~4 200 aholi · ~980 xonadon</div></div>
         <span className="fcc-live"><i /> JONLI</span><span className="fcc-demo">DEMO — namunaviy</span>
         <div className="sb mono">{clk}</div>
       </div>
@@ -205,7 +205,7 @@ const FvvDashboardPage = () => {
       <div className="fcc-wrap">
         {/* HERO */}
         <div className="fcc-hero">
-          <div className="fcc-safe"><div style={{ fontSize: 11, color: "#9fe3c4", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".5px" }}>Favqulodda hodisasiz kunlar</div><div className="big">{fmt(safeDays)}</div><div style={{ fontSize: 11.5, color: T.muted, marginTop: 6 }}>Navbahor MFY · uzluksiz</div></div>
+          <div className="fcc-safe"><div style={{ fontSize: 11, color: "#9fe3c4", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".5px" }}>Favqulodda hodisasiz kunlar</div><div className="big">{fmt(safeDays)}</div><div style={{ fontSize: 11.5, color: T.muted, marginTop: 6 }}>Sarnovul MFY · uzluksiz</div></div>
           <div className="fcc-kpi"><div className="lab">Bugungi 112 chaqiruvlari</div><div className="val" style={{ color: T.text }}>{fmt(calls)}</div><div style={{ fontSize: 11, color: T.alarm, marginTop: 2 }}>faol hodisa: {fmt(active)}</div></div>
           <div className="fcc-card" style={{ animationDelay: "60ms", padding: "8px 10px 0" }}><div style={{ fontSize: 11, color: T.muted, fontWeight: 600, textTransform: "uppercase", padding: "6px 6px 0" }}>Umumiy xavf darajasi</div><div className="fcc-ch" style={{ height: 110 }}><RiskGaugeChart option={riskGauge} /></div></div>
           <div className="fcc-kpi"><div className="lab">O'rtacha brigada ETA</div><div className="val" style={{ color: T.teal }}>6 daq</div><div style={{ fontSize: 11, color: T.muted, marginTop: 2 }}>eng yaqin kuch</div></div>
@@ -279,7 +279,7 @@ const FvvDashboardPage = () => {
           <div className="fcc-card fcc-c4" style={{ animationDelay: "480ms" }}>
             <div className="hd"><div><div className="t">Xavf guruhidagi xonadonlar</div><div className="s">17 xonadon · manzilli</div></div></div>
             <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>{[["Yolg'iz keksa", 9, T.gold], ["Nogironligi bor", 4, T.teal], ["Eski gaz/elektr", 4, T.alarm]].map(([l, n, c]) => <div key={l} style={{ flex: 1, border: `1px solid ${T.border}`, borderRadius: 10, padding: "8px", textAlign: "center" }}><div className="mono" style={{ fontSize: 20, fontWeight: 700, color: c }}>{n}</div><div style={{ fontSize: 9.5, color: T.muted }}>{l}</div></div>)}</div>
-            <div style={{ fontSize: 11.5, color: T.muted, lineHeight: 1.8 }}>Navbahor 8-uy · Bog' 12-uy · Markaziy 5-uy · Istiqlol 21-uy …</div>
+            <div style={{ fontSize: 11.5, color: T.muted, lineHeight: 1.8 }}>Sarnovul 8-uy · Bog' 12-uy · Markaziy 5-uy · Istiqlol 21-uy …</div>
           </div>
           <div className="fcc-card fcc-c4" style={{ animationDelay: "520ms" }}>
             <div className="hd"><div><div className="t">Evakuatsiya</div><div className="s">Yig'ilish nuqtalari</div></div></div>
@@ -297,7 +297,7 @@ const FvvDashboardPage = () => {
           <div className="fcc-card fcc-c8" style={{ animationDelay: "600ms" }}>
             <div className="hd"><div><div className="t">Mahalla fuqaro muhofazasi yig'ma guruhi</div><div className="s">Tezkor kuchlar tarkibi</div></div></div>
             <div className="fcc-staffgrid">{[
-              ["Olimov Rustam", "Yig'ma guruh rahbari", "Navbahor MFY", "shay", T.green],
+              ["Olimov Rustam", "Yig'ma guruh rahbari", "Sarnovul MFY", "shay", T.green],
               ["Karimov Akmal", "Tuman FVV inspektori", "MFY bo'yicha", "shay", T.green],
               ["Tursunov Sardor", "Yong'in xavfsizligi inspektori", "1–6-bloklar", "yo'lda", T.gold],
               ["Qizil Yarim oy otryadi", "Ko'ngillilar (8 kishi)", "MFY bo'yicha", "shay", T.green],
@@ -316,7 +316,7 @@ const FvvDashboardPage = () => {
           </div>
         </div>
 
-        <div style={{ marginTop: 16, fontSize: 11.5, color: T.muted }}>Barcha ma'lumotlar — <b>DEMO (namunaviy/simulyatsiya)</b>. Faqat Navbahor MFY. Backend/sensor yo'q.</div>
+        <div style={{ marginTop: 16, fontSize: 11.5, color: T.muted }}>Barcha ma'lumotlar — <b>DEMO (namunaviy/simulyatsiya)</b>. Faqat Sarnovul MFY. Backend/sensor yo'q.</div>
       </div>
 
       {selSensor && createPortal(<div className="fcc-modal" onClick={() => setSelSensor(null)}><div className="fcc-mbox" style={{ width: "min(560px,94vw)" }} onClick={(e) => e.stopPropagation()}><div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}><div><div style={{ fontFamily: '"Space Grotesk"', fontWeight: 700, fontSize: 17 }}>{selSensor.name}</div><div style={{ fontSize: 11, color: T.muted }}>{selSensor.loc}</div></div><button className="fcc-x" onClick={() => setSelSensor(null)}>×</button></div><div style={{ display: "flex", gap: 16, alignItems: "baseline", margin: "8px 0" }}><span className="mono" style={{ fontSize: 40, fontWeight: 700, color: statusColor[sensorStatus(selSensor, selSensor.val)] }}>{selSensor.val}</span><span style={{ color: T.muted }}>{selSensor.unit}</span><span style={{ marginLeft: "auto", color: T.muted, fontSize: 12 }}>Ogohlik ≥ {selSensor.warn} · Xavf ≥ {selSensor.danger}</span></div><Spark data={selSensor.trend} color={statusColor[sensorStatus(selSensor, selSensor.val)]} w={500} h={120} /><div style={{ marginTop: 10 }}><span className="fcc-pill">DEMO</span></div></div></div>, document.body)}

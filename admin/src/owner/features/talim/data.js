@@ -4,7 +4,7 @@ export const rng = (s) => { const x = Math.sin(s * 12.9898 + 78.233) * 43758.545
 export const dayLabel = (b) => { const d = new Date(2026, 5, 24); d.setDate(d.getDate() - b); return `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1).padStart(2, "0")}`; };
 const pad = (n) => String(n).padStart(2, "0");
 
-export const M = { name: "Navbahor MFY", area: "Yunusobod tumani, Toshkent", children6_18: 2680, inSchool: 2540, outOfSchool: 31, preschool: 78, chronic: 24, present: 2392, excused: 89, absent: 59 };
+export const M = { name: "Sarnovul MFY", area: "Baliqchi tumani, Andijon", children6_18: 2680, inSchool: 2540, outOfSchool: 31, preschool: 78, chronic: 24, present: 2392, excused: 89, absent: 59 };
 export const SCHOOLS3 = ["12-maktab", "47-maktab", "Bilim xususiy maktabi"];
 export const SUBJECTS = ["Matematika", "Ona tili", "Ingliz tili", "Fizika", "Tarix", "Kimyo", "Biologiya", "Geografiya", "Informatika", "Jismoniy tarbiya", "Musiqa", "Chizmachilik"];
 
@@ -14,7 +14,7 @@ export const classDist = (total, seed) => { const base = Array.from({ length: 11
 export const INST = [
   { id: "davlat", title: "Bizdagi maktab", sub: "Davlat maktablari", kind: "school", schools: ["12-maktab (2-smena)", "47-maktab (1-smena)"], count: 2, students: 2220, attendance: 94.6, boys: 1154, girls: 1066, chronic: 21, accent: "#2DD4BF", trend: trend30(2), dist: classDist(2220, 5) },
   { id: "xususiy", title: "Xususiy maktab", sub: "Bilim xususiy maktabi", kind: "school", schools: ["Bilim xususiy maktabi"], count: 1, students: 320, attendance: 96.4, boys: 166, girls: 154, chronic: 3, accent: "#E0A93B", trend: trend30(7), dist: classDist(320, 9) },
-  { id: "bogcha", title: "Bog'cha", sub: "Maktabgacha ta'lim · Navbahor 14-DMTT", kind: "kg", schools: ["Navbahor 14-DMTT"], count: 1, students: 180, attendance: 92.1, boys: 94, girls: 86, chronic: 5, accent: "#2FBF87", trend: trend30(4), groups: [["3–4 yosh", 54], ["4–5 yosh", 62], ["5–6 yosh", 64]] },
+  { id: "bogcha", title: "Bog'cha", sub: "Maktabgacha ta'lim · Sarnovul 14-DMTT", kind: "kg", schools: ["Sarnovul 14-DMTT"], count: 1, students: 180, attendance: 92.1, boys: 94, girls: 86, chronic: 5, accent: "#2FBF87", trend: trend30(4), groups: [["3–4 yosh", 54], ["4–5 yosh", 62], ["5–6 yosh", 64]] },
 ];
 
 const LAST = ["Azizov", "Karimov", "Rasulov", "Tursunov", "Yusupov", "Aliyev", "Saidov", "Qodirov", "Ergashev", "Olimov", "Nazarov", "Sobirov", "Hasanov", "Umarov", "Jo'rayev", "Mirzayev", "To'xtasinov", "Islomov"];

@@ -30,7 +30,7 @@ const columns = [
   { key: "requestNumber", header: "Ariza raqami", render: (r) => <span className="font-medium">{r.requestNumber}</span> },
   { key: "serviceType", header: "Xizmat turi", render: (r) => SERVICE_LABELS[r.serviceType] },
   { key: "applicantName", header: "Arizachi" },
-  { key: "region", header: "Viloyat" },
+  { key: "region", header: "Ko'cha", render: (r) => `${r.region} ko'chasi` },
   { key: "invoiceAmount", header: "Summa", align: "right", render: (r) => (r.invoiceAmount ? formatMoney(r.invoiceAmount) : "—") },
   {
     key: "status",

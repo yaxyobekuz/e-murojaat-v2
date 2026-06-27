@@ -1,10 +1,10 @@
-// Yoshlar Command Center — 15 mahalla bo'yicha realistik mock ma'lumot.
+// Yoshlar Command Center — Sarnovul MFY ichidagi 14 ko'cha bo'yicha realistik mock ma'lumot.
 // Deterministik (Math.random YO'Q) — seed asosida, har refresh bir xil.
 // AI qatlamlari (risk/opportunity/forecast/migration) shu ma'lumotdan formula bilan hisoblanadi.
 
 // Markaz — Sarnovul MFY, Baliqchi tumani, Andijon (soliq moduli bilan bir hudud)
 export const MAP_CENTER = { lat: 40.9034, lng: 71.8604 };
-export const PLACE_LABEL = "Baliqchi tumani, Andijon viloyati";
+export const PLACE_LABEL = "Sarnovul MFY, Baliqchi tumani, Andijon";
 
 const rng = (seed) => {
   const x = Math.sin(seed * 127.1 + 311.7) * 43758.5453;
@@ -12,15 +12,15 @@ const rng = (seed) => {
 };
 
 const MAHALLA_NAMES = [
-  "Sarnovul", "Bo'ston", "Yangiobod", "Do'stlik", "Navbahor",
-  "Guliston", "Chinor", "Fidokor", "Marvarid", "Oltinko'l",
-  "Mustaqillik", "Yoshlik", "Bahor", "Zafar", "Istiqbol",
+  "Sarnovul", "Navoiy", "Bobur", "Amir Temur", "Fidokor",
+  "Istiqlol", "Do'stlik", "Bog'", "Chinor", "Guliston",
+  "Mustaqillik", "Yangi hayot", "Marvarid", "Oqtepa",
 ];
 
-// 15 mahalla — 5×3 grid (markaz atrofida)
-const ORIGIN = { lat: 40.9150, lng: 71.8420 };
-const STEP_LAT = 0.0050;
-const STEP_LNG = 0.0062;
+// 14 ko'cha — Sarnovul MFY ichida, ixcham grid (markaz atrofida)
+const ORIGIN = { lat: 40.9070, lng: 71.8556 };
+const STEP_LAT = 0.0016;
+const STEP_LNG = 0.0020;
 const COLS = 5;
 
 // Talant turlari (Talent Map uchun)
@@ -51,11 +51,11 @@ const buildMahallas = () => {
     const seed = i + 1;
     const col = i % COLS;
     const row = Math.floor(i / COLS);
-    const lat = ORIGIN.lat - row * STEP_LAT + (rng(seed * 2.3) - 0.5) * 0.0012;
-    const lng = ORIGIN.lng + col * STEP_LNG + (rng(seed * 3.1) - 0.5) * 0.0012;
+    const lat = ORIGIN.lat - row * STEP_LAT + (rng(seed * 2.3) - 0.5) * 0.0004;
+    const lng = ORIGIN.lng + col * STEP_LNG + (rng(seed * 3.1) - 0.5) * 0.0004;
 
-    // aholi va yoshlar
-    const population = 4200 + Math.round(rng(seed * 1.7) * 5600); // 4200..9800
+    // aholi va yoshlar — ko'cha darajasida (Sarnovul MFY ichidagi bitta ko'cha)
+    const population = 320 + Math.round(rng(seed * 1.7) * 680); // 320..1000
     const youth = Math.round(population * (0.28 + rng(seed * 4.4) * 0.12)); // ~28-40%
 
     // taqsimotlar (yig'indi youthга yaqin)
@@ -90,7 +90,7 @@ const buildMahallas = () => {
 
     return {
       id: `mahalla-${String(i + 1).padStart(2, "0")}`,
-      name: `${name} MFY`,
+      name: `${name} ko'chasi`,
       shortName: name,
       lat,
       lng,

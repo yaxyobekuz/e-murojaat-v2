@@ -17,7 +17,7 @@ const YerDashboardPage = () => {
         <div>
           <h1 className="text-xl font-semibold tracking-tight">Yer / Mol-mulk analitikasi</h1>
           <p className="mt-0.5 text-sm text-foreground/50">
-            Davlat yer kadastri va mulk solig'i bo'yicha umumiy ko'rsatkichlar
+            Sarnovul MFY, Baliqchi tumani, Andijon — ko'chalar bo'yicha kadastr ko'rsatkichlari
           </p>
         </div>
         <YerFilters value={state} onChange={setField} />

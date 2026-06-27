@@ -21,7 +21,7 @@ export const RATING_METRICS = [
   { key: "speed", label: "Tezlik bali", weight: 1.4, hint: "O'rtacha bajarish tezligi (SLA)", positive: true },
 ];
 
-const MAHALLAS = ["Sarnovul", "Markaz", "Yangiobod", "Bo'ston", "Guliston", "Navbahor", "Do'stlik", "Oltinko'l", "Chinor", "Bahor"];
+const MAHALLAS = ["Sarnovul", "Navoiy", "Bobur", "Amir Temur", "Fidokor", "Istiqlol", "Do'stlik", "Bog'", "Chinor", "Guliston", "Mustaqillik", "Yangi hayot", "Marvarid", "Oqtepa"];
 
 // Har mahalla uchun 7 metrikni mavjud datadan yig'amiz
 const buildRow = (name, i) => {

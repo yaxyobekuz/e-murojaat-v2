@@ -19,7 +19,7 @@ const donutData = YM_BY_TYPE.map((d) => ({ name: TREE_TYPE[d.key], value: d.valu
 
 const rows = [...YM_PLANTINGS].sort((a, b) => b.count - a.count);
 const columns = [
-  { key: "mahalla", header: "Mahalla", render: (r) => <span className="font-medium text-foreground">{r.mahalla}</span> },
+  { key: "mahalla", header: "Ko'cha", render: (r) => <span className="font-medium text-foreground">{r.mahalla}</span> },
   { key: "site", header: "Joy", render: (r) => r.site },
   { key: "coords", header: "Koordinata", render: (r) => <span className="text-xs text-foreground/50">{r.coords}</span> },
   { key: "type", header: "Turi", render: (r) => TREE_TYPE[r.type] },

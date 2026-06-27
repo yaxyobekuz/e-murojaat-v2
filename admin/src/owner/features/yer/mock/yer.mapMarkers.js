@@ -1,28 +1,15 @@
-// Demo center + notable government objects — Andijon shahar markazi (real bino
-// qoplamasi zich joy). Koordinatalar shahar markazi atrofida.
-export const MAP_CENTER = { lat: 40.7821, lng: 72.3442 };
-export const MAP_PLACE_LABEL = "Andijon shahar markazi";
+// Demo markaz + diqqatga sazovor obyektlar — Sarnovul MFY markazi (Baliqchi tumani,
+// Andijon). Koordinatalar mahalla markazi atrofida.
+export const MAP_CENTER = { lat: 40.9034, lng: 71.8604 };
+export const MAP_PLACE_LABEL = "Sarnovul MFY, Baliqchi tumani, Andijon";
 
 export const CADASTRE_MARKERS = [
   {
-    id: "shahar-hokimligi",
-    title: "Andijon shahar hokimligi",
-    position: { lat: 40.78055, lng: 72.34605 },
-    info: {
-      cadastreNumber: "UZ:03:01:01:0000007",
-      type: "Davlat boshqaruv binosi",
-      typeLabel: "Davlat boshqaruv binosi",
-      areaM2: 3200,
-      valueUzs: 12_400_000_000,
-      status: "royxatda",
-    },
-  },
-  {
     id: "mfy-binosi",
-    title: "Bobur MFY binosi",
-    position: { lat: 40.78315, lng: 72.34555 },
+    title: "Sarnovul MFY binosi",
+    position: { lat: 40.90345, lng: 71.86065 },
     info: {
-      cadastreNumber: "UZ:03:01:04:0000112",
+      cadastreNumber: "UZ:40:08:01:0000007",
       type: "Mahalla ma'muriy binosi",
       typeLabel: "Mahalla ma'muriy binosi",
       areaM2: 850,
@@ -31,11 +18,24 @@ export const CADASTRE_MARKERS = [
     },
   },
   {
-    id: "turar-joy-massiv",
-    title: "Bo'ston turar-joy massivi",
-    position: { lat: 40.78405, lng: 72.34185 },
+    id: "navoiy-kochasi",
+    title: "Navoiy ko'chasi turar-joy",
+    position: { lat: 40.90415, lng: 71.86015 },
     info: {
-      cadastreNumber: "UZ:03:01:04:0001543",
+      cadastreNumber: "UZ:40:08:04:0000112",
+      type: "Ko'p qavatli turar-joy",
+      typeLabel: "Ko'p qavatli turar-joy",
+      areaM2: 5400,
+      valueUzs: 8_700_000_000,
+      status: "jarayonda",
+    },
+  },
+  {
+    id: "bobur-massiv",
+    title: "Bobur ko'chasi massivi",
+    position: { lat: 40.90265, lng: 71.86185 },
+    info: {
+      cadastreNumber: "UZ:40:08:04:0001543",
       type: "Ko'p qavatli turar-joy",
       typeLabel: "Ko'p qavatli turar-joy",
       areaM2: 5400,

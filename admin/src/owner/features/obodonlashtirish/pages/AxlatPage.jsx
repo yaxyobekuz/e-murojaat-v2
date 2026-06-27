@@ -27,7 +27,7 @@ const missedFeed = im.missedRoutes.map((r) => ({
 const rows = [...AXLAT_ROUTES].sort((a, b) => ({ missed: 0, late: 1, done: 2 }[a.status] - { missed: 0, late: 1, done: 2 }[b.status]));
 const columns = [
   { key: "name", header: "Marshrut", render: (r) => <span className="font-medium text-foreground">{r.name}</span> },
-  { key: "mahalla", header: "Mahalla", render: (r) => r.mahalla },
+  { key: "mahalla", header: "Ko'cha", render: (r) => r.mahalla },
   { key: "norm", header: "Norma", render: (r) => SCHEDULE_NORM[r.norm] },
   { key: "last", header: "Oxirgi kelgan", render: (r) => r.status === "missed" ? <span className="text-rose-400">Kelmadi</span> : <span>{formatDateUz(r.lastDate)} {r.lastArrival}{r.lateMin > 0 && <span className="text-amber-400"> (+{r.lateMin}d)</span>}</span> },
   { key: "next", header: "Keyingi reja", render: (r) => formatDateUz(r.nextPlanned) },
@@ -75,7 +75,7 @@ const AxlatPage = () => (
     </div>
 
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
-      <Reveal i={0}><Panel title="Mahalla bo'yicha reyslar" icon={Truck} accent={ACCENT} className="lg:col-span-2">
+      <Reveal i={0}><Panel title="Ko'cha bo'yicha reyslar" icon={Truck} accent={ACCENT} className="lg:col-span-2">
         <div className="py-2">{[...AXLAT_BY_MAHALLA].sort((a, b) => b.value - a.value).slice(0, 7).map((m) => (
           <BarRow key={m.key} label={m.key} value={m.value} pct={(m.value / 32) * 100} accent={ACCENT} unit=" reys" />
         ))}</div>

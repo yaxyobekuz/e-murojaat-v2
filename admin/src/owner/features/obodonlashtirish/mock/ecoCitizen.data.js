@@ -18,7 +18,7 @@ export const ECO_ACTIONS = [
 ];
 
 const NAMES = ["Karimovlar", "Yusupovlar", "Rahimovlar", "Ergashevlar", "Qodirovlar", "Saidovlar", "Nazarovlar", "Aliyevlar", "To'xtayevlar", "Yo'ldoshevlar"];
-const MAHALLAS = ["Sarnovul", "Markaz", "Yangiobod", "Bo'ston", "Guliston", "Navbahor", "Do'stlik", "Oltinko'l"];
+const MAHALLAS = ["Sarnovul", "Navoiy", "Bobur", "Amir Temur", "Fidokor", "Istiqlol", "Do'stlik", "Bog'", "Chinor", "Guliston", "Mustaqillik", "Yangi hayot", "Marvarid", "Oqtepa"];
 
 // Oilalar reytingi (eko-ball bo'yicha)
 export const ECO_FAMILIES = Array.from({ length: 12 }, (_, i) => {

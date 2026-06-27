@@ -6,8 +6,8 @@ const triggerClass =
   "h-10 rounded-full border-[rgb(var(--card-border))] !bg-card/60 text-sm text-foreground";
 
 const regionOptions = [
-  { value: "", label: "Barcha viloyatlar" },
-  ...REGIONS.map((r) => ({ value: r, label: r })),
+  { value: "", label: "Barcha ko'chalar" },
+  ...REGIONS.map((r) => ({ value: r, label: `${r} ko'chasi` })),
 ];
 
 const typeOptions = [
@@ -18,7 +18,7 @@ const typeOptions = [
 const YerFilters = ({ value, onChange, statusOptions, children }) => (
   <div className="flex flex-wrap items-center gap-2">
     <Select
-      placeholder="Viloyat"
+      placeholder="Ko'cha"
       value={value.region}
       onChange={(v) => onChange("region", v)}
       options={regionOptions}

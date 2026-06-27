@@ -26,7 +26,7 @@ export const PB_STATUS = {
   building: { label: "Amalga oshmoqda", tone: "progress" },
 };
 
-const MAHALLAS = ["Sarnovul", "Markaz", "Yangiobod", "Bo'ston", "Guliston", "Navbahor", "Do'stlik", "Oltinko'l", "Chinor", "Bahor"];
+const MAHALLAS = ["Sarnovul", "Navoiy", "Bobur", "Amir Temur", "Fidokor", "Istiqlol", "Do'stlik", "Bog'", "Chinor", "Guliston", "Mustaqillik", "Yangi hayot", "Marvarid", "Oqtepa"];
 const TYPES = ["road", "sport", "park", "water", "school", "light"];
 const TITLES = {
   road: ["Ichki ko'cha asfaltlash", "Markaziy yo'l ta'miri", "Trotuar yangilash"],

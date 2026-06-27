@@ -64,7 +64,7 @@ const YoshlarDashboardPage = () => {
               </h1>
             </div>
             <p className="mt-0.5 text-[12px] text-foreground/45">
-              Yoshlar ishlari agentligi · {PLACE_LABEL} · 15 mahalla real-time monitoring
+              Yoshlar ishlari agentligi · {PLACE_LABEL} · 14 ko'cha real-time monitoring
             </p>
           </div>
           <div className="flex items-center gap-2 rounded-xl border border-foreground/10 bg-muted/40 px-3 py-1.5 text-[11px] text-foreground/55 backdrop-blur-xl">

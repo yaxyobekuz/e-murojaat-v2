@@ -23,14 +23,14 @@ const rng = (seed) => () => {
   return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
 };
 
-// 12 mahalla/qishloq — Sarnovul atrofidagi demo hududlar (o'zbekcha nomlar).
+// 14 ko'cha — Sarnovul MFY ichidagi ko'chalar (o'zbekcha nomlar).
 const NAMES = [
-  "Sarnovul", "Oltinko'l", "Bo'ston", "Yangiobod", "Qo'rg'oncha", "Do'stlik",
-  "Navbahor", "Gulshan", "Chinor", "Mevazor", "Sebzor", "Paxtakor",
+  "Sarnovul", "Navoiy", "Bobur", "Amir Temur", "Fidokor", "Istiqlol", "Do'stlik",
+  "Bog'", "Chinor", "Guliston", "Mustaqillik", "Yangi hayot", "Marvarid", "Oqtepa",
 ];
 
-// Ataylab bir nechta mahalla qizil (oshib ketgan yuklama) bo'lsin.
-const LOAD_SEED = [62, 78, 168, 95, 142, 71, 188, 104, 58, 126, 83, 155];
+// Ataylab bir nechta ko'cha qizil (oshib ketgan yuklama) bo'lsin.
+const LOAD_SEED = [62, 78, 168, 95, 142, 71, 188, 104, 58, 126, 83, 155, 112, 67];
 
 const build = () => {
   const r = rng(40879);
@@ -53,7 +53,7 @@ const build = () => {
     return {
       id: `mfy_${String(i + 1).padStart(2, "0")}`,
       name,
-      label: `${name} MFY`,
+      label: `${name} ko'chasi`,
       load,
       status: healthOf(load),
       transformers,

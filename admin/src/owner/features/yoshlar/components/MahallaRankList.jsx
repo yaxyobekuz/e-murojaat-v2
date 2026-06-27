@@ -7,7 +7,7 @@ const MahallaRankList = ({ mahallas = [], activeId, onSelect }) => {
   return (
     <div className="flex h-full flex-col rounded-2xl border border-foreground/10 bg-card/70 backdrop-blur-xl">
       <div className="flex shrink-0 items-center justify-between border-b border-foreground/10 px-3 py-2.5">
-        <h4 className="text-[13px] font-semibold text-foreground">Mahallalar reytingi</h4>
+        <h4 className="text-[13px] font-semibold text-foreground">Ko'chalar reytingi</h4>
         <span className="text-[11px] text-foreground/40">{mahallas.length} ta</span>
       </div>
       <div className="soliq-scroll flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto p-1.5">

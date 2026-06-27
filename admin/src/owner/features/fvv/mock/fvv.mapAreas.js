@@ -1,11 +1,11 @@
-// FVV operativ xaritasi — Navbahor MFY (prototip, demo). IIB uslubidagi voronoi
+// FVV operativ xaritasi — Sarnovul MFY (prototip, demo). IIB uslubidagi voronoi
 // bloklar + ustidan ko'cha yo'llari. Har blok yong'in holatiga qarab bo'yaladi:
 //   calm  = yashil (tinch)
 //   alert = sariq  (xavf — gaz/tutun signali)
 //   fire  = qizil  (faol yong'in)
 // Yong'in nuqtalari (dots) + har blokda kameralar (yaqin atrofni kuzatish uchun).
 
-export const MAP_PLACE_LABEL = "Navbahor MFY, Asaka tumani, Andijon";
+export const MAP_PLACE_LABEL = "Sarnovul MFY, Baliqchi tumani, Andijon";
 
 export const FIRE_STATUS = {
   calm: { label: "Tinch", color: "#16a34a", dot: "#22c55e", tone: "done" },
@@ -250,14 +250,14 @@ const OBJ_DEFS = [
   { blockIdx: 2, type: "maktab", name: "7-umumiy o'rta maktab", people: 1240, risk: "Yuqori", note: "2-smena 14:00 da boshlanadi.", stats: [["O'quvchilar", 1240], ["O'qituvchilar", 86], ["Sinflar", 44], ["Smenalar", 2]] },
   { blockIdx: 3, type: "zavod", name: "G'isht zavodi", people: 240, risk: "O'rta", note: "Yuqori harorat — yong'in xavfi.", stats: [["Xodimlar", 240], ["Smena", 3], ["Pechlar", 4]] },
   { blockIdx: 4, type: "bogcha", name: "12-bolalar bog'chasi", people: 210, risk: "Yuqori", note: "Evakuatsiya rejasi yangilangan.", stats: [["Bolalar", 210], ["Tarbiyachilar", 28], ["Guruhlar", 11]] },
-  { blockIdx: 5, type: "avtostansiya", name: "Navbahor avtostansiyasi", people: 300, risk: "Past", note: "", stats: [["Yo'nalishlar", 24], ["Kunlik yo'lovchi", 3200], ["Peronlar", 8]] },
+  { blockIdx: 5, type: "avtostansiya", name: "Sarnovul avtostansiyasi", people: 300, risk: "Past", note: "", stats: [["Yo'nalishlar", 24], ["Kunlik yo'lovchi", 3200], ["Peronlar", 8]] },
   { blockIdx: 6, type: "house", name: "Yusupovlar hovlisi", people: 6, risk: "Past", note: "Hovlida gaz balloni saqlanadi.", stats: [["Qavatlar", 1], ["Aholi", 6], ["Bolalar", 2], ["Keksalar", 1]] },
   { blockIdx: 7, type: "apartment", name: "9-qavatli yangi uy", people: 254, risk: "Yuqori", note: "Lift nosoz — qutqaruv qiyin.", stats: [["Qavatlar", 9], ["Kvartiralar", 72], ["Aholi", "254 (~3.5/kv.)"], ["Bolalar", 58], ["Keksalar", 27]] },
-  { blockIdx: 8, type: "shifoxona", name: "Navbahor tuman shifoxonasi", people: 360, risk: "O'rta", note: "Kislorod balloni — yong'in xavfi.", stats: [["Koyka", 120], ["Bemorlar", 92], ["Shifokorlar", 38], ["Hamshira", 64], ["Bo'limlar", 9]] },
+  { blockIdx: 8, type: "shifoxona", name: "Sarnovul tuman shifoxonasi", people: 360, risk: "O'rta", note: "Kislorod balloni — yong'in xavfi.", stats: [["Koyka", 120], ["Bemorlar", 92], ["Shifokorlar", 38], ["Hamshira", 64], ["Bo'limlar", 9]] },
   { blockIdx: 9, type: "benzin", name: "Gaz taqsimlagich shoxobchasi", people: 14, risk: "Yuqori", note: "Portlash xavfi — birinchi navbatdagi obyekt.", stats: [["Kolonkalar", 6], ["Rezervuar", "20 m³"], ["Xodimlar", 8]] },
-  { blockIdx: 10, type: "stadion", name: "Navbahor stadioni", people: 0, risk: "Past", note: "Tadbir paytida 8000 kishi yig'iladi.", stats: [["Sig'im", 8000], ["Sektorlar", 12]] },
+  { blockIdx: 10, type: "stadion", name: "Sarnovul stadioni", people: 0, risk: "Past", note: "Tadbir paytida 8000 kishi yig'iladi.", stats: [["Sig'im", 8000], ["Sektorlar", 12]] },
   { blockIdx: 11, type: "house", name: "Aliyevlar hovlisi", people: 8, risk: "Past", note: "Xususiy 2 qavatli uy.", stats: [["Qavatlar", 2], ["Aholi", 8], ["Bolalar", 3], ["Keksalar", 1]] },
-  { blockIdx: 12, type: "savdo", name: "Navbahor savdo markazi", people: 820, risk: "O'rta", note: "Yong'in signalizatsiyasi faol.", stats: [["Do'konlar", 64], ["Xodimlar", 320], ["Kunlik tashrif", 4500], ["Qavatlar", 3]] },
+  { blockIdx: 12, type: "savdo", name: "Sarnovul savdo markazi", people: 820, risk: "O'rta", note: "Yong'in signalizatsiyasi faol.", stats: [["Do'konlar", 64], ["Xodimlar", 320], ["Kunlik tashrif", 4500], ["Qavatlar", 3]] },
   { blockIdx: 13, type: "masjid", name: "Mahalla masjidi", people: 600, risk: "Past", note: "Juma kuni to'la bo'ladi.", stats: [["Sig'im", 600], ["Xodimlar", 6]] },
   { blockIdx: 14, type: "apartment", name: "5-uy · 7 qavatli", people: 196, risk: "Yuqori", note: "3-qavatda tutun datchigi ishga tushgan.", stats: [["Qavatlar", 7], ["Kvartiralar", 56], ["Aholi", "196 (~3.5/kv.)"], ["Bolalar", 45], ["Keksalar", 21]] },
 ];

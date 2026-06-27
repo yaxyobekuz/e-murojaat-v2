@@ -3,7 +3,7 @@
 // Holat ranglari (rules/02): rejada=ko'k, jarayonda=amber, yakunlangan=yashil.
 
 export const MAP_CENTER = { lat: 40.9034, lng: 71.8604 };
-export const MAP_PLACE_LABEL = "Baliqchi tumani, Andijon";
+export const MAP_PLACE_LABEL = "Sarnovul MFY, Baliqchi tumani, Andijon";
 
 // Loyiha holati ranglari
 export const PROJECT_STATUS = {

@@ -21,7 +21,7 @@ const RowLosses = ({ mahallaId }) => {
       </GlassChartCard>
 
       <GlassChartCard
-        title="Kuchlanish sifati (mahalla bo'yicha)"
+        title="Kuchlanish sifati (ko'cha bo'yicha)"
         insight="200V dan past — maishiy texnika ishlamaydi"
       >
         <VoltageBars data={voltage || []} height={300} />

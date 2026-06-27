@@ -21,7 +21,7 @@ const LIMIT = 12;
 const columns = [
   { key: "cadastreNumber", header: "Kadastr raqami", render: (r) => <span className="font-medium">{r.cadastreNumber}</span> },
   { key: "type", header: "Turi", render: (r) => TYPE_LABELS[r.type] },
-  { key: "region", header: "Viloyat" },
+  { key: "region", header: "Ko'cha", render: (r) => `${r.region} ko'chasi` },
   { key: "areaM2", header: "Maydon", align: "right", render: (r) => `${r.areaM2.toLocaleString("uz-UZ")} m²` },
   { key: "valueUzs", header: "Qiymati", align: "right", render: (r) => formatMoney(r.valueUzs) },
   { key: "ownershipType", header: "Egalik", render: (r) => OWNERSHIP_LABELS[r.ownershipType] },

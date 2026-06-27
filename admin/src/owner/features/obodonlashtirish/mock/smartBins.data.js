@@ -7,8 +7,8 @@ const rng = (seed) => {
 };
 
 export const BIN_MAHALLAS = [
-  "Sarnovul", "Markaz", "Yangiobod", "Bo'ston", "Guliston",
-  "Navbahor", "Do'stlik", "Oltinko'l", "Chinor", "Bahor",
+  "Sarnovul", "Navoiy", "Bobur", "Amir Temur", "Fidokor", "Istiqlol", "Do'stlik",
+  "Bog'", "Chinor", "Guliston", "Mustaqillik", "Yangi hayot", "Marvarid", "Oqtepa",
 ];
 
 const STREETS = ["Markaziy", "Bog'", "Navoiy", "Amir Temur", "Mustaqillik", "Yoshlik", "Chinor", "Guliston", "Bahor", "Do'stlik"];

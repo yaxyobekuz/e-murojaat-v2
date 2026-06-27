@@ -11,7 +11,7 @@ const MahallaTable = ({ rows = [], selectedId, onSelect }) => {
   const columns = [
     {
       key: "label",
-      header: "Mahalla",
+      header: "Ko'cha",
       render: (r) => (
         <span className={selectedId === r.id ? "font-semibold text-brand-yellow" : "font-medium"}>
           {r.label}

@@ -23,7 +23,7 @@ const recentFeed = [...HASHAR_EVENTS].sort((a, b) => b.date.localeCompare(a.date
 const rows = [...HASHAR_EVENTS].sort((a, b) => b.date.localeCompare(a.date));
 const columns = [
   { key: "date", header: "Sana", render: (r) => formatDateUz(r.date) },
-  { key: "mahalla", header: "Mahalla", render: (r) => <span className="font-medium text-foreground">{r.mahalla}</span> },
+  { key: "mahalla", header: "Ko'cha", render: (r) => <span className="font-medium text-foreground">{r.mahalla}</span> },
   { key: "type", header: "Tur", render: (r) => <StatusBadge tone={TYPE_TONE[r.type]}>{EVENT_TYPE[r.type]}</StatusBadge> },
   { key: "participants", header: "Ishtirokchi", align: "right", render: (r) => r.participants },
   { key: "area", header: "Maydon", align: "right", render: (r) => `${r.areaHa} ga` },
@@ -57,7 +57,7 @@ const HasharPage = () => (
           <ProgressRing value={im.engagement} target={100} label="Engagement" accent={ACCENT} forecast="o'smoqda" />
           <div className="space-y-2">
             <ScoreMeter score={im.engagement} label="Faollik bali" accent={ACCENT} hint="Ishtirok darajasi" />
-            <ScoreMeter score={s.topMahalla.value} label="Top mahalla" accent="#fbbf24" hint={s.topMahalla.key} />
+            <ScoreMeter score={s.topMahalla.value} label="Top ko'cha" accent="#fbbf24" hint={s.topMahalla.key} />
           </div>
         </div>
       </Panel></Reveal>
@@ -66,7 +66,7 @@ const HasharPage = () => (
     </div>
 
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
-      <Reveal i={0}><Panel title="«Eng toza mahalla» chempionati" icon={Trophy} accent={ACCENT} className="lg:col-span-2">
+      <Reveal i={0}><Panel title="«Eng toza ko'cha» chempionati" icon={Trophy} accent={ACCENT} className="lg:col-span-2">
         <Leaderboard items={im.leaderboard} accent={ACCENT} unit=" ball" />
       </Panel></Reveal>
       <Reveal i={1}><Panel title="Tadbir turlari" icon={Sparkles} accent={ACCENT}><div className="p-2"><Donut data={donutData} accent={ACCENT} height={196} /></div></Panel></Reveal>

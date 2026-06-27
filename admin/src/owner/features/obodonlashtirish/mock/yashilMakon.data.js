@@ -2,7 +2,7 @@
 // yillik 200 mln ko'chat target), platforma yashilmakon.eco (tizimga kiritilgan %),
 // PF-47 (25.03.2026) — ko'kalamzorlik 14.2% → 30% (2030). Raqamlar deterministik — demo, real emas.
 
-export const YM_PLACE = "Baliqchi tumani, Andijon";
+export const YM_PLACE = "Sarnovul MFY, Baliqchi tumani, Andijon";
 
 const rng = (seed) => {
   const x = Math.sin(seed * 53.9 + 12.7) * 43758.5453;
@@ -20,7 +20,7 @@ export const TREE_TYPE = {
 // Mavsum
 export const SEASON = { spring: "Bahor", autumn: "Kuz" };
 
-const MAHALLAS = ["Sarnovul", "Markaz", "Yangiobod", "Bo'ston", "Guliston", "Navbahor", "Do'stlik", "Oltinko'l", "Chinor", "Bahor"];
+const MAHALLAS = ["Sarnovul", "Navoiy", "Bobur", "Amir Temur", "Fidokor", "Istiqlol", "Do'stlik", "Bog'", "Chinor", "Guliston", "Mustaqillik", "Yangi hayot", "Marvarid", "Oqtepa"];
 const TYPES = ["ornamental", "fruit", "conifer", "shrub"];
 const SITES = ["Ko'cha bo'yi", "Maktab oldi", "Park hududi", "Daryo bo'yi", "MFY markazi", "Yo'l chet'i"];
 

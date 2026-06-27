@@ -89,7 +89,7 @@ export const SmartBins = () => {
 
       {/* mahalla tanlash */}
       <div className="mb-2 flex flex-wrap items-center gap-1.5">
-        <span className="text-[11px] text-foreground/50">Mahalla:</span>
+        <span className="text-[11px] text-foreground/50">Ko'cha:</span>
         {BINS_BY_MAHALLA.map(({ mahalla: m }) => {
           const ms = binMahallaStats.find((s) => s.mahalla === m);
           const active = m === mahalla;
@@ -107,7 +107,7 @@ export const SmartBins = () => {
       {/* 10 ta chelak — tanlangan mahalla */}
       <div className="rounded-xl border border-[rgb(var(--card-border))] bg-muted/20 p-3">
         <div className="mb-2 flex items-center justify-between">
-          <span className="text-[12px] font-semibold text-foreground">{mahalla} MFY — 10 ta chelak</span>
+          <span className="text-[12px] font-semibold text-foreground">{mahalla} ko'chasi — 10 ta chelak</span>
           <span className="text-[11px] text-foreground/55">O'rtacha to'lganlik: <b style={{ color: stat.avgFill > 70 ? "#ef4444" : stat.avgFill > 45 ? "#f59e0b" : "#22c55e" }}>{stat.avgFill}%</b> · {stat.full} ta to'la</span>
         </div>
         <div className="grid grid-cols-5 gap-2 sm:grid-cols-10">
@@ -159,7 +159,7 @@ export const SmartBins = () => {
         <div className="rounded-xl border border-[rgb(var(--card-border))] bg-card p-3">
           <div className="mb-2 flex items-center gap-1.5">
             <Truck className="size-3.5" style={{ color: ACCENT }} />
-            <span className="text-[12px] font-semibold text-foreground">Mahalla bo'yicha to'lganlik & olib ketish</span>
+            <span className="text-[12px] font-semibold text-foreground">Ko'cha bo'yicha to'lganlik & olib ketish</span>
           </div>
           <div className="space-y-1.5">
             {[...binMahallaStats].sort((a, b) => b.avgFill - a.avgFill).map((s) => {

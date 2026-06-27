@@ -21,8 +21,8 @@ const DashboardRowB = () => {
       </GlassChartCard>
 
       <GlassChartCard
-        title="Viloyatlar bo'yicha obyektlar"
-        insight="Eng ko'p ro'yxatga olingan hududlar"
+        title="Ko'chalar bo'yicha obyektlar"
+        insight="Eng ko'p ro'yxatga olingan ko'chalar"
       >
         <RegionDotMap data={byRegion || []} />
       </GlassChartCard>

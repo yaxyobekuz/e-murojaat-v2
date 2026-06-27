@@ -2,20 +2,23 @@
 // across reloads. Shapes mirror the future backend so swapping to a real API is trivial.
 
 // ---- Reference data (English keys + Uzbek labels) ----
+// Sarnovul MFY ko'chalari — butun modul shu mahalla ichida, ko'cha kesimida.
+export const PLACE_LABEL = "Sarnovul MFY, Baliqchi tumani, Andijon";
 export const REGIONS = [
-  "Toshkent shahri",
-  "Toshkent viloyati",
-  "Andijon",
-  "Farg'ona",
-  "Namangan",
-  "Samarqand",
-  "Buxoro",
+  "Sarnovul",
   "Navoiy",
-  "Qashqadaryo",
-  "Surxondaryo",
-  "Jizzax",
-  "Sirdaryo",
-  "Xorazm",
+  "Bobur",
+  "Amir Temur",
+  "Fidokor",
+  "Istiqlol",
+  "Do'stlik",
+  "Bog'",
+  "Chinor",
+  "Guliston",
+  "Mustaqillik",
+  "Yangi hayot",
+  "Marvarid",
+  "Oqtepa",
 ];
 
 export const PROPERTY_TYPES = ["uy", "kvartira", "yer", "noturar"];
@@ -154,17 +157,17 @@ const dateInMonth = (monthsAgo) => {
 export const properties = Array.from({ length: 404 }, (_, i) => {
   const type = weightedType();
   const area = areaFor(type);
-  const region = pick(REGIONS);
+  const region = pick(REGIONS); // ko'cha (Sarnovul ichida)
   const statusRoll = rnd();
   const status =
     statusRoll < 0.85 ? "royxatda" : statusRoll < 0.94 ? "jarayonda" : "nizoli";
   return {
     id: `prop_${pad(i + 1, 4)}`,
-    cadastreNumber: `UZ:${pad(int(1, 14), 2)}:${pad(int(1, 30), 2)}:${pad(int(1, 12), 2)}:${pad(int(1, 9999), 4)}`,
+    cadastreNumber: `UZ:40:${pad(int(1, 30), 2)}:${pad(int(1, 12), 2)}:${pad(int(1, 9999), 4)}`,
     type,
     region,
-    district: `${region} tumani`,
-    address: `${pick(["Mustaqillik", "Navoiy", "Amir Temur", "Bobur", "Chilonzor"])} ko'chasi, ${int(1, 120)}-uy`,
+    district: "Baliqchi tumani",
+    address: `${region} ko'chasi, ${int(1, 120)}-uy`,
     areaM2: area,
     valueUzs: valueFor(type, area),
     ownershipType: pick(OWNERSHIP_TYPES),

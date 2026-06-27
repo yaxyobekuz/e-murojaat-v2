@@ -34,7 +34,7 @@ const ObodDashboardPage = () => {
         <div className="pointer-events-auto flex flex-wrap items-start justify-between gap-3">
           <div className="surface-overlay rounded-xl px-3 py-2">
             <h1 className="text-sm font-semibold tracking-tight">Obodonlashtirish analitikasi</h1>
-            <p className="text-[11px] text-foreground/55">Baliqchi tumani, Andijon</p>
+            <p className="text-[11px] text-foreground/55">Sarnovul MFY, Baliqchi tumani, Andijon</p>
           </div>
           <button
             type="button"

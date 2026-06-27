@@ -9,7 +9,7 @@ import { OBOD_PROJECTS, PROJECT_STATUS, obodSummary } from "../mock/obod.project
 import { InsightCard, Reveal, SectionTitle } from "../components/insight/kit";
 
 const ACCENT = "#10b981";
-const PLACE = "Baliqchi tumani, Andijon";
+const PLACE = "Sarnovul MFY, Baliqchi tumani, Andijon";
 
 const TYPE_META = {
   road: { icon: Route, color: "#f59e0b" },

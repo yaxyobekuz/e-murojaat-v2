@@ -22,7 +22,7 @@ const ElektrDashboardPage = () => {
         <div>
           <h1 className="text-xl font-semibold tracking-tight">Elektr energiya analitikasi</h1>
           <p className="mt-0.5 text-sm text-foreground/50">
-            Mahalla/qishloq darajasida tarmoq salomatligi, yo'qotishlar va yashil energiya
+            Sarnovul MFY — ko'cha darajasida tarmoq salomatligi, yo'qotishlar va yashil energiya
           </p>
         </div>
         <ElektrFilters value={state} onChange={setField} />
@@ -32,10 +32,10 @@ const ElektrDashboardPage = () => {
       <RowDynamics mahallaId={state.mahallaId} />
 
       <GlassChartCard
-        title="Mahalla tarmoq salomatligi (Infrastructure Health Index)"
+        title="Ko'cha tarmoq salomatligi (Infrastructure Health Index)"
         insight={
           critical
-            ? `${critical} ta mahallada transformatorlar kritik yuklamada — birinchi navbatda almashtirish kerak`
+            ? `${critical} ta ko'chada transformatorlar kritik yuklamada — birinchi navbatda almashtirish kerak`
             : "Barcha transformatorlar me'yoriy yuklamada"
         }
       >
@@ -45,8 +45,8 @@ const ElektrDashboardPage = () => {
       <RowLosses mahallaId={state.mahallaId} />
 
       <GlassChartCard
-        title="Mahalla kesimida to'liq ko'rsatkichlar"
-        insight="Qatorni bosib mahallani tanlang — yuqoridagi tahlillar shu mahalla bo'yicha filtrlanadi"
+        title="Ko'cha kesimida to'liq ko'rsatkichlar"
+        insight="Qatorni bosib ko'chani tanlang — yuqoridagi tahlillar shu ko'cha bo'yicha filtrlanadi"
       >
         <MahallaTable
           rows={mahallaRows || []}

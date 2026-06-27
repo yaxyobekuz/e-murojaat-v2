@@ -30,7 +30,7 @@ import { pbSummary } from "../mock/participatoryBudget.data";
 import { ecoSummary } from "../mock/ecoCitizen.data";
 import { reportsSummary } from "../mock/citizenReports.data";
 
-const PLACE = "Baliqchi tumani, Andijon";
+const PLACE = "Sarnovul MFY, Baliqchi tumani, Andijon";
 const C = { exec: "#10b981", axlat: "#22d3ee", gaz: "#3b82f6", ym: "#22c55e", hashar: "#b794f6", live: "#34d399", rating: "#f59e0b", budget: "#f59e0b", eco: "#22c55e", reports: "#8b5cf6" };
 
 const NAV = [
@@ -77,7 +77,7 @@ const ObodExecPage = () => (
         </Panel>
       </Reveal>
       <Reveal i={1}>
-        <Panel title="Mahalla bo'yicha ekilgan" icon={TreePine} accent={C.live} source="Jami daraxt soni — demo">
+        <Panel title="Ko'cha bo'yicha ekilgan" icon={TreePine} accent={C.live} source="Jami daraxt soni — demo">
           <div className="py-2">
             {[...YM_BY_MAHALLA].sort((a, b) => b.value - a.value).map((m) => (
               <BarRow key={m.key} label={m.key} value={m.value.toLocaleString("uz-UZ")} pct={(m.value / ymMaxMahalla) * 100} accent={C.live} unit=" ta" />
@@ -161,7 +161,7 @@ const ObodExecPage = () => (
     </div>
 
     {/* ══════════ CHIQINDI IDISHLARI (smart bins) ══════════ */}
-    <SectionBanner id="bins" icon={Trash2} title="Chiqindi idishlari (aqlli chelaklar)" sub="Har mahallada 10 chelak · to'lganlik % · olib ketish · chiqindi tarkibi" accent={C.axlat} />
+    <SectionBanner id="bins" icon={Trash2} title="Chiqindi idishlari (aqlli chelaklar)" sub="Har ko'chada 10 chelak · to'lganlik % · olib ketish · chiqindi tarkibi" accent={C.axlat} />
     <Reveal i={0}>
       <Panel title="Chelaklar monitoringi" icon={Trash2} accent={C.axlat} source="Sensorli idish + GPS axlat mashinasi (demo)" bodyClass="p-0">
         <SmartBins />
@@ -181,7 +181,7 @@ const ObodExecPage = () => (
         equivalents={[{ icon: Hourglass, text: `${assenSummary.inProgress} jarayonda` }]} />
     </Kpis>
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-      <Reveal i={0}><Panel title="Suyuq chiqindi oqimi" icon={Waypoints} accent={C.gaz} source="Mahalla → qabul nuqtasi (demo)">
+      <Reveal i={0}><Panel title="Suyuq chiqindi oqimi" icon={Waypoints} accent={C.gaz} source="Ko'cha → qabul nuqtasi (demo)">
         <GasFlow nodes={flowNodes} accent={C.gaz} height={280} />
       </Panel></Reveal>
       <Reveal i={1}><Panel title="Xizmat xaritasi (real 3D)" icon={MapPin} accent={C.gaz} source="Google 3D · Baliqchi, Andijon" bodyClass="p-2">
@@ -227,7 +227,7 @@ const ObodExecPage = () => (
     </Reveal>
 
     {/* ══════════ HASHAR ══════════ */}
-    <SectionBanner id="hashar" icon={Sparkles} title="Tozalov & hashar" sub="Jamoatchilik faolligi · «Eng toza mahalla» · PQ-234" accent={C.hashar} />
+    <SectionBanner id="hashar" icon={Sparkles} title="Tozalov & hashar" sub="Jamoatchilik faolligi · «Eng toza ko'cha» · PQ-234" accent={C.hashar} />
     <Kpis>
       <InsightCard i={0} icon={Sparkles} label="Tadbirlar" value={hasharSummary.events} accent={C.hashar}
         equivalents={[{ icon: Users, text: `${hasharSummary.participants.toLocaleString("uz-UZ")} ishtirokchi` }]} />
@@ -235,21 +235,21 @@ const ObodExecPage = () => (
         equivalents={[{ icon: Volleyball, text: `${hasharImpact.fields} futbol maydoni` }]} />
       <InsightCard i={2} icon={Users} label="Faollik bali" value={hasharImpact.engagement} suffix="/100" accent={C.hashar}
         equivalents={[{ icon: TrendingUp, text: "+12% o'sish" }]} />
-      <InsightCard i={3} icon={Trophy} label="Top mahalla" value={hasharSummary.topMahalla.value} suffix=" ball" accent="#fbbf24"
+      <InsightCard i={3} icon={Trophy} label="Top ko'cha" value={hasharSummary.topMahalla.value} suffix=" ball" accent="#fbbf24"
         equivalents={[{ icon: Trophy, text: hasharSummary.topMahalla.key }]} />
     </Kpis>
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-      <Reveal i={0}><Panel title="«Eng toza mahalla» chempionati" icon={Trophy} accent={C.hashar}><Leaderboard items={hasharBoard} accent={C.hashar} unit=" ball" /></Panel></Reveal>
+      <Reveal i={0}><Panel title="«Eng toza ko'cha» chempionati" icon={Trophy} accent={C.hashar}><Leaderboard items={hasharBoard} accent={C.hashar} unit=" ball" /></Panel></Reveal>
       <Reveal i={1}><Panel title="Tozalik xaritasi (real 3D)" icon={MapPin} accent={C.hashar} source="Google 3D · Baliqchi, Andijon" bodyClass="p-2"><ObodRealMap accent={C.hashar} height={300} label="Mahalla hududi" legend={hasharMapLegend} /></Panel></Reveal>
     </div>
 
     {/* ══════════ REYTING ══════════ */}
-    <SectionBanner id="rating" icon={Trophy} title="Operator / mahalla reytingi" sub="7 metrikli baholash (xalqnazorati.uz metodologiyasi)" accent={C.rating} />
+    <SectionBanner id="rating" icon={Trophy} title="Operator / ko'cha reytingi" sub="7 metrikli baholash (xalqnazorati.uz metodologiyasi)" accent={C.rating} />
     <Kpis>
       <InsightCard i={0} icon={Trophy} label="Yetakchi" value={ratingSummary.top.score} suffix=" ball" accent="#fbbf24"
         equivalents={[{ icon: Medal, text: ratingSummary.top.name }]} />
       <InsightCard i={1} icon={ShieldCheck} label="A'lo darajadagilar" value={ratingSummary.excellent} accent="#22c55e"
-        equivalents={[{ icon: CheckCircle2, text: `${ratingSummary.count} mahalladan` }]} />
+        equivalents={[{ icon: CheckCircle2, text: `${ratingSummary.count} ko'chadan` }]} />
       <InsightCard i={2} icon={Gauge} label="O'rtacha ball" value={ratingSummary.avg} suffix="/100" accent={C.rating}
         equivalents={[{ icon: BarChart3, text: "7 metrik bo'yicha" }]} />
       <InsightCard i={3} icon={AlertTriangle} label="E'tibor talab" value={ratingSummary.worst.score} suffix=" ball" accent="#ef4444"

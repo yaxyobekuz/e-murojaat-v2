@@ -56,7 +56,7 @@ const YouthRegistry = () => {
       <div className="mb-2 flex flex-wrap items-center gap-2">
         <div className="relative min-w-[180px] flex-1">
           <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-foreground/40" />
-          <input value={q} onChange={(e) => setField("q", e.target.value)} placeholder="Ism, ID yoki mahalla..."
+          <input value={q} onChange={(e) => setField("q", e.target.value)} placeholder="Ism, ID yoki ko'cha..."
             className="w-full rounded-lg border border-[rgb(var(--card-border))] bg-muted/40 py-1.5 pl-8 pr-3 text-[12px] text-foreground placeholder:text-foreground/35 focus:outline-none focus:ring-1 focus:ring-cyan-400/50" />
         </div>
         <div className="flex flex-wrap gap-1">
@@ -77,7 +77,7 @@ const YouthRegistry = () => {
             <tr className="border-b border-[rgb(var(--card-border))] text-foreground/55">
               <th className="px-3 py-2 text-left font-medium">ID</th>
               <th className="px-3 py-2 text-left font-medium">Yosh</th>
-              <th className="px-3 py-2 text-left font-medium">Mahalla</th>
+              <th className="px-3 py-2 text-left font-medium">Ko'cha</th>
               <th className="px-3 py-2 text-left font-medium">Yo'nalish</th>
               <th className="px-3 py-2 text-left font-medium">Ehtiyoj</th>
               <th className="px-3 py-2 text-left font-medium">Holat</th>

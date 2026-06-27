@@ -27,7 +27,7 @@ export const REPORT_STATUS = {
   returned: { label: "Qayta ishlashga qaytarildi", tone: "danger" },
 };
 
-const MAHALLAS = ["Sarnovul", "Markaz", "Yangiobod", "Bo'ston", "Guliston", "Navbahor", "Do'stlik", "Oltinko'l", "Chinor", "Bahor"];
+const MAHALLAS = ["Sarnovul", "Navoiy", "Bobur", "Amir Temur", "Fidokor", "Istiqlol", "Do'stlik", "Bog'", "Chinor", "Guliston", "Mustaqillik", "Yangi hayot", "Marvarid", "Oqtepa"];
 const TYPES = ["dump", "light", "tree", "road", "water", "sanitation"];
 const STATUSES = ["confirmed", "confirmed", "fixed", "assigned", "new", "returned"];
 const ORG = "Obodonlashtirish boshqarmasi";

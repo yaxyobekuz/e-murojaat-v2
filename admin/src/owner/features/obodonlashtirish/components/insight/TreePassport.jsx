@@ -77,7 +77,7 @@ export const TreePassport = () => {
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[180px]">
           <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-foreground/40" />
-          <input value={q} onChange={(e) => setField("q", e.target.value)} placeholder="Daraxt ID yoki mahalla..."
+          <input value={q} onChange={(e) => setField("q", e.target.value)} placeholder="Daraxt ID yoki ko'cha..."
             className="w-full rounded-lg border border-[rgb(var(--card-border))] bg-foreground/[0.03] py-1.5 pl-8 pr-3 text-[12px] text-foreground placeholder:text-foreground/35 focus:outline-none focus:ring-1" style={{ "--tw-ring-color": hexA(ACCENT, 0.5) }} />
         </div>
         <div className="flex gap-1">
@@ -101,7 +101,7 @@ export const TreePassport = () => {
             <tr className="border-b border-[rgb(var(--card-border))] text-foreground/55">
               <th className="px-3 py-2 text-left font-medium">Daraxt ID</th>
               <th className="px-3 py-2 text-left font-medium">Tur</th>
-              <th className="px-3 py-2 text-left font-medium">Mahalla</th>
+              <th className="px-3 py-2 text-left font-medium">Ko'cha</th>
               <th className="px-3 py-2 text-right font-medium">Bo'y</th>
               <th className="px-3 py-2 text-center font-medium">Holat</th>
             </tr>

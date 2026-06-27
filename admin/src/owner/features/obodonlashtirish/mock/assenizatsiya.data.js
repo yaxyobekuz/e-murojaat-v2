@@ -3,7 +3,7 @@
 // belgilangan qabul nuqtasiga tashlanadi. Milliy tarif/SLA normasi YO'Q — buyurtma oqimi.
 // Raqamlar deterministik (Math.random yo'q) — demo, real emas.
 
-export const ASSEN_PLACE = "Baliqchi tumani, Andijon";
+export const ASSEN_PLACE = "Sarnovul MFY, Baliqchi tumani, Andijon";
 const TODAY = new Date("2026-06-24");
 
 // Holat (rules/02): yangi=ko'k, jarayonda=amber, bajarildi=yashil, rad=qizil
@@ -19,7 +19,7 @@ const rng = (seed) => {
   return x - Math.floor(x);
 };
 
-const MAHALLAS = ["Sarnovul", "Yangiobod", "Bo'ston", "Guliston", "Navbahor", "Do'stlik", "Oltinko'l", "Bahor"];
+const MAHALLAS = ["Sarnovul", "Navoiy", "Bobur", "Amir Temur", "Fidokor", "Istiqlol", "Do'stlik", "Bog'", "Chinor", "Guliston", "Mustaqillik", "Yangi hayot", "Marvarid", "Oqtepa"];
 const RECEPTION = "Baliqchi suyuq chiqindi qabul shoxobchasi";
 
 const STATUSES = ["done", "done", "done", "done", "dispatched", "new", "rejected"];

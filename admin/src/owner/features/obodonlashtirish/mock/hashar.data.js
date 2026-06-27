@@ -2,7 +2,7 @@
 // "Eng toza mahalla" reytingi; hashar — uyushtirilgan tadbir (majburiy chastota normasi yo'q).
 // Raqamlar deterministik (Math.random yo'q) — demo, real emas.
 
-export const HASHAR_PLACE = "Baliqchi tumani, Andijon";
+export const HASHAR_PLACE = "Sarnovul MFY, Baliqchi tumani, Andijon";
 const TODAY = new Date("2026-06-24");
 
 // Tadbir turi
@@ -18,7 +18,7 @@ const rng = (seed) => {
   return x - Math.floor(x);
 };
 
-const MAHALLAS = ["Sarnovul", "Markaz", "Yangiobod", "Bo'ston", "Guliston", "Navbahor", "Do'stlik", "Oltinko'l", "Chinor", "Bahor"];
+const MAHALLAS = ["Sarnovul", "Navoiy", "Bobur", "Amir Temur", "Fidokor", "Istiqlol", "Do'stlik", "Bog'", "Chinor", "Guliston", "Mustaqillik", "Yangi hayot", "Marvarid", "Oqtepa"];
 const TYPES = ["cleanup", "greening", "sanitation", "repair"];
 
 // Tadbirlar (so'nggi 6 oy)

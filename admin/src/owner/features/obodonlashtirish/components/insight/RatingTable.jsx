@@ -60,7 +60,7 @@ export const RatingTable = () => {
           <thead className="bg-card">
             <tr className="border-b border-[rgb(var(--card-border))] text-foreground/55">
               <th className="px-3 py-2 text-left font-medium">#</th>
-              <th className="px-3 py-2 text-left font-medium">Mahalla / operator</th>
+              <th className="px-3 py-2 text-left font-medium">Ko'cha / operator</th>
               <th className="px-3 py-2 text-right font-medium">Bajarilgan</th>
               <th className="px-3 py-2 text-right font-medium">Kechikkan</th>
               <th className="px-3 py-2 text-right font-medium">Faollik</th>

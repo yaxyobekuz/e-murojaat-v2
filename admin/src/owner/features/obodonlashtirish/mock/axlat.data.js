@@ -3,7 +3,7 @@
 // Operator reytingi: VM 648-son (16.10.2025) — qizil/sariq/yashil.
 // Barcha raqamlar deterministik (seed asosida, Math.random yo'q) — demo, real emas.
 
-export const AXLAT_PLACE = "Baliqchi tumani, Andijon";
+export const AXLAT_PLACE = "Sarnovul MFY, Baliqchi tumani, Andijon";
 const TODAY = new Date("2026-06-24");
 
 // Holat ranglari (rules/02): keldi=yashil, kechikdi=amber, kelmadi=qizil
@@ -25,24 +25,24 @@ const rng = (seed) => {
 };
 
 const MAHALLAS = [
-  "Sarnovul", "Markaz", "Yangiobod", "Bo'ston", "Guliston",
-  "Navbahor", "Do'stlik", "Oltinko'l", "Chinor", "Bahor",
+  "Sarnovul", "Navoiy", "Bobur", "Amir Temur", "Fidokor", "Istiqlol", "Do'stlik",
+  "Bog'", "Chinor", "Guliston", "Mustaqillik", "Yangi hayot", "Marvarid", "Oqtepa",
 ];
 
 // Marshrutlar — ko'p qavatli (daily) yoki xususiy sektor (every3)
 const META = [
-  { name: "M-1 Markaziy", norm: "daily", houses: 480, lateMin: 12 },
-  { name: "M-2 Sarnovul", norm: "daily", houses: 360, lateMin: 0 },
-  { name: "M-3 Yangiobod", norm: "every3", houses: 220, lateMin: 0 },
-  { name: "M-4 Bo'ston", norm: "every3", houses: 180, lateMin: 0 },
-  { name: "M-5 Guliston", norm: "daily", houses: 410, lateMin: 35 },
-  { name: "M-6 Navbahor", norm: "every3", houses: 240, lateMin: 0 },
+  { name: "M-1 Sarnovul", norm: "daily", houses: 480, lateMin: 12 },
+  { name: "M-2 Navoiy", norm: "daily", houses: 360, lateMin: 0 },
+  { name: "M-3 Bobur", norm: "every3", houses: 220, lateMin: 0 },
+  { name: "M-4 Amir Temur", norm: "every3", houses: 180, lateMin: 0 },
+  { name: "M-5 Fidokor", norm: "daily", houses: 410, lateMin: 35 },
+  { name: "M-6 Istiqlol", norm: "every3", houses: 240, lateMin: 0 },
   { name: "M-7 Do'stlik", norm: "daily", houses: 300, lateMin: 8 },
-  { name: "M-8 Oltinko'l", norm: "every3", houses: 160, lateMin: 0 },
+  { name: "M-8 Bog'", norm: "every3", houses: 160, lateMin: 0 },
   { name: "M-9 Chinor", norm: "daily", houses: 350, lateMin: 0 },
-  { name: "M-10 Bahor", norm: "every3", houses: 200, lateMin: 0 },
-  { name: "M-11 Sharq", norm: "daily", houses: 280, lateMin: 0 },
-  { name: "M-12 G'arb", norm: "every3", houses: 190, lateMin: 0 },
+  { name: "M-10 Guliston", norm: "every3", houses: 200, lateMin: 0 },
+  { name: "M-11 Mustaqillik", norm: "daily", houses: 280, lateMin: 0 },
+  { name: "M-12 Yangi hayot", norm: "every3", houses: 190, lateMin: 0 },
 ];
 
 // Holatni aniqlash: missed → kechagi kun ham qoldirilgan; late → kechikkan; aks holda keldi
