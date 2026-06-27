@@ -1,6 +1,12 @@
-import { LayoutDashboard, Trees, Users, Home, Landmark, Map, GraduationCap, Shield, Flame, Store, TriangleAlert, Layers, Zap, Wrench, ClipboardList, Fuel, Route as RouteIcon } from "lucide-react";
+import { LayoutDashboard, LayoutGrid, Trees, Users, Home, Landmark, Map, GraduationCap, Shield, Flame, Store, TriangleAlert, Layers, Zap, Wrench, ClipboardList, Fuel, Route as RouteIcon } from "lucide-react";
 
 const ownerSidebar = [
+  {
+    key: "asosiy",
+    title: "Asosiy",
+    icon: LayoutGrid,
+    items: [{ title: "Umumiy ko'rinish", url: "/owner/asosiy", icon: Home }],
+  },
   {
     key: "dashboard",
     title: "Boshqaruv paneli",
