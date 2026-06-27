@@ -35,6 +35,7 @@ function LiveFaceId({ onPass }) {
       <div className="hd"><div><div className="t">Face-ID — jonli kirish</div><div className="s">{M.name} · maktab darvozasi</div></div><span className="tcc-live"><i />JONLI</span></div>
       <div className="tcc-scan">
         <img src={cur.photo} alt="" />
+        <div className="vig" />
         <div className="grid" />
         {phase === "scan" ? (
           <>
@@ -58,7 +59,7 @@ function LiveFaceId({ onPass }) {
         {feed.length === 0 && <div style={{ fontSize: 12, color: T.muted, padding: "6px 2px" }}>Kutilmoqda…</div>}
         {feed.map((f) => (
           <div className="tcc-feedrow" key={f.id}>
-            <img src={f.photo} alt="" style={{ width: 32, height: 32, borderRadius: "50%", objectFit: "cover", border: `1px solid ${T.border}` }} />
+            <img src={f.photo} alt="" style={{ width: 32, height: 32, borderRadius: "50%", objectFit: "cover", border: `1px solid ${T.border}`, background: "#0f1a24" }} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontSize: 12.5, fontWeight: 600, color: T.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{surname(f.name)} <span style={{ color: T.muted, fontWeight: 400 }}>· {f.grade}-{f.letter}</span></div>
             </div>
@@ -156,7 +157,6 @@ const TalimDashboardPage = () => {
   const [entered, setEntered] = useState(2387);
   const out = useCountUp(M.outOfSchool); const cov = useCountUp(+(((M.children6_18 - M.outOfSchool) / M.children6_18) * 100).toFixed(1), 1500); const kids = useCountUp(M.children6_18, 1500); const chr = useCountUp(M.chronic);
 
-  const sankey = useMemo(() => { const red = { itemStyle: { color: T.alarm }, label: { color: T.alarm } }; return { backgroundColor: "transparent", tooltip: { trigger: "item", ...tip }, series: [{ type: "sankey", left: 6, right: 130, top: 12, bottom: 12, nodeWidth: 13, nodeGap: 13, emphasis: { focus: "adjacency" }, draggable: false, label: { color: T.text, fontSize: 11 }, lineStyle: { color: "gradient", curveness: .5, opacity: .42 }, data: [{ name: "Bolalar 6–18", itemStyle: { color: T.gold } }, { name: "Maktabda o'qiyapti", itemStyle: { color: T.green } }, { name: "Maktabgacha tayyorlov", itemStyle: { color: T.teal } }, { name: "⚠ Chetda qolgan", ...red }, { name: "9-sinfni tugatdi", itemStyle: { color: T.gold } }, { name: "10-sinf (akademik)", itemStyle: { color: T.green } }, { name: "Kollej / texnikum", itemStyle: { color: T.teal } }, { name: "⚠ Hech qayerda", ...red }], links: [{ source: "Bolalar 6–18", target: "Maktabda o'qiyapti", value: 2540 }, { source: "Bolalar 6–18", target: "Maktabgacha tayyorlov", value: 109 }, { source: "Bolalar 6–18", target: "⚠ Chetda qolgan", value: 31, lineStyle: { color: T.alarm, opacity: .65 } }, { source: "Maktabda o'qiyapti", target: "9-sinfni tugatdi", value: 224 }, { source: "9-sinfni tugatdi", target: "10-sinf (akademik)", value: 150 }, { source: "9-sinfni tugatdi", target: "Kollej / texnikum", value: 65 }, { source: "9-sinfni tugatdi", target: "⚠ Hech qayerda", value: 9, lineStyle: { color: T.alarm, opacity: .65 } }] }] }; }, []);
   const radar = useMemo(() => { const rings = [["9-dan keyin", 96, T.gold], ["O'rta", 97, T.teal], ["Boshlang'ich", 99, T.green], ["Maktabgacha", 78, T.amber]]; return { backgroundColor: "transparent", series: rings.map((r, i) => ({ type: "gauge", startAngle: 90, endAngle: -270, radius: `${92 - i * 18}%`, center: ["50%", "52%"], pointer: { show: false }, progress: { show: true, roundCap: true, width: 8, itemStyle: { color: r[2] } }, axisLine: { lineStyle: { width: 8, color: [[1, "rgba(255,255,255,.06)"]] } }, splitLine: { show: false }, axisTick: { show: false }, axisLabel: { show: false }, data: [{ value: r[1] }], detail: { show: false } })) }; }, []);
   const trend = useMemo(() => lineOpt(trend30(1).slice(30 - days), Array.from({ length: days }, (_, i) => dayLabel(days - 1 - i)), T.teal), [days]);
   const classes = useMemo(() => barOpt(Array.from({ length: 11 }, (_, i) => i + 1), classDist(2860, 1), T.teal), []);
@@ -166,28 +166,33 @@ const TalimDashboardPage = () => {
     <div className="tcc">
       <CcTop subtitle={`${M.name} · ${M.area}`} right={<select className="tcc-sel" value={days} onChange={(e) => setDays(+e.target.value)} aria-label="Sana filtri"><option value={7}>7 kun</option><option value={14}>14 kun</option><option value={30}>30 kun</option></select>} />
       <div className="tcc-wrap">
-        {/* ═══ JONLI FACE-ID + MAKTAB MA'LUMOTLARI (panel ikkiga bo'lingan) ═══ */}
-        <div className="tcc-split">
-          <LiveFaceId onPass={() => setEntered((v) => v + 1)} />
-          <SchoolInfoPanel enteredToday={entered} />
-        </div>
+        {/* ═══ 1) ASOSIY KPI — eng muhim raqamlar (tepada) ═══ */}
         <div className="tcc-hero">
           <div className="tcc-alarm"><div style={{ fontSize: 11, color: "#ffb3b3", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".6px" }}>⚠ Ta'limdan chetda qolgan bolalar</div><div className="big">{fmt(out)}</div><div style={{ fontSize: 11.5, color: T.muted, marginTop: 6 }}>6–18 yosh · ish 12 · kasallik 7 · noaniq 9 · ko'chgan 3</div></div>
           {[["Umumiy qamrov", `${cov.toFixed(1)}%`, T.green], ["Jami bola (6–18)", fmt(kids), T.text], ["Surunkali kelmaydigan", fmt(chr), T.amber]].map(([l, v, c], i) => <div className="tcc-kpi" key={i}><div className="lab">{l}</div><div className="val" style={{ color: c }}>{v}</div></div>)}
         </div>
-        <div className="tcc-grid" style={{ marginBottom: 14 }}>
-          <EPanel className="tcc-c8" delay={120} height={360} title="Bola qayoqqa ketadi — oqim" subtitle="6–18 yosh · maktab → 9-sinfdan keyin" option={sankey} note={<span><span className="tcc-pill">namunaviy</span> &nbsp;Qizil tarmoqlar — chetda qolgan / hech qayerda</span>} />
-          <div className="tcc-card tcc-c4" style={{ animationDelay: "220ms" }}><div className="hd"><div><div className="t">Tirik mahalla — qamrov</div><div className="s">Bloklar (hex)</div></div></div><HexGrid /><div className="tcc-note"><span className="tcc-pill">namunaviy · qizil = past qamrov</span></div></div>
+        {/* ═══ 2) JONLI FACE-ID + MAKTAB MA'LUMOTLARI ═══ */}
+        <div className="tcc-split">
+          <LiveFaceId onPass={() => setEntered((v) => v + 1)} />
+          <SchoolInfoPanel enteredToday={entered} />
         </div>
-        <div className="tcc-grid">
-          <EPanel className="tcc-c4" delay={260} height={230} title="Qamrov radari" subtitle="Maktabgacha → 9-dan keyin" option={radar} note="Maktabgacha 78% · Boshlang'ich 99% · O'rta 97% · 9-dan keyin 96%" />
-          <EPanel className="tcc-c8" delay={300} height={230} title="Davomat tendentsiyasi" subtitle={`Oxirgi ${days} kun`} option={trend} note={<span className="tcc-pill">namunaviy</span>} />
-          <EPanel className="tcc-c5" delay={340} height={210} title="Sinflar bo'yicha taqsimot" subtitle="1–11-sinf o'quvchilari" option={classes} note={<span className="tcc-pill">namunaviy</span>} />
-          <EPanel className="tcc-c4" delay={380} height={210} title="Qizlar bo'yicha kesim" subtitle="Erta nikoh xavfi monitoringi" option={girls} note={<span><span className="tcc-pill">namunaviy</span> &nbsp;Qizlar 1245 · qamrov 98.9% · chetda 14</span>} />
-          <div className="tcc-card tcc-c3" style={{ animationDelay: "420ms" }}><div className="hd"><div><div className="t">Xavf guruhlari</div><div className="s">Maxsus e'tibor</div></div></div>
+        {/* ═══ 3) ENG QIMMATLI GRAFIKLAR — davomat trendi + qamrov radari ═══ */}
+        <div className="tcc-grid" style={{ marginBottom: 14 }}>
+          <EPanel className="tcc-c8" delay={120} height={250} title="Davomat tendentsiyasi" subtitle={`Oxirgi ${days} kun`} option={trend} note={<span className="tcc-pill">namunaviy</span>} />
+          <EPanel className="tcc-c4" delay={160} height={250} title="Qamrov radari" subtitle="Maktabgacha → 9-dan keyin" option={radar} note="Maktabgacha 78% · Boshlang'ich 99% · O'rta 97% · 9-dan keyin 96%" />
+        </div>
+        {/* ═══ 4) XAVF GURUHLARI + SINFLAR ═══ */}
+        <div className="tcc-grid" style={{ marginBottom: 14 }}>
+          <div className="tcc-card tcc-c6" style={{ animationDelay: "200ms" }}><div className="hd"><div><div className="t">Xavf guruhlari</div><div className="s">Maxsus e'tibor</div></div></div>
             <div style={{ display: "flex", flexDirection: "column", gap: 9, marginTop: 2 }}>{[["Kam ta'minlangan oila", 86, T.amber], ["Yetim / vasiylik", 9, T.teal], ["Nogironligi bor", 14, T.gold]].map(([l, n, c]) => <div key={l} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 10px", border: `1px solid ${T.border}`, borderRadius: 10, background: "rgba(255,255,255,.02)" }}><div className="mono" style={{ fontSize: 22, fontWeight: 700, color: c, minWidth: 40 }}>{n}</div><div style={{ fontSize: 11.5 }}>{l}</div></div>)}</div>
             <div className="tcc-note"><span className="tcc-pill">namunaviy</span></div>
           </div>
+          <EPanel className="tcc-c6" delay={240} height={230} title="Sinflar bo'yicha taqsimot" subtitle="1–11-sinf o'quvchilari" option={classes} note={<span className="tcc-pill">namunaviy</span>} />
+        </div>
+        {/* ═══ 5) KAMROQ KERAKLI — hex xarita + qizlar kesimi (pastda) ═══ */}
+        <div className="tcc-grid">
+          <div className="tcc-card tcc-c8" style={{ animationDelay: "300ms" }}><div className="hd"><div><div className="t">Tirik mahalla — qamrov</div><div className="s">Bloklar (hex)</div></div></div><div style={{ height: 260 }}><HexGrid /></div><div className="tcc-note"><span className="tcc-pill">namunaviy · qizil = past qamrov</span></div></div>
+          <EPanel className="tcc-c4" delay={340} height={260} title="Qizlar bo'yicha kesim" subtitle="Erta nikoh xavfi monitoringi" option={girls} note={<span><span className="tcc-pill">namunaviy</span> &nbsp;Qizlar 1245 · qamrov 98.9% · chetda 14</span>} />
         </div>
         {/* ═══ UMUMIY MA'LUMOTLAR (analitikada ham turaversin; bo'lim bosilsa to'liq sahifaga) ═══ */}
         <div className="tcc-h2" role="button" tabIndex={0} style={{ cursor: "pointer", marginTop: 26 }} onClick={() => nav("/owner/talim/malumotlar")} onKeyDown={(e) => e.key === "Enter" && nav("/owner/talim/malumotlar")}>
