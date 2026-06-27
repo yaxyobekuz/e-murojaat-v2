@@ -1,6 +1,6 @@
 // Obodonlashtirish — YAGONA umumiy sahifa. 4 modul (Axlat, Gaz, Yashil makon, Hashar)
 // bitta tartibli sahifada bo'limlar sifatida. Ma'lumot o'zgarmagan — mavjud mock + insights.
-import { Activity, AlertTriangle, Award, Banknote, BarChart3, Boxes, Car, CheckCircle2, ClipboardList, Clock, Cloud, Database, Droplet, Droplets, Fuel, Gauge, Globe, HardHat, Hourglass, Leaf, ListChecks, MapPin, Medal, MessageSquareWarning, Radio, Ruler, ScanLine, ShieldCheck, Sparkles, Sprout, Sun, Target, TreePine, TrendingUp, Trophy, Truck, User, Users, Volleyball, Vote, Wallet, Waypoints, Wind, Zap } from "lucide-react";
+import { Activity, AlertTriangle, Award, Banknote, BarChart3, Boxes, Car, CheckCircle2, ClipboardList, Clock, Cloud, Database, Droplet, Droplets, Fuel, Gauge, Globe, HardHat, Hourglass, Leaf, ListChecks, MapPin, Medal, MessageSquareWarning, Radio, Ruler, ScanLine, ShieldCheck, Sparkles, Sprout, Sun, Target, Trash2, TreePine, TrendingUp, Trophy, Truck, User, Users, Volleyball, Vote, Wallet, Waypoints, Wind, Zap } from "lucide-react";
 
 import { formatMoney } from "@/shared/utils/formatMoney";
 import { CmdRoot, CmdHeader, Panel, Donut, BarRow } from "@/shared/components/ui/command/primitives";
@@ -23,6 +23,7 @@ import { RatingTable } from "../components/insight/RatingTable";
 import { ParticipatoryBudget } from "../components/insight/ParticipatoryBudget";
 import { EcoCitizen } from "../components/insight/EcoCitizen";
 import { CitizenReports } from "../components/insight/CitizenReports";
+import { SmartBins } from "../components/insight/SmartBins";
 import { treeSummary } from "../mock/treePassport.data";
 import { ratingSummary } from "../mock/operatorRating.data";
 import { pbSummary } from "../mock/participatoryBudget.data";
@@ -39,6 +40,7 @@ const NAV = [
   { id: "reports", label: "Xalq nazorati", icon: MessageSquareWarning, color: C.reports },
   { id: "eco", label: "Eko-faol fuqaro", icon: Leaf, color: C.eco },
   { id: "axlat", label: "Axlat", icon: Truck, color: C.axlat },
+  { id: "bins", label: "Chiqindi idishlari", icon: Trash2, color: C.axlat },
   { id: "gaz", label: "Gaz mashinasi", icon: Droplets, color: C.gaz },
   { id: "ym", label: "Yashil makon", icon: TreePine, color: C.ym },
   { id: "passport", label: "Daraxt pasporti", icon: ScanLine, color: C.ym },
@@ -157,6 +159,14 @@ const ObodExecPage = () => (
       </Panel></Reveal>
       <Reveal i={1}><Panel title="Operator reytingi (VM 648)" icon={Gauge} accent={C.axlat}><div className="p-2"><Donut data={axlatDonut} accent={C.axlat} height={250} /></div></Panel></Reveal>
     </div>
+
+    {/* ══════════ CHIQINDI IDISHLARI (smart bins) ══════════ */}
+    <SectionBanner id="bins" icon={Trash2} title="Chiqindi idishlari (aqlli chelaklar)" sub="Har mahallada 10 chelak · to'lganlik % · olib ketish · chiqindi tarkibi" accent={C.axlat} />
+    <Reveal i={0}>
+      <Panel title="Chelaklar monitoringi" icon={Trash2} accent={C.axlat} source="Sensorli idish + GPS axlat mashinasi (demo)" bodyClass="p-0">
+        <SmartBins />
+      </Panel>
+    </Reveal>
 
     {/* ══════════ GAZ MASHINASI ══════════ */}
     <SectionBanner id="gaz" icon={Droplets} title="Gaz mashinasi — assenizatsiya" sub="Suyuq chiqindi · buyurtma asosida" accent={C.gaz} />
