@@ -35,6 +35,7 @@ function LiveFaceId({ onPass }) {
       <div className="hd"><div><div className="t">Face-ID — jonli kirish</div><div className="s">{M.name} · maktab darvozasi</div></div><span className="tcc-live"><i />JONLI</span></div>
       <div className="tcc-scan">
         <img src={cur.photo} alt="" />
+        <div className="vig" />
         <div className="grid" />
         {phase === "scan" ? (
           <>
@@ -58,7 +59,7 @@ function LiveFaceId({ onPass }) {
         {feed.length === 0 && <div style={{ fontSize: 12, color: T.muted, padding: "6px 2px" }}>Kutilmoqda…</div>}
         {feed.map((f) => (
           <div className="tcc-feedrow" key={f.id}>
-            <img src={f.photo} alt="" style={{ width: 32, height: 32, borderRadius: "50%", objectFit: "cover", border: `1px solid ${T.border}` }} />
+            <img src={f.photo} alt="" style={{ width: 32, height: 32, borderRadius: "50%", objectFit: "cover", objectPosition: "50% 22%", border: `1px solid ${T.border}`, filter: "grayscale(.22) saturate(.8) brightness(.96)" }} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontSize: 12.5, fontWeight: 600, color: T.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{surname(f.name)} <span style={{ color: T.muted, fontWeight: 400 }}>· {f.grade}-{f.letter}</span></div>
             </div>
