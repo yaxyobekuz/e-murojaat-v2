@@ -51,6 +51,59 @@ export const ANTENNAS = ANTENNA_META.map((a, i) => {
   return { ...a, lat, lng, status, coverageM, users };
 });
 
+// ── Uylar — har uyda taxminiy internet tezligi (Mbit/s) ──
+// Tezlik eng yaqin antenna signaliga va undan uzoqlikка bog'liq (uzoq = sekinroq).
+export const HOUSE_SPEED = {
+  fast: { label: "Tez (50+ Mbit/s)", color: "#22c55e", from: 50 },
+  ok: { label: "O'rta (20–50)", color: "#84cc16", from: 20 },
+  slow: { label: "Sekin (8–20)", color: "#f59e0b", from: 8 },
+  bad: { label: "Juda sekin (<8)", color: "#ef4444", from: 0 },
+};
+export const houseSpeedStatus = (mbps) => (mbps >= 50 ? "fast" : mbps >= 20 ? "ok" : mbps >= 8 ? "slow" : "bad");
+
+const distM = (aLat, aLng, bLat, bLng) => {
+  const dLat = (aLat - bLat) * 111000;
+  const dLng = (aLng - bLng) * 111000 * Math.cos((aLat * Math.PI) / 180);
+  return Math.sqrt(dLat * dLat + dLng * dLng);
+};
+
+// ~130 ta uy — antennalar atrofida tarqaladi
+export const HOUSES = Array.from({ length: 130 }, (_, i) => {
+  const ang = rng(i * 1.7) * Math.PI * 2;
+  const radius = 0.001 + rng(i * 2.9) * 0.008;
+  const lat = Math.round((MAP_LAT + Math.sin(ang) * radius) * 1e6) / 1e6;
+  const lng = Math.round((MAP_LNG + Math.cos(ang) * radius * 1.3) * 1e6) / 1e6;
+
+  // eng yaqin antennani topish
+  let nearest = ANTENNAS[0];
+  let best = Infinity;
+  for (const a of ANTENNAS) {
+    const d = distM(lat, lng, a.lat, a.lng);
+    if (d < best) { best = d; nearest = a; }
+  }
+  // tezlik — antenna signali × uzoqlik so'nishi (qamrov radiusidan tashqarida keskin tushadi)
+  const falloff = Math.max(0.12, 1 - best / (nearest.coverageM * 1.4));
+  const base = nearest.tech.includes("5G") ? 120 : nearest.tech.includes("LTE") ? 70 : 35;
+  const mbps = Math.max(2, Math.round(base * (nearest.signal / 100) * falloff * (0.85 + rng(i * 5.1) * 0.3)));
+
+  return {
+    id: `H-${String(i + 1).padStart(3, "0")}`,
+    lat,
+    lng,
+    mbps,
+    status: houseSpeedStatus(mbps),
+    antenna: nearest.name,
+    tech: nearest.tech,
+  };
+});
+
+export const houseSpeedSummary = (() => {
+  const avg = Math.round(HOUSES.reduce((s, h) => s + h.mbps, 0) / HOUSES.length);
+  const fast = HOUSES.filter((h) => h.status === "fast").length;
+  const slow = HOUSES.filter((h) => h.status === "slow" || h.status === "bad").length;
+  return { total: HOUSES.length, avg, fast, slow };
+})();
+
 // Provayder ulushi (bozor) — qamrov bo'yicha
 export const PROVIDERS = [
   { key: "uztelecom", label: "Uztelecom", share: 38 },
