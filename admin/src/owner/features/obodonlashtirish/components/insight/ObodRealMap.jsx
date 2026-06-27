@@ -7,11 +7,11 @@ import ObodMapBackground from "../map/ObodMapBackground";
 
 // showGreen=true → yashil zonalar + daraxtlar (Yashil makon bo'limi uchun)
 // plantings → real ekish nuqtalari (har biri 🌳 marker)
-export const ObodRealMap = ({ accent = "#22c55e", height = 340, showGreen = false, plantings = null, label, legend }) => {
+export const ObodRealMap = ({ accent = "#22c55e", height = 340, showGreen = false, plantings = null, markers = null, bare = false, range, label, legend }) => {
   const [activeId, setActiveId] = useState(null);
   return (
     <div className="relative w-full overflow-hidden rounded-xl border" style={{ height, borderColor: hexA(accent, 0.2) }}>
-      <ObodMapBackground showGreen={showGreen} activeId={activeId} onSelect={setActiveId} plantings={plantings} />
+      <ObodMapBackground showGreen={showGreen} activeId={activeId} onSelect={setActiveId} plantings={plantings} markers={markers} bare={bare} range={range} />
 
       {/* accent ramka glow */}
       <div className="pointer-events-none absolute inset-0 rounded-xl" style={{ boxShadow: `inset 0 0 32px ${hexA(accent, 0.18)}` }} />

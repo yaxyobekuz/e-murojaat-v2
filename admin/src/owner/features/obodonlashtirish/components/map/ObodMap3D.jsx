@@ -45,13 +45,16 @@ const circleRing = (center, radiusM = 130, steps = 40) => {
 // Marker balandligi — yerga nisbatan (yer moduli kabi 25m, shunda yer ostiga tushmaydi)
 const MARKER_ALT = 25;
 
-const ObodMap3D = ({ showGreen = false, activeId = null, onSelect, plantings = null }) => {
+// bare=true → faqat xarita foni (qurilish markerlari, yashil zonalar yo'q). Tashqi `markers` chiziladi.
+// range — kamera masofasi (metr); kichikroq = yaqinroq ko'rinish.
+const ObodMap3D = ({ showGreen = false, activeId = null, onSelect, plantings = null, markers = null, bare = false, range }) => {
   const hostRef = useRef(null);
   const mapRef = useRef(null);
   const libRef = useRef(null);
   const greenPolysRef = useRef([]); // yashil zonalar (showGreen rejimida)
   const greenMarkersRef = useRef([]); // daraxt markerlari
   const plantingMarkersRef = useRef([]); // ekish nuqtalari (real koordinata)
+  const customMarkersRef = useRef([]); // umumiy markerlar (chiqindi qutilari, mashina ...)
   const constructionElsRef = useRef([]); // qurilish doira + markerlari (eng tepada turishi kerak)
   const [status, setStatus] = useState("loading"); // loading | ready | fallback
 
@@ -67,14 +70,15 @@ const ObodMap3D = ({ showGreen = false, activeId = null, onSelect, plantings = n
 
         const { Map3DElement, Marker3DInteractiveElement, PinElement, Polygon3DElement, AltitudeMode, MapMode } = lib;
 
-        const map = new Map3DElement({ center: LOOK_AT, ...CAMERA, mode: MapMode.HYBRID });
+        const map = new Map3DElement({ center: LOOK_AT, ...CAMERA, range: range ?? CAMERA.range, mode: MapMode.HYBRID });
         map.style.width = "100%";
         map.style.height = "100%";
         hostRef.current.replaceChildren(map);
         mapRef.current = map;
 
         // Qurilish (jarayonda) joylari — olov rang doira (radius) + markazда kran pin
-        OBOD_PROJECTS.filter(isConstruction).forEach((p) => {
+        // bare rejimida o'tkazib yuboriladi (masalan chiqindi xaritasi — faqat qutilar/mashina)
+        if (!bare) OBOD_PROJECTS.filter(isConstruction).forEach((p) => {
           // Olov rang qurilish maydoni (doira zona)
           const circle = new Polygon3DElement({
             outerCoordinates: circleRing(p.center, 140),
@@ -198,6 +202,35 @@ const ObodMap3D = ({ showGreen = false, activeId = null, onSelect, plantings = n
       plantingMarkersRef.current.push(marker);
     });
   }, [plantings, status]);
+
+  // Umumiy markerlar — {lat,lng,glyph,color,label}. Chiqindi qutilari, mashina va h.k.
+  useEffect(() => {
+    if (status !== "ready" || !mapRef.current || !libRef.current) return;
+    const map = mapRef.current;
+    const { Marker3DInteractiveElement, PinElement } = libRef.current;
+
+    customMarkersRef.current.forEach((el) => el.remove());
+    customMarkersRef.current = [];
+    if (!markers || !markers.length) return;
+
+    markers.forEach((m) => {
+      if (m.lat == null || m.lng == null) return;
+      const pin = new PinElement({
+        background: m.color || "#22d3ee",
+        borderColor: m.borderColor || "#0b1220",
+        glyph: m.glyph || "",
+        glyphColor: m.glyphColor || "#ffffff",
+        scale: m.scale || 1.1,
+      });
+      const marker = new Marker3DInteractiveElement({
+        position: { lat: m.lat, lng: m.lng, altitude: MARKER_ALT },
+        label: m.label || "",
+      });
+      marker.append(pin);
+      map.append(marker);
+      customMarkersRef.current.push(marker);
+    });
+  }, [markers, status]);
 
   // Tanlangan loyihaga kamera uchadi
   useEffect(() => {
