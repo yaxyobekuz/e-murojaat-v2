@@ -7,7 +7,7 @@ import useObjectState from "@/shared/hooks/useObjectState";
 import { ObodRealMap } from "./ObodRealMap";
 import {
   BINS_BY_MAHALLA, binMahallaStats, BIN_STATUS,
-  TRUCKS_BY_MAHALLA, TRUCK_STATUS, truckForMahalla,
+  TRUCKS_BY_MAHALLA, TRUCK_STATUS, truckForMahalla, zoneForMahalla,
 } from "../../mock/smartBins.data";
 
 const ACCENT = "#22d3ee";
@@ -20,6 +20,10 @@ const AxlatBinsMap = () => {
   const stat = binMahallaStats.find((s) => s.mahalla === mahalla);
   const truck = truckForMahalla(mahalla);
   const ts = TRUCK_STATUS[truck.status];
+  const zone = zoneForMahalla(mahalla);
+
+  // Ajratilgan chiqindi maydoni (zona) — rangli poligon
+  const zones = [{ polygon: zone.polygon, color: ACCENT }];
 
   // Xarita markerlari — qutilar (rangli pin, ichida foiz raqami) + mashina (oq glyphli pin)
   const binMarkers = current.bins.map((b) => ({
@@ -42,7 +46,18 @@ const AxlatBinsMap = () => {
     scale: 1.5,
     label: truck.plate,
   };
-  const markers = [...binMarkers, truckMarker];
+  // Chiqindi maydoni markazi pin
+  const zoneMarker = {
+    lat: zone.center.lat,
+    lng: zone.center.lng,
+    glyph: "♻",
+    glyphColor: "#ffffff",
+    color: "#0e7490",
+    borderColor: "#0b1220",
+    scale: 1.4,
+    label: zone.name,
+  };
+  const markers = [zoneMarker, ...binMarkers, truckMarker];
 
   return (
     <div className="p-3">
@@ -69,15 +84,17 @@ const AxlatBinsMap = () => {
             accent={ACCENT}
             height={360}
             bare
-            range={950}
+            range={1150}
             markers={markers}
-            label={`${mahalla} — chiqindi qutilari & mashina`}
+            zones={zones}
+            label={`${mahalla} — chiqindi maydoni, qutilar & mashina`}
             legend={[
               { label: "Bo'sh", color: "#22c55e" },
               { label: "To'lyapti", color: "#84cc16" },
               { label: "To'lay deb qoldi", color: "#f59e0b" },
               { label: "To'la", color: "#ef4444" },
               { label: "Mashina", color: ts.color },
+              { label: "Chiqindi maydoni", color: "#0e7490" },
             ]}
           />
         </div>

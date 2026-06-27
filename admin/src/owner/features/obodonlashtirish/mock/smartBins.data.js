@@ -136,6 +136,37 @@ export const TRUCKS_BY_MAHALLA = BINS_BY_MAHALLA.map(({ mahalla, bins }, i) => b
 export const truckForMahalla = (mahalla) =>
   TRUCKS_BY_MAHALLA.find((t) => t.mahalla === mahalla) || TRUCKS_BY_MAHALLA[0];
 
+// ── Har mahallaga ajratilgan chiqindi maydoni (hudud) ──
+// Markaz atrofida ko'pburchak zona (qutilar joylashgan hududni qamrab oladi).
+const ringPolygon = (cLat, cLng, rLat, rLng, steps = 7, seed = 1) => {
+  const ring = [];
+  for (let i = 0; i < steps; i++) {
+    const ang = (i / steps) * Math.PI * 2;
+    const wob = 0.82 + rng(seed * (i + 3.1)) * 0.36; // notekis chegara (tabiiyroq)
+    ring.push({
+      lat: Math.round((cLat + Math.sin(ang) * rLat * wob) * 1e5) / 1e5,
+      lng: Math.round((cLng + Math.cos(ang) * rLng * wob) * 1e5) / 1e5,
+    });
+  }
+  return ring;
+};
+
+export const BIN_ZONE_BY_MAHALLA = BINS_BY_MAHALLA.map(({ mahalla, bins }, i) => {
+  // zona markazi — mahalla qutilarining o'rtacha nuqtasi
+  const cLat = bins.reduce((s, b) => s + b.lat, 0) / bins.length;
+  const cLng = bins.reduce((s, b) => s + b.lng, 0) / bins.length;
+  return {
+    mahalla,
+    name: `${mahalla} chiqindi maydoni`,
+    center: { lat: Math.round(cLat * 1e5) / 1e5, lng: Math.round(cLng * 1e5) / 1e5 },
+    polygon: ringPolygon(cLat, cLng, 0.0052, 0.0066, 7, i + 1),
+    bins: bins.length,
+  };
+});
+
+export const zoneForMahalla = (mahalla) =>
+  BIN_ZONE_BY_MAHALLA.find((z) => z.mahalla === mahalla) || BIN_ZONE_BY_MAHALLA[0];
+
 // Mashinalar yig'indisi
 export const truckSummary = (() => {
   const live = TRUCKS_BY_MAHALLA.filter((t) => TRUCK_STATUS[t.status].live).length;
