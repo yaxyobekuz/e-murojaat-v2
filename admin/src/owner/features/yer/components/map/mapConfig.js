@@ -1,7 +1,7 @@
 // Mapbox setup: token, basemap styles + initial 3D camera over the demo center.
 import { MAP_CENTER } from "../../mock/yer.mapMarkers";
 
-export const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
+export const MAPBOX_TOKEN = "pk.eyJ1IjoieWF4eW9iZWsiLCJhIjoiY21xcXVyMnN5MDJ0YTJzczhmZGhoMGh5bCJ9.C66cPZikWv2zNvjXHNrp5g";
 
 // Switchable basemaps (UI labels in Uzbek, ids in English).
 export const BASEMAPS = [

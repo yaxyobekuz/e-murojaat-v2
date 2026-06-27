@@ -6,7 +6,7 @@ import { useMemo } from "react";
 import { EChart } from "@/shared/components/ui/chart3d/EChart";
 import { Mahalla3DMap } from "@/shared/components/ui/chart3d/Mahalla3DMap";
 
-const API_KEY = import.meta.env.VITE_MAPS_API_KEY;
+const API_KEY = "AIzaSyAzevS5emLN3BTdUOIN6tmK6Din6aG7DjY";
 const CENTER = { lat: 40.9034, lng: 71.8604 }; // Sarnovul MFY, Baliqchi, Andijon
 
 // Binolar (asosiy detal): x,z grid pozitsiyasi, balandlik (qavat), rang, nom

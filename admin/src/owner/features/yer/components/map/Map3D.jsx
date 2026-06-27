@@ -7,7 +7,7 @@ import { loadMaps3d } from "../../utils/googleMaps.loader";
 import { MAP_CENTER, CADASTRE_MARKERS } from "../../mock/yer.mapMarkers";
 import MapInfoCard from "./MapInfoCard";
 
-const API_KEY = import.meta.env.VITE_MAPS_API_KEY;
+const API_KEY = "AIzaSyAzevS5emLN3BTdUOIN6tmK6Din6aG7DjY";
 
 // Baliqchi yer balandligi (~440m). Kamera yerga qaraydi — shunda markerlar
 // kadr markazida turadi (altitude:0 bo'lsa kamera yer ostiga qarab, markerlar yuqoriga suriladi).

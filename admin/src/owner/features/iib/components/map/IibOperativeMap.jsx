@@ -8,7 +8,7 @@ import { loadMaps3d } from "@/shared/components/ui/chart3d/maps3dLoader";
 import { MAP_CENTER, MAHALLA_AREAS, SECURITY_STATUS, INCIDENT_TYPES } from "../../mock/iib.mapAreas";
 import IibMapFallback from "./IibMapFallback";
 
-const API_KEY = import.meta.env.VITE_MAPS_API_KEY;
+const API_KEY = "AIzaSyAzevS5emLN3BTdUOIN6tmK6Din6aG7DjY";
 
 const GROUND_ALT = 440;
 const LOOK_AT = { ...MAP_CENTER, altitude: GROUND_ALT };

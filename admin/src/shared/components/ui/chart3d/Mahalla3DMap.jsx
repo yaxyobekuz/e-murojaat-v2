@@ -3,7 +3,7 @@ import { Loader2 } from "lucide-react";
 import { loadMaps3d } from "./maps3dLoader";
 import { Map3DChart } from "./Map3DChart";
 
-const API_KEY = import.meta.env.VITE_MAPS_API_KEY;
+const API_KEY = "AIzaSyAzevS5emLN3BTdUOIN6tmK6Din6aG7DjY";
 
 // Photorealistik Google Maps 3D xarita (Obod/Soliq uslubi). Marker'lar + popup.
 // API kalit bo'lmasa — echarts 3D shahar bloklari fallback.

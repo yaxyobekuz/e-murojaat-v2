@@ -10,7 +10,7 @@ import { loadMaps3d } from "@/owner/features/soliq/utils/googleMaps3d.loader";
 import { MAP_CENTER, SCORE_TIERS, tierOfScore, aiRiskScore } from "../../mock/youth.data";
 import YouthMapFallback from "./YouthMapFallback";
 
-const API_KEY = import.meta.env.VITE_MAPS_API_KEY;
+const API_KEY = "AIzaSyAzevS5emLN3BTdUOIN6tmK6Din6aG7DjY";
 const GROUND_ALT = 460;
 const LOOK_AT = { ...MAP_CENTER, altitude: GROUND_ALT };
 const CAMERA = { tilt: 60, range: 4200, heading: 18 };

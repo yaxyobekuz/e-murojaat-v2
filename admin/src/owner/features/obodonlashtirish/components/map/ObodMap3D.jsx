@@ -11,7 +11,7 @@ import { MAP_CENTER, OBOD_PROJECTS, isGreen, isConstruction } from "../../mock/o
 import ObodMapInfoCard from "./ObodMapInfoCard";
 import ObodMapFallback from "./ObodMapFallback";
 
-const API_KEY = import.meta.env.VITE_MAPS_API_KEY;
+const API_KEY = "AIzaSyAzevS5emLN3BTdUOIN6tmK6Din6aG7DjY";
 
 const GROUND_ALT = 440;
 const LOOK_AT = { ...MAP_CENTER, altitude: GROUND_ALT };

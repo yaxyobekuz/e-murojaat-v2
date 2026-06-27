@@ -13,7 +13,7 @@ import { MAP_CENTER, MAHALLA_AREAS } from "../../mock/soliq.mapAreas";
 import { BUSINESS_TYPES, COLLECTION_TIERS } from "../../mock/soliq.businesses";
 import BusinessMapFallback from "./BusinessMapFallback";
 
-const API_KEY = import.meta.env.VITE_MAPS_API_KEY;
+const API_KEY = "AIzaSyAzevS5emLN3BTdUOIN6tmK6Din6aG7DjY";
 
 const GROUND_ALT = 440;
 const LOOK_AT = { ...MAP_CENTER, altitude: GROUND_ALT };
