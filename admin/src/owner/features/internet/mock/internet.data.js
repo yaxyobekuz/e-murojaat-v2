@@ -12,6 +12,45 @@ export const STREETS = [
   { id: "s8", name: "Qishloqobod", label: "Qishloqobod MFY", households: 540, covered: 260, fiber: 40, speed: 22, uptime: 91.8, complaints: 53, outages: 19, status: "kritik" },
 ];
 
+// ── Antennalar (bazaviy stansiyalar) — xaritada signal sifati bilan ──
+// Holat signal sifatiga qarab: yaxshi (yashil) / o'rta (amber) / zaif (qizil).
+export const ANTENNA_STATUS = {
+  good: { label: "Yaxshi signal", color: "#22c55e", from: 80 },
+  mid: { label: "O'rtacha signal", color: "#f59e0b", from: 55 },
+  weak: { label: "Zaif signal", color: "#ef4444", from: 0 },
+};
+export const signalStatus = (q) => (q >= 80 ? "good" : q >= 55 ? "mid" : "weak");
+
+const MAP_LAT = 40.9034;
+const MAP_LNG = 71.8604;
+const rng = (s) => { const x = Math.sin(s * 71.3 + 9.7) * 43758.5453; return x - Math.floor(x); };
+
+const ANTENNA_META = [
+  { id: "ant-1", name: "Sarnovul BS-1", tech: "5G", provider: "Uztelecom", signal: 92 },
+  { id: "ant-2", name: "Markaz BS-2", tech: "4G/LTE", provider: "UZONLINE", signal: 84 },
+  { id: "ant-3", name: "Bog'ibo'ston BS-3", tech: "4G/LTE", provider: "Comnet", signal: 61 },
+  { id: "ant-4", name: "Guliston BS-4", tech: "4G", provider: "Uztelecom", signal: 43 },
+  { id: "ant-5", name: "Yangiobod BS-5", tech: "5G", provider: "Sarkor Telekom", signal: 88 },
+  { id: "ant-6", name: "Do'stlik BS-6", tech: "4G/LTE", provider: "Comnet", signal: 58 },
+  { id: "ant-7", name: "Chamanzor BS-7", tech: "5G", provider: "Uztelecom", signal: 90 },
+  { id: "ant-8", name: "Qishloqobod BS-8", tech: "3G/4G", provider: "UZONLINE", signal: 38 },
+  { id: "ant-9", name: "Navro'z BS-9", tech: "4G/LTE", provider: "Sarkor Telekom", signal: 76 },
+];
+
+// Antennalar markaz atrofida aylana bo'ylab joylashadi (xarita markazida ko'rinadi)
+export const ANTENNAS = ANTENNA_META.map((a, i) => {
+  const ang = (i / ANTENNA_META.length) * Math.PI * 2;
+  const radius = 0.004 + (i % 2) * 0.0022;
+  const lat = Math.round((MAP_LAT + Math.sin(ang) * radius) * 1e5) / 1e5;
+  const lng = Math.round((MAP_LNG + Math.cos(ang) * radius * 1.3) * 1e5) / 1e5;
+  const status = signalStatus(a.signal);
+  // qamrov radiusi (m) — signal kuchiga bog'liq
+  const coverageM = Math.round(350 + (a.signal / 100) * 650);
+  // ulangan abonentlar — taxminiy
+  const users = Math.round(180 + rng(i * 3.3) * 1400);
+  return { ...a, lat, lng, status, coverageM, users };
+});
+
 // Provayder ulushi (bozor) — qamrov bo'yicha
 export const PROVIDERS = [
   { key: "uztelecom", label: "Uztelecom", share: 38 },
