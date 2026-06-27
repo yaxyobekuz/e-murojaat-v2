@@ -391,6 +391,17 @@ input[type="search"]::-ms-reveal {
 }
 .asosiy-grow { animation: asosiy-grow 0.9s cubic-bezier(0.22, 1, 0.36, 1) both; }
 
+/* O'ng panel almashganda (overview <-> bino) — kuchli 3D kirish */
+@keyframes asosiy-panel-swap {
+  0%   { opacity: 0; transform: translateX(34px) scale(0.92) rotateY(-10deg); filter: blur(8px); }
+  55%  { opacity: 1; }
+  100% { opacity: 1; transform: translateX(0) scale(1) rotateY(0deg); filter: blur(0); }
+}
+.asosiy-panel-swap {
+  transform-origin: right center;
+  animation: asosiy-panel-swap 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .asosiy-rise, .asosiy-fade, .asosiy-slide, .asosiy-grow { animation: none !important; }
+  .asosiy-rise, .asosiy-fade, .asosiy-slide, .asosiy-grow, .asosiy-panel-swap { animation: none !important; }
 }

@@ -45,7 +45,11 @@ const buildHouse = (rnd) => {
   if (rnd() < 0.22) debtModules.push({ name: "Elektr", amount: ri(rnd, 60, 600) * 1000 });
   if (rnd() < 0.18) debtModules.push({ name: "Soliq", amount: ri(rnd, 100, 1500) * 1000 });
   if (rnd() < 0.12) debtModules.push({ name: "Suv", amount: ri(rnd, 30, 200) * 1000 });
+  const children = ri(rnd, 0, members);
   const youth = ri(rnd, 0, Math.max(0, members - 1));
+  const pensioners = ri(rnd, 0, Math.max(0, members - children));
+  const propertyTax = ri(rnd, 80, 600) * 1000;
+  const landTax = ri(rnd, 40, 280) * 1000;
   return {
     title: `${family}lar honadoni`,
     subtitle: `${street} ko'chasi, ${houseNo}-uy`,
@@ -54,7 +58,7 @@ const buildHouse = (rnd) => {
     facts: [
       { label: "Xonadon boshlig'i", value: `${family} ${pick(rnd, FIRST_NAMES)}` },
       { label: "Yashovchilar", value: `${members} kishi` },
-      { label: "Bolalar (0-18)", value: `${ri(rnd, 0, members)} ta` },
+      { label: "Bolalar (0-18)", value: `${children} ta` },
       { label: "Mehnatga layoqatli", value: `${ri(rnd, 1, members)} ta` },
       { label: "Maydon", value: `${(ri(rnd, 4, 12) * 100) / 10} sotix` },
       { label: "Qurilgan yili", value: `${ri(rnd, 1965, 2022)}` },
@@ -67,6 +71,21 @@ const buildHouse = (rnd) => {
     ],
     consumption: { gas: ri(rnd, 40, 320), elec: ri(rnd, 120, 650), water: ri(rnd, 6, 28) },
     debts: debtModules,
+    // Moliya yo'nalishi — soliqlar
+    taxes: [
+      { name: "Mol-mulk solig'i", amount: propertyTax, paid: rnd() < 0.75 },
+      { name: "Yer solig'i", amount: landTax, paid: rnd() < 0.7 },
+    ],
+    // Ijtimoiy yo'nalish
+    social: {
+      children,
+      youth,
+      pensioners,
+      employed: ri(rnd, 0, members),
+      students: ri(rnd, 0, children),
+      risk: rnd() < 0.08 ? "Profilaktika hisobida" : rnd() < 0.2 ? "Nazoratda" : "Toza",
+      benefits: rnd() < 0.3 ? pick(rnd, ["Kam ta'minlangan", "Nogironlik nafaqasi", "Bolalar nafaqasi"]) : null,
+    },
     youthCount: youth,
     risk: rnd() < 0.08 ? "Profilaktika hisobida" : rnd() < 0.2 ? "Nazoratda" : "Toza",
   };

@@ -36,13 +36,16 @@ const AsosiyDashboardPage = () => {
       </div>
 
       {/* o'ng panel — overview yoki tanlangan element. Top va bottom bar orasidagi balandlikni egallaydi */}
-      <div className="absolute right-3 top-[148px] bottom-[76px] z-20 w-[420px] max-w-[calc(100%-1.5rem)] xl:w-[480px]">
+      <div className="absolute right-3 top-[148px] bottom-[76px] z-20 w-[420px] max-w-[calc(100%-1.5rem)] xl:w-[480px] [perspective:1400px]">
         <div className="surface-overlay flex h-full flex-col overflow-hidden rounded-2xl p-3.5 shadow-2xl backdrop-blur-xl">
-          {selectedEl ? (
-            <DetailPanel element={selectedEl} onClose={() => select(null)} />
-          ) : (
-            <OverviewPanel />
-          )}
+          {/* key har almashganda animatsiyani qaytadan ishga tushiradi */}
+          <div key={selectedId ?? "overview"} className="asosiy-panel-swap flex h-full flex-col overflow-hidden">
+            {selectedEl ? (
+              <DetailPanel element={selectedEl} onClose={() => select(null)} />
+            ) : (
+              <OverviewPanel />
+            )}
+          </div>
         </div>
       </div>
 
