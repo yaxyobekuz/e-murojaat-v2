@@ -107,7 +107,7 @@ export const SmartBins = () => {
       {/* 10 ta chelak — tanlangan mahalla */}
       <div className="rounded-xl border border-[rgb(var(--card-border))] bg-muted/20 p-3">
         <div className="mb-2 flex items-center justify-between">
-          <span className="text-[12px] font-semibold text-foreground">{mahalla} ko'chasi — 10 ta chelak</span>
+          <span className="text-[12px] font-semibold text-foreground">{mahalla} ko'chasi — {current.bins.length} ta chelak</span>
           <span className="text-[11px] text-foreground/55">O'rtacha to'lganlik: <b style={{ color: stat.avgFill > 70 ? "#ef4444" : stat.avgFill > 45 ? "#f59e0b" : "#22c55e" }}>{stat.avgFill}%</b> · {stat.full} ta to'la</span>
         </div>
         <div className="grid grid-cols-5 gap-2 sm:grid-cols-10">

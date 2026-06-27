@@ -103,7 +103,7 @@ const AxlatBinsMap = () => {
         <div className="flex flex-col rounded-xl border border-[rgb(var(--card-border))] bg-card p-3">
           <div className="mb-2 flex items-center justify-between">
             <span className="flex items-center gap-1.5 text-[12px] font-semibold text-foreground">
-              <Trash2 className="size-3.5" style={{ color: ACCENT }} /> {mahalla} — 10 ta quti
+              <Trash2 className="size-3.5" style={{ color: ACCENT }} /> {mahalla} — {current.bins.length} ta quti
             </span>
             <span className="text-[11px] text-foreground/55">O'rtacha: <b style={{ color: fillColor(stat.avgFill) }}>{stat.avgFill}%</b></span>
           </div>

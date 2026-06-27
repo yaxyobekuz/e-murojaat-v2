@@ -33,22 +33,28 @@ const TODAY = new Date("2026-06-27T13:00:00");
 const MAP_LAT = 40.9034;
 const MAP_LNG = 71.8604;
 
+// Har mahallada nechta quti (10 + ~7 → jami +100ga yaqin, 14 mahalla bo'yicha)
+const BINS_PER_MAHALLA = 17;
+
 // Har chelak — xarita MARKAZI atrofida joylashtiriladi (kamera shu yerga qaraydi).
-// 10 ta quti aylana bo'ylab teng taqsimlanadi → ustma-ust tushmaydi, markazda turadi.
-// mi (mahalla) faqat butun guruhni biroz suradi, lekin markazga yaqin qoladi.
-const binGeo = (seed, mi, k) => {
-  const ang = (k / 10) * Math.PI * 2 + mi * 0.4; // har quti aylanada o'z burchagida
-  const radius = 0.0024 + (k % 2) * 0.0011; // ~270m / ~390m — yaqin, lekin ajralib turadi
+// Qutilar 2 ta aylana (halqa) bo'ylab teng taqsimlanadi → ustma-ust tushmaydi, markazda turadi.
+const binGeo = (seed, mi, k, total) => {
+  const half = Math.ceil(total / 2);
+  const ring = k < half ? 0 : 1; // ichki / tashqi halqa
+  const idxInRing = ring === 0 ? k : k - half;
+  const ringCount = ring === 0 ? half : total - half;
+  const ang = (idxInRing / ringCount) * Math.PI * 2 + mi * 0.35 + ring * 0.3;
+  const radius = 0.0022 + ring * 0.0016; // ~245m (ichki) / ~420m (tashqi)
   const jitter = (rng(seed * 9.3) - 0.5) * 0.0004;
   const lat = Math.round((MAP_LAT + Math.sin(ang) * radius + jitter) * 1e5) / 1e5;
   const lng = Math.round((MAP_LNG + Math.cos(ang) * radius * 1.3 + jitter) * 1e5) / 1e5;
   return { lat, lng };
 };
 
-// Bitta mahalla uchun 10 ta chelak
-const buildBins = (mahalla, mi) => Array.from({ length: 10 }, (_, k) => {
+// Bitta mahalla uchun chelaklar
+const buildBins = (mahalla, mi) => Array.from({ length: BINS_PER_MAHALLA }, (_, k) => {
   const seed = mi * 100 + k + 1;
-  const geo = binGeo(seed, mi, k);
+  const geo = binGeo(seed, mi, k, BINS_PER_MAHALLA);
   const fill = Math.round(rng(seed * 2.3) * 100);
   const capacity = [240, 360, 660, 1100][Math.floor(rng(seed * 3.1) * 4)]; // litr
   // oxirgi bo'shatilgan — to'lish foiziga teskari (ko'p to'lsa ko'p vaqt o'tgan)
@@ -105,10 +111,11 @@ const buildTruck = (mahalla, mi, bins) => {
   const departed = new Date(arrived.getTime() + durMin * 60 * 1000);
   const left = status === "done" || status === "idle";
 
+  const total = bins.length;
   // Xizmat ko'rsatilgan chelaklar soni (holatga qarab)
-  const servedBins = status === "done" ? 10 : status === "idle" ? 0 : 3 + Math.floor(rng(seed * 5.2) * 5);
+  const servedBins = status === "done" ? total : status === "idle" ? 0 : Math.floor(total * (0.3 + rng(seed * 5.2) * 0.4));
   // Mashina joriy joylashuvi — keyingi xizmat qilinadigan chelak yonida (live) yoki markazda
-  const targetBin = bins[Math.min(servedBins, 9)];
+  const targetBin = bins[Math.min(servedBins, total - 1)];
   const lat = left ? Math.round((MAP_LAT - 0.004) * 1e5) / 1e5 : Math.round((targetBin.lat + 0.0005) * 1e5) / 1e5;
   const lng = left ? Math.round((MAP_LNG - 0.005) * 1e5) / 1e5 : Math.round((targetBin.lng + 0.0005) * 1e5) / 1e5;
 
@@ -124,7 +131,7 @@ const buildTruck = (mahalla, mi, bins) => {
     departedClock: left ? fmtClock(departed) : null,
     durMin,
     servedBins,
-    totalBins: 10,
+    totalBins: total,
     lat,
     lng,
     speed: TRUCK_STATUS[status].live ? Math.round(8 + rng(seed * 6.4) * 18) : 0, // km/soat

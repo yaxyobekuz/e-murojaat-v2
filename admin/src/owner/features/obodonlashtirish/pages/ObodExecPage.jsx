@@ -162,7 +162,7 @@ const ObodExecPage = () => (
     </div>
 
     {/* ══════════ CHIQINDI IDISHLARI (smart bins) ══════════ */}
-    <SectionBanner id="bins" icon={Trash2} title="Chiqindi idishlari (aqlli chelaklar)" sub="Har ko'chada 10 chelak · to'lganlik % · olib ketish · chiqindi tarkibi" accent={C.axlat} />
+    <SectionBanner id="bins" icon={Trash2} title="Chiqindi idishlari (aqlli chelaklar)" sub="Har mahallada chiqindi qutilari · to'lganlik % · olib ketish · chiqindi tarkibi" accent={C.axlat} />
     <Reveal i={0}>
       <Panel title="Chelaklar monitoringi" icon={Trash2} accent={C.axlat} source="Sensorli idish + GPS axlat mashinasi (demo)" bodyClass="p-0">
         <SmartBins />
