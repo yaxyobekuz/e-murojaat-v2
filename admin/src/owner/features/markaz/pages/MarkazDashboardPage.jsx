@@ -42,7 +42,7 @@ function StatTile({ s }) {
   const nav = useNavigate();
   const Icon = s.icon;
   return (
-    <button type="button" onClick={() => nav(s.to)} className="group rounded-xl border border-[rgb(var(--card-border))] bg-card/40 p-4 text-left transition-colors hover:border-brand-cyan/50 hover:bg-card/70">
+    <button type="button" onClick={() => nav(s.to)} className="group flex h-full flex-col justify-center rounded-xl border border-[rgb(var(--card-border))] bg-card/40 p-4 text-left transition-colors hover:border-brand-cyan/50 hover:bg-card/70">
       <div className="flex items-center gap-2.5">
         <span className={cn("grid size-9 shrink-0 place-items-center rounded-xl", CHIP[s.a])}><Icon className="size-[18px]" strokeWidth={2} /></span>
         <AnimatedCounter value={s.n} formatter={nf} className="text-2xl font-semibold tracking-tight tabular-nums" />
@@ -307,53 +307,56 @@ const MarkazDashboardPage = () => {
   const scale = useScale();
   const h = (b) => Math.round(b * scale);
   return (
-    <div className="flex flex-col gap-5">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Boshqaruv markazi</h1>
-        <p className="mt-0.5 text-sm text-foreground/50">IIB · FVV · Ta'lim — yagona panel · {MAHALLA} · kartani/chartni bossangiz — manba sahifa ochiladi</p>
-      </div>
+    <div className="mx-[calc(50%-50vw)] w-screen overflow-x-hidden px-4 md:px-6 2xl:px-10">
+      <div className="mx-auto flex max-w-[2100px] flex-col gap-5">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">Boshqaruv markazi</h1>
+          <p className="mt-0.5 text-sm text-foreground/50">IIB · FVV · Ta'lim — yagona panel · {MAHALLA} · kartani/chartni bossangiz — manba sahifa ochiladi</p>
+        </div>
 
-      <div className="grid gap-5 xl:grid-cols-2">
-        {/* 1 — Umumiy ma'lumotlar (faqat qiymatli kartalar) */}
-        <GlassChartCard title="Umumiy ma'lumotlar" insight="Mahalla bo'yicha kalit ko'rsatkichlar">
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">{STATS.map((s) => <StatTile key={s.lab} s={s} />)}</div>
-        </GlassChartCard>
+        {/* 4 grid — 2 qator × 2 ustun */}
+        <div className="grid gap-5 xl:grid-cols-2">
+          {/* 1 — Umumiy ma'lumotlar (faqat qiymatli kartalar) */}
+          <GlassChartCard title="Umumiy ma'lumotlar" insight="Mahalla bo'yicha kalit ko'rsatkichlar" bodyClassName="flex">
+            <div className="grid h-full w-full grid-cols-2 gap-3 [grid-auto-rows:1fr]">{STATS.map((s) => <StatTile key={s.lab} s={s} />)}</div>
+          </GlassChartCard>
 
-        {/* 2 — Statistikalar (2 qator + xavf gauge) — 3 xil chart type */}
-        <GlassChartCard title="Statistikalar" insight="Ta'lim · IIB · FVV kesimida">
-          <div className="flex flex-col gap-4">
-            {/* 1-qator: Ta'lim — maktablar davomat foizi (vertikal bar) */}
-            <ChartBlock to="/owner/talim" hoverColor="#10b981">
-              <StatRow icon={School} color="#10b981" title="Ta'lim — maktablar davomat foizi" kpi="94.6%" />
-              <SchoolBars height={h(170)} />
-            </ChartBlock>
-            {/* 2-qator: IIB (proporsiya) + FVV (yong'in tekshiruvi donut) */}
-            <div className="grid gap-4 lg:grid-cols-2">
-              <ChartBlock to="/owner/iib" hoverColor="#ef4444">
-                <StatRow icon={ShieldAlert} color="#ef4444" title="IIB — oilalar tahlili" kpi="1 240 oila" />
-                <div style={{ minHeight: h(150) }}><ProportionBar items={IIB_ITEMS} barH={h(28)} /></div>
+          {/* 2 — Statistikalar */}
+          <GlassChartCard title="Statistikalar" insight="Ta'lim · IIB · FVV kesimida">
+            <div className="flex flex-col gap-4">
+              {/* 1-qator: Ta'lim — maktablar davomat foizi (vertikal bar) */}
+              <ChartBlock to="/owner/talim" hoverColor="#10b981">
+                <StatRow icon={School} color="#10b981" title="Ta'lim — maktablar davomat foizi" kpi="94.6%" />
+                <SchoolBars height={h(180)} />
               </ChartBlock>
+              {/* 2-qator: IIB (proporsiya) + FVV (yong'in tekshiruvi donut) */}
+              <div className="grid gap-4 lg:grid-cols-2">
+                <ChartBlock to="/owner/iib" hoverColor="#ef4444">
+                  <StatRow icon={ShieldAlert} color="#ef4444" title="IIB — oilalar tahlili" kpi="1 240 oila" />
+                  <div style={{ minHeight: h(150) }}><ProportionBar items={IIB_ITEMS} barH={h(28)} /></div>
+                </ChartBlock>
+                <ChartBlock to="/owner/fvv" hoverColor="#f59e0b">
+                  <StatRow icon={Flame} color="#f59e0b" title="FVV — yong'in tekshiruvi" kpi="1 240 oila" />
+                  <DonutChart data={[{ key: "yaxshi", value: 980 }, { key: "qoniqarsiz", value: 187 }, { key: "tekshirilmagan", value: 73 }]} labelMap={{ yaxshi: "Yaxshi o'tgan", qoniqarsiz: "Qoniqarsiz", tekshirilmagan: "Tekshirilmagan" }} colors={["#10b981", "#f59e0b", "#ef4444"]} height={h(210)} />
+                </ChartBlock>
+              </div>
+              {/* 3-qator: FVV — umumiy xavf darajasi (gauge) */}
               <ChartBlock to="/owner/fvv" hoverColor="#f59e0b">
-                <StatRow icon={Flame} color="#f59e0b" title="FVV — yong'in tekshiruvi" kpi="1 240 oila" />
-                <DonutChart data={[{ key: "yaxshi", value: 980 }, { key: "qoniqarsiz", value: 187 }, { key: "tekshirilmagan", value: 73 }]} labelMap={{ yaxshi: "Yaxshi o'tgan", qoniqarsiz: "Qoniqarsiz", tekshirilmagan: "Tekshirilmagan" }} colors={["#10b981", "#f59e0b", "#ef4444"]} height={h(200)} />
+                <StatRow icon={AlertTriangle} color="#f59e0b" title="FVV — umumiy xavf darajasi" kpi="O'rta" />
+                <RiskGauge value={55} height={h(160)} />
               </ChartBlock>
             </div>
-            {/* 3-qator: FVV — umumiy xavf darajasi (gauge) */}
-            <ChartBlock to="/owner/fvv" hoverColor="#f59e0b">
-              <StatRow icon={AlertTriangle} color="#f59e0b" title="FVV — umumiy xavf darajasi" kpi="O'rta" />
-              <RiskGauge value={55} height={h(150)} />
-            </ChartBlock>
-          </div>
-        </GlassChartCard>
+          </GlassChartCard>
 
-        {/* 3 — Barcha kameralar */}
-        <GridKameralar />
+          {/* 3 — Barcha kameralar */}
+          <GridKameralar />
 
-        {/* 4 — Bildirishnomalar */}
-        <GridNotif />
+          {/* 4 — Bildirishnomalar */}
+          <GridNotif />
+        </div>
+
+        <p className="text-xs text-foreground/40">Barcha ko'rsatkichlar — <b>namunaviy (demo)</b>.</p>
       </div>
-
-      <p className="text-xs text-foreground/40">Barcha ko'rsatkichlar — <b>namunaviy (demo)</b>.</p>
     </div>
   );
 };
