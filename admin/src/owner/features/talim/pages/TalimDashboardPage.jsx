@@ -156,7 +156,24 @@ const TalimDashboardPage = () => {
   const [entered, setEntered] = useState(2387);
   const out = useCountUp(M.outOfSchool); const cov = useCountUp(+(((M.children6_18 - M.outOfSchool) / M.children6_18) * 100).toFixed(1), 1500); const kids = useCountUp(M.children6_18, 1500); const chr = useCountUp(M.chronic);
 
-  const sankey = useMemo(() => { const red = { itemStyle: { color: T.alarm }, label: { color: T.alarm } }; return { backgroundColor: "transparent", tooltip: { trigger: "item", ...tip }, series: [{ type: "sankey", left: 6, right: 130, top: 12, bottom: 12, nodeWidth: 13, nodeGap: 13, emphasis: { focus: "adjacency" }, draggable: false, label: { color: T.text, fontSize: 11 }, lineStyle: { color: "gradient", curveness: .5, opacity: .42 }, data: [{ name: "Bolalar 6–18", itemStyle: { color: T.gold } }, { name: "Maktabda o'qiyapti", itemStyle: { color: T.green } }, { name: "Maktabgacha tayyorlov", itemStyle: { color: T.teal } }, { name: "⚠ Chetda qolgan", ...red }, { name: "9-sinfni tugatdi", itemStyle: { color: T.gold } }, { name: "10-sinf (akademik)", itemStyle: { color: T.green } }, { name: "Kollej / texnikum", itemStyle: { color: T.teal } }, { name: "⚠ Hech qayerda", ...red }], links: [{ source: "Bolalar 6–18", target: "Maktabda o'qiyapti", value: 2540 }, { source: "Bolalar 6–18", target: "Maktabgacha tayyorlov", value: 109 }, { source: "Bolalar 6–18", target: "⚠ Chetda qolgan", value: 31, lineStyle: { color: T.alarm, opacity: .65 } }, { source: "Maktabda o'qiyapti", target: "9-sinfni tugatdi", value: 224 }, { source: "9-sinfni tugatdi", target: "10-sinf (akademik)", value: 150 }, { source: "9-sinfni tugatdi", target: "Kollej / texnikum", value: 65 }, { source: "9-sinfni tugatdi", target: "⚠ Hech qayerda", value: 9, lineStyle: { color: T.alarm, opacity: .65 } }] }] }; }, []);
+  const sankey = useMemo(() => {
+    const node = (name, val, color, kids) => ({ name: `${name}  ·  ${fmt(val)}`, value: val, itemStyle: { color, borderColor: color, borderWidth: 1 }, label: { color }, ...(kids ? { children: kids } : {}) });
+    const tree = {
+      name: `Bolalar 6–18  ·  ${fmt(M.children6_18)}`, value: M.children6_18, itemStyle: { color: T.gold, borderColor: T.gold }, label: { position: "top", distance: 9, color: T.gold, fontWeight: 700 },
+      children: [
+        node("Maktabda o'qiyapti", 2540, T.green, [
+          node("9-sinfni tugatdi", 224, T.gold, [
+            node("10-sinf (akademik)", 150, T.green),
+            node("Kollej / texnikum", 65, T.teal),
+            node("⚠ Hech qayerda", 9, T.alarm),
+          ]),
+        ]),
+        node("Maktabgacha tayyorlov", 109, T.teal),
+        node("⚠ Chetda qolgan", 31, T.alarm),
+      ],
+    };
+    return { backgroundColor: "transparent", tooltip: { trigger: "item", triggerOn: "mousemove", ...tip, formatter: (p) => `${p.name.split("·")[0].trim()}<br/><b>${fmt(p.value)}</b> bola` }, series: [{ type: "tree", left: 92, right: 150, top: 22, bottom: 16, layout: "orthogonal", orient: "LR", roam: false, expandAndCollapse: false, initialTreeDepth: -1, symbol: "circle", symbolSize: 12, edgeShape: "curve", edgeForkPosition: "55%", lineStyle: { color: "rgba(125,150,170,.45)", width: 1.6 }, label: { position: "right", distance: 8, color: T.text, fontSize: 11.5, fontWeight: 600 }, leaves: { label: { position: "right", distance: 8 } }, emphasis: { focus: "relative" }, animationDuration: 700, data: [tree] }] };
+  }, []);
   const radar = useMemo(() => { const rings = [["9-dan keyin", 96, T.gold], ["O'rta", 97, T.teal], ["Boshlang'ich", 99, T.green], ["Maktabgacha", 78, T.amber]]; return { backgroundColor: "transparent", series: rings.map((r, i) => ({ type: "gauge", startAngle: 90, endAngle: -270, radius: `${92 - i * 18}%`, center: ["50%", "52%"], pointer: { show: false }, progress: { show: true, roundCap: true, width: 8, itemStyle: { color: r[2] } }, axisLine: { lineStyle: { width: 8, color: [[1, "rgba(255,255,255,.06)"]] } }, splitLine: { show: false }, axisTick: { show: false }, axisLabel: { show: false }, data: [{ value: r[1] }], detail: { show: false } })) }; }, []);
   const trend = useMemo(() => lineOpt(trend30(1).slice(30 - days), Array.from({ length: days }, (_, i) => dayLabel(days - 1 - i)), T.teal), [days]);
   const classes = useMemo(() => barOpt(Array.from({ length: 11 }, (_, i) => i + 1), classDist(2860, 1), T.teal), []);
@@ -176,7 +193,7 @@ const TalimDashboardPage = () => {
           {[["Umumiy qamrov", `${cov.toFixed(1)}%`, T.green], ["Jami bola (6–18)", fmt(kids), T.text], ["Surunkali kelmaydigan", fmt(chr), T.amber]].map(([l, v, c], i) => <div className="tcc-kpi" key={i}><div className="lab">{l}</div><div className="val" style={{ color: c }}>{v}</div></div>)}
         </div>
         <div className="tcc-grid" style={{ marginBottom: 14 }}>
-          <EPanel className="tcc-c8" delay={120} height={360} title="Bola qayoqqa ketadi — oqim" subtitle="6–18 yosh · maktab → 9-sinfdan keyin" option={sankey} note={<span><span className="tcc-pill">namunaviy</span> &nbsp;Qizil tarmoqlar — chetda qolgan / hech qayerda</span>} />
+          <EPanel className="tcc-c8" delay={120} height={360} title="Bola qayoqqa ketadi — oqim" subtitle="6–18 yosh · maktab → 9-sinfdan keyin (daraxt)" option={sankey} note={<span><span className="tcc-pill">namunaviy</span> &nbsp;Qizil tugunlar — chetda qolgan / hech qayerda</span>} />
           <div className="tcc-card tcc-c4" style={{ animationDelay: "220ms" }}><div className="hd"><div><div className="t">Tirik mahalla — qamrov</div><div className="s">Bloklar (hex)</div></div></div><HexGrid /><div className="tcc-note"><span className="tcc-pill">namunaviy · qizil = past qamrov</span></div></div>
         </div>
         <div className="tcc-grid">
