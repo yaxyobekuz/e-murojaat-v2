@@ -7,11 +7,13 @@ import { useSuyuqGazAnalytics } from "../hooks/useSuyuqGazAnalytics";
 import SuyuqGazFilters from "../components/SuyuqGazFilters";
 import KpiStrip from "../components/KpiStrip";
 import StreetTable from "../components/StreetTable";
+import SuyuqGazFleetMap from "../components/SuyuqGazFleetMap";
+import DeliveryLogPanel from "../components/DeliveryLogPanel";
 
 const labelOf = (data) => (key) => data.find((d) => d.key === key)?.label || key;
 
 const SuyuqGazDashboardPage = () => {
-  const { state, setField } = useObjectState({ streetId: "" });
+  const { state, setField } = useObjectState({ streetId: "", truckId: "" });
   const { data: summary } = useSuyuqGazAnalytics("summary", { streetId: state.streetId });
   const { data: delivery } = useSuyuqGazAnalytics("deliveryTrend", { streetId: state.streetId });
   const { data: sources } = useSuyuqGazAnalytics("sources");
@@ -34,6 +36,18 @@ const SuyuqGazDashboardPage = () => {
       </div>
 
       <KpiStrip summary={summary} />
+
+      <GlassChartCard
+        title="Ballon yetkazib beruvchi mashinalar — jonli kuzatuv"
+        insight="Mashina marshrut bo'ylab harakatlanadi; to'xtash nuqtasi yashil bo'lsa — ballon almashtirilgan (kelgan/ketgan vaqt o'ngdagi panelda)"
+      >
+        <div className="grid gap-4 lg:grid-cols-[1fr_320px]">
+          <SuyuqGazFleetMap selectedTruckId={state.truckId} onSelectTruck={(id) => setField("truckId", id)} />
+          <div className="lg:max-h-[460px] lg:overflow-y-auto lg:pr-1">
+            <DeliveryLogPanel selectedTruckId={state.truckId} onSelectTruck={(id) => setField("truckId", id)} />
+          </div>
+        </div>
+      </GlassChartCard>
 
       <div className="grid gap-4 lg:grid-cols-2">
         <GlassChartCard
