@@ -82,6 +82,8 @@ const CSS = `
 @keyframes tccFeedIn{from{opacity:0;transform:translateX(-12px)}}
 .tcc-split{display:grid;grid-template-columns:minmax(300px,360px) 1fr;gap:14px;margin-bottom:16px}
 @media(max-width:960px){.tcc-split{grid-template-columns:1fr}}
+.mkz-2x2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media(max-width:1000px){.mkz-2x2{grid-template-columns:1fr}}
 .tcc-live{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:700;letter-spacing:.6px;color:#2DD4BF}
 .tcc-live i{width:8px;height:8px;border-radius:50%;background:#2DD4BF;box-shadow:0 0 8px #2DD4BF;animation:tccBlink 1.1s infinite}
 @keyframes tccBlink{50%{opacity:.25}}
