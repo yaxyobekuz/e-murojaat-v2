@@ -53,8 +53,48 @@ const APPEAL_STATUSES = [
   { key: "bajarildi", label: "Bajarildi", tone: "success" },
   { key: "rad", label: "Rad etildi", tone: "danger" },
 ];
+// Tomorqa ekinlari — sotixiga o'rtacha hosil (kg) va kg narxi (so'm)
+const GARDEN_CROPS = [
+  { name: "Kartoshka", emoji: "🥔", perSotix: 250, price: 4500 },
+  { name: "Pomidor", emoji: "🍅", perSotix: 400, price: 6000 },
+  { name: "Bodring", emoji: "🥒", perSotix: 350, price: 5000 },
+  { name: "Piyoz", emoji: "🧅", perSotix: 300, price: 3500 },
+  { name: "Sabzi", emoji: "🥕", perSotix: 320, price: 4000 },
+  { name: "Karam", emoji: "🥬", perSotix: 450, price: 3000 },
+  { name: "Sarimsoq", emoji: "🧄", perSotix: 120, price: 18000 },
+  { name: "Bulg'or qalampiri", emoji: "🫑", perSotix: 280, price: 9000 },
+];
+// Chorva turlari
+const LIVESTOCK_TYPES = [
+  { key: "qoramol", label: "Qoramol", emoji: "🐄" },
+  { key: "qoy", label: "Qo'y / Echki", emoji: "🐑" },
+  { key: "parranda", label: "Parrandalar", emoji: "🐔" },
+  { key: "asalari", label: "Asalari (uya)", emoji: "🐝" },
+];
 
 export const fmt = (v) => Math.round(v).toLocaleString("uz-UZ").replace(/,/g, " ");
+
+// Date.now() seedда mavjud emas — sanani sobit "baza"dan (2026-06-01) kun surib hosil qilamiz.
+const MONTHS_UZ = ["yan", "fev", "mar", "apr", "may", "iyun", "iyul", "avg", "sen", "okt", "noy", "dek"];
+const BASE = { y: 2026, m: 5, d: 1 }; // 0-indexli oy (iyun)
+const DIM = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+const ymd = (y, m, d) => `${String(d).padStart(2, "0")} ${MONTHS_UZ[m]} ${y}`;
+// offset > 0 → o'tmish (kun oldin), offset < 0 → kelajak (kun keyin)
+const dateOffset = (offset) => {
+  let { y, m, d } = BASE;
+  let rem = offset;
+  while (rem > 0) { // o'tmishga
+    if (d > rem) { d -= rem; rem = 0; }
+    else { rem -= d; m -= 1; if (m < 0) { m = 11; y -= 1; } d = DIM[m]; }
+  }
+  while (rem < 0) { // kelajakka
+    const dim = DIM[m];
+    if (d - rem <= dim) { d -= rem; rem = 0; }
+    else { rem += dim - d + 1; d = 1; m += 1; if (m > 11) { m = 0; y += 1; } }
+  }
+  return ymd(y, m, d);
+};
+const dateBefore = (days) => dateOffset(days);
 
 const buildHouse = (rnd, el = {}) => {
   const female = rnd() < 0.5;
@@ -139,6 +179,183 @@ const buildHouse = (rnd, el = {}) => {
     rejected: appeals.filter((a) => a.status.key === "rad").length,
   };
 
+  // oylik sarf (kommunal tabda ham, xizmatlar tabda ham ishlatiladi)
+  // gaz oyiga 18-55 m³ — 500 m³ yillik limit mazmunli bo'lishi uchun real daraja
+  const consumptionGas = ri(rnd, 18, 55); // m³
+  const consumptionElec = ri(rnd, 120, 650); // kVt·soat — 200 norma, 350+ da quyosh tavsiyasi
+  const consumptionWater = ri(rnd, 6, 28); // m³
+  const gasMonthly = consumptionGas;
+
+  // ===== Xizmatlar =====
+  // Internet
+  const hasInternet = rnd() < 0.78;
+  const internet = {
+    connected: hasInternet,
+    provider: hasInternet ? pick(rnd, ["Uztelecom", "Beeline", "UMS", "Comnet", "Sarkor"]) : null,
+    tech: hasInternet ? pick(rnd, ["FTTB (optika)", "ADSL", "4G/LTE", "GPON"]) : null,
+    speed: hasInternet ? pick(rnd, [10, 20, 30, 50, 100, 200]) : 0,
+    quality: hasInternet ? ri(rnd, 55, 99) : 0,
+  };
+  // Gaz — tabiiy yoki suyultirilgan
+  const naturalGas = rnd() < 0.62;
+  const gas = naturalGas
+    ? {
+        type: "natural",
+        typeLabel: "Tabiiy gaz",
+        monthly: gasMonthly, // m³
+        limit: 500, // 500 m³ limit
+        meter: `GM-${ri(rnd, 100000, 999999)}`,
+        pressure: pick(rnd, ["Normal", "Past", "Yuqori"]),
+      }
+    : (() => {
+        // ballon har 30 kunda yetkaziladi (Obodonlashtirish kabi izchil sana mantiqi)
+        const CYCLE = 30;
+        const sinceDelivery = ri(rnd, 0, CYCLE - 1); // oxirgi yetkazib berishdan nechi kun o'tdi
+        const daysUntilNext = CYCLE - sinceDelivery; // keyingisigacha qolgan kun
+        return {
+          type: "lpg",
+          typeLabel: "Suyultirilgan gaz (ballon)",
+          cylinders: gasCylinders,
+          cycleDays: CYCLE,
+          sinceDelivery,
+          lastDelivery: dateOffset(sinceDelivery), // o'tmish
+          nextDue: daysUntilNext,
+          nextDelivery: dateOffset(-daysUntilNext), // kelajak (oxirgi + 30 kun)
+          provider: pick(rnd, ["Hududgaz", "Mahalliy yetkazib beruvchi"]),
+        };
+      })();
+  // Elektr — sarf, 200 kVt limit, quyosh panel
+  const elecUsage = consumptionElec; // kVt·soat
+  const elecNorm = 200; // ijtimoiy norma 200 kVt
+  const hasSolar = elecUsage > 300 ? rnd() < 0.5 : rnd() < 0.12;
+  const solar = hasSolar
+    ? {
+        installed: true,
+        capacity: pick(rnd, [3, 5, 8, 10]), // kVt panel
+        generated: ri(rnd, 180, 700), // oyiga kVt
+        selling: rnd() < 0.7,
+        sold: 0, // pastda
+      }
+    : { installed: false };
+  if (hasSolar && solar.selling) solar.sold = ri(rnd, 40, Math.max(60, solar.generated - 100));
+  const electric = {
+    usage: elecUsage,
+    norm: elecNorm,
+    overNorm: Math.max(0, elecUsage - elecNorm),
+    recommendSolar: elecUsage > 350 && !hasSolar,
+    solar,
+  };
+  // Obodonlashtirish — axlat mashinasi
+  const trashDays = ri(rnd, 0, 6); // necha kun oldin olib ketildi (filter ham shuni ishlatadi)
+  const sanitation = {
+    daysSince: trashDays,
+    lastPickup: dateBefore(trashDays),
+    schedule: pick(rnd, ["Har kuni", "Dush/Chor/Shan", "Yakshanba/Chorshanba"]),
+    nextPickup: pick(rnd, ["Ertaga", "Bugun", "2 kundan keyin"]),
+    bins: ri(rnd, 1, 4),
+  };
+
+  // ===== Xavfsizlik =====
+  // 80% ehtimol bilan yong'in xavfi past, 15% o'rta, 5% yuqori
+  const fireRoll = rnd();
+  const fireRisk = fireRoll < 0.8 ? ri(rnd, 4, 27) : fireRoll < 0.95 ? ri(rnd, 32, 56) : ri(rnd, 62, 85);
+  // xulosa xavf darajasiga MOS bo'ladi
+  const fireFindings = {
+    success: [
+      "Elektr simlari yangilangan, muammo aniqlanmadi",
+      "Gaz uskunasi tekshirildi, holat yaxshi",
+      "Yong'in xavfsizligi qoidalariga to'liq rioya etilmoqda",
+      "O't o'chirgich joyida va muddati amalda — holat barqaror",
+    ],
+    warning: [
+      "Elektr rozetkalarida ortiqcha yuk belgilari bor",
+      "O't o'chirgich muddati yaqinlashmoqda — almashtirish tavsiya etiladi",
+      "Gaz uskunasini profilaktik tekshirish lozim",
+      "Chiqish yo'llari qisman to'silgan — bartaraf etish kerak",
+    ],
+    danger: [
+      "Eskirgan elektr simlari aniqlandi — zudlik bilan almashtirish shart",
+      "O't o'chirgich mavjud emas yoki muddati o'tgan",
+      "Gaz uskunasida nosozlik belgilari — favqulodda tekshiruv talab etiladi",
+      "Yong'in xavfsizligi qoidalari jiddiy buzilgan",
+    ],
+  };
+  const fireTone = fireRisk < 30 ? "success" : fireRisk < 60 ? "warning" : "danger";
+  const fire = {
+    risk: fireRisk,
+    status: fireRisk < 30 ? "Past xavf" : fireRisk < 60 ? "O'rtacha xavf" : "Yuqori xavf",
+    tone: fireTone,
+    lastInspection: dateBefore(ri(rnd, 20, 300)),
+    findings: pick(rnd, fireFindings[fireTone]),
+    inspector: {
+      name: `${pick(rnd, FAMILY_NAMES)} ${pick(rnd, FIRST_NAMES)[0]}.`,
+      title: pick(rnd, ["FVV inspektori", "Yong'in xavfsizligi nazoratchisi", "FVV bo'lim mutaxassisi"]),
+      phone: `+998 ${pick(rnd, ["90", "91", "93", "94", "97", "99"])} ${ri(rnd, 100, 999)}-${ri(rnd, 10, 99)}-${ri(rnd, 10, 99)}`,
+      department: `${ri(rnd, 1, 12)}-son FVV bo'limi`,
+    },
+  };
+  // Jinoyatlar — 90% ijobiy (jinoyat yo'q)
+  const clean = rnd() < 0.9;
+  const crime = {
+    clean,
+    count: clean ? 0 : ri(rnd, 1, 3),
+    lastIncident: clean ? null : { type: pick(rnd, ["Mayda bezorilik", "Mol-mulkka shikast", "Maishiy nizo"]), date: dateBefore(ri(rnd, 30, 360)), resolved: rnd() < 0.8 },
+    inspector: {
+      name: `${pick(rnd, FAMILY_NAMES)} ${pick(rnd, FIRST_NAMES)[0]}.`,
+      title: "Mahalla profilaktika inspektori",
+      phone: `+998 ${pick(rnd, ["90", "91", "93", "94", "97", "99"])} ${ri(rnd, 100, 999)}-${ri(rnd, 10, 99)}-${ri(rnd, 10, 99)}`,
+    },
+  };
+
+  // ===== Tomorqa va Chorvachilik =====
+  // yiliga foydalanish: 20% 1 marta, 50% 2 marta, 20% 3 marta, 10% foydalanilmaydi
+  const farmRoll = rnd();
+  const harvestsPerYear = farmRoll < 0.1 ? 0 : farmRoll < 0.3 ? 1 : farmRoll < 0.8 ? 2 : 3;
+  const SEASONS = ["Bahorgi", "Yozgi", "Kuzgi"];
+  const usedCrops = [];
+  const harvests = Array.from({ length: harvestsPerYear }, (_, i) => {
+    let crop = pick(rnd, GARDEN_CROPS);
+    let guard = 0;
+    while (usedCrops.includes(crop.name) && guard++ < 6) crop = pick(rnd, GARDEN_CROPS);
+    usedCrops.push(crop.name);
+    const sotix = ri(rnd, 1, 6);
+    const yieldKg = Math.round(sotix * crop.perSotix * (ri(rnd, 80, 120) / 100)); // ±20%
+    const income = yieldKg * crop.price;
+    return {
+      order: i + 1,
+      season: SEASONS[i] || `${i + 1}-ekin`,
+      crop: crop.name,
+      emoji: crop.emoji,
+      sotix,
+      yieldKg,
+      pricePerKg: crop.price,
+      income,
+    };
+  });
+  const gardenArea = harvests.length ? Math.max(...harvests.map((h) => h.sotix)) : ri(rnd, 0, 5);
+  const totalHarvestKg = harvests.reduce((s, h) => s + h.yieldKg, 0);
+  const totalFarmIncome = harvests.reduce((s, h) => s + h.income, 0);
+
+  // Chorva — turlarga ko'ra son
+  const livestock = [
+    { ...LIVESTOCK_TYPES[0], count: rnd() < 0.55 ? ri(rnd, 1, 6) : 0 },
+    { ...LIVESTOCK_TYPES[1], count: rnd() < 0.5 ? ri(rnd, 2, 25) : 0 },
+    { ...LIVESTOCK_TYPES[2], count: rnd() < 0.7 ? ri(rnd, 3, 40) : 0 },
+    { ...LIVESTOCK_TYPES[3], count: rnd() < 0.18 ? ri(rnd, 1, 12) : 0 },
+  ];
+  const hasLivestock = livestock.some((l) => l.count > 0);
+
+  const farming = {
+    hasGarden: harvestsPerYear > 0,
+    harvestsPerYear,
+    gardenArea,
+    harvests,
+    totalHarvestKg,
+    totalFarmIncome,
+    livestock,
+    hasLivestock,
+  };
+
   return {
     title: multi ? "Ko'p qavatli turar-joy" : `${ownerSurname}lar honadoni`,
     subtitle: `Fidokor ko'chasi, ${houseNo}-uy`,
@@ -205,7 +422,10 @@ const buildHouse = (rnd, el = {}) => {
       { name: "Suv", on: rnd() < 0.85 },
       { name: "Internet", on: rnd() < 0.7 },
     ],
-    consumption: { gas: ri(rnd, 40, 320), elec: ri(rnd, 120, 650), water: ri(rnd, 6, 28) },
+    consumption: { gas: consumptionGas, elec: consumptionElec, water: consumptionWater },
+    services: { internet, gas, electric, sanitation },
+    safety: { fire, crime },
+    farming,
     debts: debtModules,
     taxes: [
       { name: "Mol-mulk solig'i", amount: Math.round(annualTax * 0.6), paid: !hasTaxDebt || rnd() < 0.5 },
@@ -301,4 +521,89 @@ export const elementInfo = (el) => {
   const rnd = seeded(el.id);
   const data = (BUILDERS[el.type] || buildHouse)(rnd, el);
   return { ...data, type: el.type, typeMeta: ELEMENT_TYPES[el.type], id: el.id, cadastre: cadastreNo(el.id) };
+};
+
+// ===== Xarita filtrlari (xonadonni status rangiga bo'yash) =====
+// statusOf(info) → "success" (yashil) | "warning" (sariq) | "danger" (qizil)
+export const STATUS_TONES = {
+  success: { color: "#22c55e", label: "Yaxshi" },
+  warning: { color: "#f59e0b", label: "O'rtacha" },
+  danger: { color: "#ef4444", label: "Yomon" },
+};
+// Mapbox feature-state uchun raqamli kod
+export const TONE_CODE = { success: 1, warning: 2, danger: 3 };
+
+export const MAP_FILTERS = [
+  {
+    key: "tax",
+    label: "Soliq & MIB qarz",
+    icon: "Coins",
+    legend: { success: "Qarzi yo'q", warning: "Qisman qarz", danger: "Katta qarz" },
+    statusOf: (i) => {
+      const debt = (i.tax?.taxDebt || 0) + (i.tax?.mibDebt || 0);
+      if (debt === 0) return "success";
+      return debt > 1_000_000 ? "danger" : "warning";
+    },
+  },
+  {
+    key: "farming",
+    label: "Tomorqa",
+    icon: "Sprout",
+    legend: { success: "3 marta", warning: "1-2 marta", danger: "Foydalanilmaydi" },
+    statusOf: (i) => {
+      const n = i.farming?.harvestsPerYear || 0;
+      if (n >= 3) return "success";
+      return n >= 1 ? "warning" : "danger";
+    },
+  },
+  {
+    key: "electric",
+    label: "Tok limiti",
+    icon: "Zap",
+    legend: { success: "Norma ichida", warning: "200-350 kVt", danger: "350+ kVt" },
+    statusOf: (i) => {
+      const u = i.services?.electric?.usage || 0;
+      if (u <= 200) return "success";
+      return u <= 350 ? "warning" : "danger";
+    },
+  },
+  {
+    key: "fire",
+    label: "Yong'in xavfi",
+    icon: "FlameKindling",
+    legend: { success: "Past xavf", warning: "O'rtacha", danger: "Yuqori xavf" },
+    statusOf: (i) => i.safety?.fire?.tone || "success",
+  },
+  {
+    key: "sanitation",
+    label: "Chiqindi davri",
+    icon: "Trash2",
+    legend: { success: "2 kun ichida", warning: "3-4 kun", danger: "5+ kun" },
+    statusOf: (i) => {
+      const days = i.services?.sanitation?.daysSince ?? 0;
+      if (days <= 2) return "success";
+      return days <= 4 ? "warning" : "danger";
+    },
+  },
+  {
+    key: "gas",
+    label: "Gaz ta'minoti",
+    icon: "Flame",
+    legend: { success: "Tabiiy gaz", warning: "Ballon (yetarli)", danger: "Ballon (kam)" },
+    statusOf: (i) => {
+      const g = i.services?.gas;
+      if (!g) return "success";
+      if (g.type === "natural") return "success";
+      return g.nextDue > 10 ? "warning" : "danger";
+    },
+  },
+];
+
+// element uchun faol filter bo'yicha status tone
+export const filterStatusOf = (el, filterKey) => {
+  const f = MAP_FILTERS.find((x) => x.key === filterKey);
+  if (!f) return null;
+  const info = elementInfo(el);
+  if (!info) return null;
+  return f.statusOf(info);
 };

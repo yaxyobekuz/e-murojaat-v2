@@ -13,7 +13,7 @@ import { attachInteractions } from "../data/mapInteractions";
 
 const styleOf = (id) => BASEMAPS.find((b) => b.id === id)?.style;
 
-const MahallaMap = ({ selectedId, onSelect, onHover }) => {
+const MahallaMap = ({ selectedId, activeFilter, onSelect, onHover }) => {
   const hostRef = useRef(null);
   const mapRef = useRef(null);
   const interactRef = useRef(null);
@@ -53,6 +53,11 @@ const MahallaMap = ({ selectedId, onSelect, onHover }) => {
   useEffect(() => {
     if (!selectedId && interactRef.current) interactRef.current.clearSelection();
   }, [selectedId]);
+
+  // faol filter o'zgarsa — xaritani status rangiga bo'yaymiz
+  useEffect(() => {
+    if (state.status === "ready") interactRef.current?.applyFilter(activeFilter);
+  }, [activeFilter, state.status]);
 
   const orbit = () => {
     const map = mapRef.current;

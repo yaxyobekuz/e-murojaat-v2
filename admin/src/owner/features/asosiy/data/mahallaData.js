@@ -77,3 +77,22 @@ export const BOTTOM_STATS = [
   { label: "Hal qilingan murojaat", value: "61%", tone: "warning" },
   { label: "Ko'chmas mulk bitimlari", value: "47", tone: "info" },
 ];
+
+// ===== Chap panel — kamera kuzatuvi (2×2) =====
+// demo video oqimlari (ochiq namuna manbalar)
+export const CAMERAS = [
+  { id: "cam1", label: "Bobur ko'chasi · kirish", src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" },
+  { id: "cam2", label: "Oltinko'l · chiqish", src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4" },
+  { id: "cam3", label: "Markaziy ko'cha", src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4" },
+  { id: "cam4", label: "Bozor maydoni", src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4" },
+];
+
+// ===== Chap panel — jonli operativ ko'rsatkichlar =====
+export const LIVE_FEEDS = [
+  { key: "murojaat", label: "Bugungi murojaatlar", value: 37, delta: +6, tone: "info", icon: "MessageSquare" },
+  { key: "favqulodda", label: "Favqulodda holatlar", value: 2, delta: -1, tone: "danger", icon: "Siren" },
+  { key: "msk", label: "MSK buyurtmalar", value: 18, delta: +4, tone: "success", icon: "ClipboardList" },
+  { key: "davomat", label: "Darsdan qolganlar", value: 23, delta: +9, tone: "warning", icon: "GraduationCap", sub: "doimiy davomatsiz" },
+  { key: "transport", label: "Begona transportlar", value: 11, delta: +3, tone: "warning", icon: "Car" },
+  { key: "qidiruv", label: "Qidiruvdagi shaxslar", value: 4, delta: 0, tone: "danger", icon: "UserSearch" },
+];

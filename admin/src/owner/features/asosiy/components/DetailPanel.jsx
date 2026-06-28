@@ -1,10 +1,10 @@
 // Element tanlanganda — o'ng yarmida obyekt bo'yicha batafsil statistika.
 // Tepada tizimlar/yo'nalishlar bo'yicha tablar; har tab o'sha yo'nalish bo'yicha muhim ma'lumotlarni ko'rsatadi.
 import { useState } from "react";
-import { X, Flame, Zap, Droplets, Wifi, Check, AlertTriangle, LayoutGrid, Coins, Users, Wheat, Route, Factory, Building2, User, Layers, Ruler, ArrowUpNarrowWide, Wallet, MapPin, Phone, BadgeCheck, MessageSquare, Clock, Inbox, Stethoscope, Cylinder, Briefcase, UserX, HeartHandshake } from "lucide-react";
+import { X, Flame, Zap, Droplets, Wifi, Check, AlertTriangle, LayoutGrid, Coins, Users, Wheat, Route, Factory, Building2, User, Layers, Ruler, ArrowUpNarrowWide, Wallet, MapPin, Phone, BadgeCheck, MessageSquare, Clock, Inbox, Stethoscope, Cylinder, Briefcase, UserX, HeartHandshake, ShieldCheck, Sun, Trash2, Truck, Gauge, WifiOff, Lightbulb, ShieldAlert, FlameKindling, Activity, Sprout, Egg } from "lucide-react";
 
 import { cn } from "@/shared/utils/cn";
-import { elementInfo, fmt } from "../data/elementData";
+import { elementInfo, fmt, STATUS_TONES } from "../data/elementData";
 
 const TONE = {
   success: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
@@ -429,6 +429,325 @@ function AppealsTab({ info }) {
   );
 }
 
+// kategoriya sarlavhali blok (ikona + accent chiziq)
+function CatSection({ icon: Icon, title, color, badge, children }) {
+  return (
+    <div className="overflow-hidden rounded-xl border border-[rgb(var(--card-border))] bg-card/40">
+      <div className="flex items-center gap-2 border-b border-[rgb(var(--card-border))] px-3 py-2" style={{ background: `${color}10` }}>
+        <span className="grid size-6 place-items-center rounded-md" style={{ background: `${color}22`, color }}>
+          <Icon className="size-3.5" />
+        </span>
+        <p className="text-[12px] font-semibold">{title}</p>
+        {badge}
+      </div>
+      <div className="p-3">{children}</div>
+    </div>
+  );
+}
+
+function ServicesSafetyTab({ info }) {
+  const s = info.services;
+  const sec = info.safety;
+  if (!s || !sec) return <Facts facts={info.facts} />;
+  const { internet: net, gas, electric: el, sanitation: san } = s;
+  const { fire, crime } = sec;
+
+  return (
+    <div className="asosiy-stagger flex flex-col gap-3">
+      {/* ===== Internet ===== */}
+      <CatSection
+        icon={net.connected ? Wifi : WifiOff}
+        title="Internet / Wi-Fi"
+        color="#38bdf8"
+        badge={
+          <span className={cn("ml-auto rounded-md border px-1.5 py-px text-[9px] font-bold", net.connected ? TONE.success : TONE.danger)}>
+            {net.connected ? "Ulangan" : "Yo'q"}
+          </span>
+        }
+      >
+        {net.connected ? (
+          <>
+            <div className="mb-2 flex items-end gap-2">
+              <p className="text-2xl font-semibold tabular-nums text-sky-400">{net.speed}</p>
+              <p className="pb-1 text-[11px] text-foreground/45">Mbit/s · {net.tech}</p>
+            </div>
+            <div className="mb-2 grid grid-cols-2 gap-2 text-[11px]">
+              <div className="flex items-center justify-between rounded-lg bg-white/5 px-2 py-1"><span className="text-foreground/50">Provayder</span><span className="font-medium">{net.provider}</span></div>
+              <div className="flex items-center justify-between rounded-lg bg-white/5 px-2 py-1"><span className="text-foreground/50">Texnologiya</span><span className="font-medium">{net.tech}</span></div>
+            </div>
+            <LabeledBar label="Aloqa sifati" percent={net.quality} color={net.quality >= 70 ? "#10b981" : "#f59e0b"} />
+          </>
+        ) : (
+          <p className="flex items-center gap-1.5 text-[12px] text-foreground/50"><WifiOff className="size-4" /> Internetga ulanmagan</p>
+        )}
+      </CatSection>
+
+      {/* ===== Gaz ===== */}
+      <CatSection
+        icon={gas.type === "natural" ? Flame : Cylinder}
+        title="Gaz ta'minoti"
+        color="#22d3ee"
+        badge={<span className="ml-auto rounded-md border border-cyan-500/30 bg-cyan-500/15 px-1.5 py-px text-[9px] font-bold text-cyan-300">{gas.typeLabel}</span>}
+      >
+        {gas.type === "natural" ? (
+          <>
+            <div className="mb-2 flex items-end justify-between">
+              <div><p className="text-2xl font-semibold tabular-nums text-cyan-400">{fmt(gas.monthly)}</p><p className="text-[10px] text-foreground/45">m³ / oy · {gas.meter}</p></div>
+              <span className={cn("rounded-md border px-1.5 py-px text-[9px] font-bold", gas.pressure === "Normal" ? TONE.success : TONE.warning)}>Bosim: {gas.pressure}</span>
+            </div>
+            <LabeledBar label="500 m³ yillik limit" value={gas.monthly * 12} total={gas.limit} percent={Math.min(100, Math.round((gas.monthly * 12 / gas.limit) * 100))} />
+            <p className="mt-1 text-[9.5px] text-foreground/40">Yillik bashorat: {fmt(gas.monthly * 12)} m³ / {gas.limit} m³ limit</p>
+          </>
+        ) : (
+          <>
+            {/* har 30 kunlik yetkazib berish tsikli — oxirgi → keyingi izchil */}
+            <div className="mb-2 grid grid-cols-2 gap-2">
+              <div className="rounded-lg bg-white/5 p-2">
+                <p className="text-[9px] uppercase tracking-wide text-foreground/40">Oxirgi yetkazildi</p>
+                <p className="mt-0.5 text-[13px] font-semibold leading-tight text-foreground/90">{gas.lastDelivery}</p>
+                <p className="text-[9px] text-foreground/40">{gas.sinceDelivery} kun oldin</p>
+              </div>
+              <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-2">
+                <p className="text-[9px] uppercase tracking-wide text-amber-300/70">Keyingi yetkazib berish</p>
+                <p className="mt-0.5 text-[13px] font-semibold leading-tight text-amber-300">{gas.nextDelivery}</p>
+                <p className="text-[9px] text-foreground/40">{gas.nextDue} kundan keyin</p>
+              </div>
+            </div>
+
+            {/* tsikl progressi */}
+            <LabeledBar
+              label={`${gas.cycleDays} kunlik tsikl`}
+              percent={Math.round((gas.sinceDelivery / gas.cycleDays) * 100)}
+              color={gas.nextDue <= 5 ? "#ef4444" : gas.nextDue <= 12 ? "#f59e0b" : "#22c55e"}
+            />
+
+            <div className="mt-2 flex items-center justify-between text-[10px] text-foreground/45">
+              <span className="flex items-center gap-1"><Cylinder className="size-3.5 text-cyan-400" /> {gas.cylinders} ballon</span>
+              <span>Yetkazib beruvchi: {gas.provider}</span>
+            </div>
+          </>
+        )}
+      </CatSection>
+
+      {/* ===== Elektr ===== */}
+      <CatSection icon={Zap} title="Elektr energiya" color="#f59e0b">
+        <div className="mb-2 flex items-end gap-2">
+          <p className="text-2xl font-semibold tabular-nums text-amber-400">{fmt(el.usage)}</p>
+          <p className="pb-1 text-[11px] text-foreground/45">kVt·soat / oy</p>
+        </div>
+        <LabeledBar
+          label="200 kVt ijtimoiy norma"
+          value={el.usage}
+          total={el.norm}
+          percent={Math.min(100, Math.round((el.usage / el.norm) * 100))}
+          color={el.usage <= el.norm ? "#10b981" : el.usage <= 350 ? "#f59e0b" : "#ef4444"}
+        />
+        <p className="mt-1 text-[9.5px] text-foreground/40">
+          {el.usage <= el.norm ? `Norma ichida (${el.norm - el.usage} kVt qoldi)` : `Normadan ${fmt(el.overNorm)} kVt oshgan`}
+        </p>
+
+        {/* quyosh panel tavsiyasi */}
+        {el.recommendSolar && (
+          <div className="mt-2 flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-2.5 py-2">
+            <Lightbulb className="size-4 shrink-0 text-amber-400" />
+            <p className="text-[11px] leading-snug text-amber-200">Sarf 350 kVt dan oshgan — <b>quyosh paneli</b> o'rnatish tavsiya etiladi (xarajatni ~40% kamaytiradi).</p>
+          </div>
+        )}
+
+        {/* quyosh panel holati */}
+        <div className="mt-2 rounded-lg border border-[rgb(var(--card-border))] bg-white/5 p-2.5">
+          <div className="flex items-center gap-2">
+            <Sun className={cn("size-4", el.solar.installed ? "text-yellow-400" : "text-foreground/30")} />
+            <span className="text-[11px] font-medium">Quyosh paneli</span>
+            <span className={cn("ml-auto rounded-md border px-1.5 py-px text-[9px] font-bold", el.solar.installed ? TONE.success : "border-[rgb(var(--card-border))] text-foreground/45")}>
+              {el.solar.installed ? "O'rnatilgan" : "Yo'q"}
+            </span>
+          </div>
+          {el.solar.installed && (
+            <div className="mt-2 grid grid-cols-3 gap-2 text-center">
+              <div><p className="text-sm font-semibold tabular-nums text-yellow-400">{el.solar.capacity}</p><p className="text-[9px] text-foreground/40">kVt quvvat</p></div>
+              <div><p className="text-sm font-semibold tabular-nums text-emerald-400">{fmt(el.solar.generated)}</p><p className="text-[9px] text-foreground/40">ishlab chiqdi</p></div>
+              <div><p className="text-sm font-semibold tabular-nums text-sky-400">{el.solar.selling ? fmt(el.solar.sold) : "—"}</p><p className="text-[9px] text-foreground/40">tarmoqqa sotdi</p></div>
+            </div>
+          )}
+        </div>
+      </CatSection>
+
+      {/* ===== Obodonlashtirish ===== */}
+      <CatSection icon={Trash2} title="Obodonlashtirish · Axlat" color="#10b981">
+        <div className="flex items-center gap-3 rounded-lg bg-white/5 px-3 py-2.5">
+          <Truck className="size-7 shrink-0 text-emerald-400" />
+          <div className="flex-1">
+            <p className="text-[10px] text-foreground/45">Oxirgi marta axlat olib ketildi</p>
+            <p className="text-[14px] font-semibold leading-tight">{san.lastPickup}</p>
+          </div>
+        </div>
+        <div className="mt-2 grid grid-cols-3 gap-2 text-center text-[11px]">
+          <div className="rounded-lg bg-white/5 p-2"><p className="font-semibold text-foreground/85">{san.schedule}</p><p className="text-[9px] text-foreground/40">jadval</p></div>
+          <div className="rounded-lg bg-white/5 p-2"><p className="font-semibold text-emerald-400">{san.nextPickup}</p><p className="text-[9px] text-foreground/40">keyingisi</p></div>
+          <div className="rounded-lg bg-white/5 p-2"><p className="font-semibold tabular-nums text-foreground/85">{san.bins}</p><p className="text-[9px] text-foreground/40">konteyner</p></div>
+        </div>
+      </CatSection>
+
+      {/* ===== Xavfsizlik bo'limi sarlavhasi ===== */}
+      <div className="mt-1 flex items-center gap-2 px-1">
+        <ShieldCheck className="size-4 text-rose-400" />
+        <p className="text-[11px] font-bold uppercase tracking-wide text-foreground/55">Xavfsizlik</p>
+        <div className="ml-1 h-px flex-1 bg-[rgb(var(--card-border))]" />
+      </div>
+
+      {/* ===== Yong'in xavfi ===== */}
+      <CatSection
+        icon={FlameKindling}
+        title="Yong'in xavfsizligi"
+        color="#ef4444"
+        badge={<span className={cn("ml-auto rounded-md border px-1.5 py-px text-[9px] font-bold", TONE[fire.tone])}>{fire.status}</span>}
+      >
+        {/* interaktiv xavf gauge */}
+        <div className="mb-2 flex items-center gap-3">
+          <div
+            className={cn("relative grid size-16 shrink-0 place-items-center rounded-full", fire.risk >= 60 && "asosiy-risk-pulse")}
+            style={{
+              background: `conic-gradient(${fire.tone === "danger" ? "#ef4444" : fire.tone === "warning" ? "#f59e0b" : "#10b981"} ${fire.risk * 3.6}deg, rgba(255,255,255,0.08) 0deg)`,
+              "--risk-glow": fire.tone === "danger" ? "rgba(239,68,68,0.4)" : "rgba(245,158,11,0.35)",
+            }}
+          >
+            <div className="grid size-12 place-items-center rounded-full bg-[#0b0f17]">
+              <span className="text-[15px] font-bold tabular-nums" style={{ color: fire.tone === "danger" ? "#f87171" : fire.tone === "warning" ? "#fbbf24" : "#34d399" }}>{fire.risk}%</span>
+            </div>
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-[10px] text-foreground/45">Yong'in ehtimoli</p>
+            <p className="text-[13px] font-semibold leading-tight">{fire.status}</p>
+            <p className="mt-1 flex items-center gap-1 text-[10px] text-foreground/45"><Clock className="size-3" /> Tekshiruv: {fire.lastInspection}</p>
+          </div>
+        </div>
+        <div className="rounded-lg border border-[rgb(var(--card-border))] bg-white/5 px-2.5 py-2">
+          <p className="mb-0.5 text-[9.5px] uppercase tracking-wide text-foreground/40">Inspektor xulosasi</p>
+          <p className="text-[11px] leading-snug text-foreground/80">{fire.findings}</p>
+        </div>
+        <div className="mt-2">
+          <OfficerCard title="Yong'in xavfsizligi xodimi (FVV)" officer={fire.inspector} icon={ShieldAlert} accent="rose" extra={fire.inspector.department} />
+        </div>
+      </CatSection>
+
+      {/* ===== Jinoyatlar ===== */}
+      <CatSection
+        icon={crime.clean ? ShieldCheck : ShieldAlert}
+        title="Jamoat xavfsizligi (1 yil)"
+        color={crime.clean ? "#10b981" : "#ef4444"}
+        badge={<span className={cn("ml-auto rounded-md border px-1.5 py-px text-[9px] font-bold", crime.clean ? TONE.success : TONE.danger)}>{crime.clean ? "Toza" : `${crime.count} holat`}</span>}
+      >
+        {crime.clean ? (
+          <div className="flex items-center gap-2.5 rounded-lg border border-emerald-500/20 bg-emerald-500/5 px-3 py-2.5">
+            <Activity className="size-5 shrink-0 text-emerald-400" />
+            <p className="text-[12px] text-emerald-300">So'nggi 1 yilda jinoyat qayd etilmagan — barqaror holat.</p>
+          </div>
+        ) : (
+          <div className="rounded-lg border border-red-500/20 bg-red-500/5 px-3 py-2.5">
+            <div className="flex items-center justify-between">
+              <span className="text-[12px] font-semibold text-red-300">{crime.lastIncident.type}</span>
+              <span className={cn("rounded-md border px-1.5 py-px text-[9px] font-bold", crime.lastIncident.resolved ? TONE.success : TONE.warning)}>{crime.lastIncident.resolved ? "Hal qilingan" : "Ko'rib chiqilmoqda"}</span>
+            </div>
+            <p className="mt-1 flex items-center gap-1 text-[10px] text-foreground/45"><Clock className="size-3" /> {crime.lastIncident.date}</p>
+          </div>
+        )}
+        <div className="mt-2">
+          <OfficerCard title="Profilaktika inspektori" officer={crime.inspector} icon={BadgeCheck} accent="indigo" extra="Mahalla" />
+        </div>
+      </CatSection>
+    </div>
+  );
+}
+
+function FarmingTab({ info }) {
+  const f = info.farming;
+  if (!f) return <Facts facts={info.facts} />;
+
+  return (
+    <div className="asosiy-stagger flex flex-col gap-3">
+      {/* ===== Tomorqadan foydalanish ===== */}
+      <CatSection
+        icon={Sprout}
+        title="Tomorqadan foydalanish"
+        color="#10b981"
+        badge={
+          <span className={cn("ml-auto rounded-md border px-1.5 py-px text-[9px] font-bold", f.harvestsPerYear > 0 ? TONE.success : "border-[rgb(var(--card-border))] text-foreground/45")}>
+            {f.harvestsPerYear > 0 ? `Yiliga ${f.harvestsPerYear} marta` : "Foydalanilmaydi"}
+          </span>
+        }
+      >
+        {f.harvestsPerYear > 0 ? (
+          <div className="grid grid-cols-3 gap-2 text-center">
+            <StatBox value={f.harvestsPerYear} label="Yillik hosil" color="#10b981" />
+            <StatBox value={`${fmt(f.totalHarvestKg)} kg`} label="Jami hosil" color="#22d3ee" />
+            <StatBox value={`${f.gardenArea} sotix`} label="Maydon" color="#f59e0b" />
+          </div>
+        ) : (
+          <p className="flex items-center gap-1.5 text-[12px] text-foreground/50"><Sprout className="size-4" /> Bu yil tomorqa ekilmagan</p>
+        )}
+      </CatSection>
+
+      {/* ===== Har bir hosil ===== */}
+      {f.harvests.map((h) => (
+        <CatSection
+          key={h.order}
+          icon={Wheat}
+          title={`${h.order}-hosil · ${h.season}`}
+          color="#84cc16"
+          badge={<span className="ml-auto text-base">{h.emoji}</span>}
+        >
+          <div className="mb-2 flex items-center justify-between">
+            <span className="text-[13px] font-semibold">{h.crop}</span>
+            <span className="rounded-md bg-white/5 px-2 py-0.5 text-[11px] text-foreground/70">{h.sotix} sotixga ekilgan</span>
+          </div>
+          <div className="grid grid-cols-3 gap-2 text-center">
+            <div className="rounded-lg bg-white/5 p-2"><p className="text-sm font-semibold tabular-nums text-lime-400">{fmt(h.yieldKg)}</p><p className="text-[9px] text-foreground/40">kg hosil</p></div>
+            <div className="rounded-lg bg-white/5 p-2"><p className="text-sm font-semibold tabular-nums text-foreground/85">{fmt(h.pricePerKg)}</p><p className="text-[9px] text-foreground/40">so'm/kg</p></div>
+            <div className="rounded-lg bg-emerald-500/10 p-2"><p className="text-sm font-semibold tabular-nums text-emerald-400">{fmt(h.income)}</p><p className="text-[9px] text-foreground/40">daromad</p></div>
+          </div>
+        </CatSection>
+      ))}
+
+      {/* ===== Umumiy daromad ===== */}
+      {f.harvestsPerYear > 0 && (
+        <div className="flex items-center justify-between rounded-xl border border-emerald-500/25 bg-emerald-500/10 px-3 py-2.5">
+          <span className="flex items-center gap-1.5 text-[12px] font-medium text-emerald-200"><Coins className="size-4" /> Tomorqadan yillik daromad</span>
+          <span className="text-[14px] font-semibold tabular-nums text-emerald-400">{fmt(f.totalFarmIncome)} so'm</span>
+        </div>
+      )}
+
+      {/* ===== Chorvachilik ===== */}
+      <CatSection
+        icon={Egg}
+        title="Chorvachilik"
+        color="#f59e0b"
+        badge={
+          <span className={cn("ml-auto rounded-md border px-1.5 py-px text-[9px] font-bold", f.hasLivestock ? TONE.success : "border-[rgb(var(--card-border))] text-foreground/45")}>
+            {f.hasLivestock ? "Mavjud" : "Yo'q"}
+          </span>
+        }
+      >
+        {f.hasLivestock ? (
+          <div className="grid grid-cols-2 gap-2">
+            {f.livestock.filter((l) => l.count > 0).map((l) => (
+              <div key={l.key} className="flex items-center gap-2.5 rounded-lg border border-[rgb(var(--card-border))] bg-white/5 px-2.5 py-2">
+                <span className="text-xl leading-none">{l.emoji}</span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[15px] font-semibold tabular-nums leading-none">{l.count} <span className="text-[10px] font-normal text-foreground/45">bosh</span></p>
+                  <p className="mt-0.5 truncate text-[10px] text-foreground/45">{l.label}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="flex items-center gap-1.5 text-[12px] text-foreground/50"><Egg className="size-4" /> Chorva mol-mulki yo'q</p>
+        )}
+      </CatSection>
+    </div>
+  );
+}
+
 function DalaTab({ info }) {
   return (
     <Section title="Hosildorlik dinamikasi (so'nggi 6 yil)">
@@ -472,10 +791,9 @@ function tabsForType(info) {
     case "uy":
       return [
         overview,
-        { key: "kommunal", label: "Kommunal", icon: Droplets, render: KommunalTab },
-        { key: "moliya", label: "Moliya", icon: Coins, render: MoliyaTab },
         { key: "murojaat", label: "Murojaat", icon: MessageSquare, render: AppealsTab },
-        { key: "ijtimoiy", label: "Ijtimoiy", icon: Users, render: IjtimoiyTab },
+        { key: "xizmat", label: "Xizmat", icon: ShieldCheck, render: ServicesSafetyTab },
+        { key: "tomorqa", label: "Tomorqa", icon: Sprout, render: FarmingTab },
       ];
     case "dala":
       return [overview, { key: "hosil", label: "Hosil", icon: Wheat, render: DalaTab }];
@@ -492,7 +810,7 @@ function tabsForType(info) {
   }
 }
 
-const DetailPanel = ({ element, onClose }) => {
+const DetailPanel = ({ element, statusTone, onClose }) => {
   const info = elementInfo(element);
   const [active, setActive] = useState("overview");
   if (!info) return null;
@@ -500,9 +818,27 @@ const DetailPanel = ({ element, onClose }) => {
   const tabs = tabsForType(info);
   const current = tabs.find((t) => t.key === active) || tabs[0];
   const Body = current.render;
+  // faol filter rangi (xarita statusi bilan mos)
+  const st = statusTone ? STATUS_TONES[statusTone] : null;
 
   return (
-    <div key={info.id} className="asosiy-slide flex h-full flex-col gap-3 overflow-hidden pr-1">
+    <div
+      key={info.id}
+      className="asosiy-slide relative flex h-full flex-col gap-3 overflow-hidden pr-1"
+      style={st ? { boxShadow: `inset 4px 0 0 ${st.color}` } : undefined}
+    >
+      {/* faol filter status banneri — yon panel xarita rangiga mos */}
+      {st && (
+        <div
+          className="flex items-center gap-2 rounded-lg border px-2.5 py-1.5"
+          style={{ borderColor: `${st.color}55`, background: `${st.color}1a` }}
+        >
+          <span className="size-2.5 rounded-full" style={{ background: st.color }} />
+          <span className="text-[11px] font-semibold" style={{ color: st.color }}>{st.label}</span>
+          <span className="ml-auto text-[10px] text-foreground/50">filter bo'yicha holat</span>
+        </div>
+      )}
+
       {/* sarlavha */}
       <div className="flex items-start gap-2.5">
         <span className="grid size-10 shrink-0 place-items-center rounded-xl text-[13px] font-bold" style={{ background: `${meta.color}22`, color: meta.color }}>

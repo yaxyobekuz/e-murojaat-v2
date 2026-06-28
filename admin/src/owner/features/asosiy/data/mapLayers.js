@@ -4,12 +4,18 @@ import { HEIGHT_RAMP } from "./mapConfig";
 
 export const LAYER = { buildings: "asosiy-buildings" };
 
+// fstatus feature-state: 0/yo'q = balandlik shkalasi, 1 = yashil, 2 = sariq, 3 = qizil
 const colorExpr = [
   "case",
   ["boolean", ["feature-state", "selected"], false],
   "#ffffff",
   ["boolean", ["feature-state", "hover"], false],
   "#e0f2fe",
+  // filter faol bo'lsa — status rangi
+  ["==", ["feature-state", "fstatus"], 1], "#22c55e",
+  ["==", ["feature-state", "fstatus"], 2], "#f59e0b",
+  ["==", ["feature-state", "fstatus"], 3], "#ef4444",
+  // filter yo'q — balandlik bo'yicha shkala
   [
     "interpolate", ["linear"], ["get", "height"],
     HEIGHT_RAMP[0].h, HEIGHT_RAMP[0].color,

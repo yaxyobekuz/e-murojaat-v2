@@ -402,6 +402,31 @@ input[type="search"]::-ms-reveal {
   animation: asosiy-panel-swap 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* Kategoriya kartochkalari ketma-ket (stagger) paydo bo'ladi */
+@keyframes asosiy-card-in {
+  0%   { opacity: 0; transform: translateY(14px) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.asosiy-stagger > * {
+  animation: asosiy-card-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.asosiy-stagger > *:nth-child(1) { animation-delay: 0.02s; }
+.asosiy-stagger > *:nth-child(2) { animation-delay: 0.07s; }
+.asosiy-stagger > *:nth-child(3) { animation-delay: 0.12s; }
+.asosiy-stagger > *:nth-child(4) { animation-delay: 0.17s; }
+.asosiy-stagger > *:nth-child(5) { animation-delay: 0.22s; }
+.asosiy-stagger > *:nth-child(6) { animation-delay: 0.27s; }
+.asosiy-stagger > *:nth-child(7) { animation-delay: 0.32s; }
+.asosiy-stagger > *:nth-child(8) { animation-delay: 0.37s; }
+
+/* Xavf darajasi indikatori — yumshoq "nafas olish" */
+@keyframes asosiy-risk-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--risk-glow, rgba(239, 68, 68, 0.35)); }
+  50%      { box-shadow: 0 0 0 6px transparent; }
+}
+.asosiy-risk-pulse { animation: asosiy-risk-pulse 2s ease-in-out infinite; }
+
 @media (prefers-reduced-motion: reduce) {
-  .asosiy-rise, .asosiy-fade, .asosiy-slide, .asosiy-grow, .asosiy-panel-swap { animation: none !important; }
+  .asosiy-rise, .asosiy-fade, .asosiy-slide, .asosiy-grow, .asosiy-panel-swap,
+  .asosiy-stagger > *, .asosiy-risk-pulse { animation: none !important; }
 }
