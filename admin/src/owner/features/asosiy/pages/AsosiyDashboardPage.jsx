@@ -40,13 +40,13 @@ const AsosiyDashboardPage = () => {
       </div>
 
       {/* ===== USTKI QATLAM: floating chrome (xaritaga xalaqit bermaydi) ===== */}
-      {/* 16 modul kartasi — to'liq kenglik (chapdan o'ngga) */}
-      <div className="absolute left-3 right-3 top-3 z-30">
+      {/* 16 modul kartasi — chap kartadan o'ngga, o'ng chetgacha */}
+      <div className="absolute left-3 right-3 top-3 z-30 md:left-[324px]">
         <TopBar />
       </div>
 
-      {/* chap panel — kamera kuzatuvi + jonli operativ holat. Pastki blokni kesmaydi */}
-      <div className="absolute left-3 top-[148px] bottom-[156px] z-20 hidden w-[300px] max-w-[calc(100%-1.5rem)] md:block">
+      {/* chap panel — tepadan boshlanadi (top bar chap chetdan boshlanmaydi), pastki blokni kesmaydi */}
+      <div className="absolute left-3 top-3 bottom-[156px] z-20 hidden w-[300px] max-w-[calc(100%-1.5rem)] md:block">
         <LeftBar />
       </div>
 
@@ -64,8 +64,8 @@ const AsosiyDashboardPage = () => {
         </div>
       </div>
 
-      {/* pastki blok — filtr paneli + jonli panel. Chap va o'ng panellar kengligini bo'sh qoldiradi */}
-      <div className="absolute left-3 right-3 bottom-3 z-30 flex flex-col gap-2 md:left-[324px] md:right-[444px] xl:right-[504px]">
+      {/* pastki blok — filtr paneli + jonli panel. Chap chetdan boshlanadi (chap karta ostida), o'ng kartadan oldin tugaydi */}
+      <div className="absolute left-3 right-3 bottom-3 z-30 flex flex-col gap-2 md:right-[444px] xl:right-[504px]">
         <FilterBar active={activeFilter} onChange={(k) => setField("activeFilter", k)} />
         <BottomBar />
       </div>
