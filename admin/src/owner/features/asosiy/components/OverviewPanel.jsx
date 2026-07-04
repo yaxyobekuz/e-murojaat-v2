@@ -1,4 +1,4 @@
-// Hech narsa tanlanmaganda — Andijon shahrining umumiy ma'lumotlari.
+// Hech narsa tanlanmaganda — Chinobod shaharchasining umumiy ma'lumotlari.
 import { MapPin } from "lucide-react";
 
 import MiniDonut from "./MiniDonut";

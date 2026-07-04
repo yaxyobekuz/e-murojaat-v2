@@ -30,13 +30,13 @@ export const TOP_CARDS = [
 
 // ===== Overview paneli (hech narsa tanlanmaganda) =====
 export const OVERVIEW = {
-  name: "Andijon shahri",
-  region: "Andijon viloyati · Markaz",
+  name: "Chinobod shaharchasi",
+  region: "Andijon viloyati · Baliqchi tumani",
   hero: [
-    { label: "Aholi", value: "468 ming", sub: "doimiy yashovchi" },
-    { label: "Hudud", value: "74 km²", sub: "umumiy maydon" },
-    { label: "Honadon", value: "112 400", sub: "ro'yxatdagi" },
-    { label: "Mahallalar", value: "162", sub: "umumiy" },
+    { label: "Aholi", value: "24,6 ming", sub: "doimiy yashovchi" },
+    { label: "Hudud", value: "8,4 km²", sub: "umumiy maydon" },
+    { label: "Honadon", value: "5 800", sub: "ro'yxatdagi" },
+    { label: "Mahallalar", value: "9", sub: "umumiy" },
   ],
   // aholi tarkibi (donut)
   population: [
