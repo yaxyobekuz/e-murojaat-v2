@@ -1,16 +1,20 @@
-# Asosiy modul — Sarnovul mahallasi interaktiv xaritasi
+# Asosiy modul — Chinobod shaharchasi interaktiv xaritasi
 
 ## Umumiy tavsif
 
 - Asosiy modul to'liq ekranni qoplagan, butun sahifa (full-screen) bo'ladi.
-- Sahifa Sarnovul mahallasining interaktiv xaritasidan iborat.
+- Sahifa Chinobod shaharchasining (Baliqchi tumani) interaktiv xaritasidan iborat.
 - Sahifa juda katta monitorda ko'rsatiladi — shu sababli elementlar ko'proq joylashtirilishi kerak.
 - Default font size: 10px - 12px (maksimum).
 
-## Xarita (3D — Mapbox GL)
+## Xarita (3D — MapLibre GL + OpenStreetMap)
 
-- Xarita Mapbox GL orqali 3D ko'rinishda chiziladi — markaz: **Andijon shahri**.
-- Uylar Mapbox'ning real bino izlari (footprint) sifatida balandlikka qarab 3D ko'tariladi.
+- Xarita MapLibre GL orqali 3D ko'rinishda chiziladi — markaz: **Chinobod shaharchasi, Baliqchi tumani**
+  (40.879317, 71.934255). Token kerak emas.
+- Basemap: OpenFreeMap (OSM vector tile'lar). OSM'da Chinobod binolari chizilmagan (bbox'da 13 ta),
+  shuning uchun uylar real OSM ko'chalari bo'ylab deterministik generatsiya qilingan —
+  statik `data/chinobodBuildings.geojson` (~1.5k bino, 13 tasi real OSM).
+- GeoJSON'ni yangilash: `node scripts/generate-chinobod-buildings.mjs` (Overpass'dan ko'cha/landuse oladi).
 - Xarita orqa fonda to'liq ravishda qoplanadi (`yer` moduli patterni: `mapConfig`/`mapLayers`/`mapInteractions`).
 - Xaritani erkin zoom/pan/orbit qilish mumkin. Tanlangan bino oqaradi (feature-state).
 
