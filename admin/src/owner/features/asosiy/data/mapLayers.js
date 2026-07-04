@@ -1,8 +1,11 @@
-// Manba + qatlamlar. Uylar = Mapbox'ning real bino izlari, real balandlikka 3D ko'tariladi,
-// balandlik bo'yicha rang shkalasi bilan bo'yaladi.
+// Manba + qatlamlar. Uylar = real OSM ko'chalari bo'ylab yasalgan bino izlari (statik GeoJSON),
+// 3D ko'tariladi, balandlik bo'yicha rang shkalasi bilan bo'yaladi.
+// GeoJSON'ni yangilash: node scripts/generate-chinobod-buildings.mjs
 import { HEIGHT_RAMP } from "./mapConfig";
+import buildingsUrl from "./chinobodBuildings.geojson?url";
 
 export const LAYER = { buildings: "asosiy-buildings" };
+export const BUILDINGS_SOURCE = "chinobod-buildings";
 
 // fstatus feature-state: 0/yo'q = balandlik shkalasi, 1 = yashil, 2 = sariq, 3 = qizil
 const colorExpr = [
@@ -26,38 +29,41 @@ const colorExpr = [
 ];
 
 export const addTerrainAndSky = (map) => {
-  if (!map.getSource("mapbox-dem")) {
-    map.addSource("mapbox-dem", {
+  if (!map.getSource("terrain-dem")) {
+    map.addSource("terrain-dem", {
       type: "raster-dem",
-      url: "mapbox://mapbox.mapbox-terrain-dem-v1",
-      tileSize: 512,
-      maxzoom: 14,
+      tiles: ["https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"],
+      encoding: "terrarium",
+      tileSize: 256,
+      maxzoom: 13,
     });
   }
-  map.setTerrain({ source: "mapbox-dem", exaggeration: 1.1 });
-  if (!map.getLayer("sky")) {
-    map.addLayer({
-      id: "sky",
-      type: "sky",
-      paint: { "sky-type": "atmosphere", "sky-atmosphere-sun-intensity": 12 },
-    });
-  }
+  map.setTerrain({ source: "terrain-dem", exaggeration: 1.1 });
+  // MapLibre'da osmon alohida layer emas — style'ning sky xossasi
+  map.setSky?.({
+    "sky-color": "#0b1220",
+    "horizon-color": "#1b2a4a",
+    "fog-color": "#0a0f1c",
+    "sky-horizon-blend": 0.6,
+  });
 };
 
-// Real bino izlari 3D ko'tariladi + balandlik bo'yicha bo'yaladi.
+// Real bino izlari (OSM GeoJSON) 3D ko'tariladi + balandlik bo'yicha bo'yaladi.
 export const addBuildings = (map) => {
-  if (!map.getSource("composite") || map.getLayer(LAYER.buildings)) return;
+  if (map.getLayer(LAYER.buildings)) return;
+  if (!map.getSource(BUILDINGS_SOURCE)) {
+    // generateId — feature-state (hover/selected/fstatus) uchun barqaror id beradi
+    map.addSource(BUILDINGS_SOURCE, { type: "geojson", data: buildingsUrl, generateId: true });
+  }
   map.addLayer({
     id: LAYER.buildings,
-    source: "composite",
-    "source-layer": "building",
-    filter: ["==", ["get", "extrude"], "true"],
+    source: BUILDINGS_SOURCE,
     type: "fill-extrusion",
     minzoom: 5,
     paint: {
       "fill-extrusion-color": colorExpr,
       "fill-extrusion-height": ["max", ["get", "height"], 3],
-      "fill-extrusion-base": ["get", "min_height"],
+      "fill-extrusion-base": ["coalesce", ["get", "min_height"], 0],
       "fill-extrusion-opacity": 0.92,
       "fill-extrusion-vertical-gradient": true,
     },

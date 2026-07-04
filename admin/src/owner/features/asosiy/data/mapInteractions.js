@@ -1,5 +1,5 @@
 // Real bino izlari uchun click + hover. Tashqi onPick(element) / onHover(id) ga uzatadi.
-import { LAYER } from "./mapLayers";
+import { LAYER, BUILDINGS_SOURCE } from "./mapLayers";
 import { buildingElement } from "./buildingElement";
 import { filterStatusOf, TONE_CODE } from "./elementData";
 
@@ -10,7 +10,7 @@ export const attachInteractions = (map, { onPick, onHover }) => {
   let activeFilter = null;
   const painted = new Set(); // fstatus qo'yilgan bino id'lari
 
-  const src = { source: "composite", sourceLayer: "building" };
+  const src = { source: BUILDINGS_SOURCE };
   const setState = (id, key, on) => {
     if (id == null) return;
     if (on) map.setFeatureState({ ...src, id }, { [key]: true });

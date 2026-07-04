@@ -1,22 +1,20 @@
-// Asosiy modul 3D xaritasi — Mapbox sozlamalari. Markaz: Andijon shahri.
-// Uylar Mapbox'ning real bino izlari (footprint) sifatida 3D ko'tariladi.
-export const MAPBOX_TOKEN =
-  "pk.eyJ1IjoieWF4eW9iZWsiLCJhIjoiY21xcXVyMnN5MDJ0YTJzczhmZGhoMGh5bCJ9.C66cPZikWv2zNvjXHNrp5g";
+// Asosiy modul 3D xaritasi — MapLibre GL + OpenStreetMap (OpenFreeMap) sozlamalari.
+// Token kerak emas. Uylar real OSM ko'chalari bo'ylab 3D ko'tariladi.
 
-// Andijon shahri markazi
-export const MAP_CENTER = { lat: 40.7821, lng: 72.3442 };
-export const MAP_PLACE_LABEL = "Andijon shahri";
+// Chinobod shaharchasi markazi (Baliqchi tumani)
+export const MAP_CENTER = { lat: 40.879317, lng: 71.934255 };
+export const MAP_PLACE_LABEL = "Chinobod shaharchasi";
 
 export const BASEMAPS = [
-  { id: "dark", label: "Tungi", style: "mapbox://styles/mapbox/dark-v11" },
-  { id: "satellite", label: "Sun'iy yo'ldosh", style: "mapbox://styles/mapbox/satellite-streets-v12" },
-  { id: "light", label: "Kunduzgi", style: "mapbox://styles/mapbox/light-v11" },
+  { id: "dark", label: "Tungi", style: "https://tiles.openfreemap.org/styles/dark" },
+  { id: "light", label: "Kunduzgi", style: "https://tiles.openfreemap.org/styles/positron" },
 ];
 
 export const INITIAL_VIEW = {
   center: [MAP_CENTER.lng, MAP_CENTER.lat],
-  zoom: 18,
+  zoom: 16.6,
   pitch: 62,
+  maxPitch: 85, // MapLibre default maxPitch 60 — 62° uchun kengaytiramiz
   bearing: -22,
   antialias: true,
 };

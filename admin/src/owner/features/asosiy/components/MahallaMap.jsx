@@ -1,13 +1,13 @@
-// Andijon shahri 3D xaritasi (Mapbox GL) — uylar real bino izlari sifatida 3D ko'tariladi.
+// Chinobod shaharchasi 3D xaritasi (MapLibre GL + OpenStreetMap) — uylar bino izlari sifatida 3D ko'tariladi.
 // Binoni bosib ma'lumotini ko'rish mumkin. Erkin zoom/pan/orbit. Tanlangan bino oqaradi.
 import { useEffect, useRef } from "react";
-import mapboxgl from "mapbox-gl";
-import "mapbox-gl/dist/mapbox-gl.css";
+import maplibregl from "maplibre-gl";
+import "maplibre-gl/dist/maplibre-gl.css";
 import { Loader2, MapPinned, Maximize, Crosshair, Orbit } from "lucide-react";
 
 import { cn } from "@/shared/utils/cn";
 import useObjectState from "@/shared/hooks/useObjectState";
-import { MAPBOX_TOKEN, INITIAL_VIEW, BASEMAPS } from "../data/mapConfig";
+import { INITIAL_VIEW, BASEMAPS } from "../data/mapConfig";
 import { LAYER, setupLayers } from "../data/mapLayers";
 import { attachInteractions } from "../data/mapInteractions";
 
@@ -19,21 +19,20 @@ const MahallaMap = ({ selectedId, activeFilter, onSelect, onHover }) => {
   const interactRef = useRef(null);
   const wiredRef = useRef(false);
   const { state, setField } = useObjectState({
-    status: MAPBOX_TOKEN ? "loading" : "error",
+    status: "loading",
   });
 
   useEffect(() => {
-    if (!MAPBOX_TOKEN || !hostRef.current) return;
-    mapboxgl.accessToken = MAPBOX_TOKEN;
+    if (!hostRef.current) return;
 
-    const map = new mapboxgl.Map({
+    const map = new maplibregl.Map({
       container: hostRef.current,
       ...INITIAL_VIEW,
       style: styleOf("dark"),
     });
     mapRef.current = map;
-    map.addControl(new mapboxgl.NavigationControl({ visualizePitch: true }), "bottom-right");
-    map.addControl(new mapboxgl.ScaleControl({ unit: "metric" }), "bottom-left");
+    map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "bottom-right");
+    map.addControl(new maplibregl.ScaleControl({ unit: "metric" }), "bottom-left");
 
     map.on("style.load", () => {
       setupLayers(map);
@@ -43,7 +42,11 @@ const MahallaMap = ({ selectedId, activeFilter, onSelect, onHover }) => {
         setField("status", "ready");
       }
     });
-    map.on("error", (e) => console.error("Mapbox xato:", e?.error || e));
+    map.on("error", (e) => {
+      console.error("Xarita xato:", e?.error || e);
+      // style hali yuklanmagan bo'lsa — xarita ochilmadi deb hisoblaymiz
+      if (!wiredRef.current) setField("status", "error");
+    });
 
     return () => map.remove();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -103,7 +106,7 @@ const MahallaMap = ({ selectedId, activeFilter, onSelect, onHover }) => {
           <div className="flex flex-col items-center gap-2">
             <MapPinned className="size-7 text-foreground/30" />
             <p className="text-sm">Xaritani yuklab bo'lmadi</p>
-            <p className="text-xs">VITE_MAPBOX_TOKEN sozlamasini tekshiring</p>
+            <p className="text-xs">OpenStreetMap manbasiga ulanib bo'lmadi — internetni tekshiring</p>
           </div>
         </div>
       )}

@@ -1,4 +1,4 @@
-// Bosilgan real Mapbox binosini barqaror "element" obyektiga aylantiradi.
+// Bosilgan real OSM binosini barqaror "element" obyektiga aylantiradi.
 // id bino markazidan hash qilinadi — bir bino har doim bir xil kartochka ko'rsatadi.
 // Tur: katta/baland binolar "zavod", qolganlari "uy" — DetailPanel shu turlardan foydalanadi.
 
@@ -31,7 +31,7 @@ const footprintArea = (ring) => {
 
 // real binodan barqaror element — id koordinatadan, tur balandlik/yuzaga qarab
 export const buildingElement = (feature) => {
-  const ring = feature.geometry?.coordinates?.[0] || [[72.3442, 40.7821]];
+  const ring = feature.geometry?.coordinates?.[0] || [[71.934255, 40.879317]];
   const [lng, lat] = centroid(ring);
   const height = Math.max(3, Math.round(feature.properties?.height || 9));
   const area = Math.max(24, Math.round(footprintArea(ring)));
