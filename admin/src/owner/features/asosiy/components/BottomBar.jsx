@@ -59,7 +59,7 @@ const BottomBar = () => {
       <div className="h-5 w-px shrink-0 bg-white/10" />
       <button
         type="button"
-        onClick={() => nav("/owner/markaz")}
+        onClick={() => nav("/owner/sarnovul")}
         className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-[rgb(var(--card-border))] px-2.5 py-1 text-[11px] font-medium text-foreground/70 transition-colors hover:text-foreground"
       >
         <LayoutGrid className="size-3.5" /> Modullar

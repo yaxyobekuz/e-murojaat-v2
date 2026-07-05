@@ -29,7 +29,6 @@ import { SuyuqGazDashboardPage } from "@/owner/features/suyuq_gaz";
 import { MskAnalyticsPage, MskAppealsPage } from "@/owner/features/msk";
 import { GazAnalyticsPage, GazStreetsPage } from "@/owner/features/gaz";
 import { AsosiyDashboardPage } from "@/owner/features/asosiy";
-import { MarkazDashboardPage } from "@/owner/features/markaz";
 import { SarnovulDashboardPage } from "@/owner/features/sarnovul";
 import { KameralarPage } from "@/owner/features/kameralar";
 
@@ -37,7 +36,6 @@ const OwnerRoutes = () => (
   <Routes>
     <Route index element={<Navigate to="asosiy" replace />} />
     <Route path="asosiy" element={<AsosiyDashboardPage />} />
-    <Route path="markaz" element={<MarkazDashboardPage />} />
     <Route path="sarnovul" element={<SarnovulDashboardPage />} />
     <Route path="kameralar" element={<KameralarPage />} />
     <Route path="yer" element={<YerDashboardPage />} />
