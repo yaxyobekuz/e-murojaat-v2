@@ -1,4 +1,4 @@
-// Asosiy modul — Chinobod shaharchasi to'liq ekranli 3D interaktiv xaritasi.
+// Asosiy modul — Sarnovul mahallasi to'liq ekranli 3D interaktiv xaritasi.
 // Xarita = orqa fon (full-screen, MapLibre GL). Ustidan: 16 modul kartasi,
 // o'ng panel (overview/element), pastki filtr + jonli panel — barchasi shisha (glass) overlay.
 import useObjectState from "@/shared/hooks/useObjectState";

@@ -1,9 +1,9 @@
 // Asosiy modul 3D xaritasi — MapLibre GL + OpenStreetMap (OpenFreeMap) sozlamalari.
 // Token kerak emas. Uylar real OSM ko'chalari bo'ylab 3D ko'tariladi.
 
-// Chinobod shaharchasi markazi (Baliqchi tumani)
+// Sarnovul MFY / Chinobod hududi markazi (Baliqchi tumani)
 export const MAP_CENTER = { lat: 40.879317, lng: 71.934255 };
-export const MAP_PLACE_LABEL = "Chinobod shaharchasi";
+export const MAP_PLACE_LABEL = "Sarnovul mahallasi";
 
 // OSM ma'lumot olinadigan hudud (~8×10km) — butun Chinobod shaharchasi + o'sish uchun zaxira.
 // Snapshot va jonli Overpass fetch shu bbox'da ishlaydi.

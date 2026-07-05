@@ -1,4 +1,4 @@
-// Hech narsa tanlanmaganda — Chinobod shaharchasining umumiy ma'lumotlari.
+// Hech narsa tanlanmaganda — Sarnovul MFY ning umumiy ma'lumotlari.
 import { MapPin } from "lucide-react";
 
 import MiniDonut from "./MiniDonut";
@@ -30,7 +30,7 @@ const OverviewPanel = () => {
           <MapPin className="size-3.5" /> {OVERVIEW.region}
         </div>
         <h2 className="mt-0.5 text-lg font-semibold leading-tight tracking-tight">{OVERVIEW.name}</h2>
-        <p className="text-[11px] text-foreground/45">Shahar bo'yicha umumiy ko'rsatkichlar · namunaviy ma'lumot</p>
+        <p className="text-[11px] text-foreground/45">Mahalla bo'yicha umumiy ko'rsatkichlar · raqamli pasport</p>
       </div>
 
       {/* hero KPI */}

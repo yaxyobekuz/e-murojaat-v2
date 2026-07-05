@@ -1,4 +1,4 @@
-// Chinobod shaharchasi 3D xaritasi (MapLibre GL + OpenStreetMap) — uylar bino izlari sifatida 3D ko'tariladi.
+// Sarnovul mahallasi 3D xaritasi (MapLibre GL + OpenStreetMap) — uylar bino izlari sifatida 3D ko'tariladi.
 // Binoni bosib ma'lumotini ko'rish mumkin. Erkin zoom/pan/orbit. Tanlangan bino oqaradi.
 import { useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
