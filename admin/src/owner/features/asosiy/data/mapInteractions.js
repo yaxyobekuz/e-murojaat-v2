@@ -1,6 +1,7 @@
-// Real bino izlari uchun click + hover. Tashqi onPick(element) / onHover(id) ga uzatadi.
-import { LAYER, BUILDINGS_SOURCE } from "./mapLayers";
-import { buildingElement } from "./buildingElement";
+// Real OSM obyektlari uchun click + hover: bino > yo'l > dala tartibida tanlanadi.
+// Tashqi onPick(element) / onHover(id) ga uzatadi.
+import { LAYER, OSM_SOURCE } from "./mapLayers";
+import { osmElement } from "./osmElement";
 import { filterStatusOf, TONE_CODE } from "./elementData";
 
 export const attachInteractions = (map, { onPick, onHover }) => {
@@ -10,7 +11,7 @@ export const attachInteractions = (map, { onPick, onHover }) => {
   let activeFilter = null;
   const painted = new Set(); // fstatus qo'yilgan bino id'lari
 
-  const src = { source: BUILDINGS_SOURCE };
+  const src = { source: OSM_SOURCE };
   const setState = (id, key, on) => {
     if (id == null) return;
     if (on) map.setFeatureState({ ...src, id }, { [key]: true });
@@ -18,12 +19,19 @@ export const attachInteractions = (map, { onPick, onHover }) => {
     else map.removeFeatureState({ ...src, id }, key);
   };
 
-  const buildingAt = (pt) => {
-    if (!map.getLayer(LAYER.buildings)) return null;
-    return map.queryRenderedFeatures(pt, { layers: [LAYER.buildings] })[0];
+  // ustma-ust kelganda render tartibi bo'yicha: bino > yo'l > landuse
+  const PICK_LAYERS = [LAYER.buildings, LAYER.roads, LAYER.landuse];
+  const pickAt = (pt) => {
+    const layers = PICK_LAYERS.filter((id) => map.getLayer(id));
+    if (!layers.length) return null;
+    for (const f of map.queryRenderedFeatures(pt, { layers })) {
+      const el = osmElement(f);
+      if (el) return { f, el };
+    }
+    return null;
   };
 
-  // ===== Filter bo'yash =====
+  // ===== Filter bo'yash (faqat binolar) =====
   const clearPaint = () => {
     painted.forEach((id) => map.setFeatureState({ ...src, id }, { fstatus: 0 }));
     painted.clear();
@@ -34,7 +42,8 @@ export const attachInteractions = (map, { onPick, onHover }) => {
     const feats = map.queryRenderedFeatures({ layers: [LAYER.buildings] });
     for (const f of feats) {
       if (f.id == null || painted.has(f.id)) continue;
-      const tone = filterStatusOf(buildingElement(f), activeFilter);
+      const el = osmElement(f);
+      const tone = el && filterStatusOf(el, activeFilter);
       if (!tone) continue;
       map.setFeatureState({ ...src, id: f.id }, { fstatus: TONE_CODE[tone] });
       painted.add(f.id);
@@ -56,34 +65,38 @@ export const attachInteractions = (map, { onPick, onHover }) => {
   };
 
   const onMove = (e) => {
-    const f = buildingAt(e.point);
-    canvas.style.cursor = f ? "pointer" : "";
-    const id = f?.id;
-    if (id === hovered) return;
+    const hit = pickAt(e.point);
+    canvas.style.cursor = hit ? "pointer" : "";
+    // hover highlight faqat binolarda (extrusion rangida)
+    const id = hit && hit.f.properties.kind === "building" ? hit.f.id : null;
+    if (id === hovered) {
+      if (!hit) onHover?.(null);
+      return;
+    }
     if (hovered != null && hovered !== selected) setState(hovered, "hover", false);
     hovered = id ?? null;
     if (hovered != null && hovered !== selected) setState(hovered, "hover", true);
-    onHover?.(f ? buildingElement(f).id : null);
+    onHover?.(hit ? hit.el.id : null);
   };
 
   const onClick = (e) => {
-    const f = buildingAt(e.point);
-    // eski tanlangan binoni butunlay tozalaymiz (selected + hover qoldig'i)
+    const hit = pickAt(e.point);
+    // eski tanlangan obyektni butunlay tozalaymiz (selected + hover qoldig'i)
     if (selected != null) {
       setState(selected, "selected", false);
       setState(selected, "hover", false);
     }
-    if (!f) {
+    if (!hit) {
       selected = null;
       onPick(null);
       return;
     }
-    selected = f.id ?? null;
-    // yangi tanlangan binoda hover holatini ham olib tashlaymiz (faqat selected qolsin)
+    selected = hit.f.id ?? null;
+    // yangi tanlangan obyektda hover holatini ham olib tashlaymiz (faqat selected qolsin)
     hovered = null;
     setState(selected, "hover", false);
     setState(selected, "selected", true);
-    onPick(buildingElement(f));
+    onPick(hit.el);
   };
 
   // jonli OSM yangilanishida feature id'lar qayta tug'iladi — ichki holatni tozalaymiz

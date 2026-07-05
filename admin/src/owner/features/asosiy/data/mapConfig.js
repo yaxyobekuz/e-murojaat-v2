@@ -14,11 +14,12 @@ export const BASEMAPS = [
 ];
 
 export const INITIAL_VIEW = {
-  center: [MAP_CENTER.lng, MAP_CENTER.lat],
-  zoom: 16.2,
-  pitch: 60,
+  // kamera OSM'da chizilgan hudud (shimoliy mahalla) markazidan boshlanadi
+  center: [71.93235, 40.89249],
+  zoom: 16.6,
+  pitch: 58,
   maxPitch: 85, // MapLibre default maxPitch 60 — kattaroq og'ish uchun kengaytiramiz
-  bearing: -45,
+  bearing: -20,
   antialias: true,
 };
 

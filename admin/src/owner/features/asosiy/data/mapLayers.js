@@ -1,15 +1,21 @@
-// Manba + qatlamlar. Uylar: statik GeoJSON (darhol chiziladi) + OSM'dan jonli binolar
-// (Overpass, har 60s). 3D ko'tariladi, balandlik bo'yicha rang shkalasi bilan bo'yaladi.
-// Statik GeoJSON'ni yangilash: node scripts/generate-chinobod-buildings.mjs
+// Manba + qatlamlar. Barcha obyektlar OSM'dan: binolar (3D), landuse (dala/qabriston/sanoat...),
+// yo'llar, suv. Statik snapshot darhol chiziladi, jonli OSM har 60s da almashtiradi.
+// Snapshot'ni yangilash: node scripts/fetch-chinobod-osm.mjs
 import { HEIGHT_RAMP } from "./mapConfig";
-import { attachLiveBuildings } from "./liveBuildings";
-import buildingsUrl from "./chinobodBuildings.geojson?url";
+import { attachLiveOsm } from "./liveOsm";
+import snapshotUrl from "./chinobodOsm.geojson?url";
 
-export const LAYER = { buildings: "asosiy-buildings" };
-export const BUILDINGS_SOURCE = "chinobod-buildings";
+export const OSM_SOURCE = "chinobod-osm";
+export const LAYER = {
+  buildings: "asosiy-buildings",
+  landuse: "asosiy-landuse",
+  landuseLine: "asosiy-landuse-line",
+  roads: "asosiy-roads",
+  waterway: "asosiy-waterway",
+};
 
 // fstatus feature-state: 0/yo'q = balandlik shkalasi, 1 = yashil, 2 = sariq, 3 = qizil
-const colorExpr = [
+const buildingColor = [
   "case",
   ["boolean", ["feature-state", "selected"], false],
   "#ffffff",
@@ -27,6 +33,51 @@ const colorExpr = [
     HEIGHT_RAMP[2].h, HEIGHT_RAMP[2].color,
     HEIGHT_RAMP[3].h, HEIGHT_RAMP[3].color,
   ],
+];
+
+// landuse kategoriyasi bo'yicha rang (tungi fon ustida shaffof tint)
+const landuseColor = [
+  "match", ["get", "cat"],
+  "farmland", "rgba(163,230,53,0.14)",
+  "farmyard", "rgba(217,180,80,0.13)",
+  "orchard", "rgba(74,222,128,0.16)",
+  "vineyard", "rgba(74,222,128,0.16)",
+  "greenhouse_horticulture", "rgba(94,234,212,0.15)",
+  "meadow", "rgba(101,163,13,0.14)",
+  "grass", "rgba(101,163,13,0.12)",
+  "cemetery", "rgba(52,211,153,0.12)",
+  "industrial", "rgba(168,85,247,0.18)",
+  "residential", "rgba(148,163,184,0.07)",
+  "water", "rgba(56,189,248,0.30)",
+  "wetland", "rgba(56,189,248,0.18)",
+  "wood", "rgba(34,197,94,0.16)",
+  "park", "rgba(34,197,94,0.14)",
+  "garden", "rgba(34,197,94,0.14)",
+  "rgba(148,163,184,0.06)",
+];
+const landuseFill = [
+  "case",
+  ["boolean", ["feature-state", "selected"], false],
+  "rgba(255,255,255,0.28)",
+  landuseColor,
+];
+
+const roadColor = [
+  "case",
+  ["boolean", ["feature-state", "selected"], false],
+  "#ffffff",
+  ["match", ["get", "cls"],
+    ["motorway", "trunk", "primary"], "#cbd5e1",
+    ["secondary", "tertiary"], "#a3b0c2",
+    ["residential", "living_street", "unclassified", "service"], "#64748b",
+    "#4b5563",
+  ],
+];
+const roadWidth = [
+  "interpolate", ["linear"], ["zoom"],
+  12, 0.6,
+  15, ["match", ["get", "cls"], ["motorway", "trunk", "primary"], 3, ["secondary", "tertiary"], 2.2, 1.4],
+  18, ["match", ["get", "cls"], ["motorway", "trunk", "primary"], 8, ["secondary", "tertiary"], 6, ["residential", "living_street", "unclassified", "service"], 4.5, 2.5],
 ];
 
 export const addTerrainAndSky = (map) => {
@@ -49,30 +100,69 @@ export const addTerrainAndSky = (map) => {
   });
 };
 
-// Real bino izlari (OSM GeoJSON) 3D ko'tariladi + balandlik bo'yicha bo'yaladi.
-export const addBuildings = (map) => {
+// OSM obyektlari: landuse + yo'l + suv (yorliqlar ostida), binolar 3D (eng ustida)
+export const addOsmLayers = (map) => {
   if (map.getLayer(LAYER.buildings)) return;
-  if (!map.getSource(BUILDINGS_SOURCE)) {
+  if (!map.getSource(OSM_SOURCE)) {
     // generateId — feature-state (hover/selected/fstatus) uchun barqaror id beradi
-    map.addSource(BUILDINGS_SOURCE, { type: "geojson", data: buildingsUrl, generateId: true });
+    map.addSource(OSM_SOURCE, { type: "geojson", data: snapshotUrl, generateId: true });
   }
+  // joy nomlari (symbol) qatlamlari ustda qolsin
+  const firstSymbol = map.getStyle().layers.find((l) => l.type === "symbol")?.id;
+
+  map.addLayer({
+    id: LAYER.landuse,
+    source: OSM_SOURCE,
+    type: "fill",
+    filter: ["==", ["get", "kind"], "landuse"],
+    paint: { "fill-color": landuseFill },
+  }, firstSymbol);
+  map.addLayer({
+    id: LAYER.landuseLine,
+    source: OSM_SOURCE,
+    type: "line",
+    filter: ["==", ["get", "kind"], "landuse"],
+    paint: { "line-color": "rgba(148,163,184,0.25)", "line-width": 1 },
+  }, firstSymbol);
+  map.addLayer({
+    id: LAYER.waterway,
+    source: OSM_SOURCE,
+    type: "line",
+    filter: ["==", ["get", "kind"], "waterway"],
+    layout: { "line-cap": "round", "line-join": "round" },
+    paint: {
+      "line-color": "rgba(56,189,248,0.6)",
+      "line-width": ["interpolate", ["linear"], ["zoom"], 12, 1, 18, 3],
+    },
+  }, firstSymbol);
+  map.addLayer({
+    id: LAYER.roads,
+    source: OSM_SOURCE,
+    type: "line",
+    filter: ["==", ["get", "kind"], "road"],
+    layout: { "line-cap": "round", "line-join": "round" },
+    paint: { "line-color": roadColor, "line-width": roadWidth, "line-opacity": 0.95 },
+  }, firstSymbol);
+
   map.addLayer({
     id: LAYER.buildings,
-    source: BUILDINGS_SOURCE,
+    source: OSM_SOURCE,
+    filter: ["==", ["get", "kind"], "building"],
     type: "fill-extrusion",
     minzoom: 5,
     paint: {
-      "fill-extrusion-color": colorExpr,
+      "fill-extrusion-color": buildingColor,
       "fill-extrusion-height": ["max", ["get", "height"], 3],
       "fill-extrusion-base": ["coalesce", ["get", "min_height"], 0],
       "fill-extrusion-opacity": 0.92,
       "fill-extrusion-vertical-gradient": true,
     },
   });
-  attachLiveBuildings(map, BUILDINGS_SOURCE, buildingsUrl);
+
+  attachLiveOsm(map, OSM_SOURCE);
 };
 
 export const setupLayers = (map) => {
   addTerrainAndSky(map);
-  addBuildings(map);
+  addOsmLayers(map);
 };

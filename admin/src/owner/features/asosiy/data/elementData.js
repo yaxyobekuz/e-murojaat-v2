@@ -105,10 +105,10 @@ const buildHouse = (rnd, el = {}) => {
   const street = pick(rnd, STREETS);
   const houseNo = ri(rnd, 1, 120);
 
-  // Real Mapbox binosidan: maydon (m²) va balandlik (m) → qavatlar, kadastr qiymati
+  // Real OSM binosidan: maydon (m²), balandlik (m) va qavat soni (building:levels)
   const area = Math.round(el.area || ri(rnd, 60, 200));
   const height = Math.round(el.height || ri(rnd, 3, 12));
-  const floors = Math.max(1, Math.round(height / 3));
+  const floors = Math.max(1, Math.round(el.levels || height / 3));
   const multi = floors >= 2;
   const value = (area * ri(rnd, 26, 38) * 100000) | 0; // m² narxi ~2.6-3.8 mln
   const ownership = pick(rnd, ["Xususiy", "Davlat", "Yuridik shaxs"]);
@@ -357,7 +357,8 @@ const buildHouse = (rnd, el = {}) => {
   };
 
   return {
-    title: multi ? "Ko'p qavatli turar-joy" : `${ownerSurname}lar honadoni`,
+    // OSM'da kiritilgan nom ustuvor (masalan "ABDUSAMAT xonodoni")
+    title: el.name || (multi ? "Ko'p qavatli turar-joy" : `${ownerSurname}lar honadoni`),
     subtitle: `Fidokor ko'chasi, ${houseNo}-uy`,
     badge: payRate >= 80 ? "Soliq to'langan" : taxDebt || mibDebt ? "Qarzi bor" : "Faol",
     badgeTone: payRate >= 80 ? "success" : payRate >= 40 ? "warning" : "danger",
@@ -445,11 +446,12 @@ const buildHouse = (rnd, el = {}) => {
   };
 };
 
-const buildField = (rnd) => {
+const buildField = (rnd, el = {}) => {
   const crop = pick(rnd, CROPS);
-  const ha = (ri(rnd, 5, 120) / 10).toFixed(1);
+  // real OSM poligon maydoni (ha) ustuvor
+  const ha = el.areaHa ? (Math.round(el.areaHa * 10) / 10).toFixed(1) : (ri(rnd, 5, 120) / 10).toFixed(1);
   return {
-    title: `${crop} dalasi`,
+    title: el.name || `${crop} dalasi`,
     subtitle: `Qishloq xo'jaligi yeri · ${ha} ga`,
     badge: rnd() < 0.8 ? "Ekin ekilgan" : "Bo'sh",
     badgeTone: rnd() < 0.8 ? "success" : "warning",
@@ -465,12 +467,12 @@ const buildField = (rnd) => {
   };
 };
 
-const buildRoad = (rnd) => {
+const buildRoad = (rnd, el = {}) => {
   const street = pick(rnd, STREETS);
-  const len = ri(rnd, 200, 2400);
+  const len = Math.round(el.length || ri(rnd, 200, 2400)); // real OSM uzunligi ustuvor
   const quality = ri(rnd, 35, 99);
   return {
-    title: `${street} ko'chasi`,
+    title: el.name || `${street} ko'chasi`,
     subtitle: `Avtomobil yo'li · ${fmt(len)} m`,
     badge: quality > 75 ? "Yaxshi holatda" : quality > 50 ? "O'rtacha" : "Ta'mir kerak",
     badgeTone: quality > 75 ? "success" : quality > 50 ? "warning" : "danger",
@@ -486,11 +488,11 @@ const buildRoad = (rnd) => {
   };
 };
 
-const buildFactory = (rnd) => {
+const buildFactory = (rnd, el = {}) => {
   const name = pick(rnd, FACTORIES);
   const workers = ri(rnd, 8, 240);
   return {
-    title: name,
+    title: el.name || name, // OSM'da kiritilgan korxona nomi ustuvor
     subtitle: `Ishlab chiqarish / tijorat obyekti`,
     badge: rnd() < 0.85 ? "Faoliyatda" : "To'xtatilgan",
     badgeTone: rnd() < 0.85 ? "success" : "danger",
