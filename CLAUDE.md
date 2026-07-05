@@ -133,5 +133,11 @@ Har modul tugaganida belgilanadi (Definition of Done: `.claude/rules/03-modul-qu
 - [x] **Dizayn**: `rules/02` ga mos (indigo accent, status badge rang xaritasi, skeleton, recharts grafiklar)
 - [x] **Qayta ishlatiladigan**: `shared/components/ui/chart/*` (TrendChart, BreakdownBar, DonutChart, ChartCard), `table/*` (DataTable, EmptyState), `badge/StatusBadge`, `data/regions.js` (mahallaLabel) — keyingi modullar shularni ishlatadi
 
+### Sarnovul MFY pasport dashboardi — ✅ tayyor
+- [x] **Admin**: `/owner/sarnovul` (`admin/src/owner/features/sarnovul/`) — yagona jamlovchi mahalla pasporti. Kanonik raqamlar: **763 xonadon / 4 306 aholi / 13 korxona**
+- [x] **Bo'limlar**: infratuzilma (elektr — TP vs quyosh iste'moli, generatsiya, texnik yo'qotish; gaz — ballon/quvur ta'minoti, talab qondirish; internet — qamrov, tezlik), obodonlashtirish (chiqindi mashinalari, ko'chatlar), MSK (ishlar + erkak/ayol), ta'lim (maktab/bog'cha, uy-davlat-xususiy), yoshlar (jami/ishsiz/daftar/band)
+- [x] **UI**: dark-glass tizim (GlassStatCard/GlassChartCard), scroll-spy SectionNav, framer-motion reveal, interaktiv SplitBar, yangi shared `RadialGauge` (`shared/components/ui/chart/`)
+- [x] **Ma'lumot**: statik, `features/sarnovul/data/sarnovul.data.js` — barcha raqamlar kanonikdan izchil hosil qilingan
+
 ### Obodonlashtirish — ⬜ navbatda
 ### Yoshlar — ⬜ navbatda
