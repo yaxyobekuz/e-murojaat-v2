@@ -35,16 +35,21 @@ const buildingColor = [
   ],
 ];
 
+// dala hisoblanadigan kategoriyalar (osmElement.FIELD_CATS bilan mos)
+const FIELD_CATS = ["farmland", "farmyard", "orchard", "vineyard", "meadow", "grass", "grassland", "allotments", "greenhouse_horticulture"];
+
 // landuse kategoriyasi bo'yicha rang (tungi fon ustida shaffof tint)
 const landuseColor = [
   "match", ["get", "cat"],
-  "farmland", "rgba(163,230,53,0.14)",
+  "farmland", "rgba(132,204,22,0.20)",
+  "grassland", "rgba(132,204,22,0.16)",
   "farmyard", "rgba(217,180,80,0.13)",
-  "orchard", "rgba(74,222,128,0.16)",
-  "vineyard", "rgba(74,222,128,0.16)",
+  "orchard", "rgba(74,222,128,0.18)",
+  "vineyard", "rgba(74,222,128,0.18)",
+  "allotments", "rgba(132,204,22,0.16)",
   "greenhouse_horticulture", "rgba(94,234,212,0.15)",
-  "meadow", "rgba(101,163,13,0.14)",
-  "grass", "rgba(101,163,13,0.12)",
+  "meadow", "rgba(101,163,13,0.16)",
+  "grass", "rgba(101,163,13,0.14)",
   "cemetery", "rgba(52,211,153,0.12)",
   "industrial", "rgba(168,85,247,0.18)",
   "residential", "rgba(148,163,184,0.07)",
@@ -55,11 +60,27 @@ const landuseColor = [
   "garden", "rgba(34,197,94,0.14)",
   "rgba(148,163,184,0.06)",
 ];
+// tanlangan dala — shaffof yashil, boshqa landuse — oqish
+const landuseSelectedColor = [
+  "match", ["get", "cat"],
+  FIELD_CATS, "rgba(134,239,172,0.45)",
+  "rgba(255,255,255,0.28)",
+];
+const landuseHoverColor = [
+  "match", ["get", "cat"],
+  FIELD_CATS, "rgba(134,239,172,0.28)",
+  "rgba(255,255,255,0.14)",
+];
 const landuseFill = [
   "case",
-  ["boolean", ["feature-state", "selected"], false],
-  "rgba(255,255,255,0.28)",
+  ["boolean", ["feature-state", "selected"], false], landuseSelectedColor,
+  ["boolean", ["feature-state", "hover"], false], landuseHoverColor,
   landuseColor,
+];
+const landuseLineColor = [
+  "case",
+  ["boolean", ["feature-state", "selected"], false], "#4ade80",
+  "rgba(148,163,184,0.25)",
 ];
 
 const roadColor = [
@@ -122,7 +143,10 @@ export const addOsmLayers = (map) => {
     source: OSM_SOURCE,
     type: "line",
     filter: ["==", ["get", "kind"], "landuse"],
-    paint: { "line-color": "rgba(148,163,184,0.25)", "line-width": 1 },
+    paint: {
+      "line-color": landuseLineColor,
+      "line-width": ["case", ["boolean", ["feature-state", "selected"], false], 2, 1],
+    },
   }, firstSymbol);
   map.addLayer({
     id: LAYER.waterway,

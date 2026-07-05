@@ -67,8 +67,8 @@ export const attachInteractions = (map, { onPick, onHover }) => {
   const onMove = (e) => {
     const hit = pickAt(e.point);
     canvas.style.cursor = hit ? "pointer" : "";
-    // hover highlight faqat binolarda (extrusion rangida)
-    const id = hit && hit.f.properties.kind === "building" ? hit.f.id : null;
+    // hover highlight bino va landuse'da (yo'l chizig'ida yo'q)
+    const id = hit && hit.f.properties.kind !== "road" ? hit.f.id : null;
     if (id === hovered) {
       if (!hit) onHover?.(null);
       return;

@@ -38,7 +38,10 @@ const lineLength = (pts) => {
 };
 
 const INDUSTRIAL_BUILDINGS = new Set(["industrial", "warehouse", "works", "factory", "manufacture"]);
-const FIELD_CATS = new Set(["farmland", "farmyard", "orchard", "vineyard", "meadow", "grass", "greenhouse_horticulture"]);
+const FIELD_CATS = new Set([
+  "farmland", "farmyard", "orchard", "vineyard", "meadow",
+  "grass", "grassland", "allotments", "greenhouse_horticulture",
+]);
 
 export const osmElement = (feature) => {
   const p = feature.properties || {};
