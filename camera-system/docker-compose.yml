@@ -1,0 +1,40 @@
+# go2rtc + backend + PostgreSQL — birga ishga tushadi.
+#   docker compose up -d
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: camuser
+      POSTGRES_PASSWORD: campass
+      POSTGRES_DB: cameras
+    volumes:
+      - camdb:/var/lib/postgresql/data
+    ports:
+      - "5433:5432" # host 5433 -> ichki 5432 (mahalliy pg bilan to'qnashmasin)
+    restart: unless-stopped
+
+  go2rtc:
+    image: alexxit/go2rtc:latest
+    volumes:
+      - ./go2rtc/go2rtc.yaml:/config/go2rtc.yaml
+    ports:
+      - "1984:1984"       # REST API + web player
+      - "8555:8555/tcp"   # WebRTC
+      - "8555:8555/udp"
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    env_file:
+      - ./backend/.env
+    environment:
+      GO2RTC_API: http://go2rtc:1984
+    depends_on:
+      - postgres
+      - go2rtc
+    ports:
+      - "8083:8083"
+    restart: unless-stopped
+
+volumes:
+  camdb:

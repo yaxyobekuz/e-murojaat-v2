@@ -9,6 +9,7 @@ import GlassChartCard from "@/shared/components/ui/glass/GlassChartCard";
 import AnimatedCounter from "@/shared/components/ui/counter/AnimatedCounter";
 import DonutChart from "@/shared/components/ui/chart/DonutChart";
 import { useChartColors } from "@/shared/components/ui/chart/chartColors";
+import { useLiveCameras } from "@/shared/hooks/useLiveCameras";
 
 const MAHALLA = "Sarnovul MFY";
 const pad = (n) => String(n).padStart(2, "0");
@@ -229,17 +230,55 @@ function CameraModal({ onClose, clk }) {
     </div>, document.body);
 }
 
+// Real (qo'shilgan) kamera — go2rtc iframe live tile
+function LiveTile({ cam, onClick }) {
+  return (
+    <button type="button" onClick={onClick} title="To'liq ekran" className="group relative block aspect-[16/10] w-full overflow-hidden rounded-xl border border-brand-cyan/40 bg-black text-left">
+      <iframe src={cam.stream.embed} title={cam.name} className="pointer-events-none absolute inset-0 size-full border-0" />
+      <div className="absolute left-2 top-2 z-10 rounded bg-black/55 px-1.5 py-0.5 text-[9px] font-bold text-emerald-300">● JONLI</div>
+      <div className="absolute inset-0 z-20 grid place-items-center bg-black/30 opacity-0 transition-opacity group-hover:opacity-100"><span className="grid size-9 place-items-center rounded-full bg-white/20 backdrop-blur-sm"><Maximize2 className="size-4 text-white" /></span></div>
+      <div className="absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-black/85 to-transparent px-2 pb-1.5 pt-3">
+        <div className="truncate text-[10px] font-bold text-white">{cam.name}</div>
+        <div className="text-[8.5px] font-bold uppercase tracking-wide text-brand-cyan">{cam.location} · real</div>
+      </div>
+    </button>
+  );
+}
+function LiveFullscreen({ cam, onClose }) {
+  return createPortal(
+    <div className="fixed inset-0 z-[400] grid place-items-center bg-black/90 p-4" onClick={onClose}>
+      <div className="relative w-[min(1500px,97vw)] overflow-hidden rounded-xl border border-white/10 bg-black" style={{ aspectRatio: "16/9" }} onClick={(e) => e.stopPropagation()}>
+        <iframe src={cam.stream.embed} title={cam.name} className="absolute inset-0 size-full border-0" allow="autoplay; fullscreen" />
+        <button onClick={onClose} className="absolute right-3 top-3 z-10 grid size-9 place-items-center rounded-lg bg-black/50 text-white hover:bg-black/70"><X className="size-5" /></button>
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent px-5 pb-4 pt-10">
+          <div className="text-lg font-bold text-white">{cam.name}</div>
+          <div className="text-xs font-bold uppercase tracking-wide text-brand-cyan">{cam.location} · {cam.ip} · JONLI</div>
+        </div>
+      </div>
+    </div>, document.body);
+}
+
 function GridKameralar() {
   const clk = useClock();
   const [open, setOpen] = useState(false);
   const [fs, setFs] = useState(null);
+  const [fsLive, setFsLive] = useState(null);
+  const { data: liveCams } = useLiveCameras();
   const warnCams = ALL_CAMERAS.filter((c) => c.warn);
+  const hasLive = liveCams && liveCams.length > 0;
   return (
     <GlassChartCard
       title="Barcha kameralar"
-      insight={`Jami ${ALL_CAMERAS.length} kamera · ${warnCams.length} ogohlantirish · default faqat ogohlantirishlilar`}
+      insight={`${hasLive ? `${liveCams.length} jonli (real) + ` : ""}${ALL_CAMERAS.length} demo · ${warnCams.length} ogohlantirish`}
       right={<button onClick={() => setOpen(true)} className="inline-flex items-center gap-1.5 rounded-lg border border-[rgb(var(--card-border))] px-3 py-1.5 text-[12px] font-medium text-foreground/70 hover:text-foreground"><Maximize2 className="size-3.5" /> To'liq ro'yxat</button>}
     >
+      {hasLive && (
+        <div className="mb-4">
+          <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-brand-cyan">Jonli kameralar (real) · {liveCams.length}</div>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">{liveCams.map((c) => <LiveTile key={c.id} cam={c} onClick={() => setFsLive(c)} />)}</div>
+        </div>
+      )}
+      <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-foreground/45">Demo — ogohlantirishli kameralar</div>
       {warnCams.length === 0 ? (
         <p className="py-4 text-sm text-emerald-500">Ogohlantirish yo'q — barcha kameralar normal.</p>
       ) : (
@@ -247,6 +286,7 @@ function GridKameralar() {
       )}
       {open && <CameraModal onClose={() => setOpen(false)} clk={clk} />}
       {fs && <CameraFullscreen cam={fs} clk={clk} onClose={() => setFs(null)} />}
+      {fsLive && <LiveFullscreen cam={fsLive} onClose={() => setFsLive(null)} />}
     </GlassChartCard>
   );
 }

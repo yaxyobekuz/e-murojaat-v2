@@ -1,0 +1,26 @@
+# go2rtc — RTSP -> WebRTC/HLS media server.
+# Brauzer RTSP'ni o'ynay olmaydi, shuning uchun go2rtc RTSP oqimini
+# WebRTC (kam kechikish) yoki HLS'ga aylantirib beradi.
+#
+# API yoqilgan: Node backend shu REST API orqali kamera streamlarini
+# ish vaqtida (runtime) qo'shadi va o'chiradi. Konfiguratsiyaga qo'lda
+# stream yozilmaydi — hammasi API orqali dinamik.
+
+api:
+  listen: ":1984" # REST API + web player (stream.html)
+
+rtsp:
+  listen: ":8554" # ichki RTSP (ixtiyoriy)
+
+webrtc:
+  listen: ":8555" # WebRTC (TCP/UDP)
+  candidates:
+    - stun:8555
+    # LAN/tashqi tarmoqda ko'rish uchun host IP'ni qo'shing, masalan:
+    # - 192.168.1.50:8555
+
+log:
+  level: info
+
+# streams bo'sh — backend runtime'da API orqali to'ldiradi.
+streams: {}
