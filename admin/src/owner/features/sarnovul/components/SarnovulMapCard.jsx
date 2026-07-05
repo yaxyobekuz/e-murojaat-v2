@@ -68,13 +68,30 @@ const SarnovulMapCard = () => {
       });
     };
 
+    // sekin orbita + yumshoq zoom "nafasi" — rAF tab yashiringanda o'zi to'xtaydi
+    let raf = 0;
+    const startOrbit = () => {
+      const t0 = performance.now();
+      const frame = (now) => {
+        const t = (now - t0) / 1000;
+        map.jumpTo({
+          bearing: (VIEW.bearing + t * 2.5) % 360,
+          zoom: VIEW.zoom + 0.35 * Math.sin((t / 16) * Math.PI * 2),
+        });
+        raf = requestAnimationFrame(frame);
+      };
+      raf = requestAnimationFrame(frame);
+    };
+
     map.on("style.load", () => {
       setLoading(false);
       loadBuildings();
+      startOrbit();
     });
 
     return () => {
       disposed = true;
+      cancelAnimationFrame(raf);
       map.remove();
     };
   }, []);
