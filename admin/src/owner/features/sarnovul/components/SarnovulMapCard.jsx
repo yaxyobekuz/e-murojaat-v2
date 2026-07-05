@@ -5,6 +5,8 @@ import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Loader2, MapPinned } from "lucide-react";
 
+import { overpassQuery } from "@/shared/lib/overpass";
+
 const VIEW = { center: [71.93235, 40.89249], zoom: 14.6, pitch: 55, bearing: -20 };
 const BBOX = "40.882,71.915,40.903,71.95"; // mahalla atrofi (s,w,n,e)
 
@@ -21,6 +23,8 @@ const SarnovulMapCard = () => {
 
   useEffect(() => {
     if (!hostRef.current) return;
+    let disposed = false;
+
     const map = new maplibregl.Map({
       container: hostRef.current,
       ...VIEW,
@@ -29,49 +33,52 @@ const SarnovulMapCard = () => {
       attributionControl: false,
     });
 
-    map.on("style.load", async () => {
-      setLoading(false);
-      try {
-        const q = `[out:json][timeout:20];(way["building"](${BBOX}););out geom;`;
-        const res = await fetch("https://overpass-api.de/api/interpreter", {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: "data=" + encodeURIComponent(q),
-        });
-        if (!res.ok) return;
-        const { elements } = await res.json();
-        const features = elements
-          .filter((el) => el.type === "way" && el.geometry?.length >= 4)
-          .map((el) => ({
-            type: "Feature",
-            geometry: { type: "Polygon", coordinates: [el.geometry.map((p) => [p.lon, p.lat])] },
-            properties: { height: heightOf(el.tags) },
-          }));
-        if (map.getSource("mini-buildings")) return;
-        map.addSource("mini-buildings", { type: "geojson", data: { type: "FeatureCollection", features } });
-        map.addLayer({
-          id: "mini-buildings",
-          source: "mini-buildings",
-          type: "fill-extrusion",
-          paint: {
-            "fill-extrusion-color": [
-              "interpolate", ["linear"], ["get", "height"],
-              3, "#34d399", 12, "#22d3ee", 25, "#6366f1",
-            ],
-            "fill-extrusion-height": ["max", ["get", "height"], 3],
-            "fill-extrusion-opacity": 0.9,
-          },
-        });
-      } catch {
-        // mini xarita uchun binolarsiz basemap ham yetarli
+    // barcha endpointlar yiqilsa 20s dan keyin qayta uriniladi (3 martagacha)
+    const loadBuildings = async (attempt = 0) => {
+      const q = `[out:json][timeout:20];(way["building"](${BBOX}););out geom;`;
+      const elements = await overpassQuery(q);
+      if (disposed) return;
+      if (!elements) {
+        if (attempt < 3) setTimeout(() => loadBuildings(attempt + 1), 20_000);
+        return;
       }
+      if (map.getSource("mini-buildings")) return;
+      const features = elements
+        .filter((el) => el.type === "way" && el.geometry?.length >= 4)
+        .map((el) => ({
+          type: "Feature",
+          geometry: { type: "Polygon", coordinates: [el.geometry.map((p) => [p.lon, p.lat])] },
+          properties: { height: heightOf(el.tags) },
+        }));
+      map.addSource("mini-buildings", { type: "geojson", data: { type: "FeatureCollection", features } });
+      map.addLayer({
+        id: "mini-buildings",
+        source: "mini-buildings",
+        type: "fill-extrusion",
+        paint: {
+          "fill-extrusion-color": [
+            "interpolate", ["linear"], ["get", "height"],
+            3, "#34d399", 12, "#22d3ee", 25, "#6366f1",
+          ],
+          "fill-extrusion-height": ["max", ["get", "height"], 3],
+          "fill-extrusion-opacity": 0.9,
+        },
+      });
+    };
+
+    map.on("style.load", () => {
+      setLoading(false);
+      loadBuildings();
     });
 
-    return () => map.remove();
+    return () => {
+      disposed = true;
+      map.remove();
+    };
   }, []);
 
   return (
-    <div className="relative min-h-[240px] overflow-hidden rounded-2xl border border-[rgb(var(--card-border))] bg-card shadow-lg">
+    <div className="relative overflow-hidden rounded-2xl border border-[rgb(var(--card-border))] bg-card shadow-lg">
       {/* inline style — maplibre-gl.css ning .maplibregl-map{position:relative} qoidasi Tailwind absolute'ni yengadi */}
       <div ref={hostRef} style={{ position: "absolute", inset: 0 }} />
 
