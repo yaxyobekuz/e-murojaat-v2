@@ -41,17 +41,17 @@ const AsosiyDashboardPage = () => {
 
       {/* ===== USTKI QATLAM: floating chrome (xaritaga xalaqit bermaydi) ===== */}
       {/* 16 modul kartasi — chap kartadan o'ngga, o'ng chetgacha */}
-      <div className="absolute left-3 right-3 top-3 z-30 md:left-[324px]">
+      <div className="absolute left-3 right-3 top-3 z-30 md:left-[320px]">
         <TopBar />
       </div>
 
       {/* chap panel — tepadan boshlanadi (top bar chap chetdan boshlanmaydi), pastki blokni kesmaydi */}
-      <div className="absolute left-3 top-3 bottom-[156px] z-20 hidden w-[300px] max-w-[calc(100%-1.5rem)] md:block">
+      <div className="absolute left-3 top-3 bottom-[160px] z-20 hidden w-[300px] max-w-[calc(100%-1.5rem)] md:block">
         <LeftBar />
       </div>
 
       {/* o'ng panel — overview yoki tanlangan element. Pastki blok endi o'ng tomonni bo'sh qoldiradi */}
-      <div className="absolute right-3 top-[148px] bottom-3 z-20 w-[420px] max-w-[calc(100%-1.5rem)] xl:w-[480px] [perspective:1400px]">
+      <div className="absolute right-3 top-[134px] bottom-3 z-20 w-[420px] max-w-[calc(100%-1.5rem)] xl:w-[480px] [perspective:1400px]">
         <div className="surface-overlay flex h-full flex-col overflow-hidden rounded-2xl p-3.5 shadow-2xl backdrop-blur-xl">
           {/* key har almashganda animatsiyani qaytadan ishga tushiradi */}
           <div key={selectedId ?? "overview"} className="asosiy-panel-swap flex h-full flex-col overflow-hidden">
