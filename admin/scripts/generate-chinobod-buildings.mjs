@@ -6,8 +6,7 @@
 import { writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
-
-const BBOX = { s: 40.8613, w: 71.9103, n: 40.8973, e: 71.9583 }; // ~4km, markaz: 40.87932, 71.93425
+import { MAP_BBOX as BBOX } from "../src/owner/features/asosiy/data/mapConfig.js";
 const OUT = join(
   dirname(fileURLToPath(import.meta.url)),
   "../src/owner/features/asosiy/data/chinobodBuildings.geojson",

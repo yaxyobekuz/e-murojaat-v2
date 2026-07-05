@@ -86,8 +86,17 @@ export const attachInteractions = (map, { onPick, onHover }) => {
     onPick(buildingElement(f));
   };
 
+  // jonli OSM yangilanishida feature id'lar qayta tug'iladi — ichki holatni tozalaymiz
+  const onRefreshed = () => {
+    painted.clear();
+    selected = null;
+    hovered = null;
+    if (activeFilter) paintVisible();
+  };
+
   map.on("mousemove", onMove);
   map.on("click", onClick);
+  map.on("buildings:refreshed", onRefreshed);
 
   // tashqaridan tanlovni tozalash uchun
   const clearSelection = () => {
@@ -103,6 +112,7 @@ export const attachInteractions = (map, { onPick, onHover }) => {
       map.off("mousemove", onMove);
       map.off("click", onClick);
       map.off("idle", onIdle);
+      map.off("buildings:refreshed", onRefreshed);
     },
     clearSelection,
     applyFilter,

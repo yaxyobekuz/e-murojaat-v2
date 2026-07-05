@@ -5,6 +5,9 @@
 export const MAP_CENTER = { lat: 40.879317, lng: 71.934255 };
 export const MAP_PLACE_LABEL = "Chinobod shaharchasi";
 
+// Binolar olinadigan hudud (~4km) — statik generatsiya va jonli OSM fetch shu bbox'da ishlaydi
+export const MAP_BBOX = { s: 40.8613, w: 71.9103, n: 40.8973, e: 71.9583 };
+
 export const BASEMAPS = [
   { id: "dark", label: "Tungi", style: "https://tiles.openfreemap.org/styles/dark" },
   { id: "light", label: "Kunduzgi", style: "https://tiles.openfreemap.org/styles/positron" },

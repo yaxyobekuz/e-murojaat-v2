@@ -1,7 +1,8 @@
-// Manba + qatlamlar. Uylar = real OSM ko'chalari bo'ylab yasalgan bino izlari (statik GeoJSON),
-// 3D ko'tariladi, balandlik bo'yicha rang shkalasi bilan bo'yaladi.
-// GeoJSON'ni yangilash: node scripts/generate-chinobod-buildings.mjs
+// Manba + qatlamlar. Uylar: statik GeoJSON (darhol chiziladi) + OSM'dan jonli binolar
+// (Overpass, har 60s). 3D ko'tariladi, balandlik bo'yicha rang shkalasi bilan bo'yaladi.
+// Statik GeoJSON'ni yangilash: node scripts/generate-chinobod-buildings.mjs
 import { HEIGHT_RAMP } from "./mapConfig";
+import { attachLiveBuildings } from "./liveBuildings";
 import buildingsUrl from "./chinobodBuildings.geojson?url";
 
 export const LAYER = { buildings: "asosiy-buildings" };
@@ -68,6 +69,7 @@ export const addBuildings = (map) => {
       "fill-extrusion-vertical-gradient": true,
     },
   });
+  attachLiveBuildings(map, BUILDINGS_SOURCE, buildingsUrl);
 };
 
 export const setupLayers = (map) => {
