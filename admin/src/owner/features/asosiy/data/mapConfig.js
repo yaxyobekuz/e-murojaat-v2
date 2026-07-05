@@ -15,10 +15,10 @@ export const BASEMAPS = [
 
 export const INITIAL_VIEW = {
   center: [MAP_CENTER.lng, MAP_CENTER.lat],
-  zoom: 16.3,
-  pitch: 58,
+  zoom: 16.2,
+  pitch: 60,
   maxPitch: 85, // MapLibre default maxPitch 60 — kattaroq og'ish uchun kengaytiramiz
-  bearing: -78,
+  bearing: -45,
   antialias: true,
 };
 
