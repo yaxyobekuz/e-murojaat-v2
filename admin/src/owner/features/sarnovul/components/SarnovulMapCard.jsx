@@ -1,9 +1,10 @@
 // Sarnovul mahallasining jonli OSM mini xaritasi (hero yonidagi 1 ustunlik karta).
 // OpenFreeMap basemap + Overpass'dan real chizilgan binolar 3D ko'rinishda.
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { Loader2, MapPinned } from "lucide-react";
+import { ArrowUpRight, Loader2, MapPinned } from "lucide-react";
 
 import { overpassQuery } from "@/shared/lib/overpass";
 
@@ -19,6 +20,7 @@ const heightOf = (t = {}) => {
 
 const SarnovulMapCard = () => {
   const hostRef = useRef(null);
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -78,7 +80,14 @@ const SarnovulMapCard = () => {
   }, []);
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-[rgb(var(--card-border))] bg-card shadow-lg">
+    <div
+      role="button"
+      tabIndex={0}
+      title="Asosiy modulga o'tish"
+      onClick={() => navigate("/owner/asosiy")}
+      onKeyDown={(e) => e.key === "Enter" && navigate("/owner/asosiy")}
+      className="group relative cursor-pointer overflow-hidden rounded-2xl border border-[rgb(var(--card-border))] bg-card shadow-lg transition-colors hover:border-emerald-400/60 focus-visible:outline-2 focus-visible:outline-emerald-400"
+    >
       {/* inline style — maplibre-gl.css ning .maplibregl-map{position:relative} qoidasi Tailwind absolute'ni yengadi */}
       <div ref={hostRef} style={{ position: "absolute", inset: 0 }} />
 
@@ -94,6 +103,7 @@ const SarnovulMapCard = () => {
         <div className="leading-tight">
           <div className="text-sm font-semibold text-white">Sarnovul mahallasi</div>
         </div>
+        <ArrowUpRight className="ml-auto size-4 text-white/50 transition-all group-hover:translate-x-0.5 group-hover:text-emerald-300" />
       </div>
     </div>
   );
