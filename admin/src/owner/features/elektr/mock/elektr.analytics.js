@@ -30,14 +30,15 @@ export const summary = (mahallaId) => {
     critical,
     outages,
     transformers: sum(ms, (m) => m.transformers),
-    deltas: { consumption: 4.2, lossPct: -2.1, askue: 6.5, solarKwh: 18.3 },
+    deltas: { consumption: 2.1, lossPct: -0.4, askue: 1.2, solarKwh: 6.3 },
   };
 };
 
-// 12 oylik dinamika: iste'mol (qishda cho'qqi) vs quyosh generatsiyasi (yozda cho'qqi)
+// 12 oylik dinamika: iste'mol (qishda cho'qqi) vs quyosh generatsiyasi (yozda cho'qqi).
+// Koeffitsiyentlar real seriyadan (iyun=1.0): TP 148 900 + quyosh 23 500 kVt·soat.
 const MONTHS = ["Yan", "Fev", "Mar", "Apr", "May", "Iyn", "Iyl", "Avg", "Sen", "Okt", "Noy", "Dek"];
-const CONS_SEAS = [1.55, 1.42, 1.18, 0.96, 0.82, 0.78, 0.84, 0.86, 0.9, 1.05, 1.28, 1.5];
-const SOLAR_SEAS = [0.42, 0.55, 0.78, 1.02, 1.32, 1.55, 1.6, 1.48, 1.2, 0.85, 0.5, 0.38];
+const CONS_SEAS = [1.204, 1.148, 1.047, 0.99, 0.98, 1, 0.974, 0.964, 0.919, 0.972, 1.057, 1.173];
+const SOLAR_SEAS = [0.391, 0.502, 0.664, 0.826, 0.94, 1, 0.928, 0.953, 0.834, 0.647, 0.443, 0.366];
 
 export const timeseries = (mahallaId) => {
   const base = summary(mahallaId).consumption; // MWh/oy
@@ -139,14 +140,14 @@ export const solar = (mahallaId) => {
   return { homes: s.solarHomes, kwh: s.solarKwh, trend: timeseries(mahallaId) };
 };
 
-// Iste'mol tarkibi (donut) — iste'molchi turi bo'yicha
+// Iste'mol tarkibi (donut) — iste'molchi turi bo'yicha (mahalla: aholi ustuvor, 13 korxona)
 export const breakdownByType = (mahallaId) => {
   const total = summary(mahallaId).consumption;
   return [
-    { key: "maishiy", label: "Maishiy (aholi)", value: round(total * 0.54, 1) },
-    { key: "tijorat", label: "Tijorat", value: round(total * 0.21, 1) },
-    { key: "byudjet", label: "Byudjet tashkilotlari", value: round(total * 0.14, 1) },
-    { key: "qishloq", label: "Qishloq xo'jaligi", value: round(total * 0.11, 1) },
+    { key: "maishiy", label: "Maishiy (aholi)", value: round(total * 0.68, 1) },
+    { key: "tijorat", label: "Tijorat", value: round(total * 0.14, 1) },
+    { key: "byudjet", label: "Byudjet tashkilotlari", value: round(total * 0.08, 1) },
+    { key: "qishloq", label: "Qishloq xo'jaligi", value: round(total * 0.1, 1) },
   ];
 };
 

@@ -1,5 +1,5 @@
-// Elektr energiya moduli — mahalla/qishloq darajasidagi demo ma'lumot.
-// Markaz: Sarnovul MFY, Baliqchi tumani, Andijon. Seedlangan PRNG => barqaror demo.
+// Elektr energiya moduli — mahalla darajasidagi demo ma'lumot (real kanonik raqamlar).
+// Markaz: Sarnovul MFY, Baliqchi tumani, Andijon. 763 xonadon, 14 ko'cha.
 // Barcha matn o'zbekcha; kod qiymatlari inglizcha.
 
 export const CENTER = { lat: 40.87913596720542, lng: 71.93424196980021 };
@@ -15,60 +15,49 @@ export const HEALTH = {
 export const healthOf = (loadPct) =>
   loadPct > 115 ? "kritik" : loadPct >= 85 ? "ogohlik" : "norma";
 
-const rng = (seed) => () => {
-  seed |= 0;
-  seed = (seed + 0x6d2b79f5) | 0;
-  let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-};
-
 // 14 ko'cha — Sarnovul MFY ichidagi ko'chalar (o'zbekcha nomlar).
 const NAMES = [
-  "Sarnovul", "Navoiy", "Bobur", "Amir Temur", "Fidokor", "Istiqlol", "Do'stlik",
-  "Bog'", "Chinor", "Guliston", "Mustaqillik", "Yangi hayot", "Marvarid", "Oqtepa",
+  "Sarnovul", "Maslahat", "Ulug'vor", "Urganji", "Navoiy", "Bobur", "Amir Temur",
+  "Istiqlol", "Do'stlik", "Guliston", "Mustaqillik", "Yangi hayot", "Chinor", "Oqtepa",
 ];
 
 // Ataylab bir nechta ko'cha qizil (oshib ketgan yuklama) bo'lsin.
-const LOAD_SEED = [62, 78, 168, 95, 142, 71, 188, 104, 58, 126, 83, 155, 112, 67];
+const LOAD_SEED = [64, 78, 122, 92, 71, 58, 96, 68, 84, 108, 52, 131, 74, 61];
 
-const build = () => {
-  const r = rng(40879);
-  return NAMES.map((name, i) => {
+// Kanonik yig'indilar: xonadon=763, quyoshli xonadon=58,
+// quyosh=23 500 kVt·soat/oy (iyun), iste'mol=172.4 MVt·soat/oy (iyun), yo'qotish≈8.6%.
+const HH_SEED = [72, 65, 58, 61, 54, 47, 56, 44, 52, 60, 38, 63, 49, 44];
+const TP_SEED = [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1];
+const VOLT_SEED = [224, 221, 208, 217, 222, 226, 216, 223, 219, 212, 227, 205, 222, 225];
+const ASKUE_SEED = [99, 98, 95, 97, 99, 98, 96, 99, 98, 97, 100, 94, 99, 98];
+const LOSS_SEED = [7.4, 8.2, 11.8, 8.9, 7.8, 6.9, 9.1, 7.2, 8.4, 9.6, 6.4, 12.3, 7.9, 7.1];
+const CONS_SEED = [16.4, 14.8, 13.1, 13.9, 12.2, 10.6, 12.7, 9.8, 11.7, 13.6, 8.5, 14.3, 11.0, 9.8]; // MWh/oy
+const SOLAR_HOMES_SEED = [7, 5, 3, 4, 6, 4, 5, 3, 4, 4, 2, 5, 3, 3];
+const SOLAR_KWH_SEED = [2870, 2100, 1185, 1600, 2490, 1560, 2025, 1230, 1580, 1680, 770, 2000, 1215, 1195];
+const OUTAGE_SEED = [1, 1, 3, 2, 1, 0, 2, 1, 1, 2, 0, 4, 1, 1];
+const MTTR_SEED = [42, 48, 76, 58, 45, 40, 62, 44, 50, 66, 38, 88, 46, 43]; // daqiqa
+
+const build = () =>
+  NAMES.map((name, i) => {
     const load = LOAD_SEED[i];
-    const transformers = 2 + Math.floor(r() * 5);
-    const households = 280 + Math.floor(r() * 720);
-    // Yuklama yuqori bo'lsa kuchlanish pasayadi (220V me'yor)
-    const voltage = Math.round(232 - load * 0.55 - r() * 14);
-    const askue = Math.max(38, Math.min(99, Math.round(100 - load * 0.28 - r() * 18)));
-    // ASKUE past bo'lsa yo'qotish ko'p (o'g'irlik/qochqin)
-    const losses = Math.round((26 - askue * 0.18 + r() * 5) * 10) / 10;
-    // Uy boshiga ~220-340 kWt·soat/oy => realistik MVt·soat
-    const consumption = Math.round(households * (0.22 + r() * 0.12) * 10) / 10; // MWh/oy
-    const solarHomes = Math.floor(households * (0.02 + r() * 0.07));
-    const solarKwh = Math.round(solarHomes * (160 + r() * 120));
-    const outages = Math.round(load / 22 + r() * 4);
-    const mttr = Math.round(38 + load * 0.42 + r() * 25); // daqiqa
-
     return {
       id: `mfy_${String(i + 1).padStart(2, "0")}`,
       name,
       label: `${name} ko'chasi`,
       load,
       status: healthOf(load),
-      transformers,
-      households,
-      voltage,
-      askue,
-      losses: Math.max(4, losses),
-      consumption,
-      solarHomes,
-      solarKwh,
-      outages,
-      mttr,
+      transformers: TP_SEED[i],
+      households: HH_SEED[i],
+      voltage: VOLT_SEED[i],
+      askue: ASKUE_SEED[i],
+      losses: LOSS_SEED[i],
+      consumption: CONS_SEED[i],
+      solarHomes: SOLAR_HOMES_SEED[i],
+      solarKwh: SOLAR_KWH_SEED[i],
+      outages: OUTAGE_SEED[i],
+      mttr: MTTR_SEED[i],
     };
   });
-};
 
 export const MAHALLAS = build();
 
