@@ -1,9 +1,10 @@
-# Asosiy modul — Chinobod shaharchasi interaktiv xaritasi
+# Asosiy modul — Sarnovul MFY interaktiv xaritasi
 
 ## Umumiy tavsif
 
 - Asosiy modul to'liq ekranni qoplagan, butun sahifa (full-screen) bo'ladi.
-- Sahifa Chinobod shaharchasining (Baliqchi tumani) interaktiv xaritasidan iborat.
+- Sahifa Sarnovul MFY (Chinobod hududi, Baliqchi tumani) interaktiv xaritasidan iborat.
+- Barcha ko'rsatkichlar sarnovul moduli bilan mos: 763 xonadon / 4 306 aholi / 13 korxona / 14 ko'cha (`mahallaData.js`).
 - Sahifa juda katta monitorda ko'rsatiladi — shu sababli elementlar ko'proq joylashtirilishi kerak.
 - Default font size: 10px - 12px (maksimum).
 
