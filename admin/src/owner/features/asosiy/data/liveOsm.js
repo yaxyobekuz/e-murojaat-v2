@@ -33,7 +33,13 @@ export const osmToFeatures = (elements) => {
     const t = el.tags || {};
     const coords = el.geometry.map((p) => [round6(p.lon), round6(p.lat)]);
 
-    if (t.building) {
+    if (t.building === "greenhouse") {
+      // issiqxona — 3D bino emas, dala kabi shaffof yashil poligon
+      if (coords.length < 4) continue;
+      const props = { kind: "landuse", cat: "greenhouse_horticulture" };
+      if (t.name) props.name = t.name;
+      feats.push({ type: "Feature", geometry: { type: "Polygon", coordinates: [coords] }, properties: props });
+    } else if (t.building) {
       if (coords.length < 4) continue;
       const levels = parseFloat(t["building:levels"]) || 0;
       const height = heightOf(t);
