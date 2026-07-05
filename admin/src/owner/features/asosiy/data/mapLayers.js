@@ -41,15 +41,15 @@ const FIELD_CATS = ["farmland", "farmyard", "orchard", "vineyard", "meadow", "gr
 // landuse kategoriyasi bo'yicha rang (tungi fon ustida shaffof tint)
 const landuseColor = [
   "match", ["get", "cat"],
-  "farmland", "rgba(132,204,22,0.20)",
-  "grassland", "rgba(132,204,22,0.16)",
-  "farmyard", "rgba(217,180,80,0.13)",
-  "orchard", "rgba(74,222,128,0.18)",
-  "vineyard", "rgba(74,222,128,0.18)",
-  "allotments", "rgba(132,204,22,0.16)",
-  "greenhouse_horticulture", "rgba(94,234,212,0.15)",
-  "meadow", "rgba(101,163,13,0.16)",
-  "grass", "rgba(101,163,13,0.14)",
+  "farmland", "rgba(132,204,22,0.05)",
+  "grassland", "rgba(132,204,22,0.04)",
+  "farmyard", "rgba(217,180,80,0.05)",
+  "orchard", "rgba(74,222,128,0.05)",
+  "vineyard", "rgba(74,222,128,0.05)",
+  "allotments", "rgba(132,204,22,0.04)",
+  "greenhouse_horticulture", "rgba(94,234,212,0.05)",
+  "meadow", "rgba(101,163,13,0.04)",
+  "grass", "rgba(101,163,13,0.04)",
   "cemetery", "rgba(52,211,153,0.12)",
   "industrial", "rgba(168,85,247,0.18)",
   "residential", "rgba(148,163,184,0.07)",
@@ -63,12 +63,12 @@ const landuseColor = [
 // tanlangan dala — shaffof yashil, boshqa landuse — oqish
 const landuseSelectedColor = [
   "match", ["get", "cat"],
-  FIELD_CATS, "rgba(134,239,172,0.45)",
+  FIELD_CATS, "rgba(134,239,172,0.14)",
   "rgba(255,255,255,0.28)",
 ];
 const landuseHoverColor = [
   "match", ["get", "cat"],
-  FIELD_CATS, "rgba(134,239,172,0.28)",
+  FIELD_CATS, "rgba(134,239,172,0.08)",
   "rgba(255,255,255,0.14)",
 ];
 const landuseFill = [
