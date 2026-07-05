@@ -1,12 +1,10 @@
 // OSM'dan jonli ma'lumot (Overpass) — binolar, landuse (dala/qabriston/sanoat...),
 // yo'llar va suv obyektlari. Har 60s da yangilanadi: OSM editor'da chizilgan obyekt
 // ~1-2 daqiqada xaritada paydo bo'ladi. Faqat real chizilgan ma'lumot ko'rsatiladi.
+// eslatma: import'lar .js kengaytma bilan — bu fayl node skriptdan ham ishlatiladi
+import { overpassQuery } from "../../../../shared/lib/overpass.js";
 import { MAP_BBOX } from "./mapConfig.js";
 
-const ENDPOINTS = [
-  "https://overpass-api.de/api/interpreter",
-  "https://overpass.kumi.systems/api/interpreter",
-];
 const REFRESH_MS = 60_000;
 
 // balandlik: height tagi > qavat soni × 3 > bino turiga qarab default
@@ -79,22 +77,8 @@ export const fetchOsm = async () => {
     way["highway"](${b});
     way["waterway"](${b});
   );out geom;`;
-  for (const url of ENDPOINTS) {
-    try {
-      const res = await fetch(url, {
-        method: "POST",
-        // User-Agent node uchun (Overpass default node UA'ni 406 bilan qaytaradi); brauzer uni e'tiborsiz qoldiradi
-        headers: { "Content-Type": "application/x-www-form-urlencoded", "User-Agent": "e-murojaat-demo/1.0" },
-        body: "data=" + encodeURIComponent(q),
-      });
-      if (!res.ok) continue;
-      const { elements } = await res.json();
-      return osmToFeatures(elements);
-    } catch {
-      // keyingi endpoint sinaladi
-    }
-  }
-  return null;
+  const elements = await overpassQuery(q);
+  return elements ? osmToFeatures(elements) : null;
 };
 
 export const attachLiveOsm = (map, sourceId) => {
