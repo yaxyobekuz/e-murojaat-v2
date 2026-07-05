@@ -24,7 +24,7 @@ function MetricCard({ c, i }) {
       onClick={() => nav(c.to)}
       title={`${c.title} · ${c.unit}`}
       style={{ "--ac": c.color, animationDelay: `${i * 30}ms` }}
-      className="group asosiy-rise relative flex items-center gap-2 overflow-hidden rounded-lg border border-[rgb(var(--card-border))] bg-card/55 px-2 py-1.5 text-left backdrop-blur-md transition-all hover:border-[var(--ac)] hover:bg-card/80"
+      className="group asosiy-rise relative flex min-h-[54px] items-center gap-2 overflow-hidden rounded-lg border border-[rgb(var(--card-border))] bg-card/55 px-2 py-1.5 text-left backdrop-blur-md transition-all hover:border-[var(--ac)] hover:bg-card/80"
     >
       <span className="grid size-7 shrink-0 place-items-center rounded-md" style={{ background: `${c.color}22`, color: c.color }}>
         <Icon className="size-[15px]" strokeWidth={2.1} />

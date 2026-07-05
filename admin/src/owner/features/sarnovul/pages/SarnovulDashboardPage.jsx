@@ -1,4 +1,5 @@
 import SarnovulHero from "../components/SarnovulHero";
+import SarnovulMapCard from "../components/SarnovulMapCard";
 import SectionNav from "../components/SectionNav";
 import Reveal from "../components/Reveal";
 import ElektrSection from "../components/ElektrSection";
@@ -11,7 +12,13 @@ import YoshlarSection from "../components/YoshlarSection";
 
 const SarnovulDashboardPage = () => (
   <div className="flex flex-col gap-6">
-    <SarnovulHero />
+    {/* hero 4 ustundan 3 tasini, mahalla mini xaritasi 1 tasini egallaydi */}
+    <div className="grid gap-6 lg:grid-cols-4">
+      <div className="lg:col-span-3">
+        <SarnovulHero />
+      </div>
+      <SarnovulMapCard />
+    </div>
     <SectionNav />
 
     <section id="infratuzilma" className="flex scroll-mt-32 flex-col gap-8">
