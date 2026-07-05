@@ -11,11 +11,14 @@
 
 - Xarita MapLibre GL orqali 3D ko'rinishda chiziladi — markaz: **Chinobod shaharchasi, Baliqchi tumani**
   (40.879317, 71.934255). Token kerak emas.
-- Basemap: OpenFreeMap (OSM vector tile'lar). Binolar ikki qatlamli:
-  **jonli OSM** (`data/liveBuildings.js` — Overpass'dan har 60s, OSM'da chizilgan bino ~1-2
-  daqiqada xaritada chiqadi) + **statik to'ldiruvchi** (`data/chinobodBuildings.geojson` — real
-  OSM ko'chalari bo'ylab deterministik generatsiya; real bino 25m radiusida to'ldiruvchi o'chadi).
-- Statik GeoJSON'ni yangilash: `node scripts/generate-chinobod-buildings.mjs` (bbox — `mapConfig.MAP_BBOX`).
+- Basemap: OpenFreeMap (OSM vector tile'lar). Barcha obyektlar **faqat OSM'da real chizilganlar**
+  (generatsiya yo'q): binolar 3D, landuse (dala/qabriston/sanoat/turar-joy...), yo'llar, suv.
+- Jonli yangilanish: `data/liveOsm.js` — Overpass'dan har 60s; OSM editor'da chizilgan obyekt
+  ~1-2 daqiqada xaritada chiqadi. Boshlang'ich render: `data/chinobodOsm.geojson` snapshot
+  (`node scripts/fetch-chinobod-osm.mjs` bilan yangilanadi, bbox — `mapConfig.MAP_BBOX`).
+- Feature type → element turi: building→uy (industrial/warehouse→zavod), landuse farmland/orchard→dala
+  (industrial→zavod), highway→yol. Kartochkada OSM'da kiritilgan real ma'lumot ustuvor:
+  `name`, `height`, `building:levels` (qavat), poligon maydoni, yo'l uzunligi (`osmElement.js`).
 - Xarita orqa fonda to'liq ravishda qoplanadi (`yer` moduli patterni: `mapConfig`/`mapLayers`/`mapInteractions`).
 - Xaritani erkin zoom/pan/orbit qilish mumkin. Tanlangan bino oqaradi (feature-state).
 
