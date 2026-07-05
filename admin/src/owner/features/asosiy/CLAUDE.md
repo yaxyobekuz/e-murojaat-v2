@@ -16,7 +16,7 @@
 - Jonli yangilanish: `data/liveOsm.js` — Overpass'dan har 60s; OSM editor'da chizilgan obyekt
   ~1-2 daqiqada xaritada chiqadi. Boshlang'ich render: `data/chinobodOsm.geojson` snapshot
   (`node scripts/fetch-chinobod-osm.mjs` bilan yangilanadi, bbox — `mapConfig.MAP_BBOX`).
-- Feature type → element turi: building→uy (industrial/warehouse→zavod), landuse farmland/orchard→dala
+- Feature type → element turi: building→uy (industrial/warehouse→zavod), landuse farmland/grassland/orchard→dala
   (industrial→zavod), highway→yol. Kartochkada OSM'da kiritilgan real ma'lumot ustuvor:
   `name`, `height`, `building:levels` (qavat), poligon maydoni, yo'l uzunligi (`osmElement.js`).
 - Xarita orqa fonda to'liq ravishda qoplanadi (`yer` moduli patterni: `mapConfig`/`mapLayers`/`mapInteractions`).
