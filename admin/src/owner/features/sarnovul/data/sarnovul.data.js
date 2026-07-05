@@ -126,19 +126,37 @@ export const TALIM = {
   institutionLabels: { m66: "66-son maktab", m67: "67-son maktab", bogcha: "Bog'chalar (6 ta)" },
 };
 
+// Real hisobot (2026): 1055 yosh, daftar 0, ishsiz 23 (3 ko'cha kesimida), "5 tashabbus" qatnashuvi
 export const YOSHLAR = {
-  total: 1178, // 14–30 yosh
-  employed: 486,
-  students: 507,
-  unemployed: 164,
-  other: 21, // harbiy xizmat, dekret
-  notebook: 57, // yoshlar daftarida
-  employmentPct: 74.8, // o'qimaydigan yoshlar orasida bandlik
+  total: 1055, // jami yoshlar (14–30)
+  employed: 837, // jami − talaba − ishsiz − migratsiyada
+  students: 142,
+  unemployed: 23,
+  migration: 53, // migratsiyadagi yoshlar
+  notebook: 0, // yoshlar daftari — bo'shatilgan
+  entrepreneurs: 5,
+  itLearners: 12,
+  langLearners: 85,
+  talented: 48, // iqtidorli yoshlar
+  employmentPct: 91.7, // o'qimaydigan yoshlar orasida (837 / 913)
   composition: [
-    { key: "employed", label: "Ish bilan band", value: 486, color: "#10b981" },
-    { key: "students", label: "O'qiydi (talaba/o'quvchi)", value: 507, color: "#3b82f6" },
-    { key: "unemployed", label: "Ishsiz", value: 164, color: "#ef4444" },
-    { key: "other", label: "Harbiy / dekret", value: 21, color: "#64748b" },
+    { key: "employed", label: "Ish bilan band", value: 837, color: "#10b981" },
+    { key: "students", label: "O'qiydi (talaba)", value: 142, color: "#3b82f6" },
+    { key: "migration", label: "Migratsiyada", value: 53, color: "#f59e0b" },
+    { key: "unemployed", label: "Ishsiz", value: 23, color: "#ef4444" },
   ],
-  deltas: { employed: 7.6, unemployed: -5.4, notebook: -12.3 },
+  // ishsiz yoshlar ko'chalar kesimida
+  unemployedByStreet: [
+    { key: "maslahat", label: "Maslahat ko'chasi", value: 11, color: "#ef4444" },
+    { key: "ulugvor", label: "Ulug'vor ko'chasi", value: 7, color: "#f97316" },
+    { key: "urganji", label: "Urganji ko'chasi", value: 5, color: "#f59e0b" },
+  ],
+  // "5 tashabbus" yo'nalishlarida qatnashuv
+  initiatives: [
+    { key: "sport", label: "Sport", value: 620, color: "#10b981" },
+    { key: "kitobxonlik", label: "Kitobxonlik", value: 165, color: "#3b82f6" },
+    { key: "madaniyat", label: "Madaniyat va san'at", value: 30, color: "#a855f7" },
+    { key: "itSavod", label: "IT savodxonlik", value: 15, color: "#06b6d4" },
+  ],
+  deltas: { employed: 7.6, unemployed: -5.4, notebook: 0 },
 };

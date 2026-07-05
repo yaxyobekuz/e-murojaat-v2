@@ -14,7 +14,7 @@ export const TOP_CARDS = [
   { key: "honadon", title: "Honadonlar", value: 763, unit: "ta", delta: +0.6, icon: Home, color: "#22d3ee", to: "/owner/asosiy" },
   { key: "soliq", title: "Yig'ilgan soliq", value: 486, unit: "mln", delta: +6.4, icon: Landmark, color: "#818cf8", to: "/owner/soliq", money: true },
   { key: "talim", title: "O'quvchilar", value: 1124, unit: "o'quvchi", delta: +2.1, icon: GraduationCap, color: "#34d399", to: "/owner/talim" },
-  { key: "yoshlar", title: "Yoshlar daftari", value: 57, unit: "yosh", delta: -12.3, icon: Briefcase, color: "#fb923c", to: "/owner/yoshlar" },
+  { key: "yoshlar", title: "Yoshlar daftari", value: 0, unit: "yosh", delta: 0, icon: Briefcase, color: "#fb923c", to: "/owner/yoshlar" },
   { key: "iib", title: "Profilaktikada", value: 9, unit: "oila", delta: -8.0, icon: ShieldAlert, color: "#f87171", to: "/owner/iib" },
   { key: "gaz", title: "Gaz qarzdorlik", value: 38, unit: "mln", delta: -4.2, icon: Flame, color: "#60a5fa", to: "/owner/gaz", money: true },
   { key: "obod", title: "Obodonlashtirish", value: 78, unit: "% bajarildi", delta: +5.5, icon: Sparkles, color: "#2dd4bf", to: "/owner/obodonlashtirish" },
