@@ -86,9 +86,9 @@ function LiveFaceId({ onPass }) {
 }
 
 const SCHOOLS_INFO = [
-  { n: "12-maktab", p: 1240, a: 95.2 },
-  { n: "47-maktab", p: 980, a: 93.8 },
-  { n: "Bilim xususiy maktabi", p: 320, a: 97.1 },
+  { n: "66-son maktab", p: 668, a: 94.2 },
+  { n: "67-son maktab", p: 456, a: 95.1 },
+  { n: "Bog'chalar (6 ta)", p: 312, a: 91.4 },
 ];
 
 // ── O'ng panel: maktablar / umumiy ma'lumotlar ──
@@ -98,7 +98,7 @@ function SchoolInfoPanel({ enteredToday }) {
     ["Jami o'quvchi", fmt(M.inSchool), T.text],
     ["Bugun kirdi", fmt(enteredToday), T.green],
     ["Umumiy qamrov", `${cov}%`, T.teal],
-    ["Maktablar", "3", T.gold],
+    ["Maktab / bog'cha", "2 / 6", T.gold],
   ];
   const att = [["Keldi", M.present, T.green], ["Sababli", M.excused, T.amber], ["Sababsiz", M.absent, T.alarm]];
   const attTotal = att.reduce((s, [, v]) => s + v, 0);
@@ -114,14 +114,14 @@ function SchoolInfoPanel({ enteredToday }) {
         ))}
       </div>
       <div>
-        <div style={{ fontSize: 11, color: T.muted, textTransform: "uppercase", letterSpacing: ".6px", fontWeight: 700, marginBottom: 8 }}>Maktablar kesimi</div>
+        <div style={{ fontSize: 11, color: T.muted, textTransform: "uppercase", letterSpacing: ".6px", fontWeight: 700, marginBottom: 8 }}>Muassasalar kesimi</div>
         <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
           {SCHOOLS_INFO.map((s) => { const c = s.a >= 96 ? T.green : s.a >= 94 ? T.teal : T.amber; return (
             <div className="tcc-srow" key={s.n}>
               <div style={{ width: 36, height: 36, borderRadius: 9, display: "grid", placeItems: "center", background: "rgba(45,212,191,.1)", color: T.teal, fontWeight: 700, fontSize: 13 }}>🏫</div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontSize: 13.5, fontWeight: 600, color: T.text }}>{s.n}</div>
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11.5, color: T.muted, marginTop: 3, marginBottom: 5 }}><span>{fmt(s.p)} o'quvchi</span><span style={{ color: c, fontWeight: 700 }}>davomat {s.a}%</span></div>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11.5, color: T.muted, marginTop: 3, marginBottom: 5 }}><span>{fmt(s.p)} nafar</span><span style={{ color: c, fontWeight: 700 }}>davomat {s.a}%</span></div>
                 <div className="tcc-bar"><i style={{ width: `${s.a}%`, background: c }} /></div>
               </div>
             </div>
@@ -142,7 +142,7 @@ function SchoolInfoPanel({ enteredToday }) {
   );
 }
 
-const HEX = [["Markaziy", 99, 0], ["Bog'", 98, 1], ["Maktab-12", 99, 0], ["Bozor", 88, 5], ["Sanoat", 79, 9], ["Yangi daha", 95, 2], ["Maktab-47", 99, 0], ["Chekka", 84, 6], ["Park", 97, 1], ["Stadion", 96, 1], ["Tibbiyot", 98, 0], ["Eski mahalla", 82, 7]].map(([name, cov, out]) => ({ name, cov, out }));
+const HEX = [["Markaziy", 99, 0], ["Bog'", 98, 1], ["Maktab-66", 99, 0], ["Bozor", 88, 3], ["Sanoat", 79, 4], ["Yangi daha", 95, 1], ["Maktab-67", 99, 0], ["Chekka", 84, 3], ["Park", 97, 1], ["Stadion", 96, 1], ["Tibbiyot", 98, 0], ["Eski mahalla", 82, 3]].map(([name, cov, out]) => ({ name, cov, out }));
 function HexGrid() {
   const [hv, setHv] = useState(null); const s = 34, w = s * 1.5, h = Math.sqrt(3) * s;
   const col = (c) => (c >= 97 ? T.green : c >= 92 ? T.teal : c >= 85 ? T.gold : T.alarm);
