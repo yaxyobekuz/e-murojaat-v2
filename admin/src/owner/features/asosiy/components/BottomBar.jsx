@@ -34,6 +34,17 @@ const BottomBar = () => {
   const nav = useNavigate();
   return (
     <div className="surface-overlay flex items-center gap-2 overflow-x-auto rounded-xl px-3 py-2 backdrop-blur-md">
+      <button
+        type="button"
+        onClick={() => nav("/owner/sarnovul")}
+        className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-[rgb(var(--card-border))] px-2.5 py-1 text-[11px] font-medium text-foreground/70 transition-colors hover:text-foreground"
+      >
+        <LayoutGrid className="size-3.5" /> Modullar
+      </button>
+      <ThemeToggle className="size-7" />
+
+      <div className="h-5 w-px shrink-0 bg-white/10" />
+
       <div className="flex shrink-0 items-center gap-1.5 pr-2 text-[11px] font-semibold text-emerald-400">
         <span className="relative flex size-2">
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/70" />
@@ -55,16 +66,6 @@ const BottomBar = () => {
 
       <div className="h-5 w-px shrink-0 bg-white/10" />
       <div className="shrink-0 font-mono text-[12px] font-semibold tabular-nums text-foreground/70">{clk}</div>
-
-      <div className="h-5 w-px shrink-0 bg-white/10" />
-      <button
-        type="button"
-        onClick={() => nav("/owner/sarnovul")}
-        className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-[rgb(var(--card-border))] px-2.5 py-1 text-[11px] font-medium text-foreground/70 transition-colors hover:text-foreground"
-      >
-        <LayoutGrid className="size-3.5" /> Modullar
-      </button>
-      <ThemeToggle className="size-7" />
     </div>
   );
 };
