@@ -29,7 +29,7 @@ const InternetDashboardPage = () => {
         <div>
           <h1 className="text-xl font-semibold tracking-tight">Internet ta'minoti analitikasi</h1>
           <p className="mt-0.5 text-sm text-foreground/50">
-            Ko'cha darajasida internet qamrovi, tezlik, optik tolali ulanish va shikoyatlar
+            Sarnovul MFY — ko'cha darajasida internet qamrovi, tezlik, optik tolali ulanish va shikoyatlar
           </p>
         </div>
         <InternetFilters value={state} onChange={setField} />

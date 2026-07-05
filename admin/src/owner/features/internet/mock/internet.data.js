@@ -1,15 +1,15 @@
-// Internet moduli — ko'cha (MFY) kesimida tarmoq ko'rsatkichlari. Barcha label o'zbekcha.
-// Provayder qamrovi, uzilishlar, tezlik va shikoyatlar mock ma'lumoti.
+// Internet moduli — Sarnovul MFY (Baliqchi tumani) ko'chalari kesimida tarmoq ko'rsatkichlari.
+// Kanonik: 763 xonadon, 641 ulangan (qamrov 84%), optika 402, simsiz 239, o'rtacha 68 Mbit/s.
 
 export const STREETS = [
-  { id: "s1", name: "Sarnovul", label: "Sarnovul MFY", households: 1240, covered: 1180, fiber: 920, speed: 78, uptime: 99.2, complaints: 14, outages: 3, status: "yaxshi" },
-  { id: "s2", name: "Bog'ibo'ston", label: "Bog'ibo'ston MFY", households: 980, covered: 760, fiber: 410, speed: 52, uptime: 97.1, complaints: 31, outages: 8, status: "o'rta" },
-  { id: "s3", name: "Yangiobod", label: "Yangiobod MFY", households: 1520, covered: 1490, fiber: 1320, speed: 92, uptime: 99.6, complaints: 9, outages: 2, status: "yaxshi" },
-  { id: "s4", name: "Guliston", label: "Guliston MFY", households: 720, covered: 430, fiber: 120, speed: 31, uptime: 94.3, complaints: 48, outages: 15, status: "kritik" },
-  { id: "s5", name: "Navro'z", label: "Navro'z MFY", households: 1100, covered: 1010, fiber: 840, speed: 71, uptime: 98.4, complaints: 19, outages: 5, status: "yaxshi" },
-  { id: "s6", name: "Do'stlik", label: "Do'stlik MFY", households: 860, covered: 590, fiber: 280, speed: 44, uptime: 96.0, complaints: 37, outages: 11, status: "o'rta" },
-  { id: "s7", name: "Chamanzor", label: "Chamanzor MFY", households: 1340, covered: 1295, fiber: 1180, speed: 88, uptime: 99.4, complaints: 11, outages: 2, status: "yaxshi" },
-  { id: "s8", name: "Qishloqobod", label: "Qishloqobod MFY", households: 540, covered: 260, fiber: 40, speed: 22, uptime: 91.8, complaints: 53, outages: 19, status: "kritik" },
+  { id: "s1", name: "Maslahat", label: "Maslahat ko'chasi", households: 128, covered: 118, fiber: 89, speed: 82, uptime: 99.3, complaints: 3, outages: 1, status: "yaxshi" },
+  { id: "s2", name: "Ulug'vor", label: "Ulug'vor ko'chasi", households: 112, covered: 102, fiber: 76, speed: 78, uptime: 99.1, complaints: 2, outages: 1, status: "yaxshi" },
+  { id: "s3", name: "Urganji", label: "Urganji ko'chasi", households: 96, covered: 87, fiber: 62, speed: 75, uptime: 98.8, complaints: 2, outages: 1, status: "yaxshi" },
+  { id: "s4", name: "Bog'iston", label: "Bog'iston ko'chasi", households: 90, covered: 76, fiber: 48, speed: 66, uptime: 98.2, complaints: 4, outages: 2, status: "o'rta" },
+  { id: "s5", name: "Tinchlik", label: "Tinchlik ko'chasi", households: 88, covered: 74, fiber: 45, speed: 64, uptime: 97.9, complaints: 3, outages: 1, status: "o'rta" },
+  { id: "s6", name: "Do'stlik", label: "Do'stlik ko'chasi", households: 86, covered: 68, fiber: 36, speed: 58, uptime: 97.4, complaints: 5, outages: 2, status: "o'rta" },
+  { id: "s7", name: "Navro'z", label: "Navro'z ko'chasi", households: 84, covered: 65, fiber: 30, speed: 55, uptime: 96.8, complaints: 4, outages: 2, status: "o'rta" },
+  { id: "s8", name: "Guliston", label: "Guliston ko'chasi", households: 79, covered: 51, fiber: 16, speed: 42, uptime: 95.1, complaints: 6, outages: 3, status: "kritik" },
 ];
 
 // ── Antennalar (bazaviy stansiyalar) — xaritada signal sifati bilan ──
@@ -26,14 +26,14 @@ const MAP_LNG = 71.8604;
 const rng = (s) => { const x = Math.sin(s * 71.3 + 9.7) * 43758.5453; return x - Math.floor(x); };
 
 const ANTENNA_META = [
-  { id: "ant-1", name: "Sarnovul BS-1", tech: "5G", provider: "Uztelecom", signal: 92 },
-  { id: "ant-2", name: "Markaz BS-2", tech: "4G/LTE", provider: "UZONLINE", signal: 84 },
-  { id: "ant-3", name: "Bog'ibo'ston BS-3", tech: "4G/LTE", provider: "Comnet", signal: 61 },
+  { id: "ant-1", name: "Sarnovul markaz BS-1", tech: "5G", provider: "Uztelecom", signal: 92 },
+  { id: "ant-2", name: "Maslahat BS-2", tech: "4G/LTE", provider: "UZONLINE", signal: 84 },
+  { id: "ant-3", name: "Bog'iston BS-3", tech: "4G/LTE", provider: "Comnet", signal: 61 },
   { id: "ant-4", name: "Guliston BS-4", tech: "4G", provider: "Uztelecom", signal: 43 },
-  { id: "ant-5", name: "Yangiobod BS-5", tech: "5G", provider: "Sarkor Telekom", signal: 88 },
+  { id: "ant-5", name: "Ulug'vor BS-5", tech: "5G", provider: "Sarkor Telekom", signal: 88 },
   { id: "ant-6", name: "Do'stlik BS-6", tech: "4G/LTE", provider: "Comnet", signal: 58 },
-  { id: "ant-7", name: "Chamanzor BS-7", tech: "5G", provider: "Uztelecom", signal: 90 },
-  { id: "ant-8", name: "Qishloqobod BS-8", tech: "3G/4G", provider: "UZONLINE", signal: 38 },
+  { id: "ant-7", name: "Urganji BS-7", tech: "5G", provider: "Uztelecom", signal: 90 },
+  { id: "ant-8", name: "Tinchlik BS-8", tech: "3G/4G", provider: "UZONLINE", signal: 38 },
   { id: "ant-9", name: "Navro'z BS-9", tech: "4G/LTE", provider: "Sarkor Telekom", signal: 76 },
 ];
 
@@ -46,8 +46,8 @@ export const ANTENNAS = ANTENNA_META.map((a, i) => {
   const status = signalStatus(a.signal);
   // qamrov radiusi (m) — signal kuchiga bog'liq
   const coverageM = Math.round(350 + (a.signal / 100) * 650);
-  // ulangan abonentlar — taxminiy
-  const users = Math.round(180 + rng(i * 3.3) * 1400);
+  // ulangan simsiz abonentlar — taxminiy (jami ~239 simsiz xonadon)
+  const users = Math.round(16 + rng(i * 3.3) * 35);
   return { ...a, lat, lng, status, coverageM, users };
 });
 
@@ -83,7 +83,7 @@ export const HOUSES = Array.from({ length: 130 }, (_, i) => {
   }
   // tezlik — antenna signali × uzoqlik so'nishi (qamrov radiusidan tashqarida keskin tushadi)
   const falloff = Math.max(0.12, 1 - best / (nearest.coverageM * 1.4));
-  const base = nearest.tech.includes("5G") ? 120 : nearest.tech.includes("LTE") ? 70 : 35;
+  const base = nearest.tech.includes("5G") ? 142 : nearest.tech.includes("LTE") ? 90 : 48;
   const mbps = Math.max(2, Math.round(base * (nearest.signal / 100) * falloff * (0.85 + rng(i * 5.1) * 0.3)));
 
   return {

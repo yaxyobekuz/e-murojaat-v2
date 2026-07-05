@@ -31,12 +31,13 @@ export const summary = (streetId) => {
     complaints,
     outages,
     critical,
-    deltas: { coverage: 5.4, avgSpeed: 12.8, uptime: 0.6, complaints: -8.2 },
+    deltas: { coverage: 1.9, avgSpeed: 3.0, uptime: 0.3, complaints: -8.2 },
   };
 };
 
-const MONTHS = ["Yan", "Fev", "Mar", "Apr", "May", "Iyn", "Iyl", "Avg", "Sen", "Okt", "Noy", "Dek"];
-const SPEED_TREND = [0.74, 0.78, 0.81, 0.83, 0.86, 0.88, 0.9, 0.92, 0.94, 0.96, 0.98, 1.0];
+const MONTHS = ["Iyl", "Avg", "Sen", "Okt", "Noy", "Dek", "Yan", "Fev", "Mar", "Apr", "May", "Iyn"];
+// Kanonik seriya (base=68): 41, 44, 47, 49, 52, 54, 57, 60, 62, 64, 66, 68
+const SPEED_TREND = [0.6029, 0.6471, 0.6912, 0.7206, 0.7647, 0.7941, 0.8382, 0.8824, 0.9118, 0.9412, 0.9706, 1.0];
 
 // 12 oylik o'rtacha tezlik dinamikasi (Mbit/s)
 export const speedTrend = (streetId) => {
@@ -54,15 +55,15 @@ export const coverageByStreet = () =>
     .sort((a, b) => a.covered / a.households - b.covered / b.households)
     .map((s) => ({ key: s.name, value: round((s.covered / s.households) * 100, 0) }));
 
-// Ulanish texnologiyasi taqsimoti (donut) — fiber vs ADSL vs mobil
+// Ulanish texnologiyasi taqsimoti (donut) — optika 402 vs simsiz 239 (radio + mobil)
 export const techMix = (streetId) => {
   const s = summary(streetId);
   const fiber = s.fiber;
   const rest = s.covered - fiber;
   return [
     { key: "fiber", label: "Optik tolali (FTTH)", value: fiber },
-    { key: "adsl", label: "ADSL / mis", value: Math.round(rest * 0.58) },
-    { key: "mobil", label: "Mobil (4G/5G)", value: Math.round(rest * 0.42) },
+    { key: "adsl", label: "Simsiz (radio)", value: Math.round(rest * 0.58) },
+    { key: "mobil", label: "Simsiz (mobil 4G/5G)", value: Math.round(rest * 0.42) },
   ];
 };
 
