@@ -30,12 +30,14 @@ import { MskAnalyticsPage, MskAppealsPage } from "@/owner/features/msk";
 import { GazAnalyticsPage, GazStreetsPage } from "@/owner/features/gaz";
 import { AsosiyDashboardPage } from "@/owner/features/asosiy";
 import { MarkazDashboardPage } from "@/owner/features/markaz";
+import { SarnovulDashboardPage } from "@/owner/features/sarnovul";
 
 const OwnerRoutes = () => (
   <Routes>
     <Route index element={<Navigate to="asosiy" replace />} />
     <Route path="asosiy" element={<AsosiyDashboardPage />} />
     <Route path="markaz" element={<MarkazDashboardPage />} />
+    <Route path="sarnovul" element={<SarnovulDashboardPage />} />
     <Route path="yer" element={<YerDashboardPage />} />
     <Route path="yer/reyestr" element={<YerRegistryPage />} />
     <Route path="yer/arizalar" element={<YerRequestsPage />} />

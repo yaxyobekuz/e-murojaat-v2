@@ -1,4 +1,4 @@
-import { LayoutDashboard, LayoutGrid, Trees, Users, Home, Landmark, Map, GraduationCap, Shield, Flame, Store, TriangleAlert, Layers, Zap, Wrench, ClipboardList, Fuel, Route as RouteIcon, Network, Wifi, Container } from "lucide-react";
+import { LayoutDashboard, LayoutGrid, Trees, Users, Home, Landmark, Map, GraduationCap, Shield, Flame, Store, TriangleAlert, Layers, Zap, Wrench, ClipboardList, Fuel, Route as RouteIcon, Network, Wifi, Container, Building2 } from "lucide-react";
 
 const ownerSidebar = [
   {
@@ -6,6 +6,12 @@ const ownerSidebar = [
     title: "Asosiy",
     icon: LayoutGrid,
     items: [{ title: "Umumiy ko'rinish", url: "/owner/asosiy", icon: Home }],
+  },
+  {
+    key: "sarnovul",
+    title: "Sarnovul MFY",
+    icon: Building2,
+    items: [{ title: "Mahalla pasporti", url: "/owner/sarnovul", icon: Home }],
   },
   {
     key: "dashboard",
