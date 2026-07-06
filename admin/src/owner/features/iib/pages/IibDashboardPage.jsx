@@ -173,7 +173,7 @@ function EPanel({ title, subtitle, note, option, className = "scc-c6", delay = 0
 }
 
 /* ───────── Hex xarita ───────── */
-const HEXB = [["Markaziy", 1], ["Bog'", 0], ["Maktab-12", 0], ["Bozor", 3], ["Sanoat", 4], ["Yangi daha", 1], ["Maktab-47", 0], ["Chekka", 3], ["Park", 0], ["Stadion", 1], ["Avtostansiya", 4], ["Eski mahalla", 2]].map(([name, risk]) => ({ name, risk }));
+const HEXB = [["Markaziy", 1], ["Bog'", 0], ["Maktab-66", 0], ["Bozor", 3], ["Sanoat", 4], ["Yangi daha", 1], ["Maktab-67", 0], ["Chekka", 3], ["Park", 0], ["Stadion", 1], ["Avtostansiya", 4], ["Eski mahalla", 2]].map(([name, risk]) => ({ name, risk }));
 function HexMap() {
   const [hv, setHv] = useState(null); const s = 34, w = s * 1.5, h = Math.sqrt(3) * s;
   const col = (r) => [T.green, "#86c98f", T.gold, "#e08a2c", T.alarm][r];

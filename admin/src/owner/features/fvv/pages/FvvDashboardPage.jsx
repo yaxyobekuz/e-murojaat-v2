@@ -133,7 +133,7 @@ function EPanel({ title, subtitle, note, option, className = "fcc-c6", delay = 0
 }
 
 /* ───────── Hex xavf xaritasi ───────── */
-const HEXB = [["Markaziy", 1, "—"], ["Bog'", 0, "—"], ["Maktab-12", 0, "—"], ["Bozor", 2, "elektr"], ["Sanoat", 4, "yong'in"], ["Yangi daha", 1, "—"], ["Maktab-47", 0, "—"], ["Ariq yoqasi", 3, "suv"], ["Park", 0, "—"], ["Gaz punkti", 4, "gaz"], ["Avtostansiya", 2, "texnogen"], ["Eski mahalla", 3, "yong'in"]].map(([name, risk, kind]) => ({ name, risk, kind }));
+const HEXB = [["Markaziy", 1, "—"], ["Bog'", 0, "—"], ["Maktab-66", 0, "—"], ["Bozor", 2, "elektr"], ["Sanoat", 4, "yong'in"], ["Yangi daha", 1, "—"], ["Maktab-67", 0, "—"], ["Ariq yoqasi", 3, "suv"], ["Park", 0, "—"], ["Gaz punkti", 4, "gaz"], ["Avtostansiya", 2, "texnogen"], ["Eski mahalla", 3, "yong'in"]].map(([name, risk, kind]) => ({ name, risk, kind }));
 function HexMap() {
   const [hv, setHv] = useState(null); const s = 34, w = s * 1.5, h = Math.sqrt(3) * s;
   const col = (r) => [T.green, "#86c98f", T.gold, "#e08a2c", T.alarm][r];
@@ -283,7 +283,7 @@ const FvvDashboardPage = () => {
           </div>
           <div className="fcc-card fcc-c4" style={{ animationDelay: "520ms" }}>
             <div className="hd"><div><div className="t">Evakuatsiya</div><div className="s">Yig'ilish nuqtalari</div></div></div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>{[["Maktab hovlisi (12-maktab)", "1 200 kishi"], ["Markaziy maydon", "2 000 kishi"]].map(([n, cap]) => <div key={n} style={{ border: `1px solid ${T.border}`, borderRadius: 10, padding: "10px 12px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(255,255,255,.02)" }}><div><div style={{ fontWeight: 600, fontSize: 12.5 }}>📍 {n}</div><div style={{ fontSize: 10.5, color: T.muted }}>yig'ilish nuqtasi</div></div><span className="mono" style={{ color: T.teal, fontSize: 12 }}>{cap}</span></div>)}</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>{[["Maktab hovlisi (66-son maktab)", "1 200 kishi"], ["Markaziy maydon", "2 000 kishi"]].map(([n, cap]) => <div key={n} style={{ border: `1px solid ${T.border}`, borderRadius: 10, padding: "10px 12px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(255,255,255,.02)" }}><div><div style={{ fontWeight: 600, fontSize: 12.5 }}>📍 {n}</div><div style={{ fontSize: 10.5, color: T.muted }}>yig'ilish nuqtasi</div></div><span className="mono" style={{ color: T.teal, fontSize: 12 }}>{cap}</span></div>)}</div>
           </div>
           <div className="fcc-card fcc-c4" style={{ animationDelay: "560ms" }}>
             <div className="hd"><div><div className="t">Yong'in tekshiruvlari & mashqlar</div><div className="s">Profilaktika</div></div></div>

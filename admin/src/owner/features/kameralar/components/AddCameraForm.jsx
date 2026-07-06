@@ -34,7 +34,7 @@ const AddCameraForm = () => {
 
       <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <label className="text-xs font-medium text-foreground/60">Nomi
-          <input className={cn(inputCls, "mt-1")} value={name} onChange={(e) => setField("name", e.target.value)} placeholder="Masalan: Maktab-12 darvoza" required />
+          <input className={cn(inputCls, "mt-1")} value={name} onChange={(e) => setField("name", e.target.value)} placeholder="Masalan: 66-son maktab darvozasi" required />
         </label>
         <label className="text-xs font-medium text-foreground/60">IP manzil
           <input className={cn(inputCls, "mt-1")} value={ip} onChange={(e) => setField("ip", e.target.value)} placeholder="192.168.1.64" required />
