@@ -1,5 +1,5 @@
 // Gaz moduli — Sarnovul MFY ko'chalari bo'yicha ta'minot ma'lumoti.
-// Ikki yo'nalish: gaz balon (LPG) + gazlashtirish (quvur). Seedlangan PRNG => barqaror.
+// Kanonik raqamlar: 763 xonadon (quvur 218 + balon 486 + yo'q 59), 4 306 aholi, 14 ko'cha.
 export const MAHALLA = "Sarnovul MFY";
 export const PLACE_LABEL = "Sarnovul MFY, Baliqchi tumani, Andijon";
 export const REF = new Date(2026, 5, 24);
@@ -31,78 +31,62 @@ export const INCIDENT_TYPE = {
 
 export const SUPPLIERS = [
   { id: "sup_1", name: "Hududgaz filiali", reliability: 96 },
-  { id: "sup_2", name: "Baliqchi gaz xizmati", reliability: 88 },
-  { id: "sup_3", name: "Sarnovul balon punkti", reliability: 79 },
-  { id: "sup_4", name: "Andijon LPG", reliability: 71 },
+  { id: "sup_2", name: "Baliqchi gaz xizmati", reliability: 90 },
+  { id: "sup_3", name: "Sarnovul balon punkti", reliability: 94 },
+  { id: "sup_4", name: "Andijon LPG", reliability: 78 },
 ];
 
-const rng = (seed) => () => {
-  seed |= 0; seed = (seed + 0x6d2b79f5) | 0;
-  let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-};
-const rint = (r, a, b) => Math.round(a + r() * (b - a));
-const rnum = (r, a, b, d = 1) => Math.round((a + r() * (b - a)) * 10 ** d) / 10 ** d;
-
-// Ko'cha (nom, ta'minot turi, holat) — izchil juftliklar
+// Ko'cha ma'lumoti — kanonikka moslangan aniq qiymatlar (random emas):
+// hh=xonadon, pop=aholi, need=oylik balon talabi, month=oylik yetkazilgan balon,
+// cycle=yetkazish davri (kun), gap=eng uzoq uzilish, last=oxirgi yetkazish (necha kun oldin).
 const SEED = [
-  ["Sarnovul", "aralash", "yashil"], ["Navoiy", "quvur", "yashil"], ["Bobur", "quvur", "yashil"],
-  ["Amir Temur", "quvur", "sariq"], ["Fidokor", "balon", "yashil"], ["Istiqlol", "balon", "sariq"],
-  ["Do'stlik", "balon", "qizil"], ["Bog'", "aralash", "sariq"], ["Chinor", "quvur", "yashil"],
-  ["Guliston", "balon", "qizil"], ["Mustaqillik", "quvur", "sariq"], ["Yangi hayot", "yoq", "qora"],
-  ["Marvarid", "balon", "qizil"], ["Oqtepa", "yoq", "qora"],
+  { name: "Sarnovul", supplyType: "quvur", status: "yashil", hh: 82, pop: 463, pipeKm: 1.8, inc: 0, repairH: 3.5, uptime: 99.2 },
+  { name: "Navoiy", supplyType: "quvur", status: "yashil", hh: 74, pop: 418, pipeKm: 1.6, inc: 1, repairH: 4.2, uptime: 98.4 },
+  { name: "Bobur", supplyType: "quvur", status: "sariq", hh: 62, pop: 350, pipeKm: 1.4, inc: 2, repairH: 7.5, uptime: 94.1 },
+  { name: "Amir Temur", supplyType: "balon", status: "yashil", hh: 64, pop: 361, need: 179, month: 179, cycle: 12, gap: 16, last: 4, supplierId: "sup_3" },
+  { name: "Maslahat", supplyType: "balon", status: "yashil", hh: 58, pop: 327, need: 162, month: 162, cycle: 10, gap: 14, last: 2, supplierId: "sup_3" },
+  { name: "Istiqlol", supplyType: "balon", status: "yashil", hh: 61, pop: 344, need: 171, month: 171, cycle: 11, gap: 15, last: 3, supplierId: "sup_2" },
+  { name: "Do'stlik", supplyType: "balon", status: "qizil", hh: 47, pop: 265, need: 132, month: 55, cycle: 48, gap: 86, last: 31, supplierId: "sup_4" },
+  { name: "Ulug'vor", supplyType: "balon", status: "yashil", hh: 55, pop: 310, need: 154, month: 152, cycle: 12, gap: 17, last: 5, supplierId: "sup_3" },
+  { name: "Chinor", supplyType: "balon", status: "yashil", hh: 52, pop: 293, need: 146, month: 144, cycle: 13, gap: 18, last: 6, supplierId: "sup_2" },
+  { name: "Guliston", supplyType: "balon", status: "yashil", hh: 49, pop: 277, need: 137, month: 135, cycle: 12, gap: 16, last: 4, supplierId: "sup_3" },
+  { name: "Mustaqillik", supplyType: "balon", status: "yashil", hh: 57, pop: 322, need: 160, month: 158, cycle: 11, gap: 15, last: 3, supplierId: "sup_2" },
+  { name: "Urganji", supplyType: "balon", status: "sariq", hh: 43, pop: 243, need: 119, month: 98, cycle: 21, gap: 36, last: 12, supplierId: "sup_4" },
+  { name: "Yangi hayot", supplyType: "yoq", status: "qora", hh: 34, pop: 192 },
+  { name: "Oqtepa", supplyType: "yoq", status: "qora", hh: 25, pop: 141 },
 ];
 
-const TIER = {
-  yashil: { cov: [0.92, 1.0], cycle: [9, 14], uptime: [97, 99.5], repair: [2, 5], gas: [88, 100], inc: [0, 1] },
-  sariq: { cov: [0.6, 0.82], cycle: [18, 30], uptime: [92, 96], repair: [5, 10], gas: [55, 80], inc: [1, 3] },
-  qizil: { cov: [0.2, 0.42], cycle: [40, 70], uptime: [80, 90], repair: [10, 24], gas: [20, 45], inc: [2, 5] },
-  qora: { cov: [0, 0.1], cycle: [90, 150], uptime: [0, 0], repair: [0, 0], gas: [0, 8], inc: [0, 0] },
-};
-
-const build = () => {
-  const r = rng(930624);
-  return SEED.map(([name, supplyType, status], i) => {
-    const t = TIER[status];
-    const households = rint(r, 180, 720);
-    const population = Math.round(households * (3.6 + r() * 1.6));
-    const usesBalon = supplyType === "balon" || supplyType === "aralash";
-    const usesPipe = supplyType === "quvur" || supplyType === "aralash";
-
-    const balonHomes = supplyType === "balon" ? households : supplyType === "aralash" ? Math.round(households * 0.5) : supplyType === "yoq" ? households : 0;
-    const need = usesBalon || supplyType === "yoq" ? Math.round(balonHomes * 1.1) : 0;
-    const coverage = rnum(r, t.cov[0], t.cov[1], 2);
-    const cylindersPerMonth = Math.round(need * coverage);
-    const cycle = rint(r, t.cycle[0], t.cycle[1]);
+const build = () =>
+  SEED.map((s, i) => {
+    const usesBalon = s.supplyType === "balon" || s.supplyType === "aralash";
+    const usesPipe = s.supplyType === "quvur" || s.supplyType === "aralash";
+    const need = s.need || 0;
+    const month = s.month || 0;
 
     return {
       id: `st_${String(i + 1).padStart(2, "0")}`,
-      name,
-      supplyType,
-      status,
-      households,
-      population,
-      balonHomes,
+      name: s.name,
+      supplyType: s.supplyType,
+      status: s.status,
+      households: s.hh,
+      population: s.pop,
+      balonHomes: usesBalon ? s.hh : 0,
       cylindersNeeded: need,
-      cylindersPerMonth,
-      coveragePct: need ? Math.round((cylindersPerMonth / need) * 100) : null,
-      avgCylindersPerFamily: balonHomes ? Math.round((cylindersPerMonth / balonHomes) * 10) / 10 : 0,
-      perCapita: population ? Math.round((cylindersPerMonth / population) * 100) / 100 : 0,
-      deliveryCycleDays: usesBalon || supplyType === "yoq" ? cycle : null,
-      longestGapDays: usesBalon || supplyType === "yoq" ? Math.round(cycle * (1.4 + r() * 1.4)) : null,
-      lastDeliveryDate: usesBalon
-        ? new Date(REF.getTime() - cycle * (0.3 + r() * 1.6) * DAY).toISOString()
-        : null,
-      supplierId: usesBalon ? SUPPLIERS[rint(r, 0, SUPPLIERS.length - 1)].id : null,
-      gasifiedPct: usesPipe ? rint(r, t.gas[0], t.gas[1]) : supplyType === "yoq" ? 0 : rint(r, 0, 8),
-      pipelineKm: usesPipe ? rnum(r, 0.6, 4.2, 1) : 0,
-      openIncidents: usesPipe ? rint(r, t.inc[0], t.inc[1]) : 0,
-      avgRepairH: usesPipe ? rnum(r, t.repair[0], t.repair[1], 1) : null,
-      uptimePct: usesPipe ? rnum(r, t.uptime[0], t.uptime[1], 1) : null,
+      cylindersPerMonth: month,
+      coveragePct: need ? Math.round((month / need) * 100) : null,
+      avgCylindersPerFamily: usesBalon && s.hh ? Math.round((month / s.hh) * 10) / 10 : 0,
+      perCapita: s.pop ? Math.round((month / s.pop) * 100) / 100 : 0,
+      deliveryCycleDays: usesBalon ? s.cycle : null,
+      longestGapDays: usesBalon ? s.gap : null,
+      lastDeliveryDate: usesBalon ? new Date(REF.getTime() - s.last * DAY).toISOString() : null,
+      supplierId: usesBalon ? s.supplierId : null,
+      gasifiedPct: usesPipe ? 100 : 0,
+      pipelineKm: usesPipe ? s.pipeKm : 0,
+      openIncidents: usesPipe ? s.inc : 0,
+      avgRepairH: usesPipe ? s.repairH : null,
+      uptimePct: usesPipe ? s.uptime : null,
     };
   });
-};
 
 export const STREETS = build();
 export const streetById = (id) => STREETS.find((s) => s.id === id);

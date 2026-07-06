@@ -14,7 +14,8 @@ const monthIdx = (iso) => {
   const d = new Date(iso);
   return months.findIndex((w) => w.y === d.getFullYear() && w.m === d.getMonth());
 };
-const seasonF = (m) => [1.45, 1.4, 1.1, 0.85, 0.7, 0.62, 0.6, 0.62, 0.75, 1.0, 1.25, 1.45][m];
+// Talab mavsumiyligi: iyun (1360 balon) = 1.0 bazaviy oy
+const seasonF = (m) => [1.42, 1.3, 1.16, 1.06, 1.01, 1.0, 0.95, 0.93, 0.98, 1.1, 1.24, 1.38][m];
 const sum = (a, f) => a.reduce((s, x) => s + f(x), 0);
 const round = (v, d = 1) => Math.round(v * 10 ** d) / 10 ** d;
 
@@ -50,7 +51,7 @@ export const summary = (f) => {
     problemStreets: ss.filter((s) => s.status === "qizil" || s.status === "qora").length,
     avgRepairH: pipe.length ? round(sum(pipe, (s) => s.avgRepairH) / pipe.length, 1) : 0,
     openIncidents: sum(ss, (s) => s.openIncidents),
-    deltas: { gasifiedPct: 2.4, cylindersMonth: 5.1, avgCycle: -3.6, regularPct: 4.0 },
+    deltas: { gasifiedPct: 0.9, cylindersMonth: -1.3, avgCycle: -0.8, regularPct: 1.2 },
   };
 };
 

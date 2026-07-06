@@ -18,8 +18,8 @@ const build = () => {
 
   STREETS.forEach((s) => {
     if (s.avgRepairH == null) return; // faqat quvur/aralash
-    // Yillik muammolar soni: ochiq + bartaraf etilganlar
-    const count = s.openIncidents + Math.round((s.openIncidents + 1) * (1.5 + r() * 2));
+    // Yillik muammolar soni: ochiq + bartaraf etilganlar (mahalla masshtabi)
+    const count = s.openIncidents + Math.round((s.openIncidents + 1) * (0.8 + r() * 1.2));
     for (let i = 0; i < count; i++) {
       n += 1;
       const reportedAt = new Date(REF.getTime() - r() * 365 * DAY);
