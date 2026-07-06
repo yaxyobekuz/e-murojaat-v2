@@ -48,20 +48,20 @@ const BBOX = {
 
 // 15 blok uchun holat + nomi
 const CELL_META = [
-  { status: "calm", name: "Markaziy ko'cha" },
+  { status: "calm", name: "Maslahat ko'chasi" },
   { status: "alert", name: "Bozor atrofi" },
-  { status: "calm", name: "Maktab-7 hududi" },
+  { status: "calm", name: "Maktab-66 hududi" },
   { status: "incident", name: "Sanoat zonasi" },
-  { status: "calm", name: "Bog' mahalla" },
+  { status: "calm", name: "Ulug'vor ko'chasi" },
   { status: "alert", name: "Avtostansiya" },
-  { status: "incident", name: "Eski shahar" },
+  { status: "incident", name: "Eski guzar" },
   { status: "alert", name: "Yangi qurilish" },
   { status: "calm", name: "Tibbiyot punkti" },
-  { status: "incident", name: "Temir yo'l o'tkagichi" },
+  { status: "incident", name: "Kanal ko'prigi" },
   { status: "calm", name: "Stadion atrofi" },
   { status: "incident", name: "Chekka dahasi" },
   { status: "alert", name: "Savdo markazi" },
-  { status: "calm", name: "Park zonasi" },
+  { status: "calm", name: "Urganji ko'chasi" },
   { status: "alert", name: "Sanoat darvozasi" },
 ];
 
@@ -208,7 +208,7 @@ const buildIncidents = (b, bi) => {
   return out;
 };
 
-const CAM_ANGLES = ["Shimoliy kirish", "Markaziy ko'cha", "Bozor tarafi", "Hovli ichi", "Avtoturargoh", "Yon ko'cha"];
+const CAM_ANGLES = ["Shimoliy kirish", "Maslahat ko'chasi", "Bozor tarafi", "Hovli ichi", "Avtoturargoh", "Yon ko'cha"];
 const buildCameras = (b, bi) => {
   const n = 2 + Math.floor(rng(bi * 8.1 + 2) * 3); // 2..4
   const out = [];

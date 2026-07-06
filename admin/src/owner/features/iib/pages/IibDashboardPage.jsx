@@ -32,11 +32,11 @@ const REGISTERED = Array.from({ length: 40 }, () => genNumber(pick(MAHALLA_REG))
 const CCTV_FILTER = "grayscale(.38) contrast(1.12) saturate(.72) brightness(.92)";
 const vid = (id, f) => `https://videos.pexels.com/video-files/${id}/${f}.mp4`;
 const fl = (kw, lock) => `https://loremflickr.com/420/260/${kw}?lock=${lock}`;
-// O'tayotgan mashina: 80% ro'yxatdan (yashil), 20% begona (qizil)
+// O'tayotgan mashina: 92% ro'yxatdan (yashil), 8% begona (qizil)
 let CARID = 0;
 const nextCar = (cam) => {
   CARID++;
-  const foreign = Math.random() < 0.2;
+  const foreign = Math.random() < 0.08;
   const plate = foreign
     ? (Math.random() < 0.7 ? genNumber(pick(REGIONS.filter((r) => !MAHALLA_REG.includes(r)))) : genNumber("01"))
     : pick(REGISTERED);
@@ -194,7 +194,7 @@ function HexMap() {
 }
 
 /* ───────── Kamera devori ───────── */
-const CAMS = ["Kirish — Sarnovul ko'chasi", "Chiqish — Bog' ko'chasi", "Markaziy chorraha", "Maktab oldi", "Bozor kirishi", "MFY posti"];
+const CAMS = ["Kirish — Maslahat ko'chasi", "Chiqish — Ulug'vor ko'chasi", "Urganji chorrahasi", "Maktab oldi", "Bozor kirishi", "MFY posti"];
 const CAM_VIDEOS = [
   vid(2034115, "2034115-sd_640_360_30fps"), vid(5921059, "5921059-sd_640_360_30fps"), vid(1721294, "1721294-sd_640_360_25fps"),
   vid(857195, "857195-sd_640_360_25fps"), vid(2099536, "2099536-sd_640_360_30fps"), vid(854671, "854671-sd_640_360_25fps"),
@@ -268,8 +268,8 @@ const IibDashboardPage = () => {
 
   const [cars, setCars] = useState(() => Array.from({ length: 8 }, () => nextCar(pick(CAMS))));
   const [alarms, setAlarms] = useState([]);
-  const [passed, setPassed] = useState(312);
-  const [foreign, setForeign] = useState(58);
+  const [passed, setPassed] = useState(132);
+  const [foreign, setForeign] = useState(4);
   const [selCam, setSelCam] = useState(null);
   const [selCar, setSelCar] = useState(null);
   const [registry, setRegistry] = useState(() => Array.from({ length: 36 }, () => { const c = nextCar(pick(CAMS)); return { ...c, time: `${pad(ri(6, 20))}:${pad(ri(0, 59))}:${pad(ri(0, 59))}` }; }).sort((a, b) => (a.time < b.time ? 1 : -1)));
@@ -291,19 +291,19 @@ const IibDashboardPage = () => {
     return () => { stop = true; clearTimeout(id); };
   }, []);
 
-  const safeDays = useCountUp(47); const prof = useCountUp(34); const open102 = useCountUp(12);
+  const safeDays = useCountUp(47); const prof = useCountUp(9); const open102 = useCountUp(2);
   const latest = alarms[0];
 
   /* charts */
-  const flow24 = useMemo(() => ({ backgroundColor: "transparent", grid: { left: 8, right: 12, top: 22, bottom: 22, containLabel: true }, tooltip: { trigger: "axis", backgroundColor: "#0c1620", borderColor: T.border, textStyle: { color: T.text } }, legend: { right: 6, top: 0, textStyle: { color: T.muted, fontSize: 10 } }, xAxis: { type: "category", data: Array.from({ length: 24 }, (_, i) => `${i}`), axisLabel: { color: T.muted, fontSize: 9 }, axisLine: { lineStyle: { color: "rgba(255,255,255,.14)" } } }, yAxis: { type: "value", splitLine: { lineStyle: { color: "rgba(255,255,255,.05)" } }, axisLabel: { color: T.muted, fontSize: 9 } }, series: [{ name: "Kirish", type: "line", smooth: true, symbol: "none", data: Array.from({ length: 24 }, (_, i) => 6 + Math.round(14 * Math.sin(i / 3) + i)), lineStyle: { color: T.teal, width: 2 }, areaStyle: { color: "rgba(45,212,191,.12)" } }, { name: "Chiqish", type: "line", smooth: true, symbol: "none", data: Array.from({ length: 24 }, (_, i) => 5 + Math.round(12 * Math.cos(i / 3) + i)), lineStyle: { color: T.gold, width: 2 }, areaStyle: { color: "rgba(224,169,59,.10)" } }] }), []);
-  const foreign7 = useMemo(() => ({ backgroundColor: "transparent", grid: { left: 8, right: 12, top: 16, bottom: 22, containLabel: true }, tooltip: { trigger: "axis", backgroundColor: "#0c1620", borderColor: T.border, textStyle: { color: T.text } }, xAxis: { type: "category", data: ["Du", "Se", "Ch", "Pa", "Ju", "Sh", "Ya"], axisLabel: { color: T.muted, fontSize: 10 }, axisLine: { lineStyle: { color: "rgba(255,255,255,.14)" } } }, yAxis: { type: "value", splitLine: { lineStyle: { color: "rgba(255,255,255,.05)" } }, axisLabel: { color: T.muted, fontSize: 9 } }, series: [{ type: "bar", data: [42, 51, 38, 60, 47, 73, 58], itemStyle: { color: T.alarm, borderRadius: [4, 4, 0, 0] }, barWidth: "55%" }] }), []);
-  const profDonut = useMemo(() => ({ backgroundColor: "transparent", tooltip: { trigger: "item", backgroundColor: "#0c1620", borderColor: T.border, textStyle: { color: T.text } }, legend: { bottom: 0, textStyle: { color: T.muted, fontSize: 10 }, icon: "circle" }, series: [{ type: "pie", radius: ["48%", "72%"], center: ["50%", "42%"], label: { show: false }, data: [{ value: 6, name: "Giyohvandlik", itemStyle: { color: T.alarm } }, { value: 11, name: "Oila-maishiy", itemStyle: { color: T.gold } }, { value: 9, name: "Reabilitatsiya", itemStyle: { color: T.teal } }, { value: 4, name: "Voyaga yetmagan", itemStyle: { color: "#7c6cf0" } }, { value: 4, name: "Temir daftar", itemStyle: { color: T.green } }] }] }), []);
+  const flow24 = useMemo(() => ({ backgroundColor: "transparent", grid: { left: 8, right: 12, top: 22, bottom: 22, containLabel: true }, tooltip: { trigger: "axis", backgroundColor: "#0c1620", borderColor: T.border, textStyle: { color: T.text } }, legend: { right: 6, top: 0, textStyle: { color: T.muted, fontSize: 10 } }, xAxis: { type: "category", data: Array.from({ length: 24 }, (_, i) => `${i}`), axisLabel: { color: T.muted, fontSize: 9 }, axisLine: { lineStyle: { color: "rgba(255,255,255,.14)" } } }, yAxis: { type: "value", splitLine: { lineStyle: { color: "rgba(255,255,255,.05)" } }, axisLabel: { color: T.muted, fontSize: 9 } }, series: [{ name: "Kirish", type: "line", smooth: true, symbol: "none", data: Array.from({ length: 24 }, (_, i) => 2 + Math.round(4 * Math.sin(i / 3) + i / 4)), lineStyle: { color: T.teal, width: 2 }, areaStyle: { color: "rgba(45,212,191,.12)" } }, { name: "Chiqish", type: "line", smooth: true, symbol: "none", data: Array.from({ length: 24 }, (_, i) => 2 + Math.round(3 * Math.cos(i / 3) + i / 4)), lineStyle: { color: T.gold, width: 2 }, areaStyle: { color: "rgba(224,169,59,.10)" } }] }), []);
+  const foreign7 = useMemo(() => ({ backgroundColor: "transparent", grid: { left: 8, right: 12, top: 16, bottom: 22, containLabel: true }, tooltip: { trigger: "axis", backgroundColor: "#0c1620", borderColor: T.border, textStyle: { color: T.text } }, xAxis: { type: "category", data: ["Du", "Se", "Ch", "Pa", "Ju", "Sh", "Ya"], axisLabel: { color: T.muted, fontSize: 10 }, axisLine: { lineStyle: { color: "rgba(255,255,255,.14)" } } }, yAxis: { type: "value", splitLine: { lineStyle: { color: "rgba(255,255,255,.05)" } }, axisLabel: { color: T.muted, fontSize: 9 } }, series: [{ type: "bar", data: [3, 5, 2, 6, 3, 7, 4], itemStyle: { color: T.alarm, borderRadius: [4, 4, 0, 0] }, barWidth: "55%" }] }), []);
+  const profDonut = useMemo(() => ({ backgroundColor: "transparent", tooltip: { trigger: "item", backgroundColor: "#0c1620", borderColor: T.border, textStyle: { color: T.text } }, legend: { bottom: 0, textStyle: { color: T.muted, fontSize: 10 }, icon: "circle" }, series: [{ type: "pie", radius: ["48%", "72%"], center: ["50%", "42%"], label: { show: false }, data: [{ value: 2, name: "Giyohvandlik", itemStyle: { color: T.alarm } }, { value: 3, name: "Oila-maishiy", itemStyle: { color: T.gold } }, { value: 2, name: "Reabilitatsiya", itemStyle: { color: T.teal } }, { value: 1, name: "Voyaga yetmagan", itemStyle: { color: "#7c6cf0" } }, { value: 1, name: "Temir daftar", itemStyle: { color: T.green } }] }] }), []);
 
   return (
     <div className="scc">
       <div className="scc-top">
         <div className="scc-emb">IIB</div>
-        <div style={{ marginRight: "auto" }}><div className="nm">Xavfsizlik Komandavoy Markazi</div><div className="sb">Sarnovul MFY · Baliqchi tumani, Andijon</div></div>
+        <div style={{ marginRight: "auto" }}><div className="nm">Xavfsizlik Komandavoy Markazi</div><div className="sb">Sarnovul MFY · Baliqchi tumani, Andijon · 4 306 aholi · 763 xonadon</div></div>
         <span className="scc-live"><i /> JONLI</span><span className="scc-demo">DEMO — namunaviy</span>
         <div className="sb mono"><Clk /></div>
       </div>
@@ -313,7 +313,7 @@ const IibDashboardPage = () => {
         <div className="scc-hero">
           <div className="scc-safe"><div style={{ fontSize: 11, color: "#9fe3c4", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".5px" }}>Jinoyatsiz kunlar</div><div className="big">{fmt(safeDays)}</div><div style={{ fontSize: 11.5, color: T.muted, marginTop: 6 }}>Sarnovul MFY · uzluksiz</div></div>
           <div className="scc-kpi" role="button" tabIndex={0} style={{ cursor: "pointer" }} onClick={() => setRegOpen(true)} onKeyDown={(e) => e.key === "Enter" && setRegOpen(true)}><div className="lab">Bugun o'tgan avto</div><div className="val" style={{ color: T.text }}>{fmt(passed)}</div><div style={{ fontSize: 11, marginTop: 2 }}><span style={{ color: T.alarm }}>begona: {fmt(foreign)}</span> · <span style={{ color: T.gold }}>kirim/chiqim jurnali →</span></div></div>
-          <div className="scc-kpi"><div className="lab">Profilaktik hisob</div><div className="val" style={{ color: T.gold }}>{fmt(prof)}</div><div style={{ fontSize: 11, color: T.muted, marginTop: 2 }}>shaxs</div></div>
+          <div className="scc-kpi"><div className="lab">Profilaktik hisob</div><div className="val" style={{ color: T.gold }}>{fmt(prof)}</div><div style={{ fontSize: 11, color: T.muted, marginTop: 2 }}>oila</div></div>
           <div className="scc-kpi"><div className="lab">Ochiq 102 murojaat</div><div className="val" style={{ color: T.teal }}>{fmt(open102)}</div><div style={{ fontSize: 11, color: T.muted, marginTop: 2 }}>ko'rib chiqilmoqda</div></div>
         </div>
 
@@ -371,18 +371,18 @@ const IibDashboardPage = () => {
         <div className="scc-grid">
           <EPanel className="scc-c8" delay={240} height={220} title="Avtomobil oqimi — 24 soat" subtitle="Kirish / chiqish" option={flow24} note={<span className="scc-pill">DEMO</span>} />
           <EPanel className="scc-c4" delay={280} height={220} title="Begona avto tendentsiyasi" subtitle="Oxirgi 7 kun" option={foreign7} note={<span className="scc-pill">DEMO</span>} />
-          <EPanel className="scc-c5" delay={320} height={210} title="Profilaktik hisob tarkibi" subtitle="34 shaxs" option={profDonut} note={<span className="scc-pill">DEMO</span>} />
+          <EPanel className="scc-c5" delay={320} height={210} title="Profilaktik hisob tarkibi" subtitle="9 oila" option={profDonut} note={<span className="scc-pill">DEMO</span>} />
           <div className="scc-card scc-c4" style={{ animationDelay: "360ms" }}>
             <div className="hd"><div><div className="t">Huquqbuzarlik xaritasi</div><div className="s">Bloklar bo'yicha xavf</div></div></div><HexMap /><div className="scc-note"><span className="scc-pill">DEMO · qizil = yuqori xavf</span></div>
           </div>
           <div className="scc-card scc-c3" style={{ animationDelay: "400ms" }}>
             <div className="hd"><div><div className="t">Himoya & profilaktika</div><div className="s">Maxsus chora-tadbirlar</div></div></div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 9, marginTop: 2 }}>{[["Himoya orderlari", 5, T.teal], ["Tashvish tugmasi", 3, T.gold], ["Voyaga yetmaganlar", 4, "#7c6cf0"], ["Temir daftar oila", 4, T.green]].map(([l, n, c]) => <div key={l} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 10px", border: `1px solid ${T.border}`, borderRadius: 10, background: "rgba(255,255,255,.02)" }}><div className="mono" style={{ fontSize: 22, fontWeight: 700, color: c, minWidth: 34 }}>{n}</div><div style={{ fontSize: 11.5 }}>{l}</div></div>)}</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 9, marginTop: 2 }}>{[["Himoya orderlari", 2, T.teal], ["Qidiruvdagi shaxslar", 1, T.alarm], ["Voyaga yetmaganlar", 1, "#7c6cf0"], ["Temir daftar oila", 1, T.green]].map(([l, n, c]) => <div key={l} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 10px", border: `1px solid ${T.border}`, borderRadius: 10, background: "rgba(255,255,255,.02)" }}><div className="mono" style={{ fontSize: 22, fontWeight: 700, color: c, minWidth: 34 }}>{n}</div><div style={{ fontSize: 11.5 }}>{l}</div></div>)}</div>
             <div className="scc-note"><span className="scc-pill">DEMO</span></div>
           </div>
           <div className="scc-card scc-c5" style={{ animationDelay: "440ms" }}>
             <div className="hd"><div><div className="t">102 murojaatlar holati</div><div className="s">Tezkor liniya</div></div></div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 6 }}>{[["Kelgan", 38, T.teal], ["Ko'rib chiqilgan", 26, T.green], ["Sudga yuborilgan", 7, T.amber], ["Ochiq", 12, T.alarm]].map(([l, n, c]) => <div key={l}><div style={{ display: "flex", justifyContent: "space-between", fontSize: 12.5 }}><span>{l}</span><span className="mono" style={{ color: c, fontWeight: 700 }}>{n}</span></div><div style={{ height: 6, borderRadius: 99, background: "rgba(255,255,255,.07)", marginTop: 4, overflow: "hidden" }}><div style={{ width: `${(n / 38) * 100}%`, height: "100%", background: c, borderRadius: 99 }} /></div></div>)}</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 6 }}>{[["Kelgan", 7, T.teal], ["Ko'rib chiqilgan", 4, T.green], ["Sudga yuborilgan", 1, T.amber], ["Ochiq", 2, T.alarm]].map(([l, n, c]) => <div key={l}><div style={{ display: "flex", justifyContent: "space-between", fontSize: 12.5 }}><span>{l}</span><span className="mono" style={{ color: c, fontWeight: 700 }}>{n}</span></div><div style={{ height: 6, borderRadius: 99, background: "rgba(255,255,255,.07)", marginTop: 4, overflow: "hidden" }}><div style={{ width: `${(n / 7) * 100}%`, height: "100%", background: c, borderRadius: 99 }} /></div></div>)}</div>
             <div className="scc-note"><span className="scc-pill">DEMO</span></div>
           </div>
         </div>
