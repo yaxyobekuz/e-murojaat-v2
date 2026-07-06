@@ -44,10 +44,10 @@ export const CAT = Object.fromEntries(CATEGORIES.map((c) => [c.key, c]));
 export const seasonCoeff = (key, monthIdx) => SEASON[CAT[key].season][monthIdx];
 export const catLabel = (key) => CAT[key]?.label || key;
 
-// Sarnovul ko'chalari
+// Sarnovul ko'chalari — kanonik 14 ta (Maslahat, Ulug'vor, Urganji + boshqalar)
 export const STREETS = [
-  "Sarnovul", "Navoiy", "Bobur", "Amir Temur", "Fidokor", "Istiqlol", "Do'stlik",
-  "Bog'", "Chinor", "Guliston", "Mustaqillik", "Yangi hayot", "Marvarid", "Oqtepa",
+  "Maslahat", "Ulug'vor", "Urganji", "Sarnovul", "Bog'bon", "Do'stlik", "Tinchlik",
+  "Chinor", "Guliston", "Navro'z", "Istiqlol", "Mehnat", "Paxtakor", "Olmazor",
 ];
 
 // Holat / ustuvorlik / manba / jins xaritalari
@@ -86,7 +86,8 @@ export const AGE_BUCKETS = [
 ];
 export const ageBucket = (age) => AGE_BUCKETS.find((b) => age >= b.min && age <= b.max)?.key || "60+";
 
-// Xodimlar reestri — har kategoriya kamida 2 xodim bilan qoplanadi.
+// Xodimlar reestri — kanonik shtat: 47 faol ish o'rni (erkak 29 / ayol 18).
+// Yo'nalishlar: elektr montaj 12, santexnika 11, duradgorlik 8, payvandlash 6, boshqa 10.
 const MALE_NAMES = ["Akmal", "Bekzod", "Davron", "Eldor", "Farrux", "G'ayrat", "Hasan", "Islom", "Jasur", "Kamol", "Laziz", "Mirjalol", "Nodir", "Otabek", "Rustam", "Sardor", "Temur", "Ulug'bek"];
 const FEMALE_NAMES = ["Dilnoza", "Feruza", "Gulnora", "Iroda", "Kamola", "Madina", "Nargiza", "Ozoda", "Rayhona", "Sevara"];
 const SURNAMES = ["Karimov", "Yusupov", "Toshmatov", "Ergashev", "Sharipov", "Qodirov", "Islomov", "Abdullayev", "Nazarov", "Rahimov", "Salimov", "Usmonov"];
@@ -98,24 +99,48 @@ const mkRng = (seed) => () => {
   return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
 };
 
+// Yo'nalish guruhlari (2-mutaxassislik faqat o'z guruhidan olinadi)
+const DIRECTION_GROUPS = [
+  ["elektrik", "chiroq_ornatish"], // elektr montaj — 12
+  ["santexnik", "suv_quvur_tamiri", "issiqlik_tizimi"], // santexnika — 11
+  ["tamirlash", "tom_yopish", "kichik_qurilish"], // duradgorlik — 8
+  ["payvandlash", "metall_konstruksiya"], // payvandlash — 6
+  ["ariq_tozalash", "boyoq_ishlari", "daraxt_kesish", "devor_suvoq", "obodonlashtirish", "qor_tozalash", "qulflash", "uy_tozalash"], // boshqa — 10
+];
+const groupOf = (key) => DIRECTION_GROUPS.find((g) => g.includes(key)) || [key];
+
+// Har kategoriya bo'yicha [erkak, ayol] shtat — jami 47 (29/18)
+const STAFF_PLAN = {
+  elektrik: [5, 2], chiroq_ornatish: [3, 2],
+  santexnik: [3, 2], suv_quvur_tamiri: [2, 1], issiqlik_tizimi: [1, 2],
+  tamirlash: [2, 2], tom_yopish: [2, 0], kichik_qurilish: [2, 0],
+  payvandlash: [4, 0], metall_konstruksiya: [2, 0],
+  ariq_tozalash: [1, 0], boyoq_ishlari: [0, 2], daraxt_kesish: [1, 0], devor_suvoq: [0, 1],
+  obodonlashtirish: [0, 2], qor_tozalash: [1, 0], qulflash: [0, 1], uy_tozalash: [0, 1],
+};
+
 const buildWorkers = () => {
   const r = mkRng(7711);
   const workers = [];
+  const used = new Set();
   let n = 0;
-  // Ayollar ko'proq mos keladigan yo'nalishlar
-  const femaleCats = new Set(["uy_tozalash", "boyoq_ishlari", "obodonlashtirish"]);
   CATEGORIES.forEach((c) => {
-    const count = 2 + Math.floor(r() * 2); // har kategoriya 2-3 xodim
-    for (let i = 0; i < count; i++) {
+    const [maleCount, femaleCount] = STAFF_PLAN[c.key];
+    for (let i = 0; i < maleCount + femaleCount; i++) {
       n += 1;
-      const isFemale = femaleCats.has(c.key) ? r() < 0.5 : r() < 0.12;
-      const first = isFemale ? FEMALE_NAMES[Math.floor(r() * FEMALE_NAMES.length)] : MALE_NAMES[Math.floor(r() * MALE_NAMES.length)];
-      const last = SURNAMES[Math.floor(r() * SURNAMES.length)];
-      // Ba'zilari 2-yo'nalish bilan
-      const extra = r() < 0.35 ? [CATEGORIES[Math.floor(r() * CATEGORIES.length)].key] : [];
+      const isFemale = i >= maleCount;
+      let name;
+      do {
+        const first = isFemale ? FEMALE_NAMES[Math.floor(r() * FEMALE_NAMES.length)] : MALE_NAMES[Math.floor(r() * MALE_NAMES.length)];
+        name = `${first} ${SURNAMES[Math.floor(r() * SURNAMES.length)]}`;
+      } while (used.has(name));
+      used.add(name);
+      // Ba'zilari o'z yo'nalishi ichida 2-mutaxassislik bilan
+      const group = groupOf(c.key);
+      const extra = r() < 0.35 && group.length > 1 ? [group[Math.floor(r() * group.length)]] : [];
       workers.push({
         id: `wrk_${String(n).padStart(3, "0")}`,
-        name: `${first} ${last}`,
+        name,
         gender: isFemale ? "ayol" : "erkak",
         specialties: Array.from(new Set([c.key, ...extra])),
       });

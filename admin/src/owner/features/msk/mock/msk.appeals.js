@@ -1,4 +1,4 @@
-// MSK arizalari — ~720 ta, 12 oy tarix, to'liq maydonlar. Seedlangan PRNG => barqaror.
+// MSK arizalari — 460 ta (oyiga ~38), 12 oy tarix, to'liq maydonlar. Seedlangan PRNG => barqaror.
 import { CATEGORIES, CAT, seasonCoeff, STREETS, WORKERS, workersFor } from "./msk.data";
 import { pickDescription } from "./msk.descriptions";
 
@@ -48,13 +48,14 @@ for (let k = 11; k >= 0; k--) {
 const statusFor = (ageDays, r) => {
   if (ageDays < 4) return pickWeighted([["yangi", 5], ["tayinlandi", 3], ["jarayonda", 2]], r);
   if (ageDays < 12) return pickWeighted([["jarayonda", 4], ["tayinlandi", 2], ["bajarildi", 3], ["kechikkan", 1], ["yangi", 1]], r);
-  return pickWeighted([["bajarildi", 74], ["bekor", 5], ["kechikkan", 7], ["jarayonda", 7], ["tayinlandi", 3], ["yangi", 2]], r);
+  // Kanonik: hal qilinganlar ~61%
+  return pickWeighted([["bajarildi", 62], ["bekor", 15], ["kechikkan", 8], ["jarayonda", 9], ["tayinlandi", 4], ["yangi", 2]], r);
 };
 
 const build = () => {
   const r = rng(880624);
   const out = [];
-  const TOTAL = 720;
+  const TOTAL = 460;
   const seq = {};
 
   // Oylik hajm og'irligi (mavsumiy)
