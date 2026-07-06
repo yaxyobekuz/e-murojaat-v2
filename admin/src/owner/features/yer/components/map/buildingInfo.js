@@ -16,7 +16,7 @@ const OWNERS = [
   "Karimov A.", "Yusupova M.", "Toshtemirov B.", "Rahimova D.", "Ergashev S.",
   "Qodirova N.", "Sharipov J.", "Islomova F.", "Abdullayev T.", "Nazarova G.",
 ];
-const STREETS = ["Bobur", "Navoiy", "Amir Temur", "Fitrat", "Cho'lpon", "Fidokor"];
+const STREETS = ["Maslahat", "Ulug'vor", "Urganji", "Sarnovul", "Tinchlik", "Bog'bon"];
 
 const hashStr = (s) => {
   let h = 2166136261;

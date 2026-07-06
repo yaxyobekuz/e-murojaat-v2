@@ -8,12 +8,15 @@ const monthKey = (iso) => {
   return `${d.getFullYear()}-${d.getMonth()}`;
 };
 
+// Kadastr qiymatidan yillik mulk/yer solig'i ulushi — kanonik "yiliga ~486 mln
+// so'm yig'ilgan soliq" raqamiga moslangan koeffitsient.
+const TAX_COEF = 0.0018;
+const TOTAL_TAX_UZS = Math.round(properties.reduce((s, p) => s + p.valueUzs * TAX_COEF, 0));
+
 // KPI summary
 export const summary = () => {
   const totalPlots = properties.length;
-  const taxRevenueUzs = Math.round(
-    properties.reduce((s, p) => s + p.valueUzs * 0.012, 0), // ~1.2% mulk solig'i
-  );
+  const taxRevenueUzs = TOTAL_TAX_UZS;
   const pendingCadaster = requests.filter((r) =>
     ["yangi", "korib_chiqilmoqda", "olchov", "tolov"].includes(r.status),
   ).length;
@@ -30,7 +33,7 @@ export const summary = () => {
     pendingCadaster,
     registeredThisMonth,
     // demo deltas (vs previous period) for the green ▲ pills
-    deltas: { totalPlots: 2.4, taxRevenueUzs: 4.7, pendingCadaster: -1.8, registeredThisMonth: 6.1 },
+    deltas: { totalPlots: 0.2, taxRevenueUzs: 3.1, pendingCadaster: -1.8, registeredThisMonth: 1.4 },
   };
 };
 
@@ -41,23 +44,29 @@ const dayKey = (iso) => {
   return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
 };
 
-// Last 12 months series: registrations + revenue (so'm, mln)
+// Oylik yig'im — yillik soliqning mavsumiy taqsimoti (yig'indisi ~486 mln)
+const MONTH_WEIGHTS = [0.82, 0.86, 0.95, 1.02, 1.1, 1.06, 0.98, 0.92, 1.04, 1.12, 1.08, 1.05];
+
+// Last 12 months series: requests + revenue (so'm, mln)
 const yearlySeries = () => {
   const now = new Date(2026, 5, 20);
   return Array.from({ length: 12 }, (_, i) => {
     const d = new Date(now.getFullYear(), now.getMonth() - (11 - i), 1);
     const key = `${d.getFullYear()}-${d.getMonth()}`;
     const reqs = requests.filter((r) => monthKey(r.createdAt) === key);
-    const props = properties.filter((p) => monthKey(p.registeredAt) === key);
-    const revenue = Math.round(
-      props.reduce((s, p) => s + p.valueUzs * 0.012, 0) / 1_000_000,
-    );
+    const revenue = Math.round(((TOTAL_TAX_UZS / 12) * MONTH_WEIGHTS[i]) / 1_000_000);
     return {
       month: MONTHS_UZ[d.getMonth()],
       arizalar: reqs.length,
       tushum: revenue, // mln so'm
     };
   });
+};
+
+// Kunlik yig'im — yillik soliqning kunlik ulushi (deterministik tebranish bilan)
+const dailyRevenue = (i) => {
+  const w = 0.6 + ((i * 37) % 100) / 125; // 0.6..1.39
+  return Math.round(((TOTAL_TAX_UZS / 365) * w) / 1_000_000);
 };
 
 // Joriy oy — har kuni bir nuqta (oyning kunlari bo'yicha)
@@ -68,14 +77,10 @@ const monthlySeries = () => {
     const d = new Date(now.getFullYear(), now.getMonth(), i + 1);
     const key = dayKey(d);
     const reqs = requests.filter((r) => dayKey(r.createdAt) === key);
-    const props = properties.filter((p) => dayKey(p.registeredAt) === key);
-    const revenue = Math.round(
-      props.reduce((s, p) => s + p.valueUzs * 0.012, 0) / 1_000_000,
-    );
     return {
       month: String(i + 1), // oyning kuni
       arizalar: reqs.length,
-      tushum: revenue, // mln so'm
+      tushum: dailyRevenue(i), // mln so'm
     };
   });
 };
@@ -87,14 +92,10 @@ const weeklySeries = () => {
     const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - (6 - i));
     const key = dayKey(d);
     const reqs = requests.filter((r) => dayKey(r.createdAt) === key);
-    const props = properties.filter((p) => dayKey(p.registeredAt) === key);
-    const revenue = Math.round(
-      props.reduce((s, p) => s + p.valueUzs * 0.012, 0) / 1_000_000,
-    );
     return {
       month: WEEKDAYS_UZ[d.getDay()],
       arizalar: reqs.length,
-      tushum: revenue, // mln so'm
+      tushum: dailyRevenue(d.getDate()), // mln so'm
     };
   });
 };
@@ -132,7 +133,8 @@ export const landUse = () => {
   properties.forEach((p) => {
     if (p.type === "yer") buckets.qishloq_xojaligi += 1;
     else if (p.type === "uy" || p.type === "kvartira") buckets.turar_joy += 1;
-    else if (p.type === "noturar") buckets.tijorat += 1;
+    // davlat noturar = ijtimoiy obyektlar (maktab/bog'cha/poliklinika/masjid)
+    else if (p.type === "noturar" && p.ownershipType !== "davlat") buckets.tijorat += 1;
     else buckets.boshqa += 1;
   });
   const total = properties.length || 1;
