@@ -40,23 +40,24 @@ const BBOX = {
   maxLng: ORIGIN.lng + (GRID_COLS - 1) * CELL_LNG + CELL_LNG * 0.6,
 };
 
-// 15 yacheyka uchun holat + ko'rsatkichlar (chapdan-o'ngga, yuqoridan-pastga)
+// 15 yacheyka uchun holat + ko'rsatkichlar (chapdan-o'ngga, yuqoridan-pastga).
+// Xonadonlar yig'indisi = 763 (Sarnovul MFY kanonik ko'rsatkichi).
 const CELL_META = [
-  { status: "paid", rate: 100, hh: 142 },
-  { status: "partial", rate: 68, hh: 168 },
-  { status: "paid", rate: 95, hh: 110 },
-  { status: "unpaid", rate: 24, hh: 121 },
-  { status: "paid", rate: 98, hh: 154 },
-  { status: "partial", rate: 55, hh: 132 },
-  { status: "unpaid", rate: 18, hh: 97 },
-  { status: "partial", rate: 61, hh: 88 },
-  { status: "paid", rate: 92, hh: 173 },
-  { status: "unpaid", rate: 31, hh: 105 },
-  { status: "paid", rate: 96, hh: 76 },
-  { status: "unpaid", rate: 12, hh: 119 },
-  { status: "partial", rate: 49, hh: 94 },
-  { status: "paid", rate: 100, hh: 138 },
-  { status: "partial", rate: 72, hh: 81 },
+  { status: "paid", rate: 100, hh: 58 },
+  { status: "partial", rate: 68, hh: 64 },
+  { status: "paid", rate: 95, hh: 47 },
+  { status: "unpaid", rate: 24, hh: 52 },
+  { status: "paid", rate: 98, hh: 61 },
+  { status: "partial", rate: 55, hh: 55 },
+  { status: "unpaid", rate: 18, hh: 39 },
+  { status: "partial", rate: 61, hh: 41 },
+  { status: "paid", rate: 92, hh: 68 },
+  { status: "unpaid", rate: 31, hh: 44 },
+  { status: "paid", rate: 96, hh: 33 },
+  { status: "unpaid", rate: 12, hh: 49 },
+  { status: "partial", rate: 49, hh: 40 },
+  { status: "paid", rate: 100, hh: 60 },
+  { status: "partial", rate: 72, hh: 52 },
 ];
 
 // Seed nuqtalar — grid + jitter (lng=x, lat=y bilan ishlaymiz)
@@ -152,9 +153,11 @@ const BLOCKS = SEEDS.map((seed) => ({
   path: warpPoly(voronoiCell(seed, SEEDS)),
 }));
 
-// Holatga qarab pul ko'rsatkichlarini deterministik hosil qilamiz
+// Holatga qarab pul ko'rsatkichlarini deterministik hosil qilamiz.
+// perHh — xonadon boshiga o'rtacha yillik mulk/yer solig'i (~130-190 ming so'm);
+// korxonalar solig'i (yiliga ~486 mln so'm, kanonik) soliq.businesses.js da alohida.
 const buildInfo = (b) => {
-  const perHh = 2_300_000 + Math.round(rng(b.c[0] * b.c[1]) * 900_000);
+  const perHh = 130_000 + Math.round(rng(b.c[0] * b.c[1]) * 60_000);
   const assessedUzs = b.hh * perHh;
   const collectedUzs = Math.round((assessedUzs * b.rate) / 100);
   return {
