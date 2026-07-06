@@ -42,20 +42,20 @@ const BBOX = {
 };
 
 const CELL_META = [
-  { status: "calm", name: "Markaziy ko'cha" },
+  { status: "calm", name: "Maslahat ko'chasi" },
   { status: "alert", name: "Bozor atrofi" },
-  { status: "calm", name: "Maktab-7 hududi" },
+  { status: "calm", name: "Maktab-66 hududi" },
   { status: "fire", name: "Sanoat zonasi" },
-  { status: "calm", name: "Bog' mahalla" },
+  { status: "calm", name: "Ulug'vor ko'chasi" },
   { status: "alert", name: "Avtostansiya" },
-  { status: "fire", name: "Eski shahar" },
+  { status: "fire", name: "Eski guzar" },
   { status: "calm", name: "Yangi qurilish" },
   { status: "calm", name: "Tibbiyot punkti" },
   { status: "fire", name: "Gaz taqsimlagich" },
   { status: "calm", name: "Stadion atrofi" },
   { status: "alert", name: "Chekka daha" },
   { status: "alert", name: "Savdo markazi" },
-  { status: "calm", name: "Park zonasi" },
+  { status: "calm", name: "Urganji ko'chasi" },
   { status: "calm", name: "Sanoat darvozasi" },
 ];
 
@@ -175,7 +175,7 @@ const buildFires = (b, bi) => {
   return out;
 };
 
-const CAM_ANGLES = ["Shimoliy kirish", "Markaziy ko'cha", "Bozor tarafi", "Hovli ichi", "Avtoturargoh", "Yon ko'cha"];
+const CAM_ANGLES = ["Shimoliy kirish", "Maslahat ko'chasi", "Bozor tarafi", "Hovli ichi", "Avtoturargoh", "Yon ko'cha"];
 const buildCameras = (b, bi) => {
   const n = 2 + Math.floor(rng(bi * 8.1 + 2) * 3); // 2..4
   const out = [];
@@ -245,21 +245,21 @@ export const OBJECT_TYPES = {
 
 // Har blokka bittadan obyekt (15 ta). people = xavf ostidagi odamlar (karta belgisi).
 const OBJ_DEFS = [
-  { blockIdx: 0, type: "apartment", name: "12-uy · 5 qavatli", people: 142, risk: "Yuqori", note: "Gaz tarmog'i eski.", stats: [["Qavatlar", 5], ["Kvartiralar", 40], ["Aholi", "142 (~4/kv.)"], ["Bolalar", 33], ["Keksalar", 15]] },
-  { blockIdx: 1, type: "bozor", name: "Markaziy bozor", people: 1500, risk: "Yuqori", note: "Elektr simlari ortiqcha yuklangan.", stats: [["Rastalar", 540], ["Savdogarlar", 610], ["Kunlik tashrif", 8000]] },
-  { blockIdx: 2, type: "maktab", name: "7-umumiy o'rta maktab", people: 1240, risk: "Yuqori", note: "2-smena 14:00 da boshlanadi.", stats: [["O'quvchilar", 1240], ["O'qituvchilar", 86], ["Sinflar", 44], ["Smenalar", 2]] },
-  { blockIdx: 3, type: "zavod", name: "G'isht zavodi", people: 240, risk: "O'rta", note: "Yuqori harorat — yong'in xavfi.", stats: [["Xodimlar", 240], ["Smena", 3], ["Pechlar", 4]] },
-  { blockIdx: 4, type: "bogcha", name: "12-bolalar bog'chasi", people: 210, risk: "Yuqori", note: "Evakuatsiya rejasi yangilangan.", stats: [["Bolalar", 210], ["Tarbiyachilar", 28], ["Guruhlar", 11]] },
-  { blockIdx: 5, type: "avtostansiya", name: "Sarnovul avtostansiyasi", people: 300, risk: "Past", note: "", stats: [["Yo'nalishlar", 24], ["Kunlik yo'lovchi", 3200], ["Peronlar", 8]] },
+  { blockIdx: 0, type: "apartment", name: "12-uy · 2 qavatli", people: 58, risk: "Yuqori", note: "Gaz tarmog'i eski.", stats: [["Qavatlar", 2], ["Kvartiralar", 16], ["Aholi", "58 (~3.6/kv.)"], ["Bolalar", 14], ["Keksalar", 6]] },
+  { blockIdx: 1, type: "bozor", name: "Mahalla dehqon bozori", people: 120, risk: "Yuqori", note: "Elektr simlari ortiqcha yuklangan.", stats: [["Rastalar", 40], ["Savdogarlar", 55], ["Kunlik tashrif", 600]] },
+  { blockIdx: 2, type: "maktab", name: "66-umumiy o'rta maktab", people: 620, risk: "Yuqori", note: "2-smena 14:00 da boshlanadi.", stats: [["O'quvchilar", 620], ["O'qituvchilar", 48], ["Sinflar", 24], ["Smenalar", 2]] },
+  { blockIdx: 3, type: "zavod", name: "G'isht sexi", people: 45, risk: "O'rta", note: "Yuqori harorat — yong'in xavfi.", stats: [["Xodimlar", 45], ["Smena", 2], ["Pechlar", 2]] },
+  { blockIdx: 4, type: "bogcha", name: "12-bolalar bog'chasi", people: 90, risk: "Yuqori", note: "Evakuatsiya rejasi yangilangan.", stats: [["Bolalar", 90], ["Tarbiyachilar", 12], ["Guruhlar", 5]] },
+  { blockIdx: 5, type: "avtostansiya", name: "Sarnovul bekati", people: 40, risk: "Past", note: "", stats: [["Yo'nalishlar", 6], ["Kunlik yo'lovchi", 400], ["Peronlar", 2]] },
   { blockIdx: 6, type: "house", name: "Yusupovlar hovlisi", people: 6, risk: "Past", note: "Hovlida gaz balloni saqlanadi.", stats: [["Qavatlar", 1], ["Aholi", 6], ["Bolalar", 2], ["Keksalar", 1]] },
-  { blockIdx: 7, type: "apartment", name: "9-qavatli yangi uy", people: 254, risk: "Yuqori", note: "Lift nosoz — qutqaruv qiyin.", stats: [["Qavatlar", 9], ["Kvartiralar", 72], ["Aholi", "254 (~3.5/kv.)"], ["Bolalar", 58], ["Keksalar", 27]] },
-  { blockIdx: 8, type: "shifoxona", name: "Sarnovul tuman shifoxonasi", people: 360, risk: "O'rta", note: "Kislorod balloni — yong'in xavfi.", stats: [["Koyka", 120], ["Bemorlar", 92], ["Shifokorlar", 38], ["Hamshira", 64], ["Bo'limlar", 9]] },
-  { blockIdx: 9, type: "benzin", name: "Gaz taqsimlagich shoxobchasi", people: 14, risk: "Yuqori", note: "Portlash xavfi — birinchi navbatdagi obyekt.", stats: [["Kolonkalar", 6], ["Rezervuar", "20 m³"], ["Xodimlar", 8]] },
-  { blockIdx: 10, type: "stadion", name: "Sarnovul stadioni", people: 0, risk: "Past", note: "Tadbir paytida 8000 kishi yig'iladi.", stats: [["Sig'im", 8000], ["Sektorlar", 12]] },
+  { blockIdx: 7, type: "apartment", name: "3-qavatli yangi uy", people: 84, risk: "Yuqori", note: "Zina yoritilishi nosoz — evakuatsiya qiyin.", stats: [["Qavatlar", 3], ["Kvartiralar", 24], ["Aholi", "84 (~3.5/kv.)"], ["Bolalar", 19], ["Keksalar", 9]] },
+  { blockIdx: 8, type: "shifoxona", name: "Sarnovul qishloq vrachlik punkti", people: 24, risk: "O'rta", note: "Kislorod balloni — yong'in xavfi.", stats: [["Koyka", 10], ["Bemorlar", 7], ["Shifokorlar", 3], ["Hamshira", 6], ["Bo'limlar", 2]] },
+  { blockIdx: 9, type: "benzin", name: "Gaz taqsimlagich shoxobchasi", people: 8, risk: "Yuqori", note: "Portlash xavfi — birinchi navbatdagi obyekt.", stats: [["Kolonkalar", 4], ["Rezervuar", "10 m³"], ["Xodimlar", 5]] },
+  { blockIdx: 10, type: "stadion", name: "Sarnovul sport maydoni", people: 0, risk: "Past", note: "Tadbir paytida 500 kishi yig'iladi.", stats: [["Sig'im", 500], ["Sektorlar", 2]] },
   { blockIdx: 11, type: "house", name: "Aliyevlar hovlisi", people: 8, risk: "Past", note: "Xususiy 2 qavatli uy.", stats: [["Qavatlar", 2], ["Aholi", 8], ["Bolalar", 3], ["Keksalar", 1]] },
-  { blockIdx: 12, type: "savdo", name: "Sarnovul savdo markazi", people: 820, risk: "O'rta", note: "Yong'in signalizatsiyasi faol.", stats: [["Do'konlar", 64], ["Xodimlar", 320], ["Kunlik tashrif", 4500], ["Qavatlar", 3]] },
+  { blockIdx: 12, type: "savdo", name: "Sarnovul savdo do'konlari", people: 60, risk: "O'rta", note: "Yong'in signalizatsiyasi faol.", stats: [["Do'konlar", 12], ["Xodimlar", 25], ["Kunlik tashrif", 400], ["Qavatlar", 2]] },
   { blockIdx: 13, type: "masjid", name: "Mahalla masjidi", people: 600, risk: "Past", note: "Juma kuni to'la bo'ladi.", stats: [["Sig'im", 600], ["Xodimlar", 6]] },
-  { blockIdx: 14, type: "apartment", name: "5-uy · 7 qavatli", people: 196, risk: "Yuqori", note: "3-qavatda tutun datchigi ishga tushgan.", stats: [["Qavatlar", 7], ["Kvartiralar", 56], ["Aholi", "196 (~3.5/kv.)"], ["Bolalar", 45], ["Keksalar", 21]] },
+  { blockIdx: 14, type: "apartment", name: "5-uy · 4 qavatli", people: 112, risk: "Yuqori", note: "3-qavatda tutun datchigi ishga tushgan.", stats: [["Qavatlar", 4], ["Kvartiralar", 32], ["Aholi", "112 (~3.5/kv.)"], ["Bolalar", 26], ["Keksalar", 12]] },
 ];
 const OFFS = [[0.0004, -0.0005], [-0.0003, 0.0006], [0.0005, 0.0003], [-0.0004, -0.0004], [0.0003, 0.0005], [0.0004, -0.0003], [-0.0004, 0.0004], [0.0005, -0.0004], [-0.0003, -0.0005], [0.0004, 0.0004], [-0.0005, 0.0003], [0.0003, -0.0004], [0.0004, 0.0005], [-0.0004, 0.0003], [0.0005, -0.0003]];
 const PHONES = ["+998 90 123-45-67", "+998 91 222-33-44", "+998 93 444-55-66", "+998 94 555-66-77", "+998 99 888-77-66", "+998 97 777-88-99", "+998 98 333-22-11", "+998 95 666-77-88"];

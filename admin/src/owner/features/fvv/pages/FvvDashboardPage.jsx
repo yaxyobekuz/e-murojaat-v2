@@ -16,11 +16,11 @@ const now = () => { const d = new Date(); return `${pad(d.getHours())}:${pad(d.g
 
 /* ───────── Sensorlar ───────── */
 const SENSOR_DEF = [
-  { id: "smoke", name: "Tutun / yong'in", loc: "Sarnovul ko'chasi 14-uy", unit: "%", warn: 40, danger: 70, base: 8, span: 16 },
-  { id: "gas", name: "Maishiy gaz (CH₄)", loc: "Bog' ko'chasi", unit: "%LEL", warn: 20, danger: 40, base: 5, span: 12 },
+  { id: "smoke", name: "Tutun / yong'in", loc: "Maslahat ko'chasi 14-uy", unit: "%", warn: 40, danger: 70, base: 8, span: 16 },
+  { id: "gas", name: "Maishiy gaz (CH₄)", loc: "Ulug'vor ko'chasi", unit: "%LEL", warn: 20, danger: 40, base: 5, span: 12 },
   { id: "water", name: "Suv sathi / sel", loc: "Ariq yoqasi", unit: "sm", warn: 90, danger: 140, base: 42, span: 30 },
   { id: "seismic", name: "Seysmik (magnituda)", loc: "MFY posti", unit: "M", warn: 3.5, danger: 5, base: 0.6, span: 1.2 },
-  { id: "co", name: "Havo / is gazi (CO)", loc: "Markaziy ko'cha", unit: "ppm", warn: 120, danger: 250, base: 30, span: 60 },
+  { id: "co", name: "Havo / is gazi (CO)", loc: "Urganji ko'chasi", unit: "ppm", warn: 120, danger: 250, base: 30, span: 60 },
   { id: "power", name: "Transformator harorati", loc: "Sanoat zonasi", unit: "°C", warn: 90, danger: 130, base: 46, span: 30 },
 ];
 const sensorStatus = (s, v) => (v >= s.danger ? "xavf" : v >= s.warn ? "ogohlik" : "normal");
@@ -28,7 +28,7 @@ const statusColor = { normal: T.green, ogohlik: T.amber, xavf: T.alarm };
 const initSensors = () => SENSOR_DEF.map((s) => ({ ...s, val: +(s.base + Math.random() * s.span * 0.5).toFixed(s.id === "seismic" ? 1 : 0), trend: Array.from({ length: 16 }, () => +(s.base + Math.random() * s.span * 0.4).toFixed(1)) }));
 
 /* ───────── Hodisalar ───────── */
-const STREETS = ["Sarnovul ko'chasi", "Navoiy ko'chasi", "Bobur ko'chasi", "Amir Temur ko'chasi", "Fidokor ko'chasi", "Istiqlol ko'chasi"];
+const STREETS = ["Maslahat ko'chasi", "Ulug'vor ko'chasi", "Urganji ko'chasi", "Tinchlik ko'chasi", "Do'stlik ko'chasi", "Guliston ko'chasi"];
 const INC_TYPES = {
   fire: { name: "YONG'IN", icon: "🔥", color: T.alarm }, gas: { name: "GAZ SIZISHI", icon: "💨", color: T.gold },
   flood: { name: "SUV TOSHQINI", icon: "🌊", color: T.teal }, tech: { name: "TEXNOGEN AVARIYA", icon: "⚙️", color: "#a78bfa" },
@@ -185,11 +185,11 @@ const FvvDashboardPage = () => {
     return () => { stop = true; clearTimeout(id); };
   }, []);
 
-  const safeDays = useCountUp(23); const calls = useCountUp(4); const active = useCountUp(1);
+  const safeDays = useCountUp(23); const calls = useCountUp(1); const active = useCountUp(1);
 
   const riskGauge = useMemo(() => ({ backgroundColor: "transparent", series: [{ type: "gauge", startAngle: 200, endAngle: -20, min: 0, max: 100, radius: "92%", center: ["50%", "60%"], progress: { show: false }, pointer: { itemStyle: { color: T.gold }, width: 5, length: "62%" }, axisLine: { lineStyle: { width: 14, color: [[0.33, T.green], [0.66, T.gold], [1, T.alarm]] } }, axisTick: { show: false }, splitLine: { length: 12, lineStyle: { color: "#fff", width: 1 } }, axisLabel: { show: false }, anchor: { show: true, size: 10, itemStyle: { color: T.gold } }, detail: { valueAnimation: true, formatter: "Sariq", color: T.gold, fontSize: 16, fontFamily: "Space Grotesk", offsetCenter: [0, "38%"] }, data: [{ value: 55 }] }] }), []);
   const incDonut = useMemo(() => ({ backgroundColor: "transparent", tooltip: { trigger: "item", backgroundColor: "#0c1620", borderColor: T.border, textStyle: { color: T.text } }, legend: { bottom: 0, textStyle: { color: T.muted, fontSize: 10 }, icon: "circle" }, series: [{ type: "pie", radius: ["48%", "72%"], center: ["50%", "42%"], label: { show: false }, data: [{ value: 14, name: "Yong'in", itemStyle: { color: T.alarm } }, { value: 9, name: "Maishiy gaz", itemStyle: { color: T.gold } }, { value: 5, name: "Suv/sel", itemStyle: { color: T.teal } }, { value: 4, name: "Texnogen", itemStyle: { color: "#a78bfa" } }, { value: 7, name: "Tibbiy", itemStyle: { color: "#ef4444" } }, { value: 3, name: "Boshqa", itemStyle: { color: "#64748b" } }] }] }), []);
-  const trend7 = useMemo(() => ({ backgroundColor: "transparent", grid: { left: 8, right: 12, top: 16, bottom: 22, containLabel: true }, tooltip: { trigger: "axis", backgroundColor: "#0c1620", borderColor: T.border, textStyle: { color: T.text } }, xAxis: { type: "category", data: ["Du", "Se", "Ch", "Pa", "Ju", "Sh", "Ya"], axisLabel: { color: T.muted, fontSize: 10 }, axisLine: { lineStyle: { color: "rgba(255,255,255,.14)" } } }, yAxis: { type: "value", splitLine: { lineStyle: { color: "rgba(255,255,255,.05)" } }, axisLabel: { color: T.muted, fontSize: 9 } }, series: [{ type: "bar", data: [3, 5, 2, 6, 4, 7, 4], itemStyle: { color: T.gold, borderRadius: [4, 4, 0, 0] }, barWidth: "55%" }] }), []);
+  const trend7 = useMemo(() => ({ backgroundColor: "transparent", grid: { left: 8, right: 12, top: 16, bottom: 22, containLabel: true }, tooltip: { trigger: "axis", backgroundColor: "#0c1620", borderColor: T.border, textStyle: { color: T.text } }, xAxis: { type: "category", data: ["Du", "Se", "Ch", "Pa", "Ju", "Sh", "Ya"], axisLabel: { color: T.muted, fontSize: 10 }, axisLine: { lineStyle: { color: "rgba(255,255,255,.14)" } } }, yAxis: { type: "value", splitLine: { lineStyle: { color: "rgba(255,255,255,.05)" } }, axisLabel: { color: T.muted, fontSize: 9 } }, series: [{ type: "bar", data: [1, 0, 2, 1, 0, 1, 1], itemStyle: { color: T.gold, borderRadius: [4, 4, 0, 0] }, barWidth: "55%" }] }), []);
 
   const latest = alarms[0];
 
@@ -197,7 +197,7 @@ const FvvDashboardPage = () => {
     <div className="fcc">
       <div className="fcc-top">
         <div className="fcc-emb">FVV</div>
-        <div style={{ marginRight: "auto" }}><div className="nm">Favqulodda Vaziyatlar Komandavoy Markazi</div><div className="sb">Sarnovul MFY · Baliqchi tumani, Andijon · ~4 200 aholi · ~980 xonadon</div></div>
+        <div style={{ marginRight: "auto" }}><div className="nm">Favqulodda Vaziyatlar Komandavoy Markazi</div><div className="sb">Sarnovul MFY · Baliqchi tumani, Andijon · 4 306 aholi · 763 xonadon</div></div>
         <span className="fcc-live"><i /> JONLI</span><span className="fcc-demo">DEMO — namunaviy</span>
         <div className="sb mono">{clk}</div>
       </div>
@@ -256,13 +256,13 @@ const FvvDashboardPage = () => {
 
         {/* Kartalar */}
         <div className="fcc-grid">
-          <EPanel className="fcc-c4" delay={240} height={210} title="Hodisalar turi" subtitle="Oxirgi 30 kun" option={incDonut} note={<span className="fcc-pill">DEMO</span>} />
+          <EPanel className="fcc-c4" delay={240} height={210} title="Hodisalar turi" subtitle="Oxirgi 12 oy" option={incDonut} note={<span className="fcc-pill">DEMO</span>} />
           <EPanel className="fcc-c5" delay={280} height={210} title="Hodisalar tendentsiyasi" subtitle="Oxirgi 7 kun" option={trend7} note={<span className="fcc-pill">DEMO</span>} />
           <div className="fcc-card fcc-c3" style={{ animationDelay: "320ms" }}><div className="hd"><div><div className="t">Xavf xaritasi</div><div className="s">Zonalar bo'yicha</div></div></div><HexMap /><div className="fcc-note"><span className="fcc-pill">DEMO</span></div></div>
 
           <div className="fcc-card fcc-c5" style={{ animationDelay: "360ms" }}>
-            <div className="hd"><div><div className="t">Xavfli obyektlar</div><div className="s">Joylashuv va xavf darajasi</div></div></div>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5 }}><tbody>{[["Gaz taqsimlash punkti", "Bog' ko'chasi", "yuqori", T.alarm], ["Transformator (3 ta)", "Sanoat / Markaziy", "o'rta", T.gold], ["Avariyaviy bino (2 ta)", "Eski mahalla", "yuqori", T.alarm], ["Yoqilg'i shoxobchasi", "Avtostansiya", "o'rta", T.gold]].map(([n, loc, r, c]) => <tr key={n} style={{ borderBottom: "1px solid rgba(255,255,255,.06)" }}><td style={{ padding: "9px 4px", fontWeight: 600 }}>{n}<div style={{ fontSize: 10, color: T.muted }}>{loc}</div></td><td style={{ textAlign: "right" }}><span style={{ fontSize: 10.5, fontWeight: 700, padding: "2px 8px", borderRadius: 999, background: c + "22", color: c }}>{r}</span></td></tr>)}</tbody></table>
+            <div className="hd"><div><div className="t">Xavfli obyektlar</div><div className="s">Jami 6 ta · joylashuv va xavf darajasi</div></div></div>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5 }}><tbody>{[["Gaz taqsimlash punkti", "Ulug'vor ko'chasi", "yuqori", T.alarm], ["Transformator (2 ta)", "Sanoat / Maslahat", "o'rta", T.gold], ["Avariyaviy bino (2 ta)", "Eski guzar", "yuqori", T.alarm], ["Yoqilg'i shoxobchasi", "Avtostansiya", "o'rta", T.gold]].map(([n, loc, r, c]) => <tr key={n} style={{ borderBottom: "1px solid rgba(255,255,255,.06)" }}><td style={{ padding: "9px 4px", fontWeight: 600 }}>{n}<div style={{ fontSize: 10, color: T.muted }}>{loc}</div></td><td style={{ textAlign: "right" }}><span style={{ fontSize: 10.5, fontWeight: 700, padding: "2px 8px", borderRadius: 999, background: c + "22", color: c }}>{r}</span></td></tr>)}</tbody></table>
           </div>
           <div className="fcc-card fcc-c4" style={{ animationDelay: "400ms" }}>
             <div className="hd"><div><div className="t">Mavsumiy xavf</div><div className="s">Joriy: bahor</div></div></div>
@@ -279,11 +279,11 @@ const FvvDashboardPage = () => {
           <div className="fcc-card fcc-c4" style={{ animationDelay: "480ms" }}>
             <div className="hd"><div><div className="t">Xavf guruhidagi xonadonlar</div><div className="s">17 xonadon · manzilli</div></div></div>
             <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>{[["Yolg'iz keksa", 9, T.gold], ["Nogironligi bor", 4, T.teal], ["Eski gaz/elektr", 4, T.alarm]].map(([l, n, c]) => <div key={l} style={{ flex: 1, border: `1px solid ${T.border}`, borderRadius: 10, padding: "8px", textAlign: "center" }}><div className="mono" style={{ fontSize: 20, fontWeight: 700, color: c }}>{n}</div><div style={{ fontSize: 9.5, color: T.muted }}>{l}</div></div>)}</div>
-            <div style={{ fontSize: 11.5, color: T.muted, lineHeight: 1.8 }}>Sarnovul 8-uy · Bog' 12-uy · Markaziy 5-uy · Istiqlol 21-uy …</div>
+            <div style={{ fontSize: 11.5, color: T.muted, lineHeight: 1.8 }}>Maslahat 8-uy · Ulug'vor 12-uy · Urganji 5-uy · Tinchlik 21-uy …</div>
           </div>
           <div className="fcc-card fcc-c4" style={{ animationDelay: "520ms" }}>
             <div className="hd"><div><div className="t">Evakuatsiya</div><div className="s">Yig'ilish nuqtalari</div></div></div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>{[["Maktab hovlisi (66-son maktab)", "1 200 kishi"], ["Markaziy maydon", "2 000 kishi"]].map(([n, cap]) => <div key={n} style={{ border: `1px solid ${T.border}`, borderRadius: 10, padding: "10px 12px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(255,255,255,.02)" }}><div><div style={{ fontWeight: 600, fontSize: 12.5 }}>📍 {n}</div><div style={{ fontSize: 10.5, color: T.muted }}>yig'ilish nuqtasi</div></div><span className="mono" style={{ color: T.teal, fontSize: 12 }}>{cap}</span></div>)}</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>{[["Maktab hovlisi (66-son maktab)", "1 500 kishi"], ["Markaziy maydon", "3 000 kishi"]].map(([n, cap]) => <div key={n} style={{ border: `1px solid ${T.border}`, borderRadius: 10, padding: "10px 12px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(255,255,255,.02)" }}><div><div style={{ fontWeight: 600, fontSize: 12.5 }}>📍 {n}</div><div style={{ fontSize: 10.5, color: T.muted }}>yig'ilish nuqtasi</div></div><span className="mono" style={{ color: T.teal, fontSize: 12 }}>{cap}</span></div>)}</div>
           </div>
           <div className="fcc-card fcc-c4" style={{ animationDelay: "560ms" }}>
             <div className="hd"><div><div className="t">Yong'in tekshiruvlari & mashqlar</div><div className="s">Profilaktika</div></div></div>
