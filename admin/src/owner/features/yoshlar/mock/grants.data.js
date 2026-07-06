@@ -1,5 +1,5 @@
-// Grant / ish o'rni kuzatuvi — yoshlarga ajratilgan grant, kredit, ish o'rinlari oqimi.
-// Asos: Yoshlar agentligi grant dasturlari + "Yoshlar daftari" bandlik chora-tadbirlari.
+// Grant / ish o'rni kuzatuvi — Sarnovul MFY yoshlariga ajratilgan grant va ish o'rinlari oqimi.
+// Asos: Yoshlar agentligi grant dasturlari (mahalla masshtabida, ~20 ariza / 12 oy).
 // Demo — deterministik, mavjud MAHALLAS dan.
 import { MAHALLAS } from "./youth.data";
 
@@ -33,7 +33,7 @@ const TODAY = new Date("2026-06-24");
 let counter = 0;
 
 export const GRANTS = MAHALLAS.flatMap((m, mi) => {
-  const sample = 2 + Math.floor(rng(mi * 3.1) * 4); // 2-5 ariza/mahalla
+  const sample = 1 + Math.floor(rng(mi * 3.1) * 2); // 1-2 ariza/ko'cha
   return Array.from({ length: sample }, (_, k) => {
     counter += 1;
     const seed = counter * 2.3 + k;
@@ -46,7 +46,7 @@ export const GRANTS = MAHALLAS.flatMap((m, mi) => {
     const date = new Date(TODAY);
     date.setDate(TODAY.getDate() - days);
     // berilgan bo'lsa — ish o'rni soni
-    const jobs = status === "approved" ? 1 + Math.floor(rng(seed * 6.2) * 6) : 0;
+    const jobs = status === "approved" ? 1 + Math.floor(rng(seed * 6.2) * 3) : 0;
 
     return {
       id: `GR-${String(counter).padStart(4, "0")}`,

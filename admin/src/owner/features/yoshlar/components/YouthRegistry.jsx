@@ -33,16 +33,16 @@ const YouthRegistry = () => {
         <span className="grid size-8 place-items-center rounded-lg bg-cyan-500/15 text-cyan-600 dark:text-cyan-400"><BookUser className="size-4" /></span>
         <div className="leading-tight">
           <h3 className="text-[14px] font-semibold text-foreground">Yoshlar daftari</h3>
-          <p className="text-[11px] text-foreground/50">Ehtiyojmand yoshlar reyestri va ko'rilgan chora</p>
+          <p className="text-[11px] text-foreground/50">Daftar bo'shatilgan (0 faol) · chiqarilganlar arxivi va ko'rilgan chora</p>
         </div>
       </div>
 
       {/* KPI mini */}
       <div className="mb-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
         {[
-          { k: "Reyestrda", v: s.total },
-          { k: "Bandlik ta'minlandi", v: `${s.resolvedPct}%`, c: "text-emerald-500" },
-          { k: "Ko'rib chiqilmoqda", v: s.pending, c: "text-amber-500" },
+          { k: "Hozir daftarda", v: 0 },
+          { k: "Chora ko'rilib chiqarildi", v: `${s.resolvedPct}%`, c: "text-emerald-500" },
+          { k: "Arxiv yozuvlari", v: s.total, c: "text-amber-500" },
           { k: "Qizlar ulushi", v: `${s.femalePct}%` },
         ].map((m, i) => (
           <div key={i} className="rounded-xl border border-[rgb(var(--card-border))] bg-muted/40 px-3 py-2">

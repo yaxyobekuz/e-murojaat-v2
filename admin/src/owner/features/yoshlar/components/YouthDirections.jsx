@@ -83,7 +83,7 @@ const FiveInitiatives = () => (
             </div>
             <div className="mt-1 font-mono text-[13px] font-bold" style={{ color: it.color }}>{pct}%</div>
             <div className="text-center text-[9px] leading-tight text-foreground/55">{it.label}</div>
-            <div className="font-mono text-[8.5px] text-foreground/40">{(it.reach / 1_000_000).toFixed(1)}M</div>
+            <div className="font-mono text-[8.5px] text-foreground/40">{fmt(it.reach)} yosh</div>
           </motion.div>
         );
       })}
@@ -93,7 +93,7 @@ const FiveInitiatives = () => (
 
 // ── 3. YOSHLAR PARLAMENTI — yarim doira o'rindiqlar (aniqroq) ──
 const Parliament = () => {
-  const ROWS = [10, 12, 14]; // 36 o'rindiq, 3 yoy
+  const ROWS = [5, 7]; // 12 o'rindiq, 2 yoy (MFY yoshlar kengashi)
   let idx = 0;
   const facColor = (i) => {
     let acc = 0;
@@ -173,13 +173,13 @@ const TalentStarfield = () => {
 
 // ── 5. TADBIRKORLIK KREDITLARI — 3 daraja + pul oqimi ──
 const CreditFlow = () => {
-  const total = useCountUp(Math.round(creditSummary.totalUzs / 1_000_000_000), 1600);
+  const total = useCountUp(Math.round(creditSummary.totalUzs / 1_000_000), 1600);
   return (
     <GlowCard tilt={false} glow="245,158,11" className="flex flex-col">
       <Head icon={Banknote} glow="245,158,11" title="Tadbirkorlik kreditlari" sub="O'z-band → loyiha → startap" />
       <div className="mb-3 flex items-baseline gap-2">
         <span className="font-mono text-2xl font-bold text-amber-600 dark:text-amber-400">{fmt(total)}</span>
-        <span className="text-[12px] text-foreground/55">mlrd so'm · {fmt(creditSummary.beneficiaries)} yosh</span>
+        <span className="text-[12px] text-foreground/55">mln so'm · {fmt(creditSummary.beneficiaries)} yosh</span>
       </div>
       <div className="space-y-2">
         {CREDIT_TIERS.map((t, i) => (
@@ -217,7 +217,7 @@ const Dolzarb = () => {
     <GlowCard tilt={false} glow="251,191,36" className="flex flex-col">
       <Head icon={Sun} glow="251,191,36" title="Dolzarb 90 kun" sub="Yozgi mavsumiy bandlik dasturi" />
       <div className="mb-2 flex items-end justify-between">
-        <div><span className="font-mono text-[22px] font-bold text-foreground">{(reached / 1_000_000).toFixed(2)}M</span><span className="text-[11px] text-foreground/55"> / {DOLZARB.target / 1_000_000}M yosh</span></div>
+        <div><span className="font-mono text-[22px] font-bold text-foreground">{fmt(reached)}</span><span className="text-[11px] text-foreground/55"> / {fmt(DOLZARB.target)} yosh</span></div>
         <div className="text-right"><span className="font-mono text-[15px] font-bold text-amber-600 dark:text-amber-400">{DOLZARB.daysPassed}</span><span className="text-[10px] text-foreground/50">/{DOLZARB.daysTotal} kun</span></div>
       </div>
       <div className="h-2.5 overflow-hidden rounded-full bg-muted">
@@ -230,7 +230,7 @@ const Dolzarb = () => {
           <div key={a.label} className="flex items-center gap-2 rounded-lg border border-[rgb(var(--card-border))] bg-muted/30 px-2 py-1.5 text-[10.5px]">
             <span className="grid size-6 place-items-center rounded-md" style={{ background: `${a.color}1f`, color: a.color }}><a.icon className="size-3.5" /></span>
             <span className="flex-1 truncate text-foreground/70">{a.label}</span>
-            <b className="font-mono text-foreground/80">{(a.count / 1000).toFixed(1)}k</b>
+            <b className="font-mono text-foreground/80">{a.count}</b>
           </div>
         ))}
       </div>

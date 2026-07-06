@@ -12,7 +12,7 @@ import LiveCounter from "./ui/LiveCounter";
 // label (UI o'zbekcha), key (totals'dan), icon, accent glow rgb, delta (mock o'zgarish)
 const KPIS = [
   { key: "youth", label: "Jami yoshlar", icon: Users, glow: "6,182,212", delta: 2.4, tone: "text-cyan-600 dark:text-cyan-300" },
-  { key: "notebook", label: "Yoshlar daftari", icon: BookMarked, glow: "168,139,250", delta: 1.1, tone: "text-violet-600 dark:text-violet-300" },
+  { key: "notebook", label: "Yoshlar daftari", icon: BookMarked, glow: "168,139,250", delta: -100, tone: "text-violet-600 dark:text-violet-300" },
   { key: "unemployed", label: "Ishsiz yoshlar", icon: UserX, glow: "239,68,68", delta: -3.2, tone: "text-rose-600 dark:text-rose-300" },
   { key: "students", label: "Talabalar", icon: GraduationCap, glow: "34,197,94", delta: 4.8, tone: "text-emerald-600 dark:text-emerald-300" },
   { key: "entrepreneurs", label: "Tadbirkorlar", icon: Rocket, glow: "52,211,153", delta: 6.5, tone: "text-emerald-600 dark:text-emerald-300" },

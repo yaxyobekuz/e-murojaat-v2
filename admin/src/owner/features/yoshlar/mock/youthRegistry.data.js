@@ -1,6 +1,6 @@
-// Yoshlar daftari (reyestr) — ehtiyojmand yoshlar individual profili.
-// Asos: "Yoshlar daftari" davlat tizimi (ishsiz/risk guruh yoshlar reyestri + ko'rilgan chora).
-// Demo — mavjud MAHALLAS aggregatlaridan generatsiya. Deterministik.
+// Yoshlar daftari (reyestr) — Sarnovul MFY da daftar BO'SHATILGAN (hozirda 0 faol).
+// Quyidagi yozuvlar — arxiv: chora ko'rilib daftardan chiqarilgan yoshlar tarixi.
+// Demo — mavjud MAHALLAS ro'yxatidan generatsiya. Deterministik.
 import { MAHALLAS } from "./youth.data";
 
 const rng = (seed) => {
@@ -29,7 +29,7 @@ export const NEED_TYPE = {
 export const MEASURE_STATUS = {
   pending: { label: "Ko'rib chiqilmoqda", tone: "progress" },
   assigned: { label: "Chora belgilandi", tone: "new" },
-  resolved: { label: "Bandlik ta'minlandi", tone: "done" },
+  resolved: { label: "Daftardan chiqarilgan", tone: "done" },
 };
 
 const FIRST = ["Akmal", "Diyor", "Sardor", "Jasur", "Bekzod", "Aziz", "Doston", "Shoxrux", "Ulug'bek", "Farrux", "Nilufar", "Dilnoza", "Madina", "Sevara", "Gulnoza", "Ozoda", "Kamola", "Shahnoza"];
@@ -37,14 +37,15 @@ const LAST = ["Karimov", "Yusupov", "To'xtayev", "Rahimov", "Ergashev", "Qodirov
 
 const DIRS = ["unemployed", "unemployed", "risk", "student", "entrepreneur"];
 const NEEDS = ["job", "grant", "skill", "loan", "social"];
-const STATUSES = ["resolved", "resolved", "assigned", "pending"];
+// Daftar bo'shatilgan — barcha arxiv yozuvlari chora ko'rilib chiqarilgan
+const STATUSES = ["resolved", "resolved", "resolved", "resolved"];
 
 const TODAY = new Date("2026-06-24");
 let counter = 0;
 
-// Har mahalladan notebook (ehtiyojmand) yoshlar soniga mutanosib vakil yozuvlar
+// Har ko'chadan ~3 ta arxiv yozuv (daftardan chiqarilganlar tarixi, jami 42)
 export const YOUTH_RECORDS = MAHALLAS.flatMap((m, mi) => {
-  const sample = 3 + Math.floor((m.notebook / 60)); // mahalla hajmiga qarab 3-8 ta
+  const sample = 3;
   return Array.from({ length: Math.min(sample, 8) }, (_, k) => {
     counter += 1;
     const seed = counter * 1.9 + k;

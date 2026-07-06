@@ -50,7 +50,7 @@ const YoshlarProjectsPage = () => {
                 Yoshlar loyihalari
               </h1>
             </div>
-            <p className="mt-0.5 text-[12px] text-foreground/45">Yoshlar ishlari agentligi · davlat dasturlari va tashabbuslari</p>
+            <p className="mt-0.5 text-[12px] text-foreground/45">Yoshlar ishlari agentligi · davlat dasturlari — Sarnovul MFY qamrovi</p>
           </div>
         </div>
 

@@ -1,4 +1,4 @@
-// Yoshlar islohotlari — real davlat dasturlari asosida (demo, deterministik).
+// Yoshlar islohotlari — davlat dasturlarining Sarnovul MFY kesimi (demo, deterministik).
 // Bandlik, Tashabbusli budjet, El-yurt umidi, Mehribonlik uyi bitiruvchilari.
 import { Briefcase, GraduationCap, Wrench, Rocket } from "lucide-react";
 
@@ -10,20 +10,20 @@ const rng = (seed) => {
 };
 
 // ───────── 1. BANDLIK DASTURLARI ─────────
-// Asos: "Yoshlar biznesi" (100k yoshga daromad), "Kelajakka qadam" (140k bitiruvchi ish bilan)
+// Davlat dasturlarining mahalla kesimi (Sarnovul MFY yoshlari qamrovi)
 export const EMPLOYMENT_PROGRAMS = [
-  { key: "biznes", name: "Yoshlar biznesi", desc: "Yoshlarga daromadli ish", target: 100000, reached: 71400, color: "#34d399", icon: Briefcase },
-  { key: "kelajak", name: "Kelajakka qadam", desc: "Bitiruvchilarni ishga joylash", target: 140000, reached: 98200, color: "#22d3ee", icon: GraduationCap },
-  { key: "kasb", name: "Kasb-hunar o'rgatish", desc: "Bepul kasbga tayyorlash", target: 60000, reached: 44800, color: "#a78bfa", icon: Wrench },
-  { key: "subsidiya", name: "Tadbirkorlik subsidiyasi", desc: "Startap va biznes granti", target: 25000, reached: 16900, color: "#f59e0b", icon: Rocket },
+  { key: "biznes", name: "Yoshlar biznesi", desc: "Yoshlarga daromadli ish", target: 40, reached: 28, color: "#34d399", icon: Briefcase },
+  { key: "kelajak", name: "Kelajakka qadam", desc: "Bitiruvchilarni ishga joylash", target: 60, reached: 44, color: "#22d3ee", icon: GraduationCap },
+  { key: "kasb", name: "Kasb-hunar o'rgatish", desc: "Bepul kasbga tayyorlash", target: 35, reached: 26, color: "#a78bfa", icon: Wrench },
+  { key: "subsidiya", name: "Tadbirkorlik subsidiyasi", desc: "Startap va biznes granti", target: 12, reached: 8, color: "#f59e0b", icon: Rocket },
 ];
 
 // Ish o'rni voronkasi (ariza → o'qish → joylashish)
 export const EMPLOYMENT_FUNNEL = [
-  { stage: "Ro'yxatdan o'tdi", value: 231000, color: "#22d3ee" },
-  { stage: "Kasbga o'qitildi", value: 156000, color: "#a78bfa" },
-  { stage: "Ish bilan ta'minlandi", value: 98200, color: "#34d399" },
-  { stage: "Doimiy ishda", value: 74100, color: "#22c55e" },
+  { stage: "Ro'yxatdan o'tdi", value: 132, color: "#22d3ee" },
+  { stage: "Kasbga o'qitildi", value: 96, color: "#a78bfa" },
+  { stage: "Ish bilan ta'minlandi", value: 74, color: "#34d399" },
+  { stage: "Doimiy ishda", value: 58, color: "#22c55e" },
 ];
 
 export const employmentSummary = (() => {
@@ -37,7 +37,7 @@ export const employmentSummary = (() => {
 export const YOUTH_INITIATIVES = Array.from({ length: 10 }, (_, i) => {
   const seed = i + 1;
   const TITLES = ["IT-laboratoriya", "Yoshlar kutubxonasi", "Sport zali jihozlari", "Robototexnika to'garagi", "Onlayn kurslar markazi", "Yoshlar teatri", "Startap inkubator", "Til o'rganish klubi", "Ijod ustaxonasi", "Media-studiya"];
-  const votes = Math.round(50 + rng(seed * 2.3) * 850);
+  const votes = Math.round(40 + rng(seed * 2.3) * 380);
   const cost = Math.round((30 + rng(seed * 3.4) * 170)) * 1_000_000;
   const status = i < 4 ? "won" : i < 7 ? "voting" : "review";
   return {

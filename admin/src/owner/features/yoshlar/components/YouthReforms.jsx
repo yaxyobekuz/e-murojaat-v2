@@ -51,7 +51,7 @@ const Employment = () => {
                   transition={{ duration: 1.6, repeat: Infinity, delay: i * 0.2 + k * 0.4, ease: "easeIn" }} />
               ))}
               <text x={W / 2} y={y + h / 2 + 1} textAnchor="middle" dominantBaseline="middle" className="fill-foreground font-medium" style={{ fontSize: 10 }}>{f.stage}</text>
-              <text x={W / 2} y={y + h / 2 + 12} textAnchor="middle" dominantBaseline="middle" className="font-mono" style={{ fontSize: 9, fill: f.color }}>{(f.value / 1000).toFixed(0)}k</text>
+              <text x={W / 2} y={y + h / 2 + 12} textAnchor="middle" dominantBaseline="middle" className="font-mono" style={{ fontSize: 9, fill: f.color }}>{f.value}</text>
             </g>
           );
         })}
