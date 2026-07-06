@@ -18,7 +18,7 @@ export function InstitutionModal({ inst, onClose }) {
           <div><div style={{ fontSize: 12, color: T.muted, marginBottom: 4 }}>Jins bo'yicha</div><MiniChart height={220} option={donutOpt(inst.boys, inst.girls)} /></div>
           <div><div style={{ fontSize: 12, color: T.muted, marginBottom: 4 }}>Oylik o'rtacha davomat — 30 kun</div><MiniChart height={220} option={lineOpt(inst.trend, inst.trend.map((_, i) => dayLabel(29 - i)), inst.accent)} /></div>
         </div>
-        <div style={{ marginTop: 14 }}><div style={{ fontSize: 12, color: T.muted, marginBottom: 4 }}>{inst.kind === "kg" ? "Yosh guruhlari" : "Sinflar bo'yicha taqsimot"}</div><MiniChart height={200} option={barOpt(labels, distData, inst.accent)} /></div>
+        <div style={{ marginTop: 14 }}><div style={{ fontSize: 12, color: T.muted, marginBottom: 4 }}>{inst.kind === "kg" ? "Bog'cha turi bo'yicha" : "Sinflar bo'yicha taqsimot"}</div><MiniChart height={200} option={barOpt(labels, distData, inst.accent)} /></div>
         <div style={{ marginTop: 12 }}><span className="tcc-pill">namunaviy</span></div>
       </div>
     </div>, document.body);

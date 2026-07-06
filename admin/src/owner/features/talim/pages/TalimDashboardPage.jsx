@@ -167,13 +167,13 @@ const TalimDashboardPage = () => {
   useInjectCC();
   const nav = useNavigate();
   const [days, setDays] = useState(14);
-  const [entered, setEntered] = useState(2387);
+  const [entered, setEntered] = useState(1041);
   const out = useCountUp(M.outOfSchool); const cov = useCountUp(+(((M.children6_18 - M.outOfSchool) / M.children6_18) * 100).toFixed(1), 1500); const kids = useCountUp(M.children6_18, 1500); const chr = useCountUp(M.chronic);
 
-  const radar = useMemo(() => { const rings = [["9-dan keyin", 96, T.gold], ["O'rta", 97, T.teal], ["Boshlang'ich", 99, T.green], ["Maktabgacha", 78, T.amber]]; return { backgroundColor: "transparent", series: rings.map((r, i) => ({ type: "gauge", startAngle: 90, endAngle: -270, radius: `${92 - i * 18}%`, center: ["50%", "52%"], pointer: { show: false }, progress: { show: true, roundCap: true, width: 8, itemStyle: { color: r[2] } }, axisLine: { lineStyle: { width: 8, color: [[1, "rgba(255,255,255,.06)"]] } }, splitLine: { show: false }, axisTick: { show: false }, axisLabel: { show: false }, data: [{ value: r[1] }], detail: { show: false } })) }; }, []);
+  const radar = useMemo(() => { const rings = [["9-dan keyin", 97, T.gold], ["O'rta", 99, T.teal], ["Boshlang'ich", 99, T.green], ["Maktabgacha", 89.7, T.amber]]; return { backgroundColor: "transparent", series: rings.map((r, i) => ({ type: "gauge", startAngle: 90, endAngle: -270, radius: `${92 - i * 18}%`, center: ["50%", "52%"], pointer: { show: false }, progress: { show: true, roundCap: true, width: 8, itemStyle: { color: r[2] } }, axisLine: { lineStyle: { width: 8, color: [[1, "rgba(255,255,255,.06)"]] } }, splitLine: { show: false }, axisTick: { show: false }, axisLabel: { show: false }, data: [{ value: r[1] }], detail: { show: false } })) }; }, []);
   const trend = useMemo(() => lineOpt(trend30(1).slice(30 - days), Array.from({ length: days }, (_, i) => dayLabel(days - 1 - i)), T.teal), [days]);
-  const classes = useMemo(() => barOpt(Array.from({ length: 11 }, (_, i) => i + 1), classDist(2860, 1), T.teal), []);
-  const girls = useMemo(() => ({ backgroundColor: "transparent", tooltip: { trigger: "item", ...tip }, series: [{ type: "pie", radius: ["56%", "78%"], center: ["50%", "48%"], label: { show: false }, data: [{ value: 1231, name: "Qamrovda", itemStyle: { color: T.green } }, { value: 14, name: "Chetda qolgan qiz", itemStyle: { color: T.alarm } }] }] }), []);
+  const classes = useMemo(() => barOpt(Array.from({ length: 11 }, (_, i) => i + 1), classDist(1124, 1), T.teal), []);
+  const girls = useMemo(() => ({ backgroundColor: "transparent", tooltip: { trigger: "item", ...tip }, series: [{ type: "pie", radius: ["56%", "78%"], center: ["50%", "48%"], label: { show: false }, data: [{ value: 552, name: "Qamrovda", itemStyle: { color: T.green } }, { value: 6, name: "Chetda qolgan qiz", itemStyle: { color: T.alarm } }] }] }), []);
 
   return (
     <div className="tcc">
@@ -181,7 +181,7 @@ const TalimDashboardPage = () => {
       <div className="tcc-wrap">
         {/* ═══ 1) ASOSIY KPI — eng muhim raqamlar (tepada) ═══ */}
         <div className="tcc-hero">
-          <div className="tcc-alarm"><div style={{ fontSize: 11, color: "#ffb3b3", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".6px" }}>⚠ Ta'limdan chetda qolgan bolalar</div><div className="big">{fmt(out)}</div><div style={{ fontSize: 11.5, color: T.muted, marginTop: 6 }}>6–18 yosh · ish 12 · kasallik 7 · noaniq 9 · ko'chgan 3</div></div>
+          <div className="tcc-alarm"><div style={{ fontSize: 11, color: "#ffb3b3", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".6px" }}>⚠ Ta'limdan chetda qolgan bolalar</div><div className="big">{fmt(out)}</div><div style={{ fontSize: 11.5, color: T.muted, marginTop: 6 }}>6–18 yosh · ish 6 · kasallik 4 · noaniq 5 · ko'chgan 2</div></div>
           {[["Umumiy qamrov", `${cov.toFixed(1)}%`, T.green], ["Jami bola (6–18)", fmt(kids), T.text], ["Surunkali kelmaydigan", fmt(chr), T.amber]].map(([l, v, c], i) => <div className="tcc-kpi" key={i}><div className="lab">{l}</div><div className="val" style={{ color: c }}>{v}</div></div>)}
         </div>
         {/* ═══ 2) JONLI FACE-ID + MAKTAB MA'LUMOTLARI ═══ */}
@@ -192,12 +192,12 @@ const TalimDashboardPage = () => {
         {/* ═══ 3) ENG QIMMATLI GRAFIKLAR — davomat trendi + qamrov radari ═══ */}
         <div className="tcc-grid" style={{ marginBottom: 14 }}>
           <EPanel className="tcc-c8" delay={120} height={250} title="Davomat tendentsiyasi" subtitle={`Oxirgi ${days} kun`} option={trend} note={<span className="tcc-pill">namunaviy</span>} />
-          <EPanel className="tcc-c4" delay={160} height={250} title="Qamrov radari" subtitle="Maktabgacha → 9-dan keyin" option={radar} note="Maktabgacha 78% · Boshlang'ich 99% · O'rta 97% · 9-dan keyin 96%" />
+          <EPanel className="tcc-c4" delay={160} height={250} title="Qamrov radari" subtitle="Maktabgacha → 9-dan keyin" option={radar} note="Maktabgacha 89.7% · Boshlang'ich 99% · O'rta 99% · 9-dan keyin 97%" />
         </div>
         {/* ═══ 4) XAVF GURUHLARI + SINFLAR ═══ */}
         <div className="tcc-grid" style={{ marginBottom: 14 }}>
           <div className="tcc-card tcc-c6" style={{ animationDelay: "200ms" }}><div className="hd"><div><div className="t">Xavf guruhlari</div><div className="s">Maxsus e'tibor</div></div></div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 9, marginTop: 2 }}>{[["Kam ta'minlangan oila", 86, T.amber], ["Yetim / vasiylik", 9, T.teal], ["Nogironligi bor", 14, T.gold]].map(([l, n, c]) => <div key={l} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 10px", border: `1px solid ${T.border}`, borderRadius: 10, background: "rgba(255,255,255,.02)" }}><div className="mono" style={{ fontSize: 22, fontWeight: 700, color: c, minWidth: 40 }}>{n}</div><div style={{ fontSize: 11.5 }}>{l}</div></div>)}</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 9, marginTop: 2 }}>{[["Kam ta'minlangan oila", 38, T.amber], ["Yetim / vasiylik", 5, T.teal], ["Nogironligi bor", 8, T.gold]].map(([l, n, c]) => <div key={l} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 10px", border: `1px solid ${T.border}`, borderRadius: 10, background: "rgba(255,255,255,.02)" }}><div className="mono" style={{ fontSize: 22, fontWeight: 700, color: c, minWidth: 40 }}>{n}</div><div style={{ fontSize: 11.5 }}>{l}</div></div>)}</div>
             <div className="tcc-note"><span className="tcc-pill">namunaviy</span></div>
           </div>
           <EPanel className="tcc-c6" delay={240} height={230} title="Sinflar bo'yicha taqsimot" subtitle="1–11-sinf o'quvchilari" option={classes} note={<span className="tcc-pill">namunaviy</span>} />
@@ -205,7 +205,7 @@ const TalimDashboardPage = () => {
         {/* ═══ 5) KAMROQ KERAKLI — hex xarita + qizlar kesimi (pastda) ═══ */}
         <div className="tcc-grid">
           <div className="tcc-card tcc-c8" style={{ animationDelay: "300ms" }}><div className="hd"><div><div className="t">Tirik mahalla — qamrov</div><div className="s">Bloklar (hex)</div></div></div><div style={{ height: 260 }}><HexGrid /></div><div className="tcc-note"><span className="tcc-pill">namunaviy · qizil = past qamrov</span></div></div>
-          <EPanel className="tcc-c4" delay={340} height={260} title="Qizlar bo'yicha kesim" subtitle="Erta nikoh xavfi monitoringi" option={girls} note={<span><span className="tcc-pill">namunaviy</span> &nbsp;Qizlar 1245 · qamrov 98.9% · chetda 14</span>} />
+          <EPanel className="tcc-c4" delay={340} height={260} title="Qizlar bo'yicha kesim" subtitle="Erta nikoh xavfi monitoringi" option={girls} note={<span><span className="tcc-pill">namunaviy</span> &nbsp;Qizlar 558 · qamrov 98.9% · chetda 6</span>} />
         </div>
         {/* ═══ UMUMIY MA'LUMOTLAR (analitikada ham turaversin; bo'lim bosilsa to'liq sahifaga) ═══ */}
         <div className="tcc-h2" role="button" tabIndex={0} style={{ cursor: "pointer", marginTop: 26 }} onClick={() => nav("/owner/talim/malumotlar")} onKeyDown={(e) => e.key === "Enter" && nav("/owner/talim/malumotlar")}>
