@@ -25,17 +25,18 @@ export const summary = (streetId) => {
     stock,
     debt,
     critical,
-    deltas: { served: 3.1, delivered: 6.4, fulfillment: 2.8, debt: -4.5 },
+    deltas: { served: 0.8, delivered: -1.3, fulfillment: -0.3, debt: -2.1 },
   };
 };
 
-const MONTHS = ["Yan", "Fev", "Mar", "Apr", "May", "Iyn", "Iyl", "Avg", "Sen", "Okt", "Noy", "Dek"];
-// Ballonga talab qishda cho'qqi (isitish)
-const SEAS = [1.62, 1.48, 1.2, 0.92, 0.74, 0.66, 0.68, 0.72, 0.84, 1.06, 1.34, 1.58];
+const MONTHS = ["Iyl", "Avg", "Sen", "Okt", "Noy", "Dek", "Yan", "Fev", "Mar", "Apr", "May", "Iyn"];
+// Joriy oyga (iyun, 1254 balon) nisbatan mavsumiy koeffitsiyent — qishda cho'qqi (isitish).
+// Kanonik seriya (iyul→iyun): 1180, 1150, 1230, 1390, 1560, 1710, 1740, 1620, 1450, 1330, 1270, 1254.
+const SEAS = [0.941, 0.9171, 0.9809, 1.1085, 1.244, 1.3636, 1.3876, 1.2919, 1.1563, 1.0606, 1.0128, 1];
 
-// 12 oylik yetkazib berilgan ballon dinamikasi (dona)
+// 12 oylik yetkazib berilgan ballon dinamikasi (dona) — gaz moduli seriyasi bilan bir xil
 export const deliveryTrend = (streetId) => {
-  const base = summary(streetId).delivered / 12;
+  const base = summary(streetId).delivered;
   return MONTHS.map((month, i) => ({ month, value: Math.round(base * SEAS[i]) }));
 };
 

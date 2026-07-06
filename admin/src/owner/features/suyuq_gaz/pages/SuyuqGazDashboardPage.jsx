@@ -29,7 +29,7 @@ const SuyuqGazDashboardPage = () => {
         <div>
           <h1 className="text-xl font-semibold tracking-tight">Suyultirilgan gaz ta'minoti analitikasi</h1>
           <p className="mt-0.5 text-sm text-foreground/50">
-            Quvur gazi yo'q ko'chalarda ballonli gaz ta'minoti, talab qondirish va qarzdorlik
+            Sarnovul MFY: quvur gazi yo'q ko'chalarda ballonli gaz ta'minoti, talab qondirish va qarzdorlik
           </p>
         </div>
         <SuyuqGazFilters value={state} onChange={setField} />

@@ -38,7 +38,7 @@ const StreetTable = ({ rows = [], selectedId, onSelect }) => {
       render: (r) => <GlassStatusBadge tone={STATUS[r.status].tone}>{STATUS[r.status].label}</GlassStatusBadge>,
     },
     { key: "households", header: "Xonadon", align: "right", render: (r) => num(r.households) },
-    { key: "served", header: "Ulangan", align: "right", render: (r) => num(r.served) },
+    { key: "served", header: "Ta'minlangan", align: "right", render: (r) => num(r.served) },
     { key: "demand", header: "Talab (ballon)", align: "right", render: (r) => num(r.demand) },
     { key: "delivered", header: "Yetkazildi", align: "right", render: (r) => num(r.delivered) },
     { key: "stock", header: "Ombor (ballon)", align: "right", render: (r) => num(r.stock) },
