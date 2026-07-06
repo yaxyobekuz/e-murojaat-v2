@@ -18,18 +18,19 @@ const rng = (seed) => {
   return x - Math.floor(x);
 };
 
-const MAHALLAS = ["Sarnovul", "Navoiy", "Bobur", "Amir Temur", "Fidokor", "Istiqlol", "Do'stlik", "Bog'", "Chinor", "Guliston", "Mustaqillik", "Yangi hayot", "Marvarid", "Oqtepa"];
+// Sarnovul MFY ko'chalari — kanonik 14 ta
+const MAHALLAS = ["Maslahat", "Ulug'vor", "Urganji", "Sarnovul", "Bog'bon", "Do'stlik", "Tinchlik", "Chinor", "Guliston", "Navro'z", "Istiqlol", "Mehnat", "Paxtakor", "Olmazor"];
 const TYPES = ["cleanup", "greening", "sanitation", "repair"];
 
-// Tadbirlar (so'nggi 6 oy)
+// Tadbirlar (so'nggi 6 oy) — mahalla masshtabi (4 306 aholi)
 export const HASHAR_EVENTS = Array.from({ length: 30 }, (_, i) => {
   const daysBack = Math.floor(rng(i * 2.6) * 170);
   const date = new Date(TODAY);
   date.setDate(TODAY.getDate() - daysBack);
   const type = TYPES[i % TYPES.length];
-  const participants = 30 + Math.round(rng(i * 3.9) * 220);
-  const areaHa = Math.round((0.5 + rng(i * 5.2) * 6) * 10) / 10;
-  const treesPlanted = type === "greening" ? 20 + Math.round(rng(i * 7.1) * 180) : 0;
+  const participants = 20 + Math.round(rng(i * 3.9) * 100);
+  const areaHa = Math.round((0.3 + rng(i * 5.2) * 1.5) * 10) / 10;
+  const treesPlanted = type === "greening" ? 10 + Math.round(rng(i * 7.1) * 80) : 0;
 
   return {
     id: `hashar-${i + 1}`,
@@ -52,7 +53,7 @@ export const HASHAR_TREND = MONTHS.map((month, i) => ({
   value: (PEAK[month] ? 5 : 2) + Math.round(rng(i * 6.4) * 3),
 }));
 
-// Mahalla reytingi (Eng toza mahalla) — ball
+// Ko'cha reytingi (Eng toza ko'cha) — ball
 export const HASHAR_RANKING = MAHALLAS.map((name, i) => ({
   key: name,
   value: 60 + Math.round(rng(i * 4.8) * 38), // 60-98 ball

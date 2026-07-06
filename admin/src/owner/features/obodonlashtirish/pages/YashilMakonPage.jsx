@@ -37,7 +37,7 @@ const YashilMakonPage = () => (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
       <InsightCard i={0} icon={TreePine} label="Ekilgan ko'chat" value={s.planted} accent={ACCENT}
         trend={{ dir: "up", text: "mavsum" }}
-        equivalents={[{ icon: TreePine, text: `~${im.mahallasGreen} mahalla yashil qoplamasi` }, { icon: MapPin, text: `${YM_PLANTINGS.length} ekish nuqtasi` }]} />
+        equivalents={[{ icon: TreePine, text: `~${im.mahallasGreen} ko'cha yashil qoplamasi` }, { icon: MapPin, text: `${YM_PLANTINGS.length} ekish nuqtasi` }]} />
       <InsightCard i={1} icon={Wind} label="CO₂ yutilishi" value={im.co2} suffix=" t/yil" accent="#06b6d4"
         equivalents={[{ icon: Car, text: `~${Math.round(im.co2 / 4.6)} ta avtomobil chiqindisi` }]} />
       <InsightCard i={2} icon={Cloud} label="O₂ ajralishi" value={im.o2} suffix=" t/yil" accent={ACCENT}

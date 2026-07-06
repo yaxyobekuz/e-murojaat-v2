@@ -42,21 +42,21 @@ const BBOX = {
   maxLng: ORIGIN.lng + (GRID_COLS - 1) * CELL_LNG + CELL_LNG * 0.6,
 };
 
-// 12 loyiha (chapdan-o'ngga, yuqoridan-pastga)
-// trees — faqat ko'kalamzor/park loyihalarida (yashil maydonlar rejimida ko'rsatiladi)
+// 12 loyiha (chapdan-o'ngga, yuqoridan-pastga) — mahalla masshtabi (mln so'm)
+// trees — faqat ko'kalamzor/park loyihalarida (jami 910 tup — 1 850 mavsumiy ko'chatning bir qismi)
 const META = [
-  { name: "Markaziy ko'cha yo'li", type: "road", status: "done", progress: 100, budget: 4_200_000_000 },
-  { name: "Sarnovul mahalla parki", type: "park", status: "ongoing", progress: 64, budget: 1_850_000_000, trees: 320 },
-  { name: "Yoritish tarmog'i — 3-blok", type: "lighting", status: "planned", progress: 0, budget: 620_000_000 },
-  { name: "Daryo bo'yi ko'kalamzori", type: "greenery", status: "ongoing", progress: 42, budget: 540_000_000, trees: 540 },
-  { name: "Maktab oldi maydoni", type: "park", status: "done", progress: 100, budget: 980_000_000, trees: 180 },
-  { name: "Ichki yo'llar ta'miri", type: "road", status: "ongoing", progress: 78, budget: 2_100_000_000 },
-  { name: "Suv quvuri yangilash", type: "water", status: "planned", progress: 0, budget: 1_400_000_000 },
-  { name: "Bozor atrofi yoritish", type: "lighting", status: "done", progress: 100, budget: 430_000_000 },
-  { name: "Sport maydonchasi", type: "park", status: "ongoing", progress: 55, budget: 760_000_000, trees: 95 },
-  { name: "Avtobus bekati zonasi", type: "road", status: "planned", progress: 0, budget: 310_000_000 },
-  { name: "Ko'cha daraxtlari ekish", type: "greenery", status: "done", progress: 100, budget: 220_000_000, trees: 760 },
-  { name: "Quduq va nasos stansiyasi", type: "water", status: "ongoing", progress: 33, budget: 1_120_000_000 },
+  { name: "Maslahat ko'chasi yo'li", type: "road", status: "done", progress: 100, budget: 980_000_000 },
+  { name: "Sarnovul mahalla parki", type: "park", status: "ongoing", progress: 64, budget: 680_000_000, trees: 140 },
+  { name: "Urganji ko'chasi yoritish", type: "lighting", status: "planned", progress: 0, budget: 240_000_000 },
+  { name: "Daryo bo'yi ko'kalamzori", type: "greenery", status: "ongoing", progress: 42, budget: 210_000_000, trees: 260 },
+  { name: "Maktab oldi maydoni", type: "park", status: "done", progress: 100, budget: 320_000_000, trees: 90 },
+  { name: "Ichki yo'llar ta'miri", type: "road", status: "ongoing", progress: 78, budget: 760_000_000 },
+  { name: "Suv quvuri yangilash", type: "water", status: "planned", progress: 0, budget: 540_000_000 },
+  { name: "Guzar atrofi yoritish", type: "lighting", status: "done", progress: 100, budget: 160_000_000 },
+  { name: "Sport maydonchasi", type: "park", status: "ongoing", progress: 55, budget: 280_000_000, trees: 40 },
+  { name: "Avtobus bekati zonasi", type: "road", status: "planned", progress: 0, budget: 120_000_000 },
+  { name: "Ko'cha daraxtlari ekish", type: "greenery", status: "done", progress: 100, budget: 95_000_000, trees: 380 },
+  { name: "Quduq va nasos stansiyasi", type: "water", status: "ongoing", progress: 33, budget: 430_000_000 },
 ];
 
 // Yashil maydon turlari (daraxt soni bo'lgan loyihalar)

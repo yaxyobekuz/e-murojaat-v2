@@ -61,9 +61,9 @@ const AxlatBinsMap = () => {
 
   return (
     <div className="p-3">
-      {/* Mahalla tanlash */}
+      {/* Ko'cha tanlash */}
       <div className="mb-2 flex flex-wrap items-center gap-1.5">
-        <span className="text-[11px] text-foreground/50">Mahalla:</span>
+        <span className="text-[11px] text-foreground/50">Ko'cha:</span>
         {BINS_BY_MAHALLA.map(({ mahalla: m }) => {
           const ms = binMahallaStats.find((s) => s.mahalla === m);
           const active = m === mahalla;
@@ -154,7 +154,7 @@ const AxlatBinsMap = () => {
 
             <div className="mt-2 flex items-center gap-1.5 border-t pt-1.5 text-[10.5px] text-foreground/65" style={{ borderColor: hexA(ts.color, 0.2) }}>
               <MapPin className="size-3" style={{ color: ts.color }} />
-              Hozir: <b className="text-foreground/80">{ts.live ? `${mahalla} mahallasida (xaritada)` : "Garaj / bazada"}</b>
+              Hozir: <b className="text-foreground/80">{ts.live ? `${mahalla} ko'chasida (xaritada)` : "Garaj / bazada"}</b>
               {ts.live && <span className="text-foreground/45">· {truck.speed} km/s</span>}
             </div>
           </div>

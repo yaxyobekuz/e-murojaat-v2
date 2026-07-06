@@ -55,7 +55,7 @@ const flowNodes = [...ASSEN_BY_MAHALLA].sort((a, b) => b.value - a.value).slice(
 const hasharBoard = hasharImpact.leaderboard;
 
 const execInsights = [
-  { text: `Tuman salomatlik indeksi ${districtHealth.score}/100 — 4 yo'nalish umumlashmasi.`, tone: C.exec },
+  { text: `Mahalla salomatlik indeksi ${districtHealth.score}/100 — 4 yo'nalish umumlashmasi.`, tone: C.exec },
   { text: `Ko'kalamzorlik: tirik qolish ${ymSummary.survivalPct}% · CO₂ ${ymImpact.co2.toLocaleString("uz-UZ")} t/yil yutilmoqda.`, tone: "#22c55e" },
   { text: axlatSummary.missed > 0 ? `Chiqindi xizmatida ${axlatSummary.missed} kelmay qolgan marshrut — e'tibor talab.` : "Chiqindi xizmati to'liq nazoratda.", tone: axlatSummary.missed > 0 ? "#f59e0b" : "#22c55e" },
 ];
@@ -89,15 +89,15 @@ const ObodExecPage = () => (
     </div>
 
     {/* ══════════ UMUMIY ══════════ */}
-    <SectionBanner id="exec" icon={Gauge} title="Umumiy ko'rinish" sub="Tuman salomatlik indeksi va modul ballari" accent={C.exec} />
+    <SectionBanner id="exec" icon={Gauge} title="Umumiy ko'rinish" sub="Mahalla salomatlik indeksi va modul ballari" accent={C.exec} />
     <Reveal i={0}>
-      <Panel title="Tuman salomatlik indeksi" icon={Gauge} accent={C.exec} source="4 modul umumlashmasi (demo)">
+      <Panel title="Mahalla salomatlik indeksi" icon={Gauge} accent={C.exec} source="4 modul umumlashmasi (demo)">
         <ExecScore score={districtHealth.score} parts={districtHealth.parts} accent={C.exec} />
       </Panel>
     </Reveal>
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
       <Reveal i={0}><Panel title="AI ijroiya xulosasi" icon={Activity} accent={C.exec}><AIInsightPanel insights={execInsights} accent={C.exec} /></Panel></Reveal>
-      <Reveal i={1}><Panel title="Tuman yutuqlari" icon={Award} accent={C.exec}><BadgeStrip badges={obodBadges} /></Panel></Reveal>
+      <Reveal i={1}><Panel title="Mahalla yutuqlari" icon={Award} accent={C.exec}><BadgeStrip badges={obodBadges} /></Panel></Reveal>
     </div>
 
     {/* ══════════ TASHABBUSLI BUDJET ══════════ */}
@@ -162,7 +162,7 @@ const ObodExecPage = () => (
     </div>
 
     {/* ══════════ CHIQINDI IDISHLARI (smart bins) ══════════ */}
-    <SectionBanner id="bins" icon={Trash2} title="Chiqindi idishlari (aqlli chelaklar)" sub="Har mahallada chiqindi qutilari · to'lganlik % · olib ketish · chiqindi tarkibi" accent={C.axlat} />
+    <SectionBanner id="bins" icon={Trash2} title="Chiqindi idishlari (aqlli chelaklar)" sub="Har ko'chada chiqindi qutilari · to'lganlik % · olib ketish · chiqindi tarkibi" accent={C.axlat} />
     <Reveal i={0}>
       <Panel title="Chelaklar monitoringi" icon={Trash2} accent={C.axlat} source="Sensorli idish + GPS axlat mashinasi (demo)" bodyClass="p-0">
         <SmartBins />
@@ -199,7 +199,7 @@ const ObodExecPage = () => (
     <SectionBanner id="ym" icon={TreePine} title="Yashil makon" sub="Ko'chat ekish · ekologik ta'sir · yashilmakon.eco" accent={C.ym} />
     <Kpis>
       <InsightCard i={0} icon={TreePine} label="Ekilgan ko'chat" value={ymSummary.planted} accent={C.ym}
-        equivalents={[{ icon: TreePine, text: `~${ymImpact.mahallasGreen} mahalla qoplamasi` }]} />
+        equivalents={[{ icon: TreePine, text: `~${ymImpact.mahallasGreen} ko'cha qoplamasi` }]} />
       <InsightCard i={1} icon={Wind} label="CO₂ yutilishi" value={ymImpact.co2} suffix=" t/yil" accent="#06b6d4"
         equivalents={[{ icon: Globe, text: "Ekologik foyda" }]} />
       <InsightCard i={2} icon={Cloud} label="O₂ ajralishi" value={ymImpact.o2} suffix=" t/yil" accent={C.ym}

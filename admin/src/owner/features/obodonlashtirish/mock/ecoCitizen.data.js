@@ -18,19 +18,20 @@ export const ECO_ACTIONS = [
 ];
 
 const NAMES = ["Karimovlar", "Yusupovlar", "Rahimovlar", "Ergashevlar", "Qodirovlar", "Saidovlar", "Nazarovlar", "Aliyevlar", "To'xtayevlar", "Yo'ldoshevlar"];
-const MAHALLAS = ["Sarnovul", "Navoiy", "Bobur", "Amir Temur", "Fidokor", "Istiqlol", "Do'stlik", "Bog'", "Chinor", "Guliston", "Mustaqillik", "Yangi hayot", "Marvarid", "Oqtepa"];
+// Sarnovul MFY ko'chalari — kanonik 14 ta
+const MAHALLAS = ["Maslahat", "Ulug'vor", "Urganji", "Sarnovul", "Bog'bon", "Do'stlik", "Tinchlik", "Chinor", "Guliston", "Navro'z", "Istiqlol", "Mehnat", "Paxtakor", "Olmazor"];
 
-// Oilalar reytingi (eko-ball bo'yicha)
+// Oilalar reytingi (eko-ball bo'yicha) — mahalla masshtabi
 export const ECO_FAMILIES = Array.from({ length: 12 }, (_, i) => {
   const seed = i + 1;
-  const trees = Math.round(rng(seed * 2.1) * 120);
-  const solar = Math.round(rng(seed * 3.2) * 5);
-  const cleanups = Math.round(rng(seed * 4.3) * 30);
-  const devices = Math.round(rng(seed * 5.4) * 8);
-  const walks = Math.round(rng(seed * 6.5) * 200);
+  const trees = Math.round(rng(seed * 2.1) * 30);
+  const solar = Math.round(rng(seed * 3.2) * 3);
+  const cleanups = Math.round(rng(seed * 4.3) * 15);
+  const devices = Math.round(rng(seed * 5.4) * 5);
+  const walks = Math.round(rng(seed * 6.5) * 120);
   const points = trees * 50 + solar * 100 + cleanups * 30 + devices * 75 + walks * 15;
-  // 100+ daraxt yoki 10 mln so'm → "Yashil oila" status
-  const greenFamily = trees >= 60 || points >= 8000;
+  // 20+ daraxt yoki 3000+ ball → "Yashil oila" status
+  const greenFamily = trees >= 20 || points >= 3000;
   return {
     id: `EF-${String(i + 1).padStart(3, "0")}`,
     name: NAMES[i % NAMES.length],

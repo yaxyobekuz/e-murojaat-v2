@@ -1,5 +1,5 @@
 // Mavjud raqamlardan KELIB CHIQADIGAN insightlar (impact ekvivalenti, ballar, AI xulosa,
-// nishonlar, tuman salomatlik indeksi). Asl mock data O'ZGARMAYDI — faqat o'qiladi.
+// nishonlar, mahalla salomatlik indeksi). Asl mock data O'ZGARMAYDI — faqat o'qiladi.
 import { Trophy, TreePine, Truck, Zap } from "lucide-react";
 
 import { axlatSummary, AXLAT_ROUTES } from "./axlat.data";
@@ -39,7 +39,7 @@ export const axlatInsights = (() => {
   const out = [];
   out.push({ text: `Xizmat ishonchliligi ${im.reliabilityScore}/100 — ${s.done} ta marshrut o'z vaqtida xizmat ko'rsatdi.`, tone: im.reliabilityScore >= 70 ? "#22c55e" : "#f59e0b" });
   if (s.missed > 0) out.push({ text: `${s.missed} ta marshrutda mashina kelmadi — darhol qayta yo'naltirish tavsiya etiladi.`, tone: "#ef4444" });
-  out.push({ text: `Oylik to'plangan hajm ${im.trucks} ta to'la axlat mashinasiga teng.`, tone: "#22d3ee" });
+  out.push({ text: `Bir yig'ish siklida to'plangan hajm ${im.trucks} ta to'la axlat mashinasiga teng.`, tone: "#22d3ee" });
   return out;
 })();
 
@@ -91,7 +91,8 @@ export const ymImpact = (() => {
   const s = ymSummary;
   const co2 = Math.round((s.planted * CO2_PER_TREE) / 1000); // tonna/yil
   const o2 = Math.round((s.planted * O2_PER_TREE) / 1000); // tonna/yil
-  const mahallasGreen = Math.round((s.planted / 4000) * 10) / 10;
+  // 1 ko'cha yashil qoplamasi ≈ 132 daraxt (1850/14) — demo
+  const mahallasGreen = Math.round((s.planted / 132) * 10) / 10;
   // Survival radar — tur bo'yicha tirik qolish
   const byType = {};
   YM_PLANTINGS.forEach((p) => {
@@ -138,7 +139,7 @@ export const hasharInsights = (() => {
   out.push({ text: `Jamoatchilik faolligi ${im.engagement}/100 — ${s.events} tadbirda ${s.participants.toLocaleString("uz-UZ")} ishtirokchi.`, tone: im.engagement >= 60 ? "#22c55e" : "#f59e0b" });
   out.push({ text: `Tozalangan maydon ${im.fields} ta futbol maydoniga teng.`, tone: "#22d3ee" });
   const last = HASHAR_RANKING[HASHAR_RANKING.length - 1];
-  if (last) out.push({ text: `${last.key} mahallasi e'tibor talab qiladi — past faollik (${last.value} ball).`, tone: "#f59e0b" });
+  if (last) out.push({ text: `${last.key} ko'chasi e'tibor talab qiladi — past faollik (${last.value} ball).`, tone: "#f59e0b" });
   return out;
 })();
 
@@ -156,14 +157,14 @@ export const obodBadges = (() => {
   const topClean = HASHAR_RANKING[0];
   const bestRoute = [...AXLAT_ROUTES].filter((r) => r.status === "done").sort((a, b) => b.collectedVolume - a.collectedVolume)[0];
   return [
-    { icon: Trophy, title: "Eng toza mahalla", sub: topClean ? `${topClean.key} · ${topClean.value} ball` : "—", color: "#fbbf24" },
+    { icon: Trophy, title: "Eng toza ko'cha", sub: topClean ? `${topClean.key} · ${topClean.value} ball` : "—", color: "#fbbf24" },
     { icon: TreePine, title: "Yashil chempion", sub: `${ymSummary.survivalPct}% tirik qolish`, color: "#22c55e" },
     { icon: Truck, title: "Eng ishonchli marshrut", sub: bestRoute ? bestRoute.name : "—", color: "#22d3ee" },
     { icon: Zap, title: "Tez xizmat", sub: `${assenSummary.avgSla} kun o'rtacha SLA`, color: "#3b82f6" },
   ];
 })();
 
-// ───────────────────────── XARITA BLOKLARI (mahalla bo'yicha) ─────────────────────────
+// ───────────────────────── XARITA BLOKLARI (ko'cha bo'yicha) ─────────────────────────
 const STATUS_RGB = { done: "#22c55e", late: "#f59e0b", missed: "#ef4444", new: "#3b82f6", dispatched: "#f59e0b", rejected: "#ef4444" };
 
 export const axlatMapBlocks = AXLAT_ROUTES.map((r) => ({
@@ -219,7 +220,7 @@ export const hasharMapLegend = [
   { color: "#22c55e", label: "A'lo (≥90)" }, { color: "#84cc16", label: "Yaxshi" }, { color: "#f59e0b", label: "O'rta" }, { color: "#ef4444", label: "Past" },
 ];
 
-// ───────────────────────── TUMAN SALOMATLIK INDEKSI ─────────────────────────
+// ───────────────────────── MAHALLA SALOMATLIK INDEKSI ─────────────────────────
 // 4 modul ballarining vaznli o'rtachasi → 0..100
 export const districtHealth = (() => {
   const waste = axlatImpact.cleanlinessIndex;

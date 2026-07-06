@@ -27,7 +27,8 @@ export const REPORT_STATUS = {
   returned: { label: "Qayta ishlashga qaytarildi", tone: "danger" },
 };
 
-const MAHALLAS = ["Sarnovul", "Navoiy", "Bobur", "Amir Temur", "Fidokor", "Istiqlol", "Do'stlik", "Bog'", "Chinor", "Guliston", "Mustaqillik", "Yangi hayot", "Marvarid", "Oqtepa"];
+// Sarnovul MFY ko'chalari — kanonik 14 ta
+const MAHALLAS = ["Maslahat", "Ulug'vor", "Urganji", "Sarnovul", "Bog'bon", "Do'stlik", "Tinchlik", "Chinor", "Guliston", "Navro'z", "Istiqlol", "Mehnat", "Paxtakor", "Olmazor"];
 const TYPES = ["dump", "light", "tree", "road", "water", "sanitation"];
 const STATUSES = ["confirmed", "confirmed", "fixed", "assigned", "new", "returned"];
 const ORG = "Obodonlashtirish boshqarmasi";
@@ -50,7 +51,7 @@ export const CITIZEN_REPORTS = Array.from({ length: 24 }, (_, i) => {
     id: `XN-${String(1000 + i)}`,
     type,
     mahalla,
-    address: `${mahalla} MFY, ${1 + (i % 50)}-uy`,
+    address: `${mahalla} ko'chasi, ${1 + (i % 50)}-uy`,
     status,
     org: ORG,
     createdDate: created.toISOString().slice(0, 10),

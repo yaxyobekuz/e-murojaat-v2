@@ -104,7 +104,7 @@ export const SmartBins = () => {
         })}
       </div>
 
-      {/* 10 ta chelak — tanlangan mahalla */}
+      {/* 1-2 chelak — tanlangan ko'cha */}
       <div className="rounded-xl border border-[rgb(var(--card-border))] bg-muted/20 p-3">
         <div className="mb-2 flex items-center justify-between">
           <span className="text-[12px] font-semibold text-foreground">{mahalla} ko'chasi — {current.bins.length} ta chelak</span>

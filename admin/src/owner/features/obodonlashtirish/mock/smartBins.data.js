@@ -1,4 +1,4 @@
-// Aqlli chiqindi idishlari (smart bins) — har mahallada 10 ta chelak, to'lish foizi,
+// Aqlli chiqindi idishlari (smart bins) — Sarnovul MFY, har ko'chada 1-2 quti (jami 24),
 // olib ketish jadvali. Asos: VM 648-son sensorli idish + GPS axlat mashinasi. Demo, deterministik.
 
 const rng = (seed) => {
@@ -6,12 +6,14 @@ const rng = (seed) => {
   return x - Math.floor(x);
 };
 
+// Sarnovul MFY ko'chalari — kanonik 14 ta
 export const BIN_MAHALLAS = [
-  "Sarnovul", "Navoiy", "Bobur", "Amir Temur", "Fidokor", "Istiqlol", "Do'stlik",
-  "Bog'", "Chinor", "Guliston", "Mustaqillik", "Yangi hayot", "Marvarid", "Oqtepa",
+  "Maslahat", "Ulug'vor", "Urganji", "Sarnovul", "Bog'bon", "Do'stlik", "Tinchlik",
+  "Chinor", "Guliston", "Navro'z", "Istiqlol", "Mehnat", "Paxtakor", "Olmazor",
 ];
 
-const STREETS = ["Markaziy", "Bog'", "Navoiy", "Amir Temur", "Mustaqillik", "Yoshlik", "Chinor", "Guliston", "Bahor", "Do'stlik"];
+// Quti joylashgan mo'ljal (ko'cha ichidagi nuqta)
+const STREETS = ["Masjid oldi", "Maktab yoni", "MFY guzari", "Bozorcha oldi", "Choyxona yoni", "Bekat yoni", "Bog' kirishi", "Do'kon oldi", "Ariq bo'yi", "Klub oldi"];
 
 // Holat — to'lish foiziga qarab
 export const BIN_STATUS = {
@@ -33,8 +35,9 @@ const TODAY = new Date("2026-06-27T13:00:00");
 const MAP_LAT = 40.9034;
 const MAP_LNG = 71.8604;
 
-// Har mahallada nechta quti (10 + ~7 → jami +100ga yaqin, 14 mahalla bo'yicha)
-const BINS_PER_MAHALLA = 17;
+// Har ko'chada 1-2 quti — 14 ko'cha bo'yicha jami 24 ta (mahalla masshtabi)
+const BINS_PER_MAHALLA = 2;
+const binsCount = (mi) => (mi % 3 === 2 ? 1 : BINS_PER_MAHALLA);
 
 // Har chelak — xarita MARKAZI atrofida joylashtiriladi (kamera shu yerga qaraydi).
 // Qutilar 2 ta aylana (halqa) bo'ylab teng taqsimlanadi → ustma-ust tushmaydi, markazda turadi.
@@ -51,10 +54,10 @@ const binGeo = (seed, mi, k, total) => {
   return { lat, lng };
 };
 
-// Bitta mahalla uchun chelaklar
-const buildBins = (mahalla, mi) => Array.from({ length: BINS_PER_MAHALLA }, (_, k) => {
+// Bitta ko'cha uchun chelaklar
+const buildBins = (mahalla, mi) => Array.from({ length: binsCount(mi) }, (_, k) => {
   const seed = mi * 100 + k + 1;
-  const geo = binGeo(seed, mi, k, BINS_PER_MAHALLA);
+  const geo = binGeo(seed, mi, k, binsCount(mi));
   const fill = Math.round(rng(seed * 2.3) * 100);
   const capacity = [240, 360, 660, 1100][Math.floor(rng(seed * 3.1) * 4)]; // litr
   // oxirgi bo'shatilgan — to'lish foiziga teskari (ko'p to'lsa ko'p vaqt o'tgan)
@@ -67,7 +70,7 @@ const buildBins = (mahalla, mi) => Array.from({ length: BINS_PER_MAHALLA }, (_, 
   return {
     id: `BIN-${String(mi + 1).padStart(2, "0")}-${String(k + 1).padStart(2, "0")}`,
     mahalla,
-    street: `${STREETS[k % STREETS.length]} ko'chasi`,
+    street: `${mahalla} ko'chasi, ${STREETS[(mi + k) % STREETS.length]}`,
     fill,
     capacity,
     status: fillStatus(fill),
@@ -82,7 +85,7 @@ const buildBins = (mahalla, mi) => Array.from({ length: BINS_PER_MAHALLA }, (_, 
 
 export const BINS_BY_MAHALLA = BIN_MAHALLAS.map((m, i) => ({ mahalla: m, bins: buildBins(m, i) }));
 
-// ── Axlat mashinalari (GPS) — har mahallada 1 ta mashina ──
+// ── Axlat mashinalari (GPS) — kanonik 3 ta mashina 14 ko'chani navbat bilan yig'adi ──
 // Holat: enroute=yo'lda, collecting=yig'moqda, done=tugatdi (ketdi), idle=garaj
 export const TRUCK_STATUS = {
   collecting: { label: "Yig'moqda", color: "#22c55e", live: true },
@@ -91,12 +94,13 @@ export const TRUCK_STATUS = {
   idle: { label: "Garajda", color: "#64748b", live: false },
 };
 
-const PLATES = ["01 A 245 GA", "01 B 718 MX", "01 A 052 KT", "01 C 390 BN", "01 B 661 HR", "01 A 884 PD"];
-const DRIVERS = ["Olimov B.", "Yusupov R.", "Karimov A.", "Toshmatov S.", "Sodiqov J.", "Ergashev N."];
+// 3 ta mashina (raqam/haydovchi takrorlanadi — bir mashina bir necha ko'chaga xizmat qiladi)
+const PLATES = ["01 A 245 GA", "01 B 718 MX", "01 A 052 KT", "01 A 245 GA", "01 B 718 MX", "01 A 052 KT"];
+const DRIVERS = ["Olimov B.", "Yusupov R.", "Karimov A.", "Olimov B.", "Yusupov R.", "Karimov A."];
 
 const fmtClock = (d) => `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
 
-// Bitta mahalla mashinasi — bugungi smena
+// Bitta ko'cha smenasi — mashinalardan biri xizmat qiladi
 const buildTruck = (mahalla, mi, bins) => {
   const seed = mi + 1;
   const r = rng(seed * 8.9);
@@ -174,14 +178,14 @@ export const BIN_ZONE_BY_MAHALLA = BINS_BY_MAHALLA.map(({ mahalla, bins }, i) =>
 export const zoneForMahalla = (mahalla) =>
   BIN_ZONE_BY_MAHALLA.find((z) => z.mahalla === mahalla) || BIN_ZONE_BY_MAHALLA[0];
 
-// Mashinalar yig'indisi
+// Mashinalar yig'indisi — total: fizik mashinalar soni (3 ta)
 export const truckSummary = (() => {
   const live = TRUCKS_BY_MAHALLA.filter((t) => TRUCK_STATUS[t.status].live).length;
   const done = TRUCKS_BY_MAHALLA.filter((t) => t.status === "done").length;
-  return { total: TRUCKS_BY_MAHALLA.length, live, done };
+  return { total: new Set(TRUCKS_BY_MAHALLA.map((t) => t.plate)).size, live, done };
 })();
 
-// Mahalla bo'yicha yig'indi
+// Ko'cha bo'yicha yig'indi
 export const binMahallaStats = BINS_BY_MAHALLA.map(({ mahalla, bins }) => {
   const avgFill = Math.round(bins.reduce((s, b) => s + b.fill, 0) / bins.length);
   const full = bins.filter((b) => b.status === "full").length;
@@ -204,7 +208,7 @@ export const WASTE_TYPES = {
 
 // Umumiy oylik hajmga (binSummary dan keyin hisoblanadi) nisbatan tonna
 export const wasteComposition = (() => {
-  const monthlyTons = 1850; // demo umumiy oylik QMC (tonna)
+  const monthlyTons = 90; // oylik QMC (tonna) — 763 xonadonlik mahalla
   return Object.entries(WASTE_TYPES).map(([key, t]) => ({
     key,
     label: t.label,
@@ -222,7 +226,7 @@ export const wasteSummary = (() => {
     recyclablePct,
     plasticTons: plastic.tons,
     plasticPct: plastic.pct,
-    monthlyTons: 1850,
+    monthlyTons: 90,
   };
 })();
 

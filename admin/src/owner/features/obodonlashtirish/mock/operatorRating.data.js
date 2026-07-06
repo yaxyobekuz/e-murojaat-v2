@@ -1,4 +1,4 @@
-// Operator / mahalla reytingi — Xalq Nazorati metodologiyasi asosida (7 vaznli metrik).
+// Operator / ko'cha reytingi — Xalq Nazorati metodologiyasi asosida (7 vaznli metrik).
 // Asos: xalqnazorati.uz bajaruvchi reytingi (bajarilgan %, kechikkan, tang holat,
 // faollik/10k aholi, rad/qayta ishlash, murakkablik). Demo — mavjud datadan hisoblanadi.
 import { AXLAT_ROUTES } from "./axlat.data";
@@ -21,9 +21,10 @@ export const RATING_METRICS = [
   { key: "speed", label: "Tezlik bali", weight: 1.4, hint: "O'rtacha bajarish tezligi (SLA)", positive: true },
 ];
 
-const MAHALLAS = ["Sarnovul", "Navoiy", "Bobur", "Amir Temur", "Fidokor", "Istiqlol", "Do'stlik", "Bog'", "Chinor", "Guliston", "Mustaqillik", "Yangi hayot", "Marvarid", "Oqtepa"];
+// Sarnovul MFY ko'chalari — kanonik 14 ta
+const MAHALLAS = ["Maslahat", "Ulug'vor", "Urganji", "Sarnovul", "Bog'bon", "Do'stlik", "Tinchlik", "Chinor", "Guliston", "Navro'z", "Istiqlol", "Mehnat", "Paxtakor", "Olmazor"];
 
-// Har mahalla uchun 7 metrikni mavjud datadan yig'amiz
+// Har ko'cha uchun 7 metrikni mavjud datadan yig'amiz
 const buildRow = (name, i) => {
   const routes = AXLAT_ROUTES.filter((r) => r.mahalla === name);
   const orders = ASSEN_ORDERS.filter((o) => o.mahalla === name);
@@ -37,7 +38,8 @@ const buildRow = (name, i) => {
   const avgSla = doneOrders.length ? doneOrders.reduce((s, o) => s + o.slaDays, 0) / doneOrders.length : 2;
 
   const seed = i + 1;
-  const population = 8000 + Math.round(rng(seed * 2.2) * 9000);
+  // Ko'cha aholisi ~220-420 (jami ≈ 4 306)
+  const population = 220 + Math.round(rng(seed * 2.2) * 200);
 
   // Raw metriklar
   const resolved = totalJobs ? Math.round((doneJobs / totalJobs) * 100) : Math.round(70 + rng(seed * 3) * 25);
@@ -53,7 +55,7 @@ const buildRow = (name, i) => {
     resolved, // 0-100
     overdue: Math.max(0, 100 - overdue * 18),
     tension: Math.max(0, 100 - tension * 1.6),
-    activity: Math.min(100, activity * 5),
+    activity: Math.min(100, activity * 0.35),
     rejection: Math.max(0, 100 - rejection * 22),
     complexity: Math.min(100, complexity * 14),
     speed,

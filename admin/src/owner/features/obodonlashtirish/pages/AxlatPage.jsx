@@ -42,7 +42,7 @@ const AxlatPage = () => (
 
     {/* Insight kartalar */}
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-      <InsightCard i={0} icon={Boxes} label="To'plangan hajm (oy)" value={s.collectedVolume} suffix=" m³" accent={ACCENT}
+      <InsightCard i={0} icon={Boxes} label="To'plangan hajm (sikl)" value={s.collectedVolume} suffix=" m³" accent={ACCENT}
         decimals={1} trend={{ dir: "up", text: "+4%" }}
         equivalents={[{ icon: Truck, text: `${im.trucks} ta to'la axlat mashinasi` }, { icon: Package, text: `Reja bajarilishi ${im.fulfillPct}%` }]} />
       <InsightCard i={1} icon={Truck} label="Bugungi marshrutlar" value={s.routes} accent={ACCENT}
@@ -85,7 +85,7 @@ const AxlatPage = () => (
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
       <Reveal i={0}><Panel title="Ko'cha bo'yicha reyslar" icon={Truck} accent={ACCENT} className="lg:col-span-2">
         <div className="py-2">{[...AXLAT_BY_MAHALLA].sort((a, b) => b.value - a.value).slice(0, 7).map((m) => (
-          <BarRow key={m.key} label={m.key} value={m.value} pct={(m.value / 32) * 100} accent={ACCENT} unit=" reys" />
+          <BarRow key={m.key} label={m.key} value={m.value} pct={(m.value / 10) * 100} accent={ACCENT} unit=" reys" />
         ))}</div>
       </Panel></Reveal>
       <Reveal i={1}><Panel title="Kelmay qolish ogohlantirishi" icon={AlertTriangle} accent="#ef4444">

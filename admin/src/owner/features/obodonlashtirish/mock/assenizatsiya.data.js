@@ -19,7 +19,8 @@ const rng = (seed) => {
   return x - Math.floor(x);
 };
 
-const MAHALLAS = ["Sarnovul", "Navoiy", "Bobur", "Amir Temur", "Fidokor", "Istiqlol", "Do'stlik", "Bog'", "Chinor", "Guliston", "Mustaqillik", "Yangi hayot", "Marvarid", "Oqtepa"];
+// Sarnovul MFY ko'chalari — kanonik 14 ta
+const MAHALLAS = ["Maslahat", "Ulug'vor", "Urganji", "Sarnovul", "Bog'bon", "Do'stlik", "Tinchlik", "Chinor", "Guliston", "Navro'z", "Istiqlol", "Mehnat", "Paxtakor", "Olmazor"];
 const RECEPTION = "Baliqchi suyuq chiqindi qabul shoxobchasi";
 
 const STATUSES = ["done", "done", "done", "done", "dispatched", "new", "rejected"];
@@ -39,7 +40,7 @@ export const ASSEN_ORDERS = Array.from({ length: 28 }, (_, i) => {
     id: `assen-${1000 + i}`,
     number: `AS-${2026}-${String(100 + i).padStart(3, "0")}`,
     mahalla: MAHALLAS[i % MAHALLAS.length],
-    address: `${MAHALLAS[i % MAHALLAS.length]} MFY, ${1 + (i % 40)}-uy`,
+    address: `${MAHALLAS[i % MAHALLAS.length]} ko'chasi, ${1 + (i % 40)}-uy`,
     status,
     createdDate: created.toISOString().slice(0, 10),
     completedDate: status === "done" ? completed.toISOString().slice(0, 10) : null,
@@ -53,13 +54,13 @@ export const ASSEN_ORDERS = Array.from({ length: 28 }, (_, i) => {
 const MONTHS = ["Iyul", "Avg", "Sen", "Okt", "Noy", "Dek", "Yan", "Fev", "Mar", "Apr", "May", "Iyun"];
 export const ASSEN_ORDER_TREND = MONTHS.map((month, i) => ({
   month,
-  value: Math.round(16 + rng(i * 6.6) * 18),
+  value: Math.round(14 + rng(i * 6.6) * 12),
 }));
 
-// Mahalla bo'yicha buyurtma
+// Ko'cha bo'yicha buyurtma
 export const ASSEN_BY_MAHALLA = MAHALLAS.map((name, i) => ({
   key: name,
-  value: ASSEN_ORDERS.filter((o) => o.mahalla === name).length + Math.round(rng(i * 8.1) * 6),
+  value: ASSEN_ORDERS.filter((o) => o.mahalla === name).length + Math.round(rng(i * 8.1) * 3),
 }));
 
 // Holat bo'yicha donut

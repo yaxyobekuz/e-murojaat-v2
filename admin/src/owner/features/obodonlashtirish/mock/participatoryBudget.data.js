@@ -26,7 +26,8 @@ export const PB_STATUS = {
   building: { label: "Amalga oshmoqda", tone: "progress" },
 };
 
-const MAHALLAS = ["Sarnovul", "Navoiy", "Bobur", "Amir Temur", "Fidokor", "Istiqlol", "Do'stlik", "Bog'", "Chinor", "Guliston", "Mustaqillik", "Yangi hayot", "Marvarid", "Oqtepa"];
+// Sarnovul MFY ko'chalari — kanonik 14 ta
+const MAHALLAS = ["Maslahat", "Ulug'vor", "Urganji", "Sarnovul", "Bog'bon", "Do'stlik", "Tinchlik", "Chinor", "Guliston", "Navro'z", "Istiqlol", "Mehnat", "Paxtakor", "Olmazor"];
 const TYPES = ["road", "sport", "park", "water", "school", "light"];
 const TITLES = {
   road: ["Ichki ko'cha asfaltlash", "Markaziy yo'l ta'miri", "Trotuar yangilash"],
@@ -46,8 +47,9 @@ export const PB_PROJECTS = Array.from({ length: 18 }, (_, i) => {
   const status = STATUSES[i % STATUSES.length];
   const titleArr = TITLES[type];
   const title = titleArr[Math.floor(rng(seed * 2.1) * titleArr.length)];
-  const votes = status === "voting" ? Math.round(20 + rng(seed * 3.3) * 380) : Math.round(150 + rng(seed * 3.3) * 1400);
-  const cost = Math.round((80 + rng(seed * 4.4) * 420)) * 1_000_000; // 80-500 mln
+  // Ovozlar mahalla masshtabida (4 306 aholi — jami ovoz undan kam)
+  const votes = status === "voting" ? Math.round(20 + rng(seed * 3.3) * 100) : Math.round(100 + rng(seed * 3.3) * 300);
+  const cost = Math.round((60 + rng(seed * 4.4) * 240)) * 1_000_000; // 60-300 mln
   const target = 50; // minimal ovoz (2025-da 50 ga oshirildi)
 
   return {
