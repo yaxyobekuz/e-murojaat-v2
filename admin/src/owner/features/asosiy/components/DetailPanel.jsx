@@ -811,6 +811,155 @@ function tabsForType(info) {
   }
 }
 
+// xodim kartochkasi: faqat to'ldirilgan maydonlar mockni ustidan yozadi
+const mergeOfficer = (base, over) =>
+  base ? { ...base, ...Object.fromEntries(Object.entries(over).filter(([, v]) => v != null && v !== "")) } : base;
+
+// Murojaat tabi — xonadon demografiyasi (foizlar qayta hisoblanadi)
+const mergeHousehold = (h, house) => {
+  if (!h) return h;
+  const families = house.familiesCount ?? h.families;
+  const residents = house.residentsCount ?? h.residents;
+  const women = house.womenCount ?? h.women;
+  const men = house.menCount ?? (house.residentsCount != null || house.womenCount != null ? Math.max(0, residents - women) : h.men);
+  const employed = house.employedCount ?? h.employed;
+  const unemployed = house.unemployedCount ?? h.unemployed;
+  const workforce = house.employedCount != null || house.unemployedCount != null ? employed + unemployed : h.workforce;
+  const cylinders = house.gasCylinderFamilies ?? h.gas.cylinders;
+  const coverage = house.gasCylinderFamilies != null || house.familiesCount != null
+    ? Math.min(100, Math.round((cylinders / Math.max(1, families)) * 100))
+    : h.gas.coverage;
+  return {
+    ...h,
+    owner: house.owner || h.owner,
+    families, residents, women, men, employed, unemployed, workforce,
+    youthLedger: house.youthLedger ?? h.youthLedger,
+    womenLedger: house.womenLedger ?? h.womenLedger,
+    gas: { cylinders, coverage },
+  };
+};
+
+// Xizmat tabi — internet / gaz / elektr / axlat
+const mergeServices = (s, house) => {
+  if (!s) return s;
+  const net = {
+    ...s.internet,
+    connected: house.internetConnected ?? s.internet.connected,
+    speed: house.internetSpeed ?? s.internet.speed ?? 0,
+    provider: house.internetProvider || s.internet.provider || "—",
+    tech: house.internetTech || s.internet.tech || "—",
+    quality: house.internetQuality ?? s.internet.quality ?? 0,
+  };
+  const gType = house.gasType || s.gas.type;
+  const monthly = house.gasMonthly ?? (house.gasYearly != null ? Math.round(house.gasYearly / 12) : null) ?? s.gas.monthly ?? 0;
+  const gas = gType === "natural"
+    ? {
+        ...s.gas,
+        type: "natural",
+        typeLabel: "Tabiiy gaz",
+        monthly,
+        limit: house.gasLimit ?? s.gas.limit ?? 500,
+        meter: house.gasMeter || s.gas.meter || "—",
+        pressure: house.gasPressure || s.gas.pressure || "Normal",
+      }
+    : {
+        ...s.gas,
+        type: "lpg",
+        typeLabel: "Suyultirilgan gaz (ballon)",
+        cycleDays: s.gas.cycleDays ?? 30,
+        sinceDelivery: s.gas.sinceDelivery ?? 0,
+        lastDelivery: s.gas.lastDelivery ?? "—",
+        nextDue: s.gas.nextDue ?? 30,
+        nextDelivery: s.gas.nextDelivery ?? "—",
+        cylinders: house.gasCylinderFamilies ?? s.gas.cylinders ?? 0,
+        provider: s.gas.provider ?? "—",
+      };
+  const usage = house.elecMonthly ?? s.electric.usage;
+  const norm = house.elecNorm ?? s.electric.norm;
+  const solar = house.solarInstalled == null
+    ? s.electric.solar
+    : house.solarInstalled
+      ? { capacity: 0, generated: 0, selling: false, sold: 0, ...(s.electric.solar?.installed ? s.electric.solar : {}), installed: true }
+      : { installed: false };
+  const electric = { usage, norm, overNorm: Math.max(0, usage - norm), recommendSolar: usage > 350 && !solar.installed, solar };
+  const sanitation = {
+    ...s.sanitation,
+    lastPickup: house.trashLastPickup || s.sanitation.lastPickup,
+    schedule: house.trashSchedule || s.sanitation.schedule,
+    bins: house.trashBins ?? s.sanitation.bins,
+  };
+  return { internet: net, gas, electric, sanitation };
+};
+
+// Xizmat tabi — yong'in va jamoat xavfsizligi
+const mergeSafety = (sec, house) => {
+  if (!sec) return sec;
+  const risk = house.fireRiskPct ?? sec.fire.risk;
+  const fire = {
+    ...sec.fire,
+    risk,
+    tone: risk < 30 ? "success" : risk < 60 ? "warning" : "danger",
+    status: risk < 30 ? "Past xavf" : risk < 60 ? "O'rtacha xavf" : "Yuqori xavf",
+    findings: house.fireFindings || sec.fire.findings,
+    lastInspection: house.fireInspection || sec.fire.lastInspection,
+    inspector: mergeOfficer(sec.fire.inspector, {
+      name: house.fireOfficerName, title: house.fireOfficerTitle,
+      department: house.fireOfficerDept, phone: house.fireOfficerPhone,
+    }),
+  };
+  const clean = house.crimeClean ?? sec.crime.clean;
+  let lastIncident = clean ? null : sec.crime.lastIncident;
+  if (!clean) {
+    lastIncident = {
+      type: house.crimeNote || lastIncident?.type || "Holat qayd etilgan",
+      date: lastIncident?.date || "—",
+      resolved: lastIncident?.resolved ?? false,
+    };
+  }
+  const crime = {
+    ...sec.crime,
+    clean,
+    count: clean ? 0 : Math.max(1, sec.crime.count || 0),
+    lastIncident,
+    inspector: mergeOfficer(sec.crime.inspector, {
+      name: house.crimeOfficerName, title: house.crimeOfficerTitle, phone: house.crimeOfficerPhone,
+    }),
+  };
+  return { fire, crime };
+};
+
+// Tomorqa tabi — hosil (daromad = kg × narx) va chorvachilik
+const mergeFarming = (f, house) => {
+  if (!f) return f;
+  const hp = house.harvestsPerYear ?? f.harvestsPerYear;
+  let harvests = f.harvests.slice(0, Math.max(0, hp));
+  if (hp > 0 && harvests.length === 0) {
+    harvests = [{ order: 1, season: "Bahorgi", crop: "—", emoji: "🌱", sotix: house.gardenArea ?? f.gardenArea ?? 0, yieldKg: 0, pricePerKg: 0, income: 0 }];
+  }
+  if (harvests.length && (house.cropName || house.cropYieldKg != null || house.cropPriceUzs != null)) {
+    const h0 = harvests[0];
+    const yieldKg = house.cropYieldKg ?? h0.yieldKg;
+    const pricePerKg = house.cropPriceUzs ?? h0.pricePerKg;
+    harvests = [
+      { ...h0, crop: house.cropName || h0.crop, sotix: house.gardenArea ?? h0.sotix, yieldKg, pricePerKg, income: yieldKg * pricePerKg },
+      ...harvests.slice(1),
+    ];
+  }
+  const L = { qoramol: house.livestockCattle, qoy: house.livestockSheep, parranda: house.livestockPoultry };
+  const livestock = f.livestock.map((l) => (L[l.key] == null ? l : { ...l, count: L[l.key] }));
+  return {
+    ...f,
+    harvestsPerYear: hp,
+    hasGarden: hp > 0,
+    gardenArea: house.gardenArea ?? f.gardenArea,
+    harvests,
+    totalHarvestKg: harvests.reduce((sum, x) => sum + x.yieldKg, 0),
+    totalFarmIncome: harvests.reduce((sum, x) => sum + x.income, 0),
+    livestock,
+    hasLivestock: livestock.some((l) => l.count > 0),
+  };
+};
+
 // server'dagi real yozuv mock kartani ustidan yozadi — reyestr faktlari, soliq holati,
 // biriktirilgan xodim va kommunal holatlar ham tahrirlangan bo'lsa realini ko'rsatamiz
 const mergeHouse = (info, house) => {
@@ -864,6 +1013,15 @@ const mergeHouse = (info, house) => {
   const U = { Gaz: house.utilGas, Elektr: house.utilElectric, Suv: house.utilWater, Internet: house.utilInternet };
   const utilities = info.utilities?.map((u) => (U[u.name] == null ? u : { ...u, on: Boolean(U[u.name]) }));
 
+  // oylik sarf (kommunal tab) — gaz/elektr real qiymatlar bilan izchil
+  const consumption = info.consumption
+    ? {
+        ...info.consumption,
+        ...(house.gasMonthly != null && { gas: house.gasMonthly }),
+        ...(house.elecMonthly != null && { elec: house.elecMonthly }),
+      }
+    : info.consumption;
+
   return {
     ...info,
     title: house.name || info.title,
@@ -872,7 +1030,19 @@ const mergeHouse = (info, house) => {
     badge,
     badgeTone,
     utilities: utilities || info.utilities,
-    household: info.household && house.owner ? { ...info.household, owner: house.owner } : info.household,
+    household: mergeHousehold(info.household, house),
+    appealOfficer: mergeOfficer(info.appealOfficer, {
+      name: house.appealOfficerName, title: house.appealOfficerTitle,
+      phone: house.appealOfficerPhone, sector: house.appealOfficerSector,
+    }),
+    medic: mergeOfficer(info.medic, {
+      name: house.medicName, title: house.medicTitle,
+      phone: house.medicPhone, facility: house.medicFacility,
+    }),
+    services: mergeServices(info.services, house),
+    safety: mergeSafety(info.safety, house),
+    farming: mergeFarming(info.farming, house),
+    consumption,
     isReal: true,
   };
 };
