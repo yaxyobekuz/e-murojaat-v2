@@ -6,12 +6,21 @@ import TopBarLayout from "@/shared/layouts/TopBarLayout";
 
 // Role panels
 import { OwnerRoutes } from "@/owner";
+import { BoshqaruvLayout, BoshqaruvLoginPage, BoshqaruvXaritaPage } from "@/boshqaruv";
+import { XonadonlarPage } from "@/owner/features/asosiy";
 
 const Routes = () => (
   <RoutesWrapper>
     <Route element={<TopBarLayout />}>
       <Route path="/owner/*" element={<OwnerRoutes />} />
       <Route path="/" element={<Navigate to="/owner" replace />} />
+    </Route>
+
+    {/* Boshqaruv paneli — owner login/paroli bilan himoyalangan alohida panel */}
+    <Route path="/boshqaruv/login" element={<BoshqaruvLoginPage />} />
+    <Route path="/boshqaruv" element={<BoshqaruvLayout />}>
+      <Route index element={<BoshqaruvXaritaPage />} />
+      <Route path="jadval" element={<XonadonlarPage />} />
     </Route>
 
     <Route path="*" element={<Navigate to="/owner" replace />} />
