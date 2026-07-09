@@ -1,0 +1,14 @@
+# Asosiy (majburiy)
+ultralytics>=8.2.0
+supervision>=0.20.0
+opencv-python>=4.9.0
+numpy>=1.24
+filterpy>=1.4.5
+pyyaml>=6.0
+tqdm>=4.66
+# torch/torchvision ultralytics bilan avtomatik o'rnatiladi (GPU uchun CUDA versiyasini alohida tanlang)
+
+# Ixtiyoriy (kerak bo'lsa qo'lda o'rnating):
+# sahi>=0.11.15             # SAHI — kichik/uzoq obyektlar uchun bo'lakli aniqlash
+# deep-sort-realtime>=1.3.2 # DeepSORT tracker (muqobil)
+# torchreid                 # OSNet ReID (aks holda torchvision ResNet fallback ishlaydi)

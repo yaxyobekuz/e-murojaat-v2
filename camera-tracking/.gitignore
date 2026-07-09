@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+outputs/
+gallery/
+*.pt
+*.onnx
+*.mp4
+*.avi
+*.dav

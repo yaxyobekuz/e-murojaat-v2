@@ -1,0 +1,91 @@
+# ═══════════════════════════════════════════════════════════════════
+#  Hikvision kamera yozuvlari uchun Motion Tracking tizimi — konfiguratsiya
+#  Butun tizim shu bitta fayl orqali boshqariladi.
+# ═══════════════════════════════════════════════════════════════════
+
+# Manba: video fayl, papka (batch) yoki RTSP manzil (--source bilan qayta yoziladi)
+source: "input.mp4"
+batch: false            # true bo'lsa "source" papkadagi barcha videolar ketma-ket
+output_dir: "outputs"
+
+device: "auto"          # auto | cpu | cuda:0
+
+# ───────── ANIQLASH (DETECTION) ─────────
+detector:
+  model: "yolov8n.pt"   # yolov8n/s/m/l/x yoki yolo11n.pt ... (GPU yo'q bo'lsa 'n' avtomatik)
+  classes: [person, car, truck, bus, motorcycle, bicycle]
+  conf: 0.45            # ishonch chegarasi
+  iou: 0.5              # NMS IoU
+  imgsz: 640
+  sahi:                 # kichik/uzoq obyektlar (dron/baland kamera) uchun bo'lakli aniqlash
+    enabled: false
+    slice: [640, 640]
+    overlap: 0.2
+  preprocess:
+    clahe: false        # kechasi / kontrasti past sharoit uchun
+
+# ───────── HARAKAT GATING (background subtraction) ─────────
+motion:
+  enabled: true         # harakatsiz kadrlarni o'tkazib yuborib tezlashtiradi
+  method: "MOG2"        # MOG2 | KNN
+  min_area: 600         # px — shundan kichik harakat e'tiborga olinmaydi
+
+# ───────── KUZATUV (TRACKING) ─────────
+tracker:
+  type: "bytetrack"     # bytetrack | deepsort
+  track_buffer: 45      # occlusion'da ID necha kadr saqlanadi
+  match_thresh: 0.8
+  trail_len: 50         # traektoriya izidagi nuqtalar soni
+
+# ───────── ODAMNI QAYTA IDENTIFIKATSIYA (ReID) ─────────
+reid:
+  enabled: false
+  model: "osnet_x0_25"  # torchreid bo'lsa OSNet, aks holda torchvision fallback
+  similarity: 0.7       # cosine similarity chegarasi
+  gallery_dir: "gallery"
+  db: "gallery/reid.sqlite"
+
+# ───────── BEV (tepadan ko'rinish) — 4 nuqtali kalibratsiya ─────────
+calibration:
+  enabled: false
+  # Videodagi 4 ta yer nuqtasi (piksel) va ularning real koordinatalari (metr)
+  image_points: [[100, 700], [1180, 700], [1050, 400], [230, 400]]
+  world_points: [[0, 0], [10, 0], [10, 15], [0, 15]]
+  bev_size: [480, 640]  # BEV panel o'lchami (px)
+  meters_per_px: 0.05
+  rings: [5, 10, 20]    # masofa halqalari (metr)
+
+# ───────── 3D BOX (soddalashtirilgan) ─────────
+intrinsics:
+  enabled: false        # true bo'lsa vizualda 3D (extruded) kub chiziladi
+
+# ───────── HODISA/ALERT QOIDALARI ─────────
+events:
+  zones: []             # - {name: "Kirish", polygon: [[x,y],...], classes: [person]}
+  lines: []             # - {name: "Darvoza", p1: [x,y], p2: [x,y]}
+  loitering:
+    enabled: false
+    seconds: 10
+    zone: null          # zona nomi (yuqoridagi zones ichidan)
+  speed_limit:
+    enabled: false
+    max_mps: 3.0
+
+# ───────── VIZUALIZATSIYA ─────────
+visualize:
+  bev_panel: true       # pastki panel (BEV) — calibration.enabled bo'lsa
+  hud: true
+  box3d: false          # extruded 3D box
+  colors:
+    person: [80, 220, 100]   # BGR — yashil
+    vehicle: [255, 150, 40]  # BGR — ko'k
+    alert: [40, 40, 235]     # BGR — qizil
+
+# ───────── CHIQISH FORMATLARI ─────────
+output:
+  video: true           # output_annotated.mp4
+  json: true            # per-frame MOT log
+  csv: true             # track bo'yicha xulosa
+  gallery: true         # odamlar croplari
+  html: true            # statistika hisoboti
+  fps: null             # null bo'lsa manbadan avtomatik
