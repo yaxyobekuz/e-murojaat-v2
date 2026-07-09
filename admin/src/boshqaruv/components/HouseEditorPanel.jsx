@@ -10,6 +10,10 @@ import Input from "@/shared/components/ui/input/Input";
 import Select from "@/shared/components/ui/select/Select";
 import Button from "@/shared/components/ui/button/Button";
 import { useHouseQuery, useHouseMutation, housesAPI } from "@/owner/features/asosiy";
+import {
+  EXT_NUM_KEYS, EXT_STR_KEYS, EXT_BOOL_KEYS,
+  MurojaatSection, XizmatSection, TomorqaSection,
+} from "./HouseEditorExtraSections";
 
 const OWNERSHIP_OPTIONS = [
   { value: "Xususiy", label: "Xususiy" },
@@ -36,9 +40,28 @@ const SectionCap = ({ children }) => (
   </p>
 );
 
+// tahrirlash tablari — DetailPanel tablariga mos
+const EDIT_TABS = [
+  { key: "umumiy", label: "Umumiy" },
+  { key: "murojaat", label: "Murojaat" },
+  { key: "xizmat", label: "Xizmat" },
+  { key: "tomorqa", label: "Tomorqa" },
+];
+
 const toUtil = (v) => (v === "" || v == null ? null : v === "bor");
 const fromUtil = (v) => (v == null ? "" : v ? "bor" : "yoq");
 const numOrNull = (v) => (v === "" || v == null ? null : Number(v));
+
+// qo'shimcha bo'limlar (tab) kalitlari — forma/serverga avtomatik konvertatsiya
+const extInitial = Object.fromEntries([...EXT_NUM_KEYS, ...EXT_STR_KEYS, ...EXT_BOOL_KEYS].map((k) => [k, ""]));
+const extFromHouse = (house) => ({
+  ...Object.fromEntries([...EXT_NUM_KEYS, ...EXT_STR_KEYS].map((k) => [k, house?.[k] ?? ""])),
+  ...Object.fromEntries(EXT_BOOL_KEYS.map((k) => [k, fromUtil(house?.[k])])),
+});
+const extToBody = (state) => ({
+  ...Object.fromEntries(EXT_NUM_KEYS.map((k) => [k, numOrNull(state[k])])),
+  ...Object.fromEntries(EXT_BOOL_KEYS.map((k) => [k, toUtil(state[k])])),
+});
 
 const FieldRow = ({ label, children }) => (
   <div>
@@ -48,10 +71,12 @@ const FieldRow = ({ label, children }) => (
 );
 
 const Meta = ({ icon: Icon, label, value }) => (
-  <div className="flex items-center gap-2 rounded-lg border border-[rgb(var(--card-border))] bg-card/40 px-2.5 py-1.5">
-    <Icon className="size-3.5 shrink-0 text-foreground/40" />
-    <span className="text-[11px] text-foreground/50">{label}</span>
-    <span className="ml-auto text-[12px] font-semibold tabular-nums">{value}</span>
+  <div className="rounded-lg border border-[rgb(var(--card-border))] bg-card/40 px-2.5 py-2">
+    <div className="flex items-center gap-1.5 text-[10px] text-foreground/45">
+      <Icon className="size-3 shrink-0" />
+      <span className="truncate">{label}</span>
+    </div>
+    <p className="mt-0.5 whitespace-nowrap text-[13px] font-semibold tabular-nums">{value}</p>
   </div>
 );
 
@@ -66,11 +91,13 @@ const HouseEditorPanel = ({ element, onClear }) => {
   const mutation = useHouseMutation();
   const queryClient = useQueryClient();
   const { state, setFields, setField } = useObjectState({
+    tab: "umumiy",
     name: "", owner: "", phone: "", members: "", ownership: "Xususiy", address: "", notes: "",
     kind: "", area: "", floors: "", heightM: "", value: "",
     taxAnnual: "", taxDebt: "", mibDebt: "",
     officerName: "", officerTitle: "", officerPhone: "", officerSector: "",
     utilGas: "", utilElectric: "", utilWater: "", utilInternet: "",
+    ...extInitial,
   });
 
   // uy almashganda yoki server yozuvi kelganda formani yangilaymiz
@@ -99,6 +126,7 @@ const HouseEditorPanel = ({ element, onClear }) => {
       utilElectric: fromUtil(house?.utilElectric),
       utilWater: fromUtil(house?.utilWater),
       utilInternet: fromUtil(house?.utilInternet),
+      ...extFromHouse(house),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [osmId, house]);
@@ -152,6 +180,7 @@ const HouseEditorPanel = ({ element, onClear }) => {
           utilElectric: toUtil(state.utilElectric),
           utilWater: toUtil(state.utilWater),
           utilInternet: toUtil(state.utilInternet),
+          ...extToBody(state),
         },
       },
       { onSuccess: () => toast.success("Saqlandi"), onError: (err) => toast.error(errMsg(err)) },
@@ -181,6 +210,25 @@ const HouseEditorPanel = ({ element, onClear }) => {
         <Meta icon={Building2} label="Maydon" value={`${element.area} m²`} />
       </div>
 
+      {/* tab bar — DetailPanel bilan bir xil bo'limlar */}
+      <div className="flex gap-1 rounded-xl border border-[rgb(var(--card-border))] bg-card/40 p-1">
+        {EDIT_TABS.map((t) => (
+          <button
+            key={t.key}
+            type="button"
+            onClick={() => setField("tab", t.key)}
+            className={
+              state.tab === t.key
+                ? "flex-1 rounded-lg bg-foreground/10 px-1 py-1.5 text-[11px] font-semibold text-foreground"
+                : "flex-1 rounded-lg px-1 py-1.5 text-[11px] font-medium text-foreground/45 transition-colors hover:text-foreground/75"
+            }
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {state.tab === "umumiy" && (
       <div className="flex flex-col gap-3">
         <FieldRow label="Xonadon nomi">
           <Input value={state.name} onChange={(e) => setField("name", e.target.value)} placeholder="Masalan: ABDUSAMAT xonodoni" />
@@ -251,15 +299,6 @@ const HouseEditorPanel = ({ element, onClear }) => {
           </FieldRow>
         </div>
 
-        <SectionCap>Kommunal ta'minot</SectionCap>
-        <div className="grid grid-cols-2 gap-3">
-          {UTILS.map((u) => (
-            <FieldRow key={u.key} label={u.label}>
-              <Select value={state[u.key]} onChange={(v) => setField(u.key, v)} options={UTIL_OPTIONS} />
-            </FieldRow>
-          ))}
-        </div>
-
         <SectionCap>Qo'shimcha</SectionCap>
         <FieldRow label="Izoh">
           <textarea
@@ -271,6 +310,25 @@ const HouseEditorPanel = ({ element, onClear }) => {
           />
         </FieldRow>
       </div>
+      )}
+
+      {state.tab === "murojaat" && <MurojaatSection state={state} setField={setField} />}
+
+      {state.tab === "xizmat" && (
+        <div className="flex flex-col gap-3">
+          <SectionCap>Kommunal ta'minot</SectionCap>
+          <div className="grid grid-cols-2 gap-3">
+            {UTILS.map((u) => (
+              <FieldRow key={u.key} label={u.label}>
+                <Select value={state[u.key]} onChange={(v) => setField(u.key, v)} options={UTIL_OPTIONS} />
+              </FieldRow>
+            ))}
+          </div>
+          <XizmatSection state={state} setField={setField} />
+        </div>
+      )}
+
+      {state.tab === "tomorqa" && <TomorqaSection state={state} setField={setField} />}
 
       <div className="flex items-center gap-2 pt-1">
         <Button onClick={onSave} disabled={mutation.isPending} className="flex-1">
