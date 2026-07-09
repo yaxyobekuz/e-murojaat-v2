@@ -45,6 +45,7 @@ export const osmToFeatures = (elements) => {
       const height = heightOf(t);
       const props = {
         kind: "building",
+        osmId: el.id, // server'da uy ma'lumotlari shu id bilan saqlanadi
         btype: t.building,
         height,
         levels: levels || Math.max(1, Math.round(height / 3)),

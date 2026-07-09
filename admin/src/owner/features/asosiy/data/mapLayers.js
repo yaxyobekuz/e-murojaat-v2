@@ -25,6 +25,8 @@ const buildingColor = [
   ["==", ["feature-state", "fstatus"], 1], "#22c55e",
   ["==", ["feature-state", "fstatus"], 2], "#f59e0b",
   ["==", ["feature-state", "fstatus"], 3], "#ef4444",
+  // server'da real ma'lumoti kiritilgan xonadon — oltin rang
+  ["boolean", ["feature-state", "real"], false], "#fbbf24",
   // filter yo'q — balandlik bo'yicha shkala
   [
     "interpolate", ["linear"], ["get", "height"],

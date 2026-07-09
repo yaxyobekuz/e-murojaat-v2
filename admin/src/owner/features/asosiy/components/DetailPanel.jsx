@@ -4,6 +4,7 @@ import { useState } from "react";
 import { X, Flame, Zap, Droplets, Wifi, Check, AlertTriangle, LayoutGrid, Coins, Users, Wheat, Route, Factory, Building2, User, Layers, Ruler, ArrowUpNarrowWide, Wallet, MapPin, Phone, BadgeCheck, MessageSquare, Clock, Inbox, Stethoscope, Cylinder, Briefcase, UserX, HeartHandshake, ShieldCheck, Sun, Trash2, Truck, Gauge, WifiOff, Lightbulb, ShieldAlert, FlameKindling, Activity, Sprout, Egg } from "lucide-react";
 
 import { cn } from "@/shared/utils/cn";
+import { useHouseQuery } from "../hooks/useHouseQuery";
 import { elementInfo, fmt, STATUS_TONES } from "../data/elementData";
 
 const TONE = {
@@ -810,9 +811,76 @@ function tabsForType(info) {
   }
 }
 
+// server'dagi real yozuv mock kartani ustidan yozadi — reyestr faktlari, soliq holati,
+// biriktirilgan xodim va kommunal holatlar ham tahrirlangan bo'lsa realini ko'rsatamiz
+const mergeHouse = (info, house) => {
+  if (!info || !house) return info;
+  const OVERRIDE = {
+    Egasi: house.owner,
+    Mulkchilik: house.ownership,
+    Manzil: house.address,
+    Turi: house.kind,
+    Maydon: house.area != null ? `${fmt(house.area)} m²` : null,
+    Qavatlar: house.floors != null ? `${house.floors} qavat` : null,
+    Balandlik: house.heightM != null ? `${house.heightM} m` : null,
+    Qiymati: house.value != null ? `${fmt(house.value)} so'm` : null,
+  };
+  const facts = (info.facts || []).map((f) => (OVERRIDE[f.label] ? { ...f, value: OVERRIDE[f.label] } : f));
+  if (house.phone) facts.push({ label: "Telefon", value: house.phone });
+  if (house.members != null && house.members !== "") facts.push({ label: "A'zolar soni", value: `${house.members} kishi` });
+  if (house.notes) facts.push({ label: "Izoh", value: house.notes });
+
+  // soliq holati + xodim
+  let tax = info.tax;
+  let badge = info.badge;
+  let badgeTone = info.badgeTone;
+  if (tax) {
+    const annual = house.taxAnnual ?? tax.annual;
+    const taxDebt = house.taxDebt ?? tax.taxDebt;
+    const mibDebt = house.mibDebt ?? tax.mibDebt;
+    const hasRealTax = house.taxAnnual != null || house.taxDebt != null || house.mibDebt != null;
+    const paid = Math.max(0, annual - taxDebt);
+    const payRate = hasRealTax
+      ? Math.min(100, Math.round((paid / Math.max(1, annual + taxDebt + mibDebt)) * 100))
+      : tax.payRate;
+    tax = {
+      ...tax,
+      annual, taxDebt, mibDebt, payRate,
+      officer: {
+        ...tax.officer,
+        ...(house.officerName && { name: house.officerName }),
+        ...(house.officerTitle && { title: house.officerTitle }),
+        ...(house.officerPhone && { phone: house.officerPhone }),
+        ...(house.officerSector && { sector: house.officerSector }),
+      },
+    };
+    if (hasRealTax) {
+      badge = payRate >= 80 ? "Soliq to'langan" : taxDebt || mibDebt ? "Qarzi bor" : "Faol";
+      badgeTone = payRate >= 80 ? "success" : payRate >= 40 ? "warning" : "danger";
+    }
+  }
+
+  // kommunal holatlar (null = mock qoladi)
+  const U = { Gaz: house.utilGas, Elektr: house.utilElectric, Suv: house.utilWater, Internet: house.utilInternet };
+  const utilities = info.utilities?.map((u) => (U[u.name] == null ? u : { ...u, on: Boolean(U[u.name]) }));
+
+  return {
+    ...info,
+    title: house.name || info.title,
+    facts,
+    tax,
+    badge,
+    badgeTone,
+    utilities: utilities || info.utilities,
+    household: info.household && house.owner ? { ...info.household, owner: house.owner } : info.household,
+    isReal: true,
+  };
+};
+
 const DetailPanel = ({ element, statusTone, onClose }) => {
-  const info = elementInfo(element);
   const [active, setActive] = useState("overview");
+  const { data: house } = useHouseQuery(element?.osmId);
+  const info = mergeHouse(elementInfo(element), house);
   if (!info) return null;
   const meta = info.typeMeta;
   const tabs = tabsForType(info);
@@ -848,6 +916,9 @@ const DetailPanel = ({ element, statusTone, onClose }) => {
           <div className="flex items-center gap-2">
             <span className="rounded-md px-1.5 py-px text-[9.5px] font-bold uppercase tracking-wide" style={{ background: `${meta.color}22`, color: meta.color }}>{meta.label}</span>
             <span className={cn("rounded-md border px-1.5 py-px text-[9.5px] font-bold", TONE[info.badgeTone])}>{info.badge}</span>
+            {info.isReal && (
+              <span className="rounded-md border border-emerald-500/40 bg-emerald-500/15 px-1.5 py-px text-[9.5px] font-bold text-emerald-400">REAL</span>
+            )}
           </div>
           <h2 className="mt-1 truncate text-base font-semibold leading-tight tracking-tight">{info.title}</h2>
           <p className="truncate font-mono text-[11px] text-foreground/45">{info.cadastre || info.subtitle}</p>
@@ -888,7 +959,8 @@ const DetailPanel = ({ element, statusTone, onClose }) => {
       </div>
 
       <p className="shrink-0 pt-1 text-center text-[10px] text-foreground/35">
-        Kadastr: <span className="font-mono">{info.cadastre}</span> · namunaviy ma'lumot
+        Kadastr: <span className="font-mono">{info.cadastre}</span> ·{" "}
+        {info.isReal ? <span className="text-emerald-400/80">real ma'lumot</span> : "namunaviy ma'lumot"}
       </p>
     </div>
   );

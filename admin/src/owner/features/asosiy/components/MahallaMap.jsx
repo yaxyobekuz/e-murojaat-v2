@@ -8,12 +8,14 @@ import { Loader2, MapPinned, Maximize, Crosshair, Orbit } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
 import useObjectState from "@/shared/hooks/useObjectState";
 import { INITIAL_VIEW, BASEMAPS } from "../data/mapConfig";
-import { LAYER, setupLayers } from "../data/mapLayers";
+import { LAYER, OSM_SOURCE, setupLayers } from "../data/mapLayers";
 import { attachInteractions } from "../data/mapInteractions";
+import { useHousesQuery } from "../hooks/useHousesQuery";
 
 const styleOf = (id) => BASEMAPS.find((b) => b.id === id)?.style;
 
-const MahallaMap = ({ selectedId, activeFilter, onSelect, onHover }) => {
+// showEntered — kiritilgan uylarni oltin rangda belgilash (faqat boshqaruv editorida true)
+const MahallaMap = ({ selectedId, activeFilter, onSelect, onHover, showEntered = false }) => {
   const hostRef = useRef(null);
   const mapRef = useRef(null);
   const interactRef = useRef(null);
@@ -56,6 +58,42 @@ const MahallaMap = ({ selectedId, activeFilter, onSelect, onHover }) => {
   useEffect(() => {
     if (!selectedId && interactRef.current) interactRef.current.clearSelection();
   }, [selectedId]);
+
+  // server'da ma'lumoti bor xonadonlarni oltin rangda belgilaymiz (faqat editor rejimida)
+  const { data: houses } = useHousesQuery({ enabled: showEntered });
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!showEntered || state.status !== "ready" || !map) return;
+    const ids = new Set((houses || []).map((h) => String(h.osmId)));
+    const applied = new Set();
+    // o'chirilgan yozuvlar tozalansin — maplibre'da key bo'yicha ommaviy remove yo'q, id talab qiladi
+    if (map.getSource(OSM_SOURCE)) {
+      for (const f of map.querySourceFeatures(OSM_SOURCE)) {
+        if (f.id != null) map.removeFeatureState({ source: OSM_SOURCE, id: f.id }, "real");
+      }
+    }
+    const apply = () => {
+      if (!map.getSource(OSM_SOURCE)) return;
+      for (const f of map.querySourceFeatures(OSM_SOURCE)) {
+        if (f.id == null || applied.has(f.id)) continue;
+        if (f.properties?.osmId && ids.has(String(f.properties.osmId))) {
+          map.setFeatureState({ source: OSM_SOURCE, id: f.id }, { real: true });
+          applied.add(f.id);
+        }
+      }
+    };
+    const onRefresh = () => {
+      applied.clear();
+      apply();
+    };
+    apply();
+    map.on("idle", apply); // pan/zoom'da yangi tile'larga ham qo'llanadi
+    map.on("buildings:refreshed", onRefresh);
+    return () => {
+      map.off("idle", apply);
+      map.off("buildings:refreshed", onRefresh);
+    };
+  }, [houses, state.status, showEntered]);
 
   // faol filter o'zgarsa — xaritani status rangiga bo'yaymiz
   useEffect(() => {

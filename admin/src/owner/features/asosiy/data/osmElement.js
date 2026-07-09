@@ -55,6 +55,7 @@ export const osmElement = (feature) => {
     return {
       id: `bld_${lng.toFixed(5)}_${lat.toFixed(5)}`,
       type, cx: lng, cy: lat, lng, lat, height, area,
+      osmId: p.osmId ? String(p.osmId) : null,
       name: p.name || null,
       levels: p.levels || null,
       btype: p.btype || null,

@@ -23,6 +23,20 @@
 - Xarita orqa fonda to'liq ravishda qoplanadi (`yer` moduli patterni: `mapConfig`/`mapLayers`/`mapInteractions`).
 - Xaritani erkin zoom/pan/orbit qilish mumkin. Tanlangan bino oqaradi (feature-state).
 
+## Xonadon ma'lumotlari (server)
+
+- Minimal backend: `server/` (Express, port 8032, auth yo'q) — `data/houses.json` faylida saqlaydi.
+  Ishga tushirish: `cd server && npm install && npm run dev`. API: `GET/PUT/DELETE /api/houses/:osmId`.
+- Kalit — **OSM bino id** (`osmId`, Overpass'dagi way id, `liveOsm.js` binolarga qo'shadi).
+- **Dashboardda tahrirlash YO'Q** — u faqat ko'rsatadi. Kiritish/tahrirlash alohida yopiq sahifada:
+  **`/owner/xonadonlar`** (`pages/XonadonlarPage.jsx`, dashboardda havolasi yo'q) — barcha OSM
+  binolar jadvali (qidiruv + kiritilgan/kiritilmagan filtri) + `HouseEditModal` (nom, egasi,
+  telefon, a'zolar, mulkchilik, manzil, izoh) + o'chirish.
+- Saqlangan yozuv dashboardda mock kartani ustidan yozadi: sarlavha + reyestr faktlari, "REAL"
+  belgisi va "real ma'lumot" footer. Server o'chiq bo'lsa panel mock rejimda ishlayveradi.
+- Hooklar: `useHouseQuery(osmId)` / `useHousesQuery()` / `useHouseMutation` (`qk.houses`).
+- Ma'lumotli uylar xaritada **oltin** rangda (`real` feature-state). To'liq stack: `npm run dev:full`.
+
 ## Elementlar
 
 - Binoga bosilganda `buildingElement` real binodan barqaror "element" yasaydi (id koordinatadan hash).
