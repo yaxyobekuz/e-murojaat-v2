@@ -3,6 +3,7 @@
 import { Video, ServerCrash } from "lucide-react";
 import AddCameraForm from "../components/AddCameraForm";
 import LiveCameraCard from "../components/LiveCameraCard";
+import AiDemo from "../components/AiDemo";
 import { useCamerasQuery } from "../hooks/useCameras";
 
 const KameralarPage = () => {
@@ -12,10 +13,12 @@ const KameralarPage = () => {
     <div className="flex flex-col gap-5">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Kameralar</h1>
-        <p className="mt-0.5 text-sm text-foreground/50">Hikvision IP kamera qo'shing — jonli tasvir shu yerda va barcha kamera bo'limlarida ko'rinadi</p>
+        <p className="mt-0.5 text-sm text-foreground/50">Hikvision IP kamera qo'shing — jonli tasvir + AI obyekt aniqlash (motion tracking) shu yerda va barcha kamera bo'limlarida ko'rinadi</p>
       </div>
 
       <AddCameraForm />
+
+      <AiDemo />
 
       <div>
         <h2 className="mb-3 text-sm font-medium text-foreground/70">Jonli kameralar {cameras?.length ? `(${cameras.length})` : ""}</h2>
