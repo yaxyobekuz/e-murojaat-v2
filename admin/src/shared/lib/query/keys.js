@@ -26,6 +26,14 @@ export const qk = Object.freeze({
     breakdown: (params) => ["soliq", "breakdown", params],
     mahalla: (params) => ["soliq", "mahalla", params],
   },
+  houses: {
+    all: () => ["houses"],
+    one: (osmId) => ["houses", "detail", osmId],
+    buildings: () => ["houses", "osmBuildings"],
+  },
+  boshqaruv: {
+    me: () => ["boshqaruv", "me"],
+  },
   yer: {
     all: () => ["yer"],
     properties: (params) => ["yer", "properties", params],

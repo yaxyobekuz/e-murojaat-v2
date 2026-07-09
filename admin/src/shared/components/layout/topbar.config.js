@@ -1,4 +1,4 @@
-import { Map, Landmark, GraduationCap, Shield, Flame, Users, Network, LayoutGrid, Building2, Cctv } from "lucide-react";
+import { Map, Landmark, GraduationCap, Shield, Flame, Users, Network, LayoutGrid, Building2, Cctv, Settings } from "lucide-react";
 
 // TopBar modullari (drill-in). Har modul: key (kod), title (UI), icon, base (root url),
 // items[] (ichki bo'limlar). Modulga bosilsa TopBar shu modul ichiga almashadi.
@@ -108,6 +108,16 @@ const topbarModules = [
       { title: "Gaz ta'minoti", url: "/owner/gaz" },
       { title: "Obodonlashtirish", url: "/owner/obodonlashtirish" },
       { title: "MSK (Servis)", url: "/owner/msk" },
+    ],
+  },
+  {
+    key: "boshqaruv",
+    title: "Boshqaruv",
+    icon: Settings,
+    base: "/boshqaruv",
+    items: [
+      { title: "Xarita tahrirlash", url: "/boshqaruv", end: true },
+      { title: "Xonadonlar jadvali", url: "/boshqaruv/jadval" },
     ],
   },
 ];

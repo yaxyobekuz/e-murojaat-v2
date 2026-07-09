@@ -18,4 +18,7 @@ export const MODAL = Object.freeze({
   MSK_APPEAL_DETAIL: "msk:appealDetail",
 
   GAZ_STREET_DETAIL: "gaz:streetDetail",
+
+  ASOSIY_HOUSE_EDIT: "asosiy:houseEdit",
+  ASOSIY_HOUSES_LIST: "asosiy:housesList",
 });
