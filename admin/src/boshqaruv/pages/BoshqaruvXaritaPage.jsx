@@ -30,7 +30,7 @@ const BoshqaruvXaritaPage = () => {
         </div>
       </div>
 
-      <aside className="w-[400px] shrink-0 overflow-y-auto border-l border-[rgb(var(--card-border))] bg-background">
+      <aside className="w-[500px] shrink-0 overflow-y-auto border-l border-[rgb(var(--card-border))] bg-background">
         <HouseEditorPanel element={selected} onClear={() => setSelected(null)} />
       </aside>
     </div>
