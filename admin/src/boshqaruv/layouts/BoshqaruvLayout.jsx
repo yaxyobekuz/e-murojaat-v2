@@ -1,7 +1,7 @@
 // Boshqaruv paneli qobig'i — owner sessiyasi bo'lmasa login'ga yo'naltiradi.
 import { NavLink, Navigate, Outlet, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { Home, Loader2, LogOut, Map, Settings, ArrowLeft } from "lucide-react";
+import { Home, Loader2, LogOut, Map, Settings, ArrowLeft, Users } from "lucide-react";
 
 import { cn } from "@/shared/utils/cn";
 import { qk } from "@/shared/lib/query/keys";
@@ -10,6 +10,7 @@ import { useBoshqaruvMe } from "../hooks/useBoshqaruvMe";
 
 const NAV = [
   { title: "Xarita tahrirlash", url: "/boshqaruv", icon: Map, end: true },
+  { title: "Aholi", url: "/boshqaruv/aholi", icon: Users },
   { title: "Jadval", url: "/boshqaruv/jadval", icon: Home },
   // kelajakda: sozlamalar, foydalanuvchilar va h.k.
 ];

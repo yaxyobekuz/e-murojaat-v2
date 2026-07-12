@@ -34,6 +34,13 @@ export const qk = Object.freeze({
   boshqaruv: {
     me: () => ["boshqaruv", "me"],
   },
+  residents: {
+    all: () => ["residents"],
+    one: (id) => ["residents", "detail", id],
+  },
+  officials: {
+    all: () => ["officials"],
+  },
   yer: {
     all: () => ["yer"],
     properties: (params) => ["yer", "properties", params],

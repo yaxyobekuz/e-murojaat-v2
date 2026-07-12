@@ -6,7 +6,7 @@ import TopBarLayout from "@/shared/layouts/TopBarLayout";
 
 // Role panels
 import { OwnerRoutes } from "@/owner";
-import { BoshqaruvLayout, BoshqaruvLoginPage, BoshqaruvXaritaPage } from "@/boshqaruv";
+import { BoshqaruvLayout, BoshqaruvLoginPage, BoshqaruvXaritaPage, BoshqaruvAholiPage } from "@/boshqaruv";
 import { XonadonlarPage } from "@/owner/features/asosiy";
 
 const Routes = () => (
@@ -20,6 +20,7 @@ const Routes = () => (
     <Route path="/boshqaruv/login" element={<BoshqaruvLoginPage />} />
     <Route path="/boshqaruv" element={<BoshqaruvLayout />}>
       <Route index element={<BoshqaruvXaritaPage />} />
+      <Route path="aholi" element={<BoshqaruvAholiPage />} />
       <Route path="jadval" element={<XonadonlarPage />} />
     </Route>
 
