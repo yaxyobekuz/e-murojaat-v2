@@ -2,10 +2,11 @@
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Lock, ShieldCheck } from "lucide-react";
+import { Lock } from "lucide-react";
 
 import useObjectState from "@/shared/hooks/useObjectState";
 import { qk } from "@/shared/lib/query/keys";
+import { logoIcon } from "@/shared/assets/icons";
 import Input from "@/shared/components/ui/input/Input";
 import Button from "@/shared/components/ui/button/Button";
 import { boshqaruvAuthAPI } from "../api/auth.api";
@@ -39,9 +40,8 @@ const BoshqaruvLoginPage = () => {
         className="w-full max-w-sm rounded-2xl border border-white/10 bg-white/5 p-7 shadow-2xl backdrop-blur-xl"
       >
         <div className="mb-6 flex flex-col items-center gap-2 text-center">
-          <span className="grid size-12 place-items-center rounded-2xl bg-emerald-500/15 text-emerald-400">
-            <ShieldCheck className="size-6" />
-          </span>
+          <img src={logoIcon} alt="O'zbekiston gerbi" className="size-16 object-contain" />
+
           <h1 className="text-lg font-bold text-white">Boshqaruv paneli</h1>
           <p className="text-xs text-white/50">Sozlamalar va ma'lumotlarni boshqarish uchun owner hisobi bilan kiring</p>
         </div>
