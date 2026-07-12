@@ -1,20 +1,23 @@
 import ApiError from "../../utils/ApiError.js";
-import { store } from "./residents.store.js";
+import Resident from "../../models/Resident.js";
+
+const notFound = () => new ApiError(404, "Fuqaro topilmadi", "NOT_FOUND");
 
 export const residentsService = {
-  list: () => store.all(),
-  getById: (id) => {
-    const resident = store.get(id);
-    if (!resident) throw new ApiError(404, "Fuqaro topilmadi", "NOT_FOUND");
-    return resident;
+  list: () => Resident.find().sort({ createdAt: -1 }),
+  getById: async (id) => {
+    const doc = await Resident.findById(id).catch(() => null);
+    if (!doc) throw notFound();
+    return doc;
   },
-  create: (data) => store.create(data),
-  update: (id, data) => {
-    const resident = store.update(id, data);
-    if (!resident) throw new ApiError(404, "Fuqaro topilmadi", "NOT_FOUND");
-    return resident;
+  create: (data) => Resident.create(data),
+  update: async (id, data) => {
+    const doc = await Resident.findByIdAndUpdate(id, data, { new: true, runValidators: true }).catch(() => null);
+    if (!doc) throw notFound();
+    return doc;
   },
-  remove: (id) => {
-    if (!store.remove(id)) throw new ApiError(404, "Fuqaro topilmadi", "NOT_FOUND");
+  remove: async (id) => {
+    const doc = await Resident.findByIdAndDelete(id).catch(() => null);
+    if (!doc) throw notFound();
   },
 };
