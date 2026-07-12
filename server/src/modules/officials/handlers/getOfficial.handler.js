@@ -3,5 +3,5 @@ import { officialsService } from "../officials.service.js";
 
 export default asyncHandler(async (req, res) => {
   // topilmasa null qaytadi — frontend "kiritilmagan" holatini ko'rsatadi
-  res.json({ success: true, data: officialsService.getByRole(req.params.role) });
+  res.json({ success: true, data: await officialsService.getByRole(req.params.role) });
 });

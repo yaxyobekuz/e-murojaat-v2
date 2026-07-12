@@ -1,5 +1,5 @@
 import ApiError from "../../utils/ApiError.js";
-import { store } from "./officials.store.js";
+import Official from "../../models/Official.js";
 import { OFFICIAL_ROLES } from "./officials.constants.js";
 
 const assertRole = (role) => {
@@ -7,17 +7,22 @@ const assertRole = (role) => {
 };
 
 export const officialsService = {
-  list: () => store.all(),
+  list: () => Official.find(),
   getByRole: (role) => {
     assertRole(role);
-    return store.get(role);
+    return Official.findOne({ role });
   },
   upsert: (role, data) => {
     assertRole(role);
-    return store.upsert(role, data);
+    return Official.findOneAndUpdate(
+      { role },
+      { $set: { ...data, role } },
+      { upsert: true, new: true, runValidators: true, setDefaultsOnInsert: true },
+    );
   },
-  remove: (role) => {
+  remove: async (role) => {
     assertRole(role);
-    if (!store.remove(role)) throw new ApiError(404, "Yozuv topilmadi", "NOT_FOUND");
+    const doc = await Official.findOneAndDelete({ role });
+    if (!doc) throw new ApiError(404, "Yozuv topilmadi", "NOT_FOUND");
   },
 };
