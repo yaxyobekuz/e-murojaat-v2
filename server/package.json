@@ -5,12 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "node --watch src/index.js",
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "db": "./.mongo/bin/mongod --dbpath ./.mongo/data --port 27017 --bind_ip 127.0.0.1"
   },
   "dependencies": {
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "express": "^4.21.2",
+    "mongoose": "^9.7.4",
     "zod": "^3.24.1"
   }
 }

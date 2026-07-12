@@ -1,9 +1,11 @@
-// E-murojaat server — xonadon ma'lumotlari (OSM id bo'yicha) uchun minimal API.
-// Demo: auth yo'q, ma'lumot data/houses.json faylida saqlanadi.
+// E-murojaat server — xonadon, aholi va mahalla yettiligi ma'lumotlari uchun API.
+// Ma'lumotlar MongoDB'da saqlanadi (Mongoose).
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
+import { connectDb } from "./config/db.js";
+import { importLegacyJson } from "./config/importJson.js";
 import authRoutes from "./modules/auth/auth.routes.js";
 import housesRoutes from "./modules/houses/houses.routes.js";
 import residentsRoutes from "./modules/residents/residents.routes.js";
@@ -26,4 +28,13 @@ app.use("/api/officials", officialsRoutes);
 app.use((req, res) => res.status(404).json({ success: false, message: "Topilmadi", code: "NOT_FOUND" }));
 app.use(errorHandler);
 
-app.listen(PORT, () => console.log(`Server: http://localhost:${PORT}`));
+const start = async () => {
+  await connectDb();
+  await importLegacyJson();
+  app.listen(PORT, () => console.log(`Server: http://localhost:${PORT}`));
+};
+
+start().catch((err) => {
+  console.error("Server ishga tushmadi:", err.message);
+  process.exit(1);
+});
