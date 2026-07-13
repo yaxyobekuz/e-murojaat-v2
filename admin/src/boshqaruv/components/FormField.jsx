@@ -19,8 +19,9 @@ const FormField = ({ field, value, onChange }) => (
       <Select value={value} onChange={onChange} options={field.options} placeholder="Belgilanmagan" />
     ) : (
       <Input
-        type={field.type === "number" ? "number" : field.type === "date" ? "date" : "text"}
+        type={field.type === "number" || field.type === "signed" ? "number" : field.type === "date" ? "date" : field.type === "password" ? "password" : "text"}
         min={field.type === "number" ? "0" : undefined}
+        step={field.type === "signed" ? "0.1" : undefined}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={field.placeholder}
