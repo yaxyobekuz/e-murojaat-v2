@@ -48,9 +48,9 @@ function MetricCard({ c, i }) {
   );
 }
 
-const TopBar = () => (
+const TopBar = ({ cards = TOP_CARDS }) => (
   <div className="grid grid-cols-4 gap-1.5 sm:grid-cols-6 lg:grid-cols-8">
-    {TOP_CARDS.map((c, i) => (
+    {cards.map((c, i) => (
       <MetricCard key={c.key} c={c} i={i} />
     ))}
   </div>

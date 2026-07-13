@@ -76,7 +76,7 @@ function FeedRow({ feed }) {
   );
 }
 
-const LeftBar = () => {
+const LeftBar = ({ feeds = LIVE_FEEDS }) => {
   return (
     <div className="surface-overlay flex h-full flex-col overflow-hidden rounded-2xl p-3 shadow-2xl backdrop-blur-xl">
       {/* ===== Kamera kuzatuvi (2×2) ===== */}
@@ -100,7 +100,7 @@ const LeftBar = () => {
         <p className="text-[11px] font-semibold">Jonli operativ holat</p>
       </div>
       <div className="flex flex-1 flex-col gap-1.5 overflow-y-auto pr-0.5">
-        {LIVE_FEEDS.map((feed) => (
+        {feeds.map((feed) => (
           <FeedRow key={feed.key} feed={feed} />
         ))}
       </div>

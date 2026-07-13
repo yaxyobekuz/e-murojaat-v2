@@ -29,7 +29,7 @@ function useClock() {
   return s;
 }
 
-const BottomBar = () => {
+const BottomBar = ({ stats = BOTTOM_STATS }) => {
   const clk = useClock();
   const nav = useNavigate();
   return (
@@ -56,7 +56,7 @@ const BottomBar = () => {
       <div className="h-5 w-px shrink-0 bg-white/10" />
 
       <div className="flex flex-1 items-center gap-4">
-        {BOTTOM_STATS.map((s) => (
+        {stats.map((s) => (
           <div key={s.label} className="flex shrink-0 items-center gap-1.5 whitespace-nowrap text-[11px]">
             <span className="text-foreground/45">{s.label}:</span>
             <span className={cn("font-semibold tabular-nums", TONE[s.tone])}>{s.value}</span>

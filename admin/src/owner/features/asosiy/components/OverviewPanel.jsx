@@ -20,22 +20,22 @@ function Bar({ label, value, color }) {
   );
 }
 
-const OverviewPanel = () => {
-  const popTotal = OVERVIEW.population.reduce((s, p) => s + p.value, 0);
+const OverviewPanel = ({ overview = OVERVIEW }) => {
+  const popTotal = overview.population.reduce((s, p) => s + p.value, 0);
   return (
     <div className="asosiy-fade flex h-full flex-col gap-3 overflow-y-auto pr-1">
       {/* sarlavha */}
       <div>
         <div className="flex items-center gap-1.5 text-[11px] font-medium text-cyan-400">
-          <MapPin className="size-3.5" /> {OVERVIEW.region}
+          <MapPin className="size-3.5" /> {overview.region}
         </div>
-        <h2 className="mt-0.5 text-lg font-semibold leading-tight tracking-tight">{OVERVIEW.name}</h2>
+        <h2 className="mt-0.5 text-lg font-semibold leading-tight tracking-tight">{overview.name}</h2>
         <p className="text-[11px] text-foreground/45">Mahalla bo'yicha umumiy ko'rsatkichlar · raqamli pasport</p>
       </div>
 
       {/* hero KPI */}
       <div className="grid grid-cols-2 gap-2">
-        {OVERVIEW.hero.map((h) => (
+        {overview.hero.map((h) => (
           <div key={h.label} className="rounded-xl border border-[rgb(var(--card-border))] bg-card/40 p-2.5">
             <p className="text-[10px] uppercase tracking-wide text-foreground/40">{h.label}</p>
             <p className="text-xl font-semibold tabular-nums leading-tight">{h.value}</p>
@@ -47,14 +47,14 @@ const OverviewPanel = () => {
       {/* aholi tarkibi (donut) */}
       <div className="rounded-xl border border-[rgb(var(--card-border))] bg-card/40 p-3">
         <p className="mb-3 text-[11px] font-semibold text-foreground/75">Aholi tarkibi</p>
-        <MiniDonut data={OVERVIEW.population} size={132} thickness={20} centerLabel={nf(popTotal)} />
+        <MiniDonut data={overview.population} size={132} thickness={20} centerLabel={nf(popTotal)} />
       </div>
 
       {/* infratuzilma qamrovi */}
       <div className="rounded-xl border border-[rgb(var(--card-border))] bg-card/40 p-3">
         <p className="mb-2.5 text-[11px] font-semibold text-foreground/75">Kommunal infratuzilma qamrovi</p>
         <div className="flex flex-col gap-2.5">
-          {OVERVIEW.coverage.map((c) => (
+          {overview.coverage.map((c) => (
             <Bar key={c.label} {...c} />
           ))}
         </div>
@@ -65,7 +65,7 @@ const OverviewPanel = () => {
         <div className="rounded-xl border border-[rgb(var(--card-border))] bg-card/40 p-3">
           <p className="mb-2 text-[11px] font-semibold text-foreground/75">Xaritadagi obyektlar</p>
           <div className="flex flex-col gap-1.5">
-            {OVERVIEW.mapObjects.map((m) => (
+            {overview.mapObjects.map((m) => (
               <div key={m.label} className="flex items-center justify-between text-[11px]">
                 <span className="flex items-center gap-1.5 text-foreground/70">
                   <span className="size-2 rounded-sm" style={{ background: m.color }} /> {m.label}
@@ -78,7 +78,7 @@ const OverviewPanel = () => {
         <div className="rounded-xl border border-[rgb(var(--card-border))] bg-card/40 p-3">
           <p className="mb-2 text-[11px] font-semibold text-foreground/75">Ijtimoiy obyektlar</p>
           <div className="flex flex-col gap-1.5">
-            {OVERVIEW.facilities.map((f) => {
+            {overview.facilities.map((f) => {
               const Icon = f.icon;
               return (
                 <div key={f.label} className="flex items-center justify-between text-[11px]">
