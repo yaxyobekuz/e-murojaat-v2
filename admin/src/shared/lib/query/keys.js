@@ -41,6 +41,9 @@ export const qk = Object.freeze({
   officials: {
     all: () => ["officials"],
   },
+  mahalla: {
+    indicators: () => ["mahalla", "indicators"],
+  },
   yer: {
     all: () => ["yer"],
     properties: (params) => ["yer", "properties", params],
