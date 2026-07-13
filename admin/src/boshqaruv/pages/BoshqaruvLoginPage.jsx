@@ -43,7 +43,7 @@ const BoshqaruvLoginPage = () => {
           <img src={logoIcon} alt="O'zbekiston gerbi" className="size-16 object-contain" />
 
           <h1 className="text-lg font-bold text-white">Boshqaruv paneli</h1>
-          <p className="text-xs text-white/50">Sozlamalar va ma'lumotlarni boshqarish uchun owner hisobi bilan kiring</p>
+          <p className="text-xs text-white/50">Hisobingiz (login va parol) bilan kiring — owner yoki mahalla yettiligi a'zosi</p>
         </div>
 
         <div className="flex flex-col gap-3">
