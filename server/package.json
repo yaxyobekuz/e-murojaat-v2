@@ -9,6 +9,7 @@
     "db": "./.mongo/bin/mongod --dbpath ./.mongo/data --port 27017 --bind_ip 127.0.0.1"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "express": "^4.21.2",
