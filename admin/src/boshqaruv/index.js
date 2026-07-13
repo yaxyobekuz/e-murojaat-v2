@@ -1,5 +1,9 @@
 export { default as BoshqaruvLayout } from "./layouts/BoshqaruvLayout";
 export { default as BoshqaruvLoginPage } from "./pages/BoshqaruvLoginPage";
+export { default as BoshqaruvHome } from "./pages/BoshqaruvHome";
 export { default as BoshqaruvXaritaPage } from "./pages/BoshqaruvXaritaPage";
+export { default as BoshqaruvRoleXaritaPage } from "./pages/BoshqaruvRoleXaritaPage";
 export { default as BoshqaruvAholiPage } from "./pages/BoshqaruvAholiPage";
 export { default as BoshqaruvYettilikPage } from "./pages/BoshqaruvYettilikPage";
+export { default as BoshqaruvMalumotPage } from "./pages/BoshqaruvMalumotPage";
+export { default as BoshqaruvHisoblarPage } from "./pages/BoshqaruvHisoblarPage";

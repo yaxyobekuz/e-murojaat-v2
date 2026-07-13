@@ -65,7 +65,7 @@ const BoshqaruvAholiPage = () => {
         </Button>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-[rgb(var(--card-border))]">
+      <div className="glass-table overflow-hidden rounded-xl border border-[rgb(var(--card-border))]">
         {isLoading ? (
           <div className="grid h-64 place-items-center text-foreground/40">
             <Loader2 className="size-6 animate-spin" />

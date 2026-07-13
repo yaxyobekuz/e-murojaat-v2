@@ -1,20 +1,14 @@
 // Boshqaruv paneli qobig'i — owner sessiyasi bo'lmasa login'ga yo'naltiradi.
 import { NavLink, Navigate, Outlet, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { Home, Loader2, LogOut, Map, Settings, ArrowLeft, Users, Landmark } from "lucide-react";
+import { Loader2, LogOut, Settings, ArrowLeft } from "lucide-react";
 
 import { cn } from "@/shared/utils/cn";
 import { qk } from "@/shared/lib/query/keys";
+import { roleLabel } from "@/shared/constants/roles";
 import { boshqaruvAuthAPI } from "../api/auth.api";
 import { useBoshqaruvMe } from "../hooks/useBoshqaruvMe";
-
-const NAV = [
-  { title: "Xarita tahrirlash", url: "/boshqaruv", icon: Map, end: true },
-  { title: "Aholi", url: "/boshqaruv/aholi", icon: Users },
-  { title: "Mahalla yettiligi", url: "/boshqaruv/yettilik", icon: Landmark },
-  { title: "Jadval", url: "/boshqaruv/jadval", icon: Home },
-  // kelajakda: sozlamalar, foydalanuvchilar va h.k.
-];
+import { navForRole } from "../data/nav";
 
 const BoshqaruvLayout = () => {
   const navigate = useNavigate();
@@ -36,6 +30,8 @@ const BoshqaruvLayout = () => {
 
   if (isError || !me) return <Navigate to="/boshqaruv/login" replace />;
 
+  const NAV = navForRole(me.role);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-40 border-b border-[rgb(var(--card-border))] bg-background/80 backdrop-blur-md">
@@ -51,6 +47,11 @@ const BoshqaruvLayout = () => {
           <div className="flex items-center gap-2">
             <Settings className="size-4.5 text-emerald-500" />
             <span className="text-sm font-bold tracking-tight">Boshqaruv paneli</span>
+            {me.role !== "owner" && (
+              <span className="rounded-md border border-emerald-500/40 bg-emerald-500/10 px-1.5 py-px text-[10px] font-semibold text-emerald-400">
+                {roleLabel(me.role)}
+              </span>
+            )}
           </div>
 
           <nav className="ml-4 flex items-center gap-1">
@@ -73,7 +74,7 @@ const BoshqaruvLayout = () => {
 
           <div className="ml-auto flex items-center gap-3">
             <span className="text-xs text-foreground/50">
-              <span className="font-semibold text-foreground/80">{me.username}</span> sifatida
+              <span className="font-semibold text-foreground/80">{me.fullName || me.username}</span> sifatida
             </span>
             <button
               type="button"
