@@ -27,6 +27,9 @@ const base = {
   womenNotebook: optBool,
   youthNotebook: optBool,
   notes: optStr(1000),
+  // uyga bog'lanish
+  houseOsmId: z.string().trim().max(64).optional().nullable().or(z.literal("")),
+  householdRole: z.enum(["owner", "member", ""]).optional(),
 };
 
 export const createResidentSchema = z.object({

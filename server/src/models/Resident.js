@@ -25,6 +25,9 @@ const residentSchema = new mongoose.Schema(
     womenNotebook: Boolean,
     youthNotebook: Boolean,
     notes: String,
+    // uyga bog'lanish — qaysi bino (OSM id) va xonadondagi roli
+    houseOsmId: { type: String, default: null, index: true },
+    householdRole: { type: String, enum: ["owner", "member"], default: "member" },
   },
   { timestamps: true, versionKey: false },
 );

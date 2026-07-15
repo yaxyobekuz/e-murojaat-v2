@@ -1,5 +1,6 @@
 import ApiError from "../../utils/ApiError.js";
 import House from "../../models/House.js";
+import Resident from "../../models/Resident.js";
 import { scopeHouseData } from "./houses.fields.js";
 
 export const housesService = {
@@ -16,5 +17,7 @@ export const housesService = {
   remove: async (osmId) => {
     const doc = await House.findOneAndDelete({ osmId });
     if (!doc) throw new ApiError(404, "Uy topilmadi", "NOT_FOUND");
+    // uy o'chsa — fuqarolar o'chmaydi, faqat ajratiladi
+    await Resident.updateMany({ houseOsmId: osmId }, { $set: { houseOsmId: null, householdRole: "member" } });
   },
 };
