@@ -3,7 +3,9 @@ import MahallaIndicator from "../models/MahallaIndicator.js";
 // Kanonik qiymatlar — mahallaData.js + sarnovul.data.js dagi hozirgi raqamlar.
 // Dashboard birinchi kundan aynan shu raqamlarni ko'rsatadi (keyin rollar tahrirlaydi).
 const SEED = {
-  population: { population: 4306, households: 763, streets: 14, ageChildren: 1420, ageWorking: 2280, ageElderly: 606, residentialBuildings: 452, realEstateDeals: 19, populationDelta: 1.8, householdsDelta: 0.6 },
+  // population/households SEED QILINMAYDI — default sifatida kiritilgan real fuqarolar/uylardan (computed) olinadi.
+  // Chairman xohlasa "Ma'lumot kiritish" da qo'lda kiritib override qiladi.
+  population: { streets: 14, ageChildren: 1420, ageWorking: 2280, ageElderly: 606, residentialBuildings: 452, realEstateDeals: 19, populationDelta: 1.8, householdsDelta: 0.6 },
   education: { students: 1124, studentsDelta: 2.1, schools: 2, kindergartens: 6, clinics: 1, mosques: 3, chronicAbsentees: 7 },
   utilities: { waterPct: 91, waterDelta: 1.2, internetPct: 84, internetDelta: 5.2, electricPct: 98, gasPct: 92, sewagePct: 18, greenAreas: 84 },
   tax: { taxCollectedMln: 486, taxDelta: 6.4, enterprises: 13, enterprisesDelta: 3.3, newBusinesses: 5 },
