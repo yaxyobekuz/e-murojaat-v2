@@ -57,16 +57,25 @@ const FEED_MAP = {
 };
 
 export const buildStats = (ind) => {
+  // "Aholi soni"/"Honadonlar" default'i — real kiritilgan fuqarolar/uylar (computed); qo'lda kiritilsa override
+  const residentsTotal = ind?.computed?.residentsTotal;
+  const housesWithResidents = ind?.computed?.housesWithResidents;
+  const computedFb = { aholi: residentsTotal, honadon: housesWithResidents };
+
   const topCards = TOP_CARDS.map((c) => {
     const m = TOP_MAP[c.key];
-    return m ? { ...c, value: g(ind, m[0], m[1], c.value), delta: g(ind, m[0], m[2], c.delta) } : c;
+    if (!m) return c;
+    const fb = computedFb[c.key] ?? c.value; // manual (g) -> computed -> mock
+    return { ...c, value: g(ind, m[0], m[1], fb), delta: g(ind, m[0], m[2], c.delta) };
   });
 
   const overview = {
     ...OVERVIEW,
     hero: OVERVIEW.hero.map((h, i) => {
       const m = HERO_MAP[i];
-      return m ? { ...h, value: nf(g(ind, m[0], m[1], toNum(h.value))) } : h;
+      if (!m) return h;
+      const fb = [residentsTotal, housesWithResidents][i] ?? toNum(h.value);
+      return { ...h, value: nf(g(ind, m[0], m[1], fb)) };
     }),
     population: OVERVIEW.population.map((p, i) => {
       const m = POP_MAP[i];
