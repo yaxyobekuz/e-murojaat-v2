@@ -3,10 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import { qk } from "@/shared/lib/query/keys";
 import { residentsAPI } from "../api/residents.api";
 
-// server'ga kiritilgan barcha fuqarolar ro'yxati
-export const useResidentsQuery = () =>
+// params bo'lsa (masalan {houseOsmId}) — filtrlangan ro'yxat, bo'lmasa — hammasi
+export const useResidentsQuery = (params) =>
   useQuery({
-    queryKey: qk.residents.all(),
-    queryFn: () => residentsAPI.list().then((r) => r.data.data),
+    queryKey: params ? qk.residents.list(params) : qk.residents.all(),
+    queryFn: () => residentsAPI.list(params).then((r) => r.data.data),
     retry: false,
   });

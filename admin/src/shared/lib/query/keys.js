@@ -36,6 +36,7 @@ export const qk = Object.freeze({
   },
   residents: {
     all: () => ["residents"],
+    list: (params) => ["residents", "list", params],
     one: (id) => ["residents", "detail", id],
   },
   officials: {

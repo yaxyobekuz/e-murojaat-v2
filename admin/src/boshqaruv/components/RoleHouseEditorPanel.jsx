@@ -8,6 +8,7 @@ import Button from "@/shared/components/ui/button/Button";
 import { useHouseQuery, useHouseMutation } from "@/owner/features/asosiy";
 import { houseFieldsForRole, houseToForm, formToHouseBody } from "../data/houseFields";
 import FormField from "./FormField";
+import HouseResidentsSection from "./HouseResidentsSection";
 
 const errMsg = (err) =>
   err?.response?.status === 401 ? "Sessiya tugagan — qayta kiring" : err?.response?.data?.message || "Amalni bajarib bo'lmadi";
@@ -53,6 +54,8 @@ const RoleHouseEditorPanel = ({ element, role, onClear }) => {
         </div>
         <button type="button" onClick={onClear} className="text-xs text-foreground/45 hover:text-foreground">Tozalash</button>
       </div>
+
+      {role === "chairman" && <HouseResidentsSection osmId={osmId} onFillCounts={(d) => setFields(d)} />}
 
       <div className="grid grid-cols-2 gap-3">
         {fields.map((field) => (

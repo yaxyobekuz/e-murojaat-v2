@@ -14,6 +14,7 @@ import {
   EXT_NUM_KEYS, EXT_STR_KEYS, EXT_BOOL_KEYS,
   MurojaatSection, XizmatSection, TomorqaSection,
 } from "./HouseEditorExtraSections";
+import HouseResidentsSection from "./HouseResidentsSection";
 
 const OWNERSHIP_OPTIONS = [
   { value: "Xususiy", label: "Xususiy" },
@@ -312,7 +313,12 @@ const HouseEditorPanel = ({ element, onClear }) => {
       </div>
       )}
 
-      {state.tab === "murojaat" && <MurojaatSection state={state} setField={setField} />}
+      {state.tab === "murojaat" && (
+        <div className="flex flex-col gap-3">
+          <HouseResidentsSection osmId={osmId} onFillCounts={(d) => setFields(d)} />
+          <MurojaatSection state={state} setField={setField} />
+        </div>
+      )}
 
       {state.tab === "xizmat" && (
         <div className="flex flex-col gap-3">

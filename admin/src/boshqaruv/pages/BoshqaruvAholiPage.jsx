@@ -89,6 +89,7 @@ const BoshqaruvAholiPage = () => {
                 <th className="px-4 py-2.5">Telefon</th>
                 <th className="px-4 py-2.5">Manzil</th>
                 <th className="px-4 py-2.5">Bandligi</th>
+                <th className="px-4 py-2.5">Uy</th>
                 <th className="px-4 py-2.5 text-right">Amal</th>
               </tr>
             </thead>
@@ -108,6 +109,18 @@ const BoshqaruvAholiPage = () => {
                       </span>
                     ) : (
                       "—"
+                    )}
+                  </td>
+                  <td className="px-4 py-2.5">
+                    {r.houseOsmId ? (
+                      <span className="inline-flex items-center gap-1.5">
+                        <span className="font-mono text-[11px] text-foreground/60">OSM {r.houseOsmId}</span>
+                        {r.householdRole === "owner" && (
+                          <span className="rounded border border-amber-500/40 bg-amber-500/10 px-1 py-px text-[9px] font-bold text-amber-400">EGA</span>
+                        )}
+                      </span>
+                    ) : (
+                      <span className="text-foreground/40">—</span>
                     )}
                   </td>
                   <td className="px-4 py-2.5">

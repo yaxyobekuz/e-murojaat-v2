@@ -14,13 +14,30 @@ const errMsg = (err) =>
     ? "Sessiya tugagan — qayta kiring"
     : err?.response?.data?.message || "Amalni bajarib bo'lmadi";
 
-const ResidentFormDrawer = ({ open, resident, onClose }) => {
+const HOUSEHOLD_ROLE_FIELD = {
+  key: "householdRole",
+  label: "Xonadondagi roli",
+  type: "select",
+  options: [
+    { value: "member", label: "Xonadon a'zosi" },
+    { value: "owner", label: "Uy egasi" },
+  ],
+};
+
+const ResidentFormDrawer = ({ open, resident, houseOsmId, onClose }) => {
   const isEdit = Boolean(resident?.id);
   const mutation = useResidentSaveMutation();
-  const { state, setFields, setField } = useObjectState(emptyResident());
+  const { state, setFields, setField } = useObjectState({ ...emptyResident(), householdRole: "member" });
+
+  // uy konteksti — bino editoridan ochilsa yoki fuqaro allaqachon uyga bog'langan bo'lsa
+  const houseCtx = houseOsmId || resident?.houseOsmId || null;
 
   useEffect(() => {
-    if (open) setFields(resident ? residentToForm(resident) : emptyResident());
+    if (open)
+      setFields({
+        ...(resident ? residentToForm(resident) : emptyResident()),
+        householdRole: resident?.householdRole || "member",
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, resident?.id]);
 
@@ -29,7 +46,7 @@ const ResidentFormDrawer = ({ open, resident, onClose }) => {
   const onSave = () => {
     if (!state.fullName.trim()) return toast.error("F.I.O. majburiy");
     mutation.mutate(
-      { id: resident?.id, body: formToBody(state) },
+      { id: resident?.id, body: { ...formToBody(state), houseOsmId: houseCtx, householdRole: state.householdRole } },
       {
         onSuccess: () => {
           toast.success(isEdit ? "Ma'lumotlar saqlandi" : "Fuqaro qo'shildi");
@@ -56,6 +73,22 @@ const ResidentFormDrawer = ({ open, resident, onClose }) => {
         </header>
 
         <div className="flex-1 space-y-5 overflow-y-auto px-5 py-4">
+          {houseCtx && (
+            <div>
+              <p className="mb-3 border-b border-[rgb(var(--card-border))] pb-1.5 text-[11px] font-bold uppercase tracking-wider text-foreground/45">
+                Xonadon
+              </p>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="col-span-2">
+                  <p className="mb-1.5 text-xs font-medium text-foreground/55">Biriktirilgan uy</p>
+                  <div className="flex h-10 items-center rounded-lg border border-[rgb(var(--card-border))] bg-card/40 px-3 font-mono text-xs text-foreground/60">
+                    OSM {houseCtx}
+                  </div>
+                </div>
+                <FormField field={HOUSEHOLD_ROLE_FIELD} value={state.householdRole} onChange={(v) => setField("householdRole", v)} />
+              </div>
+            </div>
+          )}
           {RESIDENT_SECTIONS.map((section) => (
             <div key={section.title}>
               <p className="mb-3 border-b border-[rgb(var(--card-border))] pb-1.5 text-[11px] font-bold uppercase tracking-wider text-foreground/45">
